@@ -38,14 +38,17 @@ import net.automatalib.word.Word;
  * @param <D>
  *         the output type
  */
+@FunctionalInterface
 public interface InclusionOracle<A extends Output<I, D>, I, D> extends EquivalenceOracle<A, I, D> {
 
     default boolean isCounterExample(Output<I, D> hypothesis, Iterable<? extends I> input, D output) {
         return !Objects.equals(hypothesis.computeOutput(input), output);
     }
 
+    @FunctionalInterface
     interface DFAInclusionOracle<I> extends InclusionOracle<DFA<?, I>, I, Boolean>, DFAEquivalenceOracle<I> {}
 
+    @FunctionalInterface
     interface MealyInclusionOracle<I, O>
             extends InclusionOracle<MealyMachine<?, I, ?, O>, I, Word<O>>, MealyEquivalenceOracle<I, O> {}
 }

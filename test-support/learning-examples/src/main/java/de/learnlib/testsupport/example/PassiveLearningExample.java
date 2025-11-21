@@ -20,15 +20,20 @@ import java.util.Collection;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.word.Word;
 
+@FunctionalInterface
 public interface PassiveLearningExample<I, D> {
 
     Collection<DefaultQuery<I, D>> getSamples();
 
+    @FunctionalInterface
     interface DFAPassiveLearningExample<I> extends PassiveLearningExample<I, Boolean> {}
 
+    @FunctionalInterface
     interface MealyPassiveLearningExample<I, O> extends PassiveLearningExample<I, Word<O>> {}
 
+    @FunctionalInterface
     interface MoorePassiveLearningExample<I, O> extends PassiveLearningExample<I, Word<O>> {}
 
+    @FunctionalInterface
     interface SSTPassiveLearningExample<I, O> extends PassiveLearningExample<I, Word<O>> {}
 }

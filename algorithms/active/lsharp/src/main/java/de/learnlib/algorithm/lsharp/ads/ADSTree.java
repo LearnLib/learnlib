@@ -110,7 +110,7 @@ public final class ADSTree<S extends Comparable<S>, I, O> implements ADS<I, O> {
             }
         }
 
-        assert bestInput != null && bestChildren != null;
+        assert bestInput != null;
 
         return new ADSNode<>(bestInput, toMap(bestChildren), bestIScore);
     }

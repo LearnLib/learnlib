@@ -23,6 +23,7 @@ import java.io.Writer;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import net.automatalib.common.util.IOUtil;
 
+@FunctionalInterface
 public interface ObservationTableWriter<I, D> {
 
     void write(ObservationTable<? extends I, ? extends D> table, Appendable out) throws IOException;

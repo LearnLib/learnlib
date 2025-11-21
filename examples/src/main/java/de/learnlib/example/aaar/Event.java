@@ -38,12 +38,8 @@ class Event {
 
         @Override
         public boolean equals(@Nullable Object o) {
-            if (!(o instanceof Msg)) {
-                return false;
-            }
-            final Msg<?> that = (Msg<?>) o;
-
-            return this.seq == that.seq && Objects.equals(this.data, that.data);
+            return this == o ||
+                   o instanceof Msg<?> that && this.seq == that.seq && Objects.equals(this.data, that.data);
         }
 
         @Override

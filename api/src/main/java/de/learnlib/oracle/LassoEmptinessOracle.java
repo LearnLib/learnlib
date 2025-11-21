@@ -29,9 +29,12 @@ import net.automatalib.word.Word;
  * @param <I> the input type
  * @param <D> the output type
  */
+@FunctionalInterface
 public interface LassoEmptinessOracle<L extends Lasso<I, D>, I, D> extends EmptinessOracle<L, I, D> {
 
+    @FunctionalInterface
     interface DFALassoEmptinessOracle<I> extends LassoEmptinessOracle<DFALasso<I>, I, Boolean> {}
 
+    @FunctionalInterface
     interface MealyLassoEmptinessOracle<I, O> extends LassoEmptinessOracle<MealyLasso<I, O>, I, Word<O>> {}
 }

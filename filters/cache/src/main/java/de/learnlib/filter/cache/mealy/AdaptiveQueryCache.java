@@ -276,15 +276,14 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
 
             final Response response = delegate.processOutput(out);
 
-            switch (response) {
-                case FINISHED:
+            return switch (response) {
+                case FINISHED -> {
                     isFinished = true;
-                    return Response.FINISHED;
-                case RESET:
-                    return Response.FINISHED;
-                default:
-                    return response;
-            }
+                    yield Response.FINISHED;
+                }
+                case RESET -> Response.FINISHED;
+                case SYMBOL -> response;
+            };
         }
     }
 

@@ -24,6 +24,7 @@ import net.automatalib.word.Word;
  * @param <I>
  *         input symbol type
  */
+@FunctionalInterface
 public interface AccessSequenceProvider<I> {
 
     /**

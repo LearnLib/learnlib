@@ -39,15 +39,7 @@ public final class Error extends MethodOutput {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof Error)) {
-            return false;
-        }
-
-        final Error other = (Error) obj;
-        return Objects.equals(this.id, other.id);
+        return this == obj || obj instanceof Error other && Objects.equals(this.id, other.id);
     }
 
     @Override

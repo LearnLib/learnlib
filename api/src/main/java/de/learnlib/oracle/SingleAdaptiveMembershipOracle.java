@@ -25,6 +25,7 @@ import de.learnlib.query.AdaptiveQuery;
  * @see AdaptiveMembershipOracle
  * @see SingleQueryOracle
  */
+@FunctionalInterface
 public interface SingleAdaptiveMembershipOracle<I, O> extends AdaptiveMembershipOracle<I, O> {
 
     @Override

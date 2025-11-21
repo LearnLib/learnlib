@@ -127,14 +127,11 @@ public final class AlternatingBitExampleExplicit {
 
         @Override
         public Event getRepresentative(String a) {
-            switch (a) {
-                case "recv":
-                    return new Recv();
-                case "msg":
-                    return new Msg<>(0, "d");
-                default:
-                    throw new IllegalArgumentException("Unknown abstract: " + a);
-            }
+            return switch (a) {
+                case "recv" -> new Recv();
+                case "msg" -> new Msg<>(0, "d");
+                default -> throw new IllegalArgumentException("Unknown abstract: " + a);
+            };
         }
 
         @Override

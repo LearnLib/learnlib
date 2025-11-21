@@ -18,6 +18,10 @@ package de.learnlib.datastructure.pta;
 import net.automatalib.common.util.comparison.CmpUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Note: this class has a natural ordering that is inconsistent with equals.
+ */
+@SuppressWarnings("PMD.OverrideBothEqualsAndHashCodeOnComparable")
 public abstract class AbstractBlueFringePTAState<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, TP>
         extends AbstractBasePTAState<S, SP, TP> implements Comparable<S> {
 

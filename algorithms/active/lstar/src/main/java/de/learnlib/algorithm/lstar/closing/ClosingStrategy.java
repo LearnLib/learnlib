@@ -29,6 +29,7 @@ import de.learnlib.oracle.MembershipOracle;
  * @param <D>
  *         type variable for output symbol upper bound.
  */
+@FunctionalInterface
 public interface ClosingStrategy<I, D> {
 
     /**

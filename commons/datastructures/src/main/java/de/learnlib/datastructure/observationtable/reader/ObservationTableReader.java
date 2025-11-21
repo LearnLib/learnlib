@@ -26,6 +26,7 @@ import net.automatalib.alphabet.Alphabet;
  * @param <D>
  *         observation (output) domain class
  */
+@FunctionalInterface
 public interface ObservationTableReader<I, D> {
 
     /**

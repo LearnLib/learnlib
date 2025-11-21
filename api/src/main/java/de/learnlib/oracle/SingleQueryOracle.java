@@ -32,6 +32,7 @@ import net.automatalib.word.Word;
  * @param <D>
  *         output domain type
  */
+@FunctionalInterface
 public interface SingleQueryOracle<I, D> extends MembershipOracle<I, D> {
 
     @Override
@@ -48,10 +49,13 @@ public interface SingleQueryOracle<I, D> extends MembershipOracle<I, D> {
     @Override
     D answerQuery(Word<I> prefix, Word<I> suffix);
 
+    @FunctionalInterface
     interface SingleQueryOracleDFA<I> extends SingleQueryOracle<I, Boolean>, DFAMembershipOracle<I> {}
 
+    @FunctionalInterface
     interface SingleQueryOracleMealy<I, O> extends SingleQueryOracle<I, Word<O>>, MealyMembershipOracle<I, O> {}
 
+    @FunctionalInterface
     interface SingleQueryOracleMoore<I, O> extends SingleQueryOracle<I, Word<O>>, MooreMembershipOracle<I, O> {}
 
 }

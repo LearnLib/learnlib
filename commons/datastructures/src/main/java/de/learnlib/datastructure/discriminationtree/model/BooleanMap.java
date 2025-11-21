@@ -203,15 +203,7 @@ public class BooleanMap<V> extends AbstractMap<Boolean, V> {
 
         @Override
         public boolean equals(@Nullable Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof BooleanMap.Entry)) {
-                return false;
-            }
-
-            final BooleanMap<?>.Entry that = (BooleanMap<?>.Entry) o;
-            return Objects.equals(key, that.key);
+            return this == o || o instanceof BooleanMap<?>.Entry that && Objects.equals(key, that.key);
         }
     }
 }

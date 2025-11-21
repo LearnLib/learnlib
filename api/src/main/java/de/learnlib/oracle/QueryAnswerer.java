@@ -25,6 +25,7 @@ import net.automatalib.word.Word;
  * @param <D>
  *         output domain type
  */
+@FunctionalInterface
 public interface QueryAnswerer<I, D> {
 
     default D answerQuery(Word<I> input) {

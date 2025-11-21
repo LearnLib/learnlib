@@ -132,8 +132,7 @@ public abstract class AbstractAbstractionTree<AI, CI, D>
 
     @Override
     public Collection<Node> getOutgoingEdges(Node node) {
-        if (node instanceof InnerNode) {
-            final InnerNode<?, ?> n = (InnerNode<?, ?>) node;
+        if (node instanceof InnerNode<?, ?> n) {
             return Arrays.asList(n.equalsNext, n.otherNext);
         }
 
@@ -155,8 +154,7 @@ public abstract class AbstractAbstractionTree<AI, CI, D>
 
         while (!nodes.isEmpty()) {
             final Node n = nodes.poll();
-            if (n instanceof InnerNode) {
-                final InnerNode<?, ?> in = (InnerNode<?, ?>) n;
+            if (n instanceof InnerNode<?, ?> in) {
                 result.add(in);
                 nodes.add(in.equalsNext);
                 nodes.add(in.otherNext);
@@ -177,11 +175,9 @@ public abstract class AbstractAbstractionTree<AI, CI, D>
             public boolean getNodeProperties(Node node, Map<String, String> properties) {
                 super.getNodeProperties(node, properties);
 
-                if (node instanceof InnerNode) {
-                    final InnerNode<?, ?> n = (InnerNode<?, ?>) node;
+                if (node instanceof InnerNode<?, ?> n) {
                     properties.put(NodeAttrs.LABEL, n.prefix + ", " + n.suffix);
-                } else if (node instanceof Leaf) {
-                    final Leaf<?, ?> l = (Leaf<?, ?>) node;
+                } else if (node instanceof Leaf<?, ?> l) {
                     properties.put(NodeAttrs.LABEL, String.format("Abs.: '%s'%nRep.: '%s'", l.abs, l.rep));
                 }
 
@@ -192,8 +188,7 @@ public abstract class AbstractAbstractionTree<AI, CI, D>
             public boolean getEdgeProperties(Node src, Node edge, Node tgt, Map<String, String> properties) {
                 super.getEdgeProperties(src, edge, tgt, properties);
 
-                if (src instanceof InnerNode) {
-                    final InnerNode<?, ?> n = (InnerNode<?, ?>) src;
+                if (src instanceof InnerNode<?, ?> n) {
                     if (n.equalsNext == tgt) {
                         properties.put(EdgeAttrs.LABEL, "== " + n.out);
                     } else {

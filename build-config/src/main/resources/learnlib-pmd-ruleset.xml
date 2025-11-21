@@ -25,7 +25,6 @@ limitations under the License.
     <!-- EXCLUSIONS -->
 
     <rule ref="category/java/bestpractices.xml">
-        <exclude name="AccessorMethodGeneration"/> <!-- irrelevant once we target Java 11 -->
         <exclude name="ArrayIsStoredDirectly"/>
         <exclude name="LooseCoupling"/> <!-- may be enabled once calls on sub-type methods are filtered again -->
         <exclude name="GuardLogStatement"/>
@@ -55,7 +54,6 @@ limitations under the License.
         <exclude name="ShortClassName"/>
         <exclude name="ShortMethodName"/>
         <exclude name="ShortVariable"/>
-        <exclude name="UnnecessaryImport"/> <!-- flags imports required by JavaDoc -->
     </rule>
 
     <rule ref="category/java/design.xml">
@@ -102,9 +100,21 @@ limitations under the License.
 
     <!-- CONFIGS -->
 
+    <rule ref="category/java/codestyle.xml/ConfusingTernary">
+        <properties>
+            <property name="ignoreElseIf" value="true" />
+        </properties>
+    </rule>
+
     <rule ref="category/java/codestyle.xml/EmptyControlStatement">
         <properties>
             <property name="allowCommentedBlocks" value="true" />
+        </properties>
+    </rule>
+
+    <rule ref="category/java/codestyle.xml/TypeParameterNamingConventions">
+        <properties>
+            <property name="typeParameterNamePattern" value="[A-Z0-9]*" />
         </properties>
     </rule>
 
@@ -112,12 +122,6 @@ limitations under the License.
         <properties>
             <property name="reportStaticMethods" value="false" />
             <property name="reportStaticFields" value="false" />
-        </properties>
-    </rule>
-
-    <rule ref="category/java/codestyle.xml/ConfusingTernary">
-        <properties>
-            <property name="ignoreElseIf" value="true" />
         </properties>
     </rule>
 

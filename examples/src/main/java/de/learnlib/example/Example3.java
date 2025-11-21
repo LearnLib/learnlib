@@ -161,16 +161,14 @@ public class Example3 {
     }
 
     private @Nullable String exec(BoundedStringQueue s, String input) {
-        switch (input) {
-            case OFFER_1:
-            case OFFER_2:
+        return switch (input) {
+            case OFFER_1, OFFER_2 -> {
                 s.offer(input);
-                return "void";
-            case POLL:
-                return s.poll();
-            default:
-                throw new IllegalArgumentException("unknown input symbol");
-        }
+                yield "void";
+            }
+            case POLL -> s.poll();
+            default -> throw new IllegalArgumentException("unknown input symbol");
+        };
     }
 
     /**

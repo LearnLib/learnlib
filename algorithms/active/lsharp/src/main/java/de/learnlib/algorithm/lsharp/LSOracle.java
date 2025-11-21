@@ -78,8 +78,9 @@ public class LSOracle<I, O> {
         return shuffled.subList(0, 2);
     }
 
+    @SuppressWarnings("PMD.SwitchDensity")
     private Pair<Word<I>, Word<O>> rule3IO(List<Word<I>> candidates, Word<I> prefix) {
-        switch (this.rule3) {
+        return switch (this.rule3) {
             case ADS:
                 if (candidates.size() == 2) {
                     Word<I> q1Acc = candidates.get(0);
@@ -92,28 +93,25 @@ public class LSOracle<I, O> {
                     Word<I> wit = ApartnessUtil.computeWitness(obsTree, q1, q2);
                     assert wit != null;
 
-                    WordBuilder<I> inputSeq = new WordBuilder<>(prefix);
                     assert !(ApartnessUtil.accStatesAreApart(obsTree, prefix, q1Acc) ||
                              ApartnessUtil.accStatesAreApart(obsTree, prefix, q2Acc));
-                    inputSeq.append(wit);
-                    Word<O> outputSeq = this.outputQuery(inputSeq.toWord());
 
-                    return Pair.of(inputSeq.toWord(), outputSeq);
+                    Word<I> inputSeq = prefix.concat(wit);
+                    Word<O> outputSeq = this.outputQuery(inputSeq);
 
+                    yield Pair.of(inputSeq, outputSeq);
                 } else {
                     List<Integer> candss = getSuccs(candidates);
                     ADSTree<Integer, I, O> suffix = new ADSTree<>(obsTree, candss, sinkOutput);
-                    return this.adaptiveOutputQuery(prefix, null, suffix);
+                    yield this.adaptiveOutputQuery(prefix, null, suffix);
                 }
             case SEPSEQ:
                 List<Integer> withS = getSuccs(sample2(candidates));
                 Word<I> wit = ApartnessUtil.computeWitness(obsTree, withS.get(0), withS.get(1));
                 assert wit != null;
                 Word<I> inputSeq = prefix.concat(wit);
-                return Pair.of(inputSeq, this.outputQuery(inputSeq));
-            default:
-                throw new IllegalStateException("Shouldn't get here!");
-        }
+                yield Pair.of(inputSeq, this.outputQuery(inputSeq));
+        };
     }
 
     private List<Integer> getSuccs(Collection<Word<I>> candidates) {
@@ -148,14 +146,14 @@ public class LSOracle<I, O> {
     }
 
     private Pair<Word<I>, Word<O>> rule2IO(Word<I> accessQ, I i, List<Integer> bss, Collection<Word<I>> basis) {
-        switch (this.rule2) {
+        return switch (this.rule2) {
             case ADS:
                 ADSTree<Integer, I, O> suffix = new ADSTree<>(obsTree, bss, sinkOutput);
-                return this.adaptiveOutputQuery(accessQ, i, suffix);
+                yield this.adaptiveOutputQuery(accessQ, i, suffix);
             case NOTHING:
                 Word<I> prefix = accessQ.append(i);
                 Word<O> oSeq = this.outputQuery(prefix);
-                return Pair.of(prefix, oSeq);
+                yield Pair.of(prefix, oSeq);
             case SEPSEQ:
                 Word<I> wit;
                 if (basis.size() >= 2) {
@@ -167,10 +165,8 @@ public class LSOracle<I, O> {
                 }
                 Word<I> inputSeq = accessQ.append(i).concat(wit);
                 Word<O> outputSeq = this.outputQuery(inputSeq);
-                return Pair.of(inputSeq, outputSeq);
-            default:
-                throw new IllegalStateException("Shouldn't get here!");
-        }
+                yield Pair.of(inputSeq, outputSeq);
+        };
     }
 
     public List<Pair<Word<I>, List<Word<I>>>> exploreFrontier(Collection<Word<I>> basis) {

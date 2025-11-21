@@ -41,15 +41,12 @@ class Protocol implements SingleQueryOracleMealy<Event, String> {
     }
 
     private String handleEvent(Event event) {
-        if (event instanceof Msg<?>) {
-            Msg<?> msg = (Msg<?>) event;
-
+        if (event instanceof Msg<?> msg) {
             if (buffer == null && msg.seq % 2 == seqExp % 2) {
                 buffer = msg.data;
                 seqExp++;
                 return "ind";
             }
-
             return "-";
         } else if (event instanceof Recv) {
             if (buffer == null) {

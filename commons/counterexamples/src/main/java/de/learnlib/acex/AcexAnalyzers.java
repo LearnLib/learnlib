@@ -109,14 +109,10 @@ public final class AcexAnalyzers {
     }
 
     public static Collection<AbstractNamedAcexAnalyzer> getAnalyzers(Direction dir) {
-        switch (dir) {
-            case FORWARD:
-                return getForwardAnalyzers();
-            case BACKWARD:
-                return getBackwardAnalyzers();
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (dir) {
+            case FORWARD -> getForwardAnalyzers();
+            case BACKWARD -> getBackwardAnalyzers();
+        };
     }
 
     public static Collection<AbstractNamedAcexAnalyzer> getForwardAnalyzers() {

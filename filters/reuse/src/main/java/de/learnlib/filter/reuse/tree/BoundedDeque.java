@@ -100,14 +100,11 @@ public class BoundedDeque<E> extends AbstractCollection<E> {
      * @return the evicted element, may be {@code null} if the queue was empty
      */
     private @Nullable E evict() {
-        switch (evictPolicy) {
-            case EVICT_OLDEST:
-                return deque.pollFirst();
-            case EVICT_NEWEST:
-                return deque.pollLast();
-            default:
-                throw new IllegalStateException("Illegal evict policy: " + evictPolicy);
-        }
+        return switch (evictPolicy) {
+            case EVICT_OLDEST -> deque.pollFirst();
+            case EVICT_NEWEST -> deque.pollLast();
+            default -> throw new IllegalStateException("Illegal evict policy: " + evictPolicy);
+        };
     }
 
     /**
@@ -117,14 +114,10 @@ public class BoundedDeque<E> extends AbstractCollection<E> {
      * @return the evicted element, may be {@code null} if the queue was empty
      */
     public @Nullable E retrieve() {
-        switch (accessPolicy) {
-            case LIFO:
-                return deque.pollLast();
-            case FIFO:
-                return deque.pollFirst();
-            default:
-                throw new IllegalStateException("Illegal evict policy: " + evictPolicy);
-        }
+        return switch (accessPolicy) {
+            case LIFO -> deque.pollLast();
+            case FIFO -> deque.pollFirst();
+        };
     }
 
     /**
@@ -134,14 +127,10 @@ public class BoundedDeque<E> extends AbstractCollection<E> {
      * @return the top-most element of the container
      */
     public @Nullable E peek() {
-        switch (accessPolicy) {
-            case LIFO:
-                return deque.peekLast();
-            case FIFO:
-                return deque.peekFirst();
-            default:
-                throw new IllegalStateException("Illegal evict policy: " + evictPolicy);
-        }
+        return switch (accessPolicy) {
+            case LIFO -> deque.peekLast();
+            case FIFO -> deque.peekFirst();
+        };
     }
 
     /**

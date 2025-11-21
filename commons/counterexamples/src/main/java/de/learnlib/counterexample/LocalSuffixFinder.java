@@ -47,6 +47,7 @@ import net.automatalib.automaton.concept.SuffixOutput;
  * @param <D>
  *         output domain type upper bound
  */
+@FunctionalInterface
 public interface LocalSuffixFinder<I, D> {
 
     /**

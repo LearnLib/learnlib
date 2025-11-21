@@ -118,15 +118,8 @@ public abstract class Query<I, D> {
 
     @Override
     public final boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Query)) {
-            return false;
-        }
-
-        final Query<?, ?> that = (Query<?, ?>) o;
-        return Objects.equals(getPrefix(), that.getPrefix()) && Objects.equals(getSuffix(), that.getSuffix());
+        return this == o || o instanceof Query<?, ?> that && Objects.equals(getPrefix(), that.getPrefix()) &&
+                            Objects.equals(getSuffix(), that.getSuffix());
     }
 
     /**

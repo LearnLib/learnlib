@@ -41,6 +41,7 @@ import net.automatalib.word.Word;
  * @param <D>
  *         output domain type upper bound
  */
+@FunctionalInterface
 public interface GlobalSuffixFinder<I, D> {
 
     /**

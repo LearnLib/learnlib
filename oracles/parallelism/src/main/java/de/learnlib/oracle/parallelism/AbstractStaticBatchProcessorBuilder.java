@@ -142,16 +142,10 @@ public abstract class AbstractStaticBatchProcessorBuilder<Q, P extends BatchProc
         if (customExecutor != null) {
             executor = customExecutor;
         } else {
-            switch (poolPolicy) {
-                case FIXED:
-                    executor = Executors.newFixedThreadPool(size);
-                    break;
-                case CACHED:
-                    executor = new ScalingThreadPoolExecutor(0, size, DEFAULT_KEEP_ALIVE_TIME, TimeUnit.SECONDS);
-                    break;
-                default:
-                    throw new IllegalStateException("Unknown pool policy: " + poolPolicy);
-            }
+            executor = switch (poolPolicy) {
+                case FIXED -> Executors.newFixedThreadPool(size);
+                case CACHED -> new ScalingThreadPoolExecutor(0, size, DEFAULT_KEEP_ALIVE_TIME, TimeUnit.SECONDS);
+            };
         }
 
         return buildOracle(instances, minBatchSize, executor);

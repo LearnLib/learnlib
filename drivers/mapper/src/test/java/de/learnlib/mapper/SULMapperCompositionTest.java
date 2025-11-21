@@ -126,16 +126,12 @@ public class SULMapperCompositionTest {
 
         @Override
         public Character step(Character in) {
-            switch (in) {
-                case OUTER_EXCEPTION_TRIGGER_CHAR:
-                    throw new OuterWrappedException(new IllegalArgumentException());
-                case INNER_EXCEPTION_TRIGGER_CHAR:
-                    throw new InnerUnwrappedException();
-                case NESTED_EXCEPTION_TRIGGER_CHAR:
-                    throw new NestedUnwrappedException();
-                default:
-                    return in;
-            }
+            return switch (in) {
+                case OUTER_EXCEPTION_TRIGGER_CHAR -> throw new OuterWrappedException(new IllegalArgumentException());
+                case INNER_EXCEPTION_TRIGGER_CHAR -> throw new InnerUnwrappedException();
+                case NESTED_EXCEPTION_TRIGGER_CHAR -> throw new NestedUnwrappedException();
+                default -> in;
+            };
         }
     }
 

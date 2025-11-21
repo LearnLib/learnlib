@@ -31,6 +31,7 @@ import de.learnlib.filter.reuse.ReuseOracleBuilder;
  * @param <S>
  *         system state class
  */
+@FunctionalInterface
 public interface SystemStateHandler<S> {
 
     /**

@@ -32,6 +32,7 @@ import de.learnlib.datastructure.pta.PTATransition;
  *
  * @see DefaultProcessingOrders
  */
+@FunctionalInterface
 public interface ProcessingOrder {
 
     /**
