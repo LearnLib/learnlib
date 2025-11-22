@@ -60,7 +60,7 @@ public class RandomWpEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
 
     private <S> DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> findCounterExampleInternal(MMLT<S, I, ?, O> hypothesis, Collection<? extends TimedInput<I>> inputs) {
         // Make expanded form of hypothesis:
-        var hypSemModel = ReducedMMLTSemantics.forLocalTimerMealy(hypothesis);
+        var hypSemModel = ReducedMMLTSemantics.forMMLT(hypothesis);
 
         // Create a list of symbols (for faster access):
         List<TimedInput<I>> listAlphabet = new ArrayList<>(inputs);
@@ -69,7 +69,7 @@ public class RandomWpEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
         var globalSuffixes = Automata.characterizingSet(hypSemModel, inputs);
 
         // Get list of prefixes in deterministic order (so we can reproduce experiments easily):
-        var locationCover = MMLTCover.getLocalTimerMealyLocationCover(hypothesis, listAlphabet);
+        var locationCover = MMLTCover.getMMLTLocationCover(hypothesis, listAlphabet);
         var prefixList = locationCover
                 .values()
                 .stream()

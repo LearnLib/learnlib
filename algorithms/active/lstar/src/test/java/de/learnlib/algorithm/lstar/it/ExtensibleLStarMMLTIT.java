@@ -31,7 +31,7 @@ import net.automatalib.serialization.dot.DOTParsers;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimeoutSymbol;
-import net.automatalib.util.automaton.mmlt.MMLTUtil;
+import net.automatalib.util.automaton.mmlt.MMLTs;
 import net.automatalib.word.Word;
 import org.testng.annotations.Test;
 
@@ -134,10 +134,10 @@ public class ExtensibleLStarMMLTIT extends AbstractMMLTLearnerIT {
                 var model = parser.readModel(is);
                 var automaton = model.model;
 
-                long maxTimeoutDelay = MMLTUtil.getMaximumTimeoutDelay(automaton);
+                long maxTimeoutDelay = MMLTs.getMaximumTimeoutDelay(automaton);
                 long maxTimerQueryWaitingFinal = (maxTimerQueryWaiting > 0) ?
                         maxTimerQueryWaiting :
-                        MMLTUtil.getMaximumInitialTimerValue(automaton) * 2;
+                        MMLTs.getMaximumInitialTimerValue(automaton) * 2;
 
                 this.mmlt = automaton;
                 this.params =

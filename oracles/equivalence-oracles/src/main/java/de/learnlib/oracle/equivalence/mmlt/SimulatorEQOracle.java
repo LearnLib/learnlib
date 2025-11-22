@@ -5,7 +5,7 @@ import de.learnlib.query.DefaultQuery;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.automaton.mmlt.MMLT;
-import net.automatalib.util.automaton.mmlt.MMLTUtil;
+import net.automatalib.util.automaton.mmlt.MMLTs;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -31,7 +31,7 @@ public class SimulatorEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
     public @Nullable DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> findCounterExample(MMLT<?, I, ?, O> hypothesis, Collection<? extends TimedInput<I>> inputs) {
         List<TimedInput<I>> listInputs = new ArrayList<>(inputs);
 
-        var separatingWord = MMLTUtil.findSeparatingWord(refModel, hypothesis, listInputs);
+        var separatingWord = MMLTs.findSeparatingWord(refModel, hypothesis, listInputs);
         if (separatingWord != null) {
             var sulOutput = refModel.getSemantics().computeOutput(separatingWord);
             return new DefaultQuery<>(separatingWord, sulOutput);

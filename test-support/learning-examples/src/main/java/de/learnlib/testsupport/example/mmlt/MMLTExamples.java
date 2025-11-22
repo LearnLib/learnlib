@@ -9,7 +9,7 @@ import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
 import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.dot.DOTParsers;
-import net.automatalib.util.automaton.mmlt.MMLTUtil;
+import net.automatalib.util.automaton.mmlt.MMLTs;
 
 public class MMLTExamples {
 
@@ -114,8 +114,8 @@ public class MMLTExamples {
                 var model = parser.readModel(is);
                 var automaton = model.model;
 
-                long maxTimeoutDelay = MMLTUtil.getMaximumTimeoutDelay(automaton);
-                long maxTimerQueryWaitingFinal = MMLTUtil.getMaximumInitialTimerValue(automaton) * 2;
+                long maxTimeoutDelay = MMLTs.getMaximumTimeoutDelay(automaton);
+                long maxTimerQueryWaitingFinal = MMLTs.getMaximumInitialTimerValue(automaton) * 2;
 
                 if (name.contains("SCTP")) {
                     maxTimerQueryWaitingFinal = 9000; // SCTP needs more waiting time

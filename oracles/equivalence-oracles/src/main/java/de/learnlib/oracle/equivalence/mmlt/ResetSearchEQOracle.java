@@ -93,7 +93,7 @@ public class ResetSearchEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
             (MMLT<S, I, T, O> hypothesis, List<TimedInput<I>> inputs) {
 
         // Retrieve prefixes from state cover, to establish some separation between learner and teacher:
-        var stateCover = MMLTCover.getLocalTimerMealyLocationCover(hypothesis, inputs);
+        var stateCover = MMLTCover.getMMLTLocationCover(hypothesis, inputs);
 
         // Only keep locations that have at least two stable configs (only these can have local resets):
         List<Word<TimedInput<I>>> prefixes = new ArrayList<>();

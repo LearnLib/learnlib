@@ -20,7 +20,7 @@ import de.learnlib.testsupport.example.LearningExample.MMLTLearningExample;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
-import net.automatalib.util.automaton.mmlt.MMLTUtil;
+import net.automatalib.util.automaton.mmlt.MMLTs;
 import net.automatalib.word.Word;
 
 public class MMLTLearnerITCase<I, O>
@@ -42,8 +42,8 @@ public class MMLTLearnerITCase<I, O>
 
     @Override
     protected boolean testEquivalence(MMLT<?, I, ?, O> hypothesis) {
-        return MMLTUtil.testEquivalence(this.example.getReferenceAutomaton(),
-                                        hypothesis,
-                                        this.example.getReferenceAutomaton().getSemantics().getInputAlphabet());
+        return MMLTs.testEquivalence(this.example.getReferenceAutomaton(),
+                                     hypothesis,
+                                     this.example.getReferenceAutomaton().getSemantics().getInputAlphabet());
     }
 }

@@ -59,7 +59,7 @@ public class MMLTSimulatorSUL<S, I, T, O> implements TimedSUL<I, O> {
 
     @Override
     public void pre() {
-        this.currentConfiguration = semantics.getInitialState().copy();
+        this.currentConfiguration = semantics.getInitialState();
     }
 
     @Override
