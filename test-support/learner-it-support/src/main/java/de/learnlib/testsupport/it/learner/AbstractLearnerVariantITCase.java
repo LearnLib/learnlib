@@ -17,7 +17,6 @@ package de.learnlib.testsupport.it.learner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.logging.Category;
@@ -90,7 +89,7 @@ abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation
         }
 
         if (!ceQueries.isEmpty()) {
-            DefaultQuery<I, D> oldCe = ceQueries.get(new Random(42).nextInt(ceQueries.size()));
+            DefaultQuery<I, D> oldCe = ceQueries.get(0);
             Assert.assertFalse(learner.refineHypothesis(oldCe),
                                "Learner should not report a hypothesis update on outdated counterexample");
         }

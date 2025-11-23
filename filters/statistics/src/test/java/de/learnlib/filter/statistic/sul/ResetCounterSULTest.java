@@ -20,7 +20,7 @@ import java.util.Optional;
 import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 
 public class ResetCounterSULTest extends AbstractResetCounterSULTest<CounterSUL<Integer, Character>> {
 
@@ -31,7 +31,7 @@ public class ResetCounterSULTest extends AbstractResetCounterSULTest<CounterSUL<
 
     @Override
     protected Optional<Long> getCount(CounterSUL<Integer, Character> sul) {
-        final StatsContainer container = Statistics.getContainer();
-        return container.getCount(CounterSUL.RESET_KEY);
+        final StatisticsCollector statisticsCollector = Statistics.getCollector();
+        return statisticsCollector.getCount(CounterSUL.RESET_KEY);
     }
 }

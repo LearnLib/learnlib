@@ -1,6 +1,5 @@
 package de.learnlib.algorithm.lstar.mmlt;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.stream.Stream;
 
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
-import de.learnlib.algorithm.MMLTModelParams;
+import de.learnlib.time.MMLTModelParams;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
 import de.learnlib.algorithm.lstar.mmlt.cex.MMLTCounterexampleHandler;
@@ -25,13 +24,13 @@ import de.learnlib.filter.MutableSymbolFilter;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.mmlt.MMLT;
-import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
@@ -51,7 +50,7 @@ import org.slf4j.LoggerFactory;
 public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>> {
 
     private static final Logger logger = LoggerFactory.getLogger(ExtensibleLStarMMLT.class);
-    private final StatsContainer stats;
+    private final StatisticsCollector stats;
 
     private final ClosingStrategy<? super TimedInput<I>, ? super Word<TimedOutput<O>>> closingStrategy;
 
@@ -107,7 +106,7 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
         this.closingStrategy = closingStrategy;
         this.timeOracle = timeOracle;
         this.initialSuffixes = initialSuffixes;
-        this.stats = Statistics.getContainer();
+        this.stats = Statistics.getCollector();
 
         // Prepare hyp data:
 
@@ -134,15 +133,14 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
      * @param <O>             Output type
      * @return New one-shot timer
      */
-    public static <O> MealyTimerInfo<?, O> selectOneShotTimer(List<? extends MealyTimerInfo<?, O>> sortedTimers, long maxInitialValue) {
+    public static <O> int selectOneShotTimer(List<? extends TimerInfo<?, O>> sortedTimers, long maxInitialValue) {
 
         // Filter relevant timers:
         // Start at timer with the highest initial value.
         // Ignore all timers whose initial value exceeds the maximum value.
         // Also ignore timers whose timeout is the multiple of another timer's initial value.
-        List<MealyTimerInfo<?, O>> relevantTimers = new ArrayList<>();
         for (int i = sortedTimers.size() - 1; i >= 0; i--) {
-            MealyTimerInfo<?, O> timer = sortedTimers.get(i);
+            TimerInfo<?, O> timer = sortedTimers.get(i);
 
             if (timer.initial() > maxInitialValue) {
                 continue; // could not have expired
@@ -152,7 +150,7 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
             // When set to one-shot, these would expire at same time as periodic timer -> non-deterministic behavior!
             boolean multiple = false;
             for (int j = 0; j < i; j++) {
-                MealyTimerInfo<?, O> otherTimer = sortedTimers.get(j);
+                TimerInfo<?, O> otherTimer = sortedTimers.get(j);
                 if (timer.initial() % otherTimer.initial() == 0) {
                     multiple = true;
                     break;
@@ -162,15 +160,10 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
                 continue;
             }
 
-            return timer; // not a multiple and within time
+            return i; // not a multiple and within time
         }
 
-        if (relevantTimers.isEmpty()) {
-            throw new IllegalStateException("Max. initial value is too low; must include at least one timer.");
-        }
-
-        // Return the candidate with the highest initial value one-shot:
-        return relevantTimers.get(0); // order is reversed -> first is last
+        throw new IllegalStateException("Max. initial value is too low; must include at least one timer.");
     }
 
 
@@ -218,7 +211,7 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
                     TimedOutput<O> output = null;
                     if (inputSym instanceof TimeStepSequence<I> ws) {
                         // Query timer output from table:
-                        MealyTimerInfo<?, O> timerInfo = this.hypData.getTable().getTimerInfo(prefix, ws.timeSteps());
+                        TimerInfo<?, O> timerInfo = this.hypData.getTable().getTimerInfo(prefix, ws.timeSteps());
                         if (timerInfo == null) {
                             throw new AssertionError();
                         }
@@ -361,7 +354,7 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
         return true;
     }
 
-    private void handleMissingTimeoutChange(Row<TimedInput<I>> spRow, MealyTimerInfo<?, O> timeout) {
+    private void handleMissingTimeoutChange(Row<TimedInput<I>> spRow, TimerInfo<?, O> timeout) {
         var locationTimerInfo = hypData.getTable().getLocationTimerInfo(spRow);
         if (locationTimerInfo == null) {
             throw new AssertionError("Location with missing one-shot timer must have timers.");
@@ -386,8 +379,8 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
 
         // Remove all timers with greater timeout (are now redundant):
         var subsequentTimers = locationTimerInfo.getSortedTimers().stream()
-                .filter(t -> t.initial() > timeout.initial())
-                .map(MealyTimerInfo::name).toList();
+                                                .filter(t -> t.initial() > timeout.initial())
+                                                .map(TimerInfo::name).toList();
         subsequentTimers.forEach(locationTimerInfo::removeTimer);
 
         // Change from periodic to one-shot:

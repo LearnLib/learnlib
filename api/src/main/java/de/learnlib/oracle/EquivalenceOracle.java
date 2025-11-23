@@ -18,12 +18,12 @@ package de.learnlib.oracle;
 import java.util.Collection;
 
 import de.learnlib.query.DefaultQuery;
-import net.automatalib.symbol.time.TimedOutput;
-import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -96,10 +96,14 @@ public interface EquivalenceOracle<A, I, D> {
     interface MooreEquivalenceOracle<I, O> extends EquivalenceOracle<MooreMachine<?, I, ?, O>, I, Word<O>> {}
 
     /**
-     * A specialization of the {@link EquivalenceOracle} interface for a Local Timer Mealy learning scenario.
+     * A specialization of the {@link EquivalenceOracle} interface for an {@link MMLT} learning scenario.
      *
-     * @param <I> Input type for non-delaying inputs
-     * @param <O> Output symbol type
+     * @param <I>
+     *         input type (of non-delaying inputs)
+     * @param <O>
+     *         output symbol type
      */
-    interface MMLTEquivalenceOracle<I, O> extends EquivalenceOracle<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>>{}
+    @FunctionalInterface
+    interface MMLTEquivalenceOracle<I, O>
+            extends EquivalenceOracle<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>> {}
 }

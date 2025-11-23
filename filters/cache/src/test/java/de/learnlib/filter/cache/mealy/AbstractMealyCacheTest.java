@@ -63,7 +63,7 @@ public abstract class AbstractMealyCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return Statistics.getContainer().getCount(MealyCounterOracle.QUERY_KEY).orElse(0L);
+        return Statistics.getCollector().getCount(MealyCounterOracle.QUERY_KEY).orElse(0L);
     }
 
     @Override

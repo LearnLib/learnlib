@@ -23,7 +23,7 @@ import de.learnlib.algorithm.lstar.mmlt.filter.MMLTRandomSymbolFilter;
 import de.learnlib.algorithm.lstar.mmlt.filter.MMLTStatisticsSymbolFilter;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 import de.learnlib.testsupport.example.mmlt.MMLTExamples;
 import net.automatalib.automaton.visualization.MMLTVisualizationHelper;
 import net.automatalib.symbol.time.InputSymbol;
@@ -40,12 +40,12 @@ import net.automatalib.word.Word;
 public class Example1 {
 
     public static void main(String[] args) {
-        var model = MMLTExamples.SensorCollector();
+        var model = MMLTExamples.sensorCollector();
 
         // We first create a statistics container.
         // This container will store various statistical data during learning:
-        var stats = Statistics.getContainer();
-        stats.addTextInfo("LocalTimerMealyModel", null, model.toString());
+        var stats = Statistics.getCollector();
+        stats.addText("LocalTimerMealyModel", null, model.toString());
         stats.setCounter("original_locs", "Locations in original", model.getReferenceAutomaton().getStates().size());
         stats.setCounter("original_inputs", "Untimed alphabet size in original", model.getReferenceAutomaton().getInputAlphabet().size());
 
@@ -77,7 +77,7 @@ public class Example1 {
         suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
 
         // A symbol filter allows us to reduce queries by exploiting prior knowledge.
-        // For this example, we use a RandomSymbolFilter. This filter correctly predicts
+        // For this example, we use a AbstractRandomSymbolFilter. This filter correctly predicts
         // whether a transition silently self-loops with an accuracy of 90%:
         SymbolFilter<TimedInput<String>, InputSymbol<String>> filter =
                 new MMLTRandomSymbolFilter<>(model.getReferenceAutomaton(), 0.1, new Random(100));
@@ -102,31 +102,31 @@ public class Example1 {
 
     private static void runExperiment(ExtensibleLStarMMLT<String, String> learner,
                                       MMLTEquivalenceOracle<String, String> tester,
-                                      StatsContainer stats, int maxRounds) {
-        stats.startOrResumeClock("learningRt", "Processing time");
+                                      StatisticsCollector statisticsCollector, int maxRounds) {
+        statisticsCollector.startOrResumeClock("learningRt", "Processing time");
         learner.startLearning();
 
         var hyp = learner.getHypothesisModel();
         DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>> cex = tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
-        stats.increaseCounter("roundCount", "CEX queries");
+        statisticsCollector.increaseCounter("roundCount", "CEX queries");
 
         int roundCount = 1;
         while (cex != null && roundCount < maxRounds) {
             learner.refineHypothesis(cex);
             hyp = learner.getHypothesisModel();
             cex = tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
-            stats.increaseCounter("roundCount", null);
+            statisticsCollector.increaseCounter("roundCount", null);
             roundCount += 1;
         }
-        stats.pauseClock("learningRt");
+        statisticsCollector.pauseClock("learningRt");
 
         final var finalHypothesis = learner.getHypothesisModel();
 
         // Add some more stats:
-        stats.setCounter("result_locs", "Locations in result", finalHypothesis.getStates().size());
+        statisticsCollector.setCounter("result_locs", "Locations in result", finalHypothesis.getStates().size());
 
         // Print final result + statistics:
-        System.out.println(stats.printStats());
+        System.out.println(statisticsCollector.printStats());
 
         new ObservationTableASCIIWriter<>().write(learner.getObservationTable(), System.out);
 

@@ -1,6 +1,6 @@
 package de.learnlib.algorithm.lstar.mmlt;
 
-import de.learnlib.algorithm.MMLTModelParams;
+import de.learnlib.time.MMLTModelParams;
 import de.learnlib.datastructure.observationtable.Row;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.symbol.time.TimedInput;

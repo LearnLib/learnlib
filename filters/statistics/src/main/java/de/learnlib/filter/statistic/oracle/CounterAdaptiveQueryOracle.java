@@ -23,7 +23,7 @@ import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.query.AdaptiveQuery;
 import de.learnlib.query.AdaptiveQuery.Response;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 
 /**
  * A simple wrapper for counting the number of {@link Response#RESET resets} and {@link Response#SYMBOL symbols} of an
@@ -36,22 +36,22 @@ import de.learnlib.statistic.StatsContainer;
  */
 public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracle<I, O> {
 
-    public static final String DUR_KEY = "-qry-dur";
-    public static final String RESET_KEY = "-reset-cnt";
-    public static final String SYMBOL_KEY = "-sym-cnt";
+    public static final String DUR_KEY = "amq-qry-dur";
+    public static final String RESET_KEY = "amq-reset-cnt";
+    public static final String SYMBOL_KEY = "amq-sym-cnt";
 
     private final AdaptiveMembershipOracle<I, O> delegate;
-    private final StatsContainer statistics;
-    private final String prefix;
+    private final StatisticsCollector statisticsCollector;
+    private final String id;
 
     public CounterAdaptiveQueryOracle(AdaptiveMembershipOracle<I, O> delegate) {
         this(delegate, "");
     }
 
-    public CounterAdaptiveQueryOracle(AdaptiveMembershipOracle<I, O> delegate, String prefix) {
+    public CounterAdaptiveQueryOracle(AdaptiveMembershipOracle<I, O> delegate, String id) {
         this.delegate = delegate;
-        this.prefix = prefix;
-        this.statistics = Statistics.getContainer();
+        this.id = id;
+        this.statisticsCollector = Statistics.getCollector();
     }
 
     @Override
@@ -61,14 +61,14 @@ public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracl
             wrappers.add(new CountingQuery<>(q));
         }
 
-        statistics.startOrResumeClock(prefix + DUR_KEY, "Duration of queries");
+        statisticsCollector.startOrResumeClock(DUR_KEY + id, "Duration of queries");
         this.delegate.processQueries(wrappers);
-        statistics.pauseClock(prefix + DUR_KEY);
+        statisticsCollector.pauseClock(DUR_KEY + id);
 
         // statContainer is not thread-safe so we need to count in post-processing
         for (CountingQuery<I, O> wrapper : wrappers) {
-            this.statistics.increaseCounter(prefix + RESET_KEY, "Number of resets", wrapper.resets);
-            this.statistics.increaseCounter(prefix + SYMBOL_KEY, "Number of symbols", wrapper.symbols);
+            this.statisticsCollector.increaseCounter(RESET_KEY + id, "Number of resets", wrapper.resets);
+            this.statisticsCollector.increaseCounter(SYMBOL_KEY + id, "Number of symbols", wrapper.symbols);
         }
     }
 

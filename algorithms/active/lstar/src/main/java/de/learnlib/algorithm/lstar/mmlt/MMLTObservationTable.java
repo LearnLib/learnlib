@@ -6,9 +6,9 @@ import de.learnlib.datastructure.observationtable.RowImpl;
 import de.learnlib.filter.MutableSymbolFilter;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.oracle.MembershipOracle;
-import de.learnlib.filter.SymbolFilterResponse;
+import de.learnlib.filter.FilterResponse;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.InputSymbol;
@@ -88,10 +88,11 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
      */
     private void identifyLocalTimers(LocationTimerInfo<I, O> location, TimedQueryOracle<I, O> timeOracle) {
         var timerQueryResponse = timeOracle.queryTimers(location.getPrefix(), this.minTimerQueryWaitTime);
+        var timers = timerQueryResponse.timers();
 
         if (timerQueryResponse.aborted()) {
-            var newOneShot = ExtensibleLStarMMLT.selectOneShotTimer(timerQueryResponse.timers(), Long.MAX_VALUE);
-            newOneShot.setOneShot();
+            var end = ExtensibleLStarMMLT.selectOneShotTimer(timers, Long.MAX_VALUE);
+            timers.set(end, timers.get(end).asOneShot());
         }
 
         // Add timers up to one-shot:
@@ -185,20 +186,20 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
             if (succRow == null) {
                 // Query symbol filter before adding transition:
                 var filterResponse = this.symbolFilter.query(sp, (InputSymbol<I>) sym);
-                if (filterResponse == SymbolFilterResponse.IGNORE) {
+                if (filterResponse == FilterResponse.IGNORE) {
                     // Verify that output is silent:
                     var response = timeOracle.answerQuery(sp, Word.fromLetter(sym));
                     assert response.size() == 1;
                     if (!response.firstSymbol().equals(silentOutput)) {
                         // Not silent -> cannot be silent self-loop:
-                        filterResponse = SymbolFilterResponse.ACCEPT;
+                        filterResponse = FilterResponse.ACCEPT;
 
                         // Update filter:
                         this.symbolFilter.accept(sp, (InputSymbol<I>) sym);
                     }
                 }
 
-                if (filterResponse == SymbolFilterResponse.ACCEPT) {
+                if (filterResponse == FilterResponse.ACCEPT) {
                     // Treat as usual:
                     succRow = this.createLpRow(lp);
                 }
@@ -497,7 +498,7 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         throw new IllegalStateException("Not implemented.");
     }
 
-    public @Nullable MealyTimerInfo<?, O> getTimerInfo(Word<TimedInput<I>> prefix, long initial) {
+    public @Nullable TimerInfo<?, O> getTimerInfo(Word<TimedInput<I>> prefix, long initial) {
         var info = this.timerInfoMap.get(prefix);
         if (info != null) {
             return info.getTimerInfo(initial);
@@ -545,7 +546,7 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         return this.findUnclosedTransitions();
     }
 
-    public List<List<Row<TimedInput<I>>>> addTimerTransition(Row<TimedInput<I>> spRow, MealyTimerInfo<?, O> timeout, TimedQueryOracle<I, O> timeOracle) {
+    public List<List<Row<TimedInput<I>>>> addTimerTransition(Row<TimedInput<I>> spRow, TimerInfo<?, O> timeout, TimedQueryOracle<I, O> timeOracle) {
         return this.addOutgoingTransition(spRow, new TimeStepSequence<>(timeout.initial()), timeOracle);
     }
 

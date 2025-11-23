@@ -12,8 +12,8 @@ import de.learnlib.algorithm.lstar.mmlt.cex.results.MissingOneShotResult;
 import de.learnlib.algorithm.lstar.mmlt.cex.results.MissingResetResult;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.filter.SymbolFilter;
-import de.learnlib.filter.SymbolFilterResponse;
-import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import de.learnlib.filter.FilterResponse;
+import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
@@ -71,7 +71,7 @@ public class MMLTCounterexampleHandler<S, I, O> {
     private CexAnalysisResult<I, O> handleIncorrectTarget(ExtendedDecomposition<I, O> decomposition, MMLTHypothesis<I, O> hypothesis) {
         if (decomposition.input() instanceof InputSymbol<I> ndi) {
             // If decomposition at non-delaying input + considered as self-loop, treat as false ignore:
-            if (symbolFilter.query(hypothesis.getLocationPrefix(decomposition.state()), ndi) == SymbolFilterResponse.IGNORE) {
+            if (symbolFilter.query(hypothesis.getLocationPrefix(decomposition.state()), ndi) == FilterResponse.IGNORE) {
                 return new FalseIgnoreResult<>(decomposition.state().getLocation(), ndi);
             }
 
@@ -85,15 +85,16 @@ public class MMLTCounterexampleHandler<S, I, O> {
     }
 
     private CexAnalysisResult<I, O> selectOneShotTimer(ExtendedDecomposition<I, O> decomposition, MMLTHypothesis<I, O> hypothesis, long maxInitialValue) {
-        var newOneShot = ExtensibleLStarMMLT.selectOneShotTimer(hypothesis.getSortedTimers(decomposition.state().getLocation()), maxInitialValue);
+        List<TimerInfo<Integer, O>> timers = hypothesis.getSortedTimers(decomposition.state().getLocation());
+        var newOneShot = ExtensibleLStarMMLT.selectOneShotTimer(timers, maxInitialValue);
         logger.debug("Missing one-shot: setting ({}|{}) to one-shot.", hypothesis.getLocationPrefix(decomposition.state()), newOneShot);
-        return new MissingOneShotResult<>(decomposition.state().getLocation(), newOneShot);
+        return new MissingOneShotResult<>(decomposition.state().getLocation(), timers.get(newOneShot));
     }
 
     private CexAnalysisResult<I, O> handleIncorrectTargetTimeStep(ExtendedDecomposition<I, O> decomposition, MMLTHypothesis<I, O> hypothesis) {
         // Check if there is a one-shot timer expiring at the next time step:
 
-        List<? extends MealyTimerInfo<?, O>> localTimers = hypothesis.getSortedTimers(decomposition.state().getLocation());
+        List<? extends TimerInfo<?, O>> localTimers = hypothesis.getSortedTimers(decomposition.state().getLocation());
         assert !localTimers.isEmpty();
 
         // If location has a one-shot timer, this is the one with the highest initial value:

@@ -22,7 +22,7 @@ import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 import de.learnlib.util.Experiment.DFAExperiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -52,10 +52,10 @@ public class ExperimentTest {
         final MockUpLearner<Character> learner = new MockUpLearner<>(target, intermediateTarget);
         final DFAEquivalenceOracle<Character> eq = new MockUpOracle<>(intermediateTarget);
 
-        final StatsContainer statMock = Mockito.mock(StatsContainer.class);
+        final StatisticsCollector statMock = Mockito.mock(StatisticsCollector.class);
 
         try (MockedStatic<Statistics> statistics = Mockito.mockStatic(Statistics.class)) {
-            statistics.when(Statistics::getContainer).thenReturn(statMock);
+            statistics.when(Statistics::getCollector).thenReturn(statMock);
 
             DFAExperiment<Character> experiment = new DFAExperiment<>(learner, eq, alphabet);
 

@@ -71,7 +71,9 @@ public abstract class AbstractMMLTLearnerIT {
      * {@link LearnerVariantList variant list}.
      *
      * @param <I>
-     *         input symbol type
+     *         input symbol type (of non-delaying inputs)
+     * @param <O>
+     *         output symbol type
      * @param alphabet
      *         the input alphabet
      * @param mqOracle

@@ -20,7 +20,7 @@ import de.learnlib.logging.Category;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -44,14 +44,14 @@ public class Experiment<A extends Object> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Experiment.class);
     private final ExperimentImpl<?, ?> impl;
-    private final StatsContainer statistics;
+    private final StatisticsCollector statisticsCollector;
     private @Nullable A finalHypothesis;
 
     public <I, D> Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
                              EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
                              Alphabet<I> inputs) {
         this.impl = new ExperimentImpl<>(learningAlgorithm, equivalenceAlgorithm, inputs);
-        this.statistics = Statistics.getContainer();
+        this.statisticsCollector = Statistics.getCollector();
     }
 
     /**
@@ -104,22 +104,22 @@ public class Experiment<A extends Object> {
 
         public A run() {
             rounds++;
-            statistics.increaseCounter(LEARNING_ROUNDS_KEY, "Number of learning rounds");
+            statisticsCollector.increaseCounter(LEARNING_ROUNDS_KEY, "Number of learning rounds");
             LOGGER.info(Category.PHASE, "Starting round {}", rounds);
             LOGGER.info(Category.PHASE, "Learning");
 
-            statistics.startOrResumeClock(LEARNING_PROFILE_KEY, "Duration of exploration");
+            statisticsCollector.startOrResumeClock(LEARNING_PROFILE_KEY, "Duration of exploration");
             learningAlgorithm.startLearning();
-            statistics.pauseClock(LEARNING_PROFILE_KEY);
+            statisticsCollector.pauseClock(LEARNING_PROFILE_KEY);
 
             while (true) {
                 final A hyp = learningAlgorithm.getHypothesisModel();
 
                 LOGGER.info(Category.PHASE, "Searching for counterexample");
 
-                statistics.startOrResumeClock(COUNTEREXAMPLE_PROFILE_KEY, "Duration of counterexample search");
+                statisticsCollector.startOrResumeClock(COUNTEREXAMPLE_PROFILE_KEY, "Duration of counterexample search");
                 DefaultQuery<I, D> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
-                statistics.pauseClock(COUNTEREXAMPLE_PROFILE_KEY);
+                statisticsCollector.pauseClock(COUNTEREXAMPLE_PROFILE_KEY);
 
                 if (ce == null) {
                     return hyp;
@@ -129,13 +129,13 @@ public class Experiment<A extends Object> {
 
                 // next round ...
                 rounds++;
-                statistics.increaseCounter(LEARNING_ROUNDS_KEY, "Number of learning rounds");
+                statisticsCollector.increaseCounter(LEARNING_ROUNDS_KEY, "Number of learning rounds");
                 LOGGER.info(Category.PHASE, "Starting round {}", rounds);
                 LOGGER.info(Category.PHASE, "Learning");
 
-                statistics.startOrResumeClock(LEARNING_PROFILE_KEY, "Duration of exploration");
+                statisticsCollector.startOrResumeClock(LEARNING_PROFILE_KEY, "Duration of exploration");
                 final boolean refined = learningAlgorithm.refineHypothesis(ce);
-                statistics.pauseClock(LEARNING_PROFILE_KEY);
+                statisticsCollector.pauseClock(LEARNING_PROFILE_KEY);
 
                 assert refined;
             }

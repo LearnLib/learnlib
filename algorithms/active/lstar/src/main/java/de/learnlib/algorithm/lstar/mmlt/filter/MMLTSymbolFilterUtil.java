@@ -2,7 +2,7 @@ package de.learnlib.algorithm.lstar.mmlt.filter;
 
 import java.util.Objects;
 
-import de.learnlib.filter.SymbolFilterResponse;
+import de.learnlib.filter.FilterResponse;
 import net.automatalib.automaton.mmlt.MMLTSemantics;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.InputSymbol;
@@ -22,11 +22,11 @@ class MMLTSymbolFilterUtil {
      * @param <O>       Output symbol type
      * @return IGNORE for silent self-loops, ACCEPT otherwise.
      */
-    static <I, O> SymbolFilterResponse isIgnorable(MMLT<?, I, ?, O> automaton, Word<TimedInput<I>> prefix, InputSymbol<I> symbol) {
+    static <I, O> FilterResponse isIgnorable(MMLT<?, I, ?, O> automaton, Word<TimedInput<I>> prefix, InputSymbol<I> symbol) {
         return isIgnorable(automaton.getSemantics(), prefix, symbol);
     }
 
-    static <S, I, T, O> SymbolFilterResponse isIgnorable(MMLTSemantics<S, I, T, O> semantics, Word<TimedInput<I>> prefix, InputSymbol<I> symbol) {
+    static <S, I, T, O> FilterResponse isIgnorable(MMLTSemantics<S, I, T, O> semantics, Word<TimedInput<I>> prefix, InputSymbol<I> symbol) {
         var targetConfig = semantics.getState(prefix);
         var trans = semantics.getTransition(targetConfig, symbol);
         var target = semantics.getSuccessor(trans);
@@ -34,6 +34,6 @@ class MMLTSymbolFilterUtil {
 
         boolean ignorable = Objects.equals(output, semantics.getSilentOutput()) && Objects.equals(targetConfig, target);
 
-        return ignorable ? SymbolFilterResponse.IGNORE : SymbolFilterResponse.ACCEPT;
+        return ignorable ? FilterResponse.IGNORE : FilterResponse.ACCEPT;
     }
 }

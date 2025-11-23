@@ -46,6 +46,7 @@ open module de.learnlib.api {
     exports de.learnlib.query;
     exports de.learnlib.statistic;
     exports de.learnlib.sul;
+    exports de.learnlib.time;
 
     uses StatisticsProvider;
 }

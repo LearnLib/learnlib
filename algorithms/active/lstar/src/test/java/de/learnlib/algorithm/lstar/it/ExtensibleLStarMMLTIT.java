@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
-import de.learnlib.algorithm.MMLTModelParams;
+import de.learnlib.time.MMLTModelParams;
 import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.filter.symbol.AcceptAllSymbolFilter;
@@ -141,7 +141,7 @@ public class ExtensibleLStarMMLTIT extends AbstractMMLTLearnerIT {
 
                 this.mmlt = automaton;
                 this.params =
-                        new MMLTModelParams<>(silentOutput, maxTimeoutDelay, maxTimerQueryWaitingFinal, outputCombiner);
+                        new MMLTModelParams<>(silentOutput, outputCombiner, maxTimeoutDelay, maxTimerQueryWaitingFinal);
             } catch (IOException | FormatException e) {
                 throw new RuntimeException("Unable to load model " + name, e);
             }

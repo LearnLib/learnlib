@@ -11,7 +11,7 @@
 
     <artifactId>learnlib-symbol-filters</artifactId>
 
-    <name>LearnLib :: Oracles :: Symbol Filters</name>
+    <name>LearnLib :: Filters :: Symbol Filters</name>
     <description>A collection of symbol filters</description>
 
     <dependencies>
@@ -27,20 +27,15 @@
             <artifactId>automata-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-
         <!-- build -->
         <dependency>
             <groupId>de.learnlib.tooling</groupId>
             <artifactId>annotations</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
         </dependency>
 
         <!-- test -->

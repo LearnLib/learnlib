@@ -1,55 +1,80 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.testsupport.example.mmlt;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import de.learnlib.algorithm.MMLTModelParams;
 import de.learnlib.testsupport.example.LearningExample.MMLTLearningExample;
+import de.learnlib.time.MMLTModelParams;
 import net.automatalib.automaton.mmlt.MMLT;
+import net.automatalib.automaton.mmlt.impl.CompactMMLT;
 import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
 import net.automatalib.exception.FormatException;
+import net.automatalib.serialization.dot.DOTInputModelData;
+import net.automatalib.serialization.dot.DOTInputModelDeserializer;
 import net.automatalib.serialization.dot.DOTParsers;
 import net.automatalib.util.automaton.mmlt.MMLTs;
 
-public class MMLTExamples {
+/**
+ * A collection of {@link MMLT}-based learning examples.
+ */
+public final class MMLTExamples {
+
+    private MMLTExamples() {
+        // prevent instantiation
+    }
 
     /**
-     * Returns an MMLT model of an HVAC system.
+     * Returns an MMLT example of an HVAC system.
      * <p>
      * The system has been adapted from: Taylor and Taylor: Patterns in the Machine
      *
-     * @return LocalTimerMealyModel
+     * @return a learning example for the specified machine
      */
-    public static MMLTLearningExample<String, String> HVAC() {
+    public static MMLTLearningExample<String, String> hvac() {
         return new Example("HVAC");
     }
 
     /**
-     * Returns an MMLT model of an endpoint in the stream control and transmission protocol.
+     * Returns an MMLT example of an endpoint in the stream control and transmission protocol.
      * <p>
      * The model has been adapted from: Stewart et al.: Stream Control Transmission Protocol (RFC 9260, Figure 3)
      *
-     * @return LocalTimerMealyModel
+     * @return a learning example for the specified machine
      */
-    public static MMLTLearningExample<String, String> SCTP() {
+    public static MMLTLearningExample<String, String> sctp() {
         return new Example("SCTP");
     }
 
     /**
-     * Returns an MMLT model of a sensor collector.
+     * Returns an MMLT example of a sensor collector.
      * <p>
      * The sensor measures particulate matter and ambient noise. The measurement program automatically ends after some
      * time. The program may be restarted at any time. Alternatively, a self-check program can be entered. This also
      * ends after some time and may be aborted. At the end of either program, the collected data may be retrieved.
      *
-     * @return LocalTimerMealyModel
+     * @return a learning example for the specified machine
      */
-    public static MMLTLearningExample<String, String> SensorCollector() {
+    public static MMLTLearningExample<String, String> sensorCollector() {
         return new Example("sensor_collector");
     }
 
     /**
-     * Returns an MMLT model of a washing machine.
+     * Returns an MMLT example of a washing machine.
      * <p>
      * The machine is initially off. After powering it on and closing the door, the user can start either the short or
      * the normal program. An open door prevents starting and triggers a warning. Not choosing a program within 10
@@ -64,40 +89,42 @@ public class MMLTExamples {
      * the drum immediately. Once done, the door is unlocked, a message is shown, and the machine beeps repeatedly until
      * the user presses any button or opens the door.
      *
-     * @return LocalTimerMealyModel
+     * @return a learning example for the specified machine
      */
-    public static MMLTLearningExample<String, String> WM() {
+    public static MMLTLearningExample<String, String> wm() {
         return new Example("WM");
     }
 
     /**
-     * Returns an MMLT model of an oven with a time-controlled baking program.
+     * Returns an MMLT example of an oven with a time-controlled baking program.
      * <p>
      * After powering the oven on, the oven remains idle until the program is started. During the program, the oven
      * regularly measures and adjusts the temperature. At the end of the program, an alarm sounds. Then, the user may
      * extend the program. If not extended, the program ends either when the user opens the door, presses a button, or a
      * timeout occurs.
      *
-     * @return LocalTimerMealyModel
+     * @return a learning example for the specified machine
      */
-    public static MMLTLearningExample<String, String> Oven() {
+    public static MMLTLearningExample<String, String> oven() {
         return new Example("Oven");
     }
 
     /**
-     * Returns an MMLT model of a wireless sensor node.
+     * Returns an MMLT example of a wireless sensor node.
      * <p>
      * The node regularly collects and transmits data. If the battery is low, no data is transmitted. Then, a user may
      * collect the data manually. The node can be shut down at any time. If the battery is empty, it is shut down
      * automatically.
      *
-     * @return LocalTimerMealyModel
+     * @return a learning example for the specified machine
      */
-    public static MMLTLearningExample<String, String> WSN() {
+    public static MMLTLearningExample<String, String> wsn() {
         return new Example("WSN");
     }
 
-    private static class Example implements MMLTLearningExample<String, String> {
+    private static final class Example implements MMLTLearningExample<String, String> {
+
+        private static final int SCTP_TIMEOUT = 9000; // SCTP needs more waiting time
 
         private final String name;
         private final MMLT<?, String, ?, String> mmlt;
@@ -106,26 +133,29 @@ public class MMLTExamples {
         private Example(String name) {
             this.name = name;
 
-            var silentOutput = "void";
-            var outputCombiner = StringSymbolCombiner.getInstance();
-            var parser = DOTParsers.mmlt(silentOutput, outputCombiner);
+            final String silentOutput = "void";
+            final StringSymbolCombiner outputCombiner = StringSymbolCombiner.getInstance();
+            final DOTInputModelDeserializer<Integer, String, CompactMMLT<String, String>> parser =
+                    DOTParsers.mmlt(silentOutput, outputCombiner);
 
             try (InputStream is = MMLTExamples.class.getResourceAsStream("/mmlt/" + name + ".dot")) {
-                var model = parser.readModel(is);
-                var automaton = model.model;
+                final DOTInputModelData<Integer, String, CompactMMLT<String, String>> model = parser.readModel(is);
+                final CompactMMLT<String, String> automaton = model.model;
 
-                long maxTimeoutDelay = MMLTs.getMaximumTimeoutDelay(automaton);
-                long maxTimerQueryWaitingFinal = MMLTs.getMaximumInitialTimerValue(automaton) * 2;
+                final long maxTimeoutDelay = MMLTs.getMaximumTimeoutDelay(automaton);
+                final long maxTimerQueryWaitingFinal;
 
                 if (name.contains("SCTP")) {
-                    maxTimerQueryWaitingFinal = 9000; // SCTP needs more waiting time
+                    maxTimerQueryWaitingFinal = SCTP_TIMEOUT;
+                } else {
+                    maxTimerQueryWaitingFinal = MMLTs.getMaximumInitialTimerValue(automaton) * 2;
                 }
 
                 this.mmlt = automaton;
                 this.params =
-                        new MMLTModelParams<>(silentOutput, maxTimeoutDelay, maxTimerQueryWaitingFinal, outputCombiner);
+                        new MMLTModelParams<>(silentOutput, outputCombiner, maxTimeoutDelay, maxTimerQueryWaitingFinal);
             } catch (IOException | FormatException e) {
-                throw new RuntimeException("Unable to load model " + name, e);
+                throw new IllegalStateException("Unable to load model " + name, e);
             }
         }
 

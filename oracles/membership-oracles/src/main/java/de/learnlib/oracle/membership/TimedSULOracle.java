@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.oracle.membership;
 
 import java.util.ArrayList;
@@ -8,11 +23,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import de.learnlib.algorithm.MMLTModelParams;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.query.Query;
 import de.learnlib.sul.TimedSUL;
-import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import de.learnlib.time.MMLTModelParams;
+import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
@@ -25,14 +40,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implements a timed query oracle for MMLT learning.
+ * Implements a {@link TimedQueryOracle} given a {@link TimedSUL}.
  *
- * @param <I> Input type for non-delaying inputs
- * @param <O> Output symbol type
+ * @param <I>
+ *         input symbol type (of non-delaying inputs)
+ * @param <O>
+ *         output symbol type
  */
 public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
 
-    private final static Logger logger = LoggerFactory.getLogger(TimedSULOracle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TimedSULOracle.class);
 
     /**
      * To ensure globally unique timer names, we index them according to this counter.
@@ -50,7 +67,7 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
 
     @Override
     public void processQueries(Collection<? extends Query<TimedInput<I>, Word<TimedOutput<O>>>> queries) {
-        for (var q : queries) {
+        for (Query<TimedInput<I>, Word<TimedOutput<O>>> q : queries) {
             this.querySuffixOutputInternal(q);
         }
     }
@@ -72,17 +89,18 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
     /**
      * Identifies the time at which the next known timeout(s) are expected.
      *
-     * @param timeouts    Known timeouts
-     * @param currentTime Current time.
-     * @return Next timeout time.
+     * @param timeouts
+     *         known timeouts
+     * @param currentTime
+     *         current time.
+     *
+     * @return next timeout time
      */
-    private long calcNextExpectedTimeout(List<MealyTimerInfo<?, O>> timeouts, long currentTime) {
-        if (timeouts.isEmpty()) {
-            throw new AssertionError();
-        }
+    private long calcNextExpectedTimeout(List<TimerInfo<?, O>> timeouts, long currentTime) {
+        assert !timeouts.isEmpty();
 
         long minNext = Long.MAX_VALUE;
-        for (var to : timeouts) {
+        for (TimerInfo<?, O> to : timeouts) {
             long occurrences = currentTime / to.initial();
             long nextOcc = (occurrences + 1) * to.initial(); // time of next occ
 
@@ -91,9 +109,7 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
             }
         }
 
-        if (minNext == Long.MAX_VALUE) {
-            throw new AssertionError();
-        }
+        assert minNext != Long.MAX_VALUE;
 
         return minNext;
     }
@@ -103,21 +119,23 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
     }
 
     /**
-     * Identifies timeouts in the current location by waiting at most [maxDelay].
+     * Identifies timeouts in the current location by waiting at most {@code maxTotalWaitingTime}.
      * <p>
-     * All inferred timers are initially considered periodic.
-     * Stops when reaching maxTotalWaitingTime OR when an expected timeout does not occur.
-     * In the latter case, the "aborted" flag is set.
+     * All inferred timers are initially considered periodic. Stops when reaching {@code maxTotalWaitingTime} or when an
+     * expected timeout does not occur. In the latter case, the {@link TimerQueryResult#aborted()}} flag is set.
      *
-     * @param maxTotalWaitingTime Maximum time until timeouts are collected.
-     * @return List of periodic timeouts. Null, if none observed.
+     * @param maxTotalWaitingTime
+     *         maximum time until timeouts are collected
+     *
+     * @return list of periodic timeouts or {@code null} if none observed
      */
     private TimerQueryResult<O> collectTimeouts(long maxTotalWaitingTime) {
         if (maxTotalWaitingTime < this.modelParams.maxTimeoutWaitingTime()) {
-            throw new IllegalArgumentException("Timer query waiting time must be at least max. waiting time for a single timeout.");
+            throw new IllegalArgumentException(
+                    "Timer query waiting time must be at least max. waiting time for a single timeout.");
         }
 
-        List<MealyTimerInfo<?, O>> knownTimers = new ArrayList<>();
+        List<TimerInfo<?, O>> knownTimers = new ArrayList<>();
 
         // Wait for the first timeout:
         TimedOutput<O> firstTimeout = this.sul.timeoutStep(this.modelParams.maxTimeoutWaitingTime());
@@ -126,10 +144,10 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
         }
 
         if (this.modelParams.outputCombiner().isCombinedSymbol(firstTimeout.symbol())) {
-            logger.warn("Multiple timers expiring at first timeout, automaton may not be minimal.");
+            LOGGER.warn("Multiple timers expiring at first timeout, automaton may not be minimal.");
         }
 
-        knownTimers.add(new MealyTimerInfo<>(getUniqueTimerName(), firstTimeout.delay(), firstTimeout.symbol(), null));
+        knownTimers.add(new TimerInfo<>(getUniqueTimerName(), firstTimeout.delay(), firstTimeout.symbol(), null));
 
         // Wait for further timeouts:
         long currentTimeStep = firstTimeout.delay(); // already waited for first timeout
@@ -156,7 +174,8 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
             // Compare observed timeout with expectation:
             long nextActualTime = nextOutput.delay() + currentTimeStep;
 
-            TimerCheckResult<O> evalResult = evaluateNextTimer(nextActualTime, nextExpectedTime, nextOutput, knownTimers);
+            TimerCheckResult<O> evalResult =
+                    evaluateNextTimer(nextActualTime, nextExpectedTime, nextOutput, knownTimers);
             if (evalResult.newTimer() != null) {
                 knownTimers.add(evalResult.newTimer());
             } else if (evalResult.inconsistent()) {
@@ -167,44 +186,55 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
             currentTimeStep = nextActualTime;
         }
 
-        knownTimers.sort(Comparator.comparingLong(MealyTimerInfo::initial));
+        knownTimers.sort(Comparator.comparingLong(TimerInfo::initial));
         return new TimerQueryResult<>(inconsistent, knownTimers);
     }
 
-    private record TimerCheckResult<O>(@Nullable MealyTimerInfo<?, O> newTimer, boolean inconsistent) {}
-
-    private TimerCheckResult<O> evaluateNextTimer(long nextActualTime, long nextExpectedTime, TimedOutput<O> nextOutput, List<MealyTimerInfo<?, O>> knownTimers) {
+    private TimerCheckResult<O> evaluateNextTimer(long nextActualTime,
+                                                  long nextExpectedTime,
+                                                  TimedOutput<O> nextOutput,
+                                                  List<TimerInfo<?, O>> knownTimers) {
         if (nextActualTime < nextExpectedTime) {
             // A timeout occurred before we expected one -> new timer:
-            var newTimer = new MealyTimerInfo<>(getUniqueTimerName(), nextActualTime, nextOutput.symbol(), null);
+            TimerInfo<?, O> newTimer = new TimerInfo<>(getUniqueTimerName(), nextActualTime, nextOutput.symbol(), null);
             return new TimerCheckResult<>(newTimer, false);
         } else if (nextActualTime == nextExpectedTime) {
             // Timeout occurred at expected time -> check if matching expected output:
             Map<O, Long> expectedOutputs = knownTimers.stream()
-                    .filter(t -> nextExpectedTime % t.initial() == 0)
-                    .map(t -> modelParams.outputCombiner().separateSymbols(t.output())) // separate output of timers with same initial value
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.groupingBy(t -> t, Collectors.counting())); // count occurrences
+                                                      .filter(t -> nextExpectedTime % t.initial() == 0)
+                                                      .map(t -> modelParams.outputCombiner()
+                                                                           .separateSymbols(t.output())) // separate output of timers with same initial value
+                                                      .flatMap(Collection::stream)
+                                                      .collect(Collectors.groupingBy(t -> t,
+                                                                                     Collectors.counting())); // count occurrences
 
-            Map<O, Long> actualOutputs = this.modelParams.outputCombiner().separateSymbols(nextOutput.symbol())
-                    .stream()
-                    .collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+            Map<O, Long> actualOutputs = this.modelParams.outputCombiner()
+                                                         .separateSymbols(nextOutput.symbol())
+                                                         .stream()
+                                                         .collect(Collectors.groupingBy(e -> e, Collectors.counting()));
 
             // Any missing outputs?
-            boolean missingOutputs = expectedOutputs.keySet().stream()
-                    .anyMatch(o -> actualOutputs.getOrDefault(o, 0L) < expectedOutputs.get(o)); // less than expected
+            boolean missingOutputs = expectedOutputs.keySet()
+                                                    .stream()
+                                                    .anyMatch(o -> actualOutputs.getOrDefault(o, 0L) <
+                                                                   expectedOutputs.get(o)); // less than expected
             if (missingOutputs) {
                 // Same time but missing output -> missed location change:
                 return new TimerCheckResult<>(null, true);
             }
 
             // Any new outputs?
-            List<O> newOutputs = actualOutputs.keySet().stream()
-                    .filter(o -> expectedOutputs.getOrDefault(o, 0L) < actualOutputs.get(o)) // less than actual
-                    .toList();
+            List<O> newOutputs = actualOutputs.keySet()
+                                              .stream()
+                                              .filter(o -> expectedOutputs.getOrDefault(o, 0L) <
+                                                           actualOutputs.get(o)) // less than actual
+                                              .toList();
             if (!newOutputs.isEmpty()) {
                 // Same time and more outputs -> add new timer that uses the new outputs:
-                var newTimer = new MealyTimerInfo<>(getUniqueTimerName(), nextActualTime, this.modelParams.outputCombiner().combineSymbols(newOutputs), null);
+                TimerInfo<?, O> newTimer = new TimerInfo<>(getUniqueTimerName(),
+                                                           nextActualTime,
+                                                           this.modelParams.outputCombiner().combineSymbols(newOutputs),
+                                                           null);
                 return new TimerCheckResult<>(newTimer, false);
             }
         } else {
@@ -214,7 +244,6 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
         return new TimerCheckResult<>(null, false);
     }
 
-
     private void querySuffixOutputInternal(Query<TimedInput<I>, Word<TimedOutput<O>>> query) {
 
         sul.pre();
@@ -222,7 +251,7 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
 
         // Query the SUL, one symbol at a time:
         WordBuilder<TimedOutput<O>> wbOutput = new WordBuilder<>();
-        for (var s : query.getSuffix()) {
+        for (TimedInput<I> s : query.getSuffix()) {
             if (s instanceof TimeoutSymbol<I>) {
                 TimedOutput<O> output = sul.timeoutStep(this.modelParams.maxTimeoutWaitingTime());
                 if (output != null) {
@@ -251,9 +280,9 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
             }
         }
 
-
         sul.post();
         query.answer(wbOutput.toWord());
     }
 
+    private record TimerCheckResult<O>(@Nullable TimerInfo<?, O> newTimer, boolean inconsistent) {}
 }

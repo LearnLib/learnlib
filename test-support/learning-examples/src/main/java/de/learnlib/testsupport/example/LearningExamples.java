@@ -132,12 +132,12 @@ public final class LearningExamples {
     }
 
     public static List<MMLTLearningExample<?, ?>> createMMLTExamples() {
-        return Arrays.asList(MMLTExamples.HVAC(),
-                             MMLTExamples.SCTP(),
-                             MMLTExamples.SensorCollector(),
-                             MMLTExamples.WM(),
-                             MMLTExamples.Oven(),
-                             MMLTExamples.WSN());
+        return Arrays.asList(MMLTExamples.hvac(),
+                             MMLTExamples.sctp(),
+                             MMLTExamples.sensorCollector(),
+                             MMLTExamples.wm(),
+                             MMLTExamples.oven(),
+                             MMLTExamples.wsn());
     }
 
     public static List<SPALearningExample<?>> createSPAExamples() {

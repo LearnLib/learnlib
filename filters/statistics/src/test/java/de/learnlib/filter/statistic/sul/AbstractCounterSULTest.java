@@ -36,17 +36,21 @@ public abstract class AbstractCounterSULTest<S extends SUL<Integer, Character>> 
 
     protected abstract S getStatisticSUL();
 
-    protected abstract Optional<Long> getCount(S sul);
-
     protected abstract int getCountIncreasePerQuery();
 
     protected abstract Collection<Query<Integer, Word<Character>>> createQueries(int num);
+
+    protected abstract Optional<Long> getCount(S sul);
+
+    private long getCount() {
+        return getCount(statisticSUL).orElse(0L);
+    }
 
     @BeforeClass
     public void setUp() {
         this.statisticSUL = getStatisticSUL();
         this.asOracle = getSimulator(this.statisticSUL);
-        Statistics.getContainer().clear();
+        Statistics.getCollector().clear();
     }
 
     @Test
@@ -98,10 +102,6 @@ public abstract class AbstractCounterSULTest<S extends SUL<Integer, Character>> 
         mqo3.processQueries(queries);
 
         Assert.assertEquals(getCount(), oldCount + 2L * 3 * getCountIncreasePerQuery());
-    }
-
-    private long getCount() {
-        return getCount(statisticSUL).orElse(0L);
     }
 
     // use custom class to prevent cyclic dependency on learnlib-membership-oracles

@@ -74,6 +74,6 @@ public class SULParallelCacheTest
 
     @Override
     protected long getNumberOfQueries() {
-        return Statistics.getContainer().getCount(CounterSUL.RESET_KEY).orElse(0L);
+        return Statistics.getCollector().getCount(CounterSUL.RESET_KEY).orElse(0L);
     }
 }

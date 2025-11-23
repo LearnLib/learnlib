@@ -20,7 +20,7 @@ import java.util.Optional;
 import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
 import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 
 public class SymbolCounterStateLocalInputSULTest
         extends AbstractSymbolCounterSULTest<CounterStateLocalInputSUL<Integer, Character>> {
@@ -32,7 +32,7 @@ public class SymbolCounterStateLocalInputSULTest
 
     @Override
     protected Optional<Long> getCount(CounterStateLocalInputSUL<Integer, Character> sul) {
-        final StatsContainer container = Statistics.getContainer();
-        return container.getCount(CounterStateLocalInputSUL.SYMBOL_KEY);
+        final StatisticsCollector statisticsCollector = Statistics.getCollector();
+        return statisticsCollector.getCount(CounterStateLocalInputSUL.SYMBOL_KEY);
     }
 }

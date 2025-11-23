@@ -1,6 +1,6 @@
 package de.learnlib.algorithm.lstar.mmlt.cex.results;
 
-import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.mmlt.TimerInfo;
 
 /**
  * The provided timer should become one-shot.
@@ -10,9 +10,9 @@ import net.automatalib.automaton.mmlt.MealyTimerInfo;
  */
 public class MissingOneShotResult<I, O> extends CexAnalysisResult<I, O> {
     private final Integer location;
-    private final MealyTimerInfo<?, O> timeout;
+    private final TimerInfo<?, O> timeout;
 
-    public MissingOneShotResult(Integer location, MealyTimerInfo<?, O> timeout) {
+    public MissingOneShotResult(Integer location, TimerInfo<?, O> timeout) {
         this.location = location;
         this.timeout = timeout;
     }
@@ -21,7 +21,7 @@ public class MissingOneShotResult<I, O> extends CexAnalysisResult<I, O> {
         return location;
     }
 
-    public MealyTimerInfo<?, O> getTimeout() {
+    public TimerInfo<?, O> getTimeout() {
         return timeout;
     }
 }

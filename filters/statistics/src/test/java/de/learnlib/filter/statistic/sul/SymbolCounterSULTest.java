@@ -20,7 +20,7 @@ import java.util.Optional;
 import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 
 public class SymbolCounterSULTest extends AbstractSymbolCounterSULTest<CounterSUL<Integer, Character>> {
 
@@ -31,8 +31,8 @@ public class SymbolCounterSULTest extends AbstractSymbolCounterSULTest<CounterSU
 
     @Override
     protected Optional<Long> getCount(CounterSUL<Integer, Character> sul) {
-        final StatsContainer container = Statistics.getContainer();
-        return container.getCount(CounterSUL.SYMBOL_KEY);
+        final StatisticsCollector statisticsCollector = Statistics.getCollector();
+        return statisticsCollector.getCount(CounterSUL.SYMBOL_KEY);
     }
 }
 

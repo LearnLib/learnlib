@@ -1,7 +1,7 @@
 package de.learnlib.algorithm.lstar.mmlt;
 
 import net.automatalib.symbol.time.TimedInput;
-import net.automatalib.automaton.mmlt.MealyTimerInfo;
+import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -21,10 +21,10 @@ public class LocationTimerInfo<I, O> implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(LocationTimerInfo.class);
 
-    private final Map<String, MealyTimerInfo<?, O>> timers; // name -> info
+    private final Map<String, TimerInfo<?, O>> timers; // name -> info
 
     // Keep a list of timers sorted by their initial value. This lets us avoid redundant sort operations.
-    private final List<MealyTimerInfo<?, O>> sortedTimers;
+    private final List<TimerInfo<?, O>> sortedTimers;
 
     private final Word<TimedInput<I>> prefix;
 
@@ -44,10 +44,10 @@ public class LocationTimerInfo<I, O> implements Serializable {
      * Adds a local timer to this location.
      *
      */
-    public void addTimer(MealyTimerInfo<?, O> timer) {
+    public void addTimer(TimerInfo<?, O> timer) {
         this.timers.put(timer.name(), timer);
         this.sortedTimers.add(timer);
-        this.sortedTimers.sort(Comparator.comparingLong(MealyTimerInfo::initial));
+        this.sortedTimers.sort(Comparator.comparingLong(TimerInfo::initial));
     }
 
     public void removeTimer(String timerName) {
@@ -55,13 +55,13 @@ public class LocationTimerInfo<I, O> implements Serializable {
             logger.warn("Attempted to remove an unknown timer.");
             return;
         }
-        MealyTimerInfo<?, O> removedTimer = this.timers.remove(timerName);
+        TimerInfo<?, O> removedTimer = this.timers.remove(timerName);
         this.sortedTimers.remove(removedTimer);
     }
 
     @Nullable
-    public MealyTimerInfo<?, O> getTimerInfo(long initial) {
-        Optional<MealyTimerInfo<?, O>> timer = this.sortedTimers.stream().filter(t -> t.initial() == initial).findAny();
+    public TimerInfo<?, O> getTimerInfo(long initial) {
+        Optional<TimerInfo<?, O>> timer = this.sortedTimers.stream().filter(t -> t.initial() == initial).findAny();
         return timer.orElse(null);
     }
 
@@ -72,7 +72,7 @@ public class LocationTimerInfo<I, O> implements Serializable {
      * @return Timer with maximum timeout. Null, if no timers defined.
      */
     @Nullable
-    public MealyTimerInfo<?, O> getLastTimer() {
+    public TimerInfo<?, O> getLastTimer() {
         if (this.timers.isEmpty()) {
             return null;
         }
@@ -94,7 +94,10 @@ public class LocationTimerInfo<I, O> implements Serializable {
             throw new IllegalArgumentException("Only the timer with maximum timeout can be one-shot.");
         }
 
-        oneShotTimer.setOneShot();
+        // update references
+        var newTimer = oneShotTimer.asOneShot();
+        this.timers.put(name, newTimer);
+        this.sortedTimers.set(sortedTimers.size() - 1, newTimer);
     }
 
     /**
@@ -102,7 +105,7 @@ public class LocationTimerInfo<I, O> implements Serializable {
      *
      * @return List of local timers. Empty, if none.
      */
-    public List<MealyTimerInfo<?, O>> getSortedTimers() {
+    public List<TimerInfo<?, O>> getSortedTimers() {
         return Collections.unmodifiableList(sortedTimers);
     }
 
@@ -113,7 +116,7 @@ public class LocationTimerInfo<I, O> implements Serializable {
      * @return Map of local timers. Empty, if none defined.
      */
     @NonNull
-    public Map<String, MealyTimerInfo<?, O>> getLocalTimers() {
+    public Map<String, TimerInfo<?, O>> getLocalTimers() {
         return Collections.unmodifiableMap(this.timers);
     }
 }

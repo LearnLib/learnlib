@@ -16,35 +16,35 @@
 package de.learnlib.filter.statistic.sul;
 
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 import de.learnlib.sul.SUL;
 
 public class CounterSUL<I, O> implements SUL<I, O> {
 
-    public static final String RESET_KEY = "-sul-reset-cnt";
-    public static final String SYMBOL_KEY = "-sul-step-cnt";
+    public static final String RESET_KEY = "sul-reset-cnt";
+    public static final String SYMBOL_KEY = "sul-step-cnt";
 
     private final SUL<I, O> sul;
-    protected final StatsContainer statistics;
-    protected final String prefix;
+    protected final StatisticsCollector statisticsCollector;
+    protected final String id;
 
     public CounterSUL(SUL<I, O> sul) {
         this(sul, "");
     }
 
-    public CounterSUL(SUL<I, O> sul, String prefix) {
-        this(sul, prefix, Statistics.getContainer());
+    public CounterSUL(SUL<I, O> sul, String id) {
+        this(sul, id, Statistics.getCollector());
     }
 
-    protected CounterSUL(SUL<I, O> sul, String prefix, StatsContainer statistics) {
+    protected CounterSUL(SUL<I, O> sul, String id, StatisticsCollector statisticsCollector) {
         this.sul = sul;
-        this.prefix = prefix;
-        this.statistics = statistics;
+        this.id = id;
+        this.statisticsCollector = statisticsCollector;
     }
 
     @Override
     public void pre() {
-        this.statistics.increaseCounter(prefix + RESET_KEY, "Number of SUL resets");
+        this.statisticsCollector.increaseCounter(RESET_KEY + id, "Number of SUL resets");
         this.sul.pre();
     }
 
@@ -55,7 +55,7 @@ public class CounterSUL<I, O> implements SUL<I, O> {
 
     @Override
     public O step(I in) {
-        this.statistics.increaseCounter(prefix + SYMBOL_KEY, "Number of SUL steps");
+        this.statisticsCollector.increaseCounter(SYMBOL_KEY + id, "Number of SUL steps");
         return sul.step(in);
     }
 
@@ -66,6 +66,6 @@ public class CounterSUL<I, O> implements SUL<I, O> {
 
     @Override
     public SUL<I, O> fork() {
-        return new CounterSUL<>(this.sul.fork(), this.prefix, this.statistics);
+        return new CounterSUL<>(this.sul.fork(), this.id, this.statisticsCollector);
     }
 }

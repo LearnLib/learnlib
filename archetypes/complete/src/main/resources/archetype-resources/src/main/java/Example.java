@@ -70,7 +70,7 @@ public final class Example {
         System.out.println("-------------------------------------------------------");
 
         // learning statistics
-        System.out.println(Statistics.getContainer().printStats());
+        System.out.println(Statistics.getCollector().printStats());
 
         // model statistics
         System.out.println("States: " + result.size());

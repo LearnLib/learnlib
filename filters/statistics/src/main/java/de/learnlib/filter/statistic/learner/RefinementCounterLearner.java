@@ -21,7 +21,7 @@ import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Mapping;
@@ -69,19 +69,20 @@ import net.automatalib.word.Word;
                                             generics = {@Generic("I"), @Generic("O")}))
 public class RefinementCounterLearner<M, I, D> implements LearningAlgorithm<M, I, D> {
 
-    private final LearningAlgorithm<M, I, D> learningAlgorithm;
+    public static final String KEY_CNT = "ref-cnt";
 
-    private final StatsContainer statistics;
-    private final String prefix;
+    private final LearningAlgorithm<M, I, D> learningAlgorithm;
+    private final StatisticsCollector statisticsCollector;
+    private final String id;
 
     public RefinementCounterLearner(LearningAlgorithm<M, I, D> learningAlgorithm) {
         this(learningAlgorithm, "");
     }
 
-    public RefinementCounterLearner(LearningAlgorithm<M, I, D> learningAlgorithm, String prefix) {
+    public RefinementCounterLearner(LearningAlgorithm<M, I, D> learningAlgorithm, String id) {
         this.learningAlgorithm = learningAlgorithm;
-        this.prefix = prefix;
-        this.statistics = Statistics.getContainer();
+        this.id = id;
+        this.statisticsCollector = Statistics.getCollector();
     }
 
     @Override
@@ -93,7 +94,7 @@ public class RefinementCounterLearner<M, I, D> implements LearningAlgorithm<M, I
     public boolean refineHypothesis(DefaultQuery<I, D> ceQuery) {
         final boolean refined = learningAlgorithm.refineHypothesis(ceQuery);
         if (refined) {
-            statistics.increaseCounter(prefix + "-ref-cnt", "Number of refinements");
+            statisticsCollector.increaseCounter(KEY_CNT + id, "Number of refinements");
         }
         return refined;
     }

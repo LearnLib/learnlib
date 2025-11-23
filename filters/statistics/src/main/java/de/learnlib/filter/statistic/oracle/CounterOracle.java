@@ -23,7 +23,7 @@ import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.query.Query;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
@@ -66,32 +66,34 @@ import net.automatalib.word.Word;
                                             generics = {@Generic("I"), @Generic("O")}))
 public class CounterOracle<I, D> implements MembershipOracle<I, D> {
 
-    public static final String DUR_KEY = "-qry-dur";
-    public static final String QUERY_KEY = "-qry-cnt";
-    public static final String SYMBOL_KEY = "-sym-cnt";
+    public static final String DUR_KEY = "mq-qry-dur";
+    public static final String QUERY_KEY = "mq-qry-cnt";
+    public static final String SYMBOL_KEY = "mq-sym-cnt";
 
     private final MembershipOracle<I, D> delegate;
-    private final StatsContainer statistics;
-    private final String prefix;
+    private final StatisticsCollector statisticsCollector;
+    private final String id;
 
     public CounterOracle(MembershipOracle<I, D> delegate) {
         this(delegate, "");
     }
 
-    public CounterOracle(MembershipOracle<I, D> delegate, String prefix) {
+    public CounterOracle(MembershipOracle<I, D> delegate, String id) {
         this.delegate = delegate;
-        this.prefix = prefix;
-        this.statistics = Statistics.getContainer();
+        this.id = id;
+        this.statisticsCollector = Statistics.getCollector();
     }
 
     @Override
     public void processQueries(Collection<? extends Query<I, D>> queries) {
-        statistics.increaseCounter(prefix + QUERY_KEY, "Number of queries", queries.size());
+        statisticsCollector.increaseCounter(QUERY_KEY + id, "Number of queries", queries.size());
         for (Query<I, D> qry : queries) {
-            statistics.increaseCounter(prefix + SYMBOL_KEY, "Number of symbols", qry.getPrefix().length() + qry.getSuffix().length());
+            statisticsCollector.increaseCounter(SYMBOL_KEY + id,
+                                                "Number of symbols",
+                                                qry.getPrefix().length() + qry.getSuffix().length());
         }
-        statistics.startOrResumeClock(prefix + DUR_KEY, "Duration of queries");
+        statisticsCollector.startOrResumeClock(DUR_KEY + id, "Duration of queries");
         delegate.processQueries(queries);
-        statistics.pauseClock(prefix + DUR_KEY);
+        statisticsCollector.pauseClock(DUR_KEY + id);
     }
 }

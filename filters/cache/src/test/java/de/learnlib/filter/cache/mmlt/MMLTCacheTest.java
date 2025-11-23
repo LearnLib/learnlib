@@ -1,12 +1,27 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.filter.cache.mmlt;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.algorithm.MMLTModelParams;
 import de.learnlib.driver.simulator.MMLTSimulatorSUL;
 import de.learnlib.oracle.membership.TimedSULOracle;
+import de.learnlib.time.MMLTModelParams;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.mmlt.impl.CompactMMLT;
@@ -21,16 +36,15 @@ import org.testng.annotations.Test;
 
 @Test
 public class MMLTCacheTest {
+
     private CompactMMLT<String, String> buildBaseModel() {
         var alphabet = Alphabets.fromArray("p1", "p2", "abort", "collect");
         var model = new CompactMMLT<>(alphabet, "void", StringSymbolCombiner.getInstance());
 
-        var s0 = model.addState();
+        var s0 = model.addInitialState();
         var s1 = model.addState();
         var s2 = model.addState();
         var s3 = model.addState();
-
-        model.setInitialState(s0);
 
         model.addTransition(s0, "p1", s1, "go");
         model.addTransition(s1, "abort", s1, "ok");
@@ -56,13 +70,12 @@ public class MMLTCacheTest {
         Random random = new Random(100);
 
         var automaton = buildBaseModel();
-        var params = new MMLTModelParams<>("void", 4, 80, StringSymbolCombiner.getInstance());
+        var params = new MMLTModelParams<>("void", StringSymbolCombiner.getInstance(), 4, 80);
 
         var sul = new MMLTSimulatorSUL<>(automaton.getSemantics());
         var cacheSUL = new TimedSULTreeCache<>(sul, params);
         var timeOracleWithCache = new TimedSULOracle<>(cacheSUL, params);
         var timeOracleWithoutCache = new TimedSULOracle<>(sul, params);
-
 
         var listAlphabet = new ArrayList<>(automaton.getSemantics().getInputAlphabet());
 
@@ -78,7 +91,9 @@ public class MMLTCacheTest {
             var sulOutput = timeOracleWithoutCache.answerQuery(word);
             var automatonOutput = automaton.getSemantics().computeSuffixOutput(Word.epsilon(), word);
 
-            Assert.assertEquals(sulOutput, automatonOutput, "Automaton output does not match SUL output for word " + word);
+            Assert.assertEquals(sulOutput,
+                                automatonOutput,
+                                "Automaton output does not match SUL output for word " + word);
             Assert.assertEquals(cacheOutput, sulOutput, "Cache output does not match SUL output for word " + word);
         }
 
@@ -95,14 +110,15 @@ public class MMLTCacheTest {
     public void testCacheConsistencyTest() {
         // Test if the cache consistency test works correctly:
         var refAutomaton = buildBaseModel();
-        var params = new MMLTModelParams<>("void", 4, 80, StringSymbolCombiner.getInstance());
+        var params = new MMLTModelParams<>("void", StringSymbolCombiner.getInstance(), 4, 80);
 
         var sul = new MMLTSimulatorSUL<>(refAutomaton.getSemantics());
         var cacheSUL = new TimedSULTreeCache<>(sul, params);
         var timeOracleWithCache = new TimedSULOracle<>(cacheSUL, params);
 
         // Add word to cache:
-        Word<TimedInput<String>> testWord = Word.fromSymbols(TimedInput.input("p2"), TimedInput.timeout(), TimedInput.step(), TimedInput.timeout());
+        Word<TimedInput<String>> testWord =
+                Word.fromSymbols(TimedInput.input("p2"), TimedInput.timeout(), TimedInput.step(), TimedInput.timeout());
         timeOracleWithCache.answerQuery(testWord);
 
         // Create a bad hypothesis:
@@ -111,9 +127,8 @@ public class MMLTCacheTest {
         badAutomaton.addPeriodicTimer(2, "d", 4, "done");
 
         // Query the cache for a counterexample:
-        Word<TimedInput<String>> expectedCex = Word.fromSymbols(
-                new InputSymbol<>("p2"), new TimeoutSymbol<>(), new TimeoutSymbol<>()
-        );
+        Word<TimedInput<String>> expectedCex =
+                Word.fromSymbols(new InputSymbol<>("p2"), new TimeoutSymbol<>(), new TimeoutSymbol<>());
 
         var cacheConsistencyTest = cacheSUL.createCacheConsistencyTest();
         var cex = cacheConsistencyTest.findCounterExample(badAutomaton, refAutomaton.getSemantics().getInputAlphabet());

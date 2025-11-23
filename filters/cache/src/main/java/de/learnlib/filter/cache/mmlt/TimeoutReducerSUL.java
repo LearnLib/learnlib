@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.filter.cache.mmlt;
 
 import de.learnlib.sul.TimedSUL;
@@ -14,9 +29,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * We may observe a timeout again after any non-delaying input, as this may trigger a location-change.
  *
  * @param <I>
- *         Input type for non-delaying inputs
+ *         input symbol type (of non-delaying inputs)
  * @param <O>
- *         Output symbol type
+ *         output symbol type
  */
 public class TimeoutReducerSUL<I, O> implements TimedSUL<I, O> {
 
@@ -45,7 +60,7 @@ public class TimeoutReducerSUL<I, O> implements TimedSUL<I, O> {
             return null; // cannot observe expiration until non-delaying input
         }
 
-        var result = delegate.timeoutStep(maxTime);
+        TimedOutput<O> result = delegate.timeoutStep(maxTime);
 
         if (result == null) {
             this.noTimeoutWaitingTime += maxTime;

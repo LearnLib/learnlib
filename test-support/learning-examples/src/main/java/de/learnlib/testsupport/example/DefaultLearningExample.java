@@ -15,7 +15,7 @@
  */
 package de.learnlib.testsupport.example;
 
-import de.learnlib.algorithm.MMLTModelParams;
+import de.learnlib.time.MMLTModelParams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.VPAlphabet;

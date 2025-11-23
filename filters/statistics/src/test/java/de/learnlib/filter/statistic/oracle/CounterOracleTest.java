@@ -22,7 +22,7 @@ import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.Query;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 import net.automatalib.word.Word;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -40,7 +40,7 @@ public class CounterOracleTest {
 
     @BeforeClass
     public void setUp() {
-        Statistics.getContainer().clear();
+        Statistics.getCollector().clear();
     }
 
     @Test
@@ -71,14 +71,14 @@ public class CounterOracleTest {
 
     @Test(dependsOnMethods = "testSecondQueryBatch")
     public void testStatistics() {
-        final StatsContainer container = Statistics.getContainer();
-        Assert.assertTrue(container.printStats().contains("\n"));
+        final StatisticsCollector statisticsCollector = Statistics.getCollector();
+        Assert.assertFalse(statisticsCollector.getKeys().isEmpty());
     }
 
     private void verifyCounts(long queries, long symbols) {
-        final StatsContainer container = Statistics.getContainer();
-        Assert.assertEquals(container.getCount(CounterOracle.QUERY_KEY).orElse(0L), queries);
-        Assert.assertEquals(container.getCount(CounterOracle.SYMBOL_KEY).orElse(0L), symbols);
+        final StatisticsCollector statisticsCollector = Statistics.getCollector();
+        Assert.assertEquals(statisticsCollector.getCount(CounterOracle.QUERY_KEY).orElse(0L), queries);
+        Assert.assertEquals(statisticsCollector.getCount(CounterOracle.SYMBOL_KEY).orElse(0L), symbols);
     }
 
 }

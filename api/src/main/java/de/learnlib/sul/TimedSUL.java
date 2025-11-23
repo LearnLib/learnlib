@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.sul;
 
 import net.automatalib.symbol.time.InputSymbol;
@@ -12,16 +27,19 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Interface for a SUL with MMLT semantics.
  *
- * @param <I> Input type for non-delaying inputs
- * @param <O> Output symbol type
+ * @param <I>
+ *         Input type for non-delaying inputs
+ * @param <O>
+ *         Output symbol type
  */
 public interface TimedSUL<I, O> extends SUL<InputSymbol<I>, TimedOutput<O>> {
 
     /**
-     * Follows the provided input word, starting at the current system state.
-     * The input word must not contain timeout symbols. Otherwise, an error occurs.
+     * Follows the provided input word, starting at the current system state. The input word must not contain timeout
+     * symbols. Otherwise, an error occurs.
      *
-     * @param input Input suffix.
+     * @param input
+     *         the input word
      */
     default void follow(Word<TimedInput<I>> input) {
         this.follow(input, -1);
@@ -30,11 +48,13 @@ public interface TimedSUL<I, O> extends SUL<InputSymbol<I>, TimedOutput<O>> {
     /**
      * Follows the provided input word, starting at the current configuration.
      *
-     * @param input      Input suffix.
-     * @param maxTimeout Max. waiting time to use for timeoutSymbols.
+     * @param input
+     *         the input word
+     * @param maxTimeout
+     *         maximum waiting time to use for {@link TimeoutSymbol}s.
      */
     default void follow(Word<TimedInput<I>> input, long maxTimeout) {
-        for (var s : input) {
+        for (TimedInput<I> s : input) {
             if (s instanceof InputSymbol<I> ndi) {
                 this.step(ndi);
             } else if (s instanceof TimeStepSequence<I>) {
@@ -51,26 +71,25 @@ public interface TimedSUL<I, O> extends SUL<InputSymbol<I>, TimedOutput<O>> {
     }
 
     /**
-     * Waits until a timeout occurs or the provided time is reached.
-     * <p>
-     * We may observe no timeout if either the waiting time is too small or if the active location
-     * has no timers.
+     * Waits until a timeout occurs or the provided time is reached. May observe no timeout if either the waiting time
+     * is too small or if the active location has no timers.
      *
-     * @param maxTime Maximum waiting time.
-     * @return Observed timer output with waiting time, or null, if no timeout was observed.
+     * @param maxTime
+     *         maximum waiting time.
+     *
+     * @return observed timer output with waiting time, or {@code null} if no timeout was observed.
      */
-    @Nullable
-    TimedOutput<O> timeoutStep(long maxTime);
+    @Nullable TimedOutput<O> timeoutStep(long maxTime);
 
     /**
      * Waits for one time unit and returns the observed output.
      *
-     * @return Null if no output occurred, timer output if at least one timer expired.
-     * The delay of this output is set to zero.
+     * @return {@code null} if no output occurred, or a timer output if at least one timer expired. The delay of this
+     * output is set to zero.
      */
-    @Nullable
-    default TimedOutput<O> timeStep() {
-        var res = this.timeoutStep(1);
+
+    default @Nullable TimedOutput<O> timeStep() {
+        TimedOutput<O> res = this.timeoutStep(1);
         if (res != null) {
             return new TimedOutput<>(res.symbol());
         }
@@ -80,7 +99,9 @@ public interface TimedSUL<I, O> extends SUL<InputSymbol<I>, TimedOutput<O>> {
     /**
      * Waits for the specified time and returns all observed timeouts.
      *
-     * @param input Waiting time.
+     * @param input
+     *         Waiting time.
+     *
      * @return Observed timeouts. Empty, if none.
      */
     default Word<TimedOutput<O>> collectTimeouts(TimeStepSequence<I> input) {

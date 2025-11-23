@@ -16,7 +16,7 @@
 package de.learnlib.filter.statistic.sul;
 
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 import de.learnlib.sul.ObservableSUL;
 
 public class CounterObservableSUL<S, I, O> extends CounterSUL<I, O> implements ObservableSUL<S, I, O> {
@@ -27,18 +27,18 @@ public class CounterObservableSUL<S, I, O> extends CounterSUL<I, O> implements O
         this(sul, "");
     }
 
-    public CounterObservableSUL(ObservableSUL<S, I, O> sul, String prefix) {
-        this(sul, prefix, Statistics.getContainer());
+    public CounterObservableSUL(ObservableSUL<S, I, O> sul, String id) {
+        this(sul, id, Statistics.getCollector());
     }
 
-    protected CounterObservableSUL(ObservableSUL<S, I, O> sul, String prefix, StatsContainer statistics) {
-        super(sul, prefix, statistics);
+    protected CounterObservableSUL(ObservableSUL<S, I, O> sul, String id, StatisticsCollector statistics) {
+        super(sul, id, statistics);
         this.sul = sul;
     }
 
     @Override
     public ObservableSUL<S, I, O> fork() {
-        return new CounterObservableSUL<>(this.sul.fork(), super.prefix, super.statistics);
+        return new CounterObservableSUL<>(this.sul.fork(), super.id, super.statisticsCollector);
     }
 
     @Override

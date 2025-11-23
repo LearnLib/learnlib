@@ -113,7 +113,7 @@ public class ParallelismExample2 {
         // print results
         System.out.println("Single-threaded cache performance:");
         answerQueries(cache);
-        System.out.println(Statistics.getContainer().printStats());
+        System.out.println(Statistics.getCollector().printStats());
 
         parallelOracle.shutdownNow();
     }
@@ -145,7 +145,7 @@ public class ParallelismExample2 {
         // print results
         System.out.println("Shared cache performance:");
         answerQueries(parallelOracle);
-        System.out.println(Statistics.getContainer().printStats());
+        System.out.println(Statistics.getCollector().printStats());
 
         parallelOracle.shutdownNow();
     }

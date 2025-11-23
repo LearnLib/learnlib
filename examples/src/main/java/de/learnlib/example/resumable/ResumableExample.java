@@ -122,7 +122,7 @@ public final class ResumableExample {
 
     private static void printStats(Setup setup) {
         System.out.println("Hypothesis size: " + setup.learner.getHypothesisModel().size());
-        System.out.println(Statistics.getContainer().printStats());
+        System.out.println(Statistics.getCollector().printStats());
         System.out.println();
     }
 

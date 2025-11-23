@@ -42,14 +42,14 @@ public class StateLocalInputSULTreeCacheTest
     @Override
     public void testNoQueriesReceived() {
         super.testNoQueriesReceived();
-        Assert.assertEquals(Statistics.getContainer().getCount(CounterStateLocalInputSUL.INPUT_KEY).orElse(0L), 0);
+        Assert.assertEquals(Statistics.getCollector().getCount(CounterStateLocalInputSUL.INPUT_KEY).orElse(0L), 0);
     }
 
     @Test(dependsOnMethods = "testNoQueriesReceived")
     @Override
     public void testFirstQuery() {
         super.testFirstQuery();
-        Assert.assertEquals(Statistics.getContainer().getCount(CounterStateLocalInputSUL.INPUT_KEY).orElse(0L),
+        Assert.assertEquals(Statistics.getCollector().getCount(CounterStateLocalInputSUL.INPUT_KEY).orElse(0L),
                             oracle.getCache().size());
     }
 
@@ -57,7 +57,7 @@ public class StateLocalInputSULTreeCacheTest
     @Override
     public void testFirstDuplicate() {
         super.testFirstDuplicate();
-        Assert.assertEquals(Statistics.getContainer().getCount(CounterStateLocalInputSUL.INPUT_KEY).orElse(0L),
+        Assert.assertEquals(Statistics.getCollector().getCount(CounterStateLocalInputSUL.INPUT_KEY).orElse(0L),
                             oracle.getCache().size());
     }
 
@@ -65,7 +65,7 @@ public class StateLocalInputSULTreeCacheTest
     @Override
     public void testTwoQueriesOneDuplicate() {
         super.testTwoQueriesOneDuplicate();
-        Assert.assertEquals(Statistics.getContainer().getCount(CounterStateLocalInputSUL.INPUT_KEY).orElse(0L),
+        Assert.assertEquals(Statistics.getCollector().getCount(CounterStateLocalInputSUL.INPUT_KEY).orElse(0L),
                             oracle.getCache().size());
     }
 
@@ -73,7 +73,7 @@ public class StateLocalInputSULTreeCacheTest
     @Override
     public void testOneNewQuery() {
         super.testOneNewQuery();
-        Assert.assertEquals(Statistics.getContainer().getCount(CounterStateLocalInputSUL.INPUT_KEY).orElse(0L),
+        Assert.assertEquals(Statistics.getCollector().getCount(CounterStateLocalInputSUL.INPUT_KEY).orElse(0L),
                             oracle.getCache().size());
     }
 
@@ -81,7 +81,7 @@ public class StateLocalInputSULTreeCacheTest
     @Override
     public void testPrefix() {
         super.testPrefix();
-        Assert.assertEquals(Statistics.getContainer().getCount(CounterStateLocalInputSUL.INPUT_KEY).orElse(0L),
+        Assert.assertEquals(Statistics.getCollector().getCount(CounterStateLocalInputSUL.INPUT_KEY).orElse(0L),
                             oracle.getCache().size());
     }
 
@@ -148,7 +148,7 @@ public class StateLocalInputSULTreeCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return Statistics.getContainer().getCount(CounterStateLocalInputSUL.RESET_KEY).orElse(0L);
+        return Statistics.getCollector().getCount(CounterStateLocalInputSUL.RESET_KEY).orElse(0L);
     }
 
     @Override

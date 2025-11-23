@@ -18,12 +18,12 @@ package de.learnlib.filter.statistic.sul;
 import java.util.Collection;
 
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatsContainer;
+import de.learnlib.statistic.StatisticsCollector;
 import de.learnlib.sul.StateLocalInputSUL;
 
 public class CounterStateLocalInputSUL<I, O> extends CounterSUL<I, O> implements StateLocalInputSUL<I, O> {
 
-    public static final String INPUT_KEY = "-sul-inp-cnt";
+    public static final String INPUT_KEY = "sul-input-cnt";
 
     private final StateLocalInputSUL<I, O> sul;
 
@@ -31,24 +31,24 @@ public class CounterStateLocalInputSUL<I, O> extends CounterSUL<I, O> implements
         this(sul, "");
     }
 
-    private CounterStateLocalInputSUL(StateLocalInputSUL<I, O> sul, String prefix) {
-        this(sul, prefix, Statistics.getContainer());
+    private CounterStateLocalInputSUL(StateLocalInputSUL<I, O> sul, String id) {
+        this(sul, id, Statistics.getCollector());
     }
 
-    protected CounterStateLocalInputSUL(StateLocalInputSUL<I, O> sul, String prefix, StatsContainer statistics) {
-        super(sul, prefix, statistics);
+    protected CounterStateLocalInputSUL(StateLocalInputSUL<I, O> sul, String id, StatisticsCollector statistics) {
+        super(sul, id, statistics);
         this.sul = sul;
     }
 
     @Override
     public Collection<I> currentlyEnabledInputs() {
-        super.statistics.increaseCounter(prefix + INPUT_KEY, "Number of enabled input checks");
+        super.statisticsCollector.increaseCounter(INPUT_KEY + super.id, "Number of enabled input checks");
         return this.sul.currentlyEnabledInputs();
     }
 
     @Override
     public StateLocalInputSUL<I, O> fork() {
-        return new CounterStateLocalInputSUL<>(this.sul.fork(), super.prefix, super.statistics);
+        return new CounterStateLocalInputSUL<>(this.sul.fork(), super.id, super.statisticsCollector);
     }
 
 }

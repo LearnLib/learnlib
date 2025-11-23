@@ -16,15 +16,13 @@
 package de.learnlib.filter.cache;
 
 import de.learnlib.oracle.EquivalenceOracle;
-import net.automatalib.symbol.time.TimedOutput;
-import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
-
-import java.util.List;
 
 /**
  * Interface for a cache used in automata learning.
@@ -93,16 +91,11 @@ public interface LearningCache<A, I, O> {
     /**
      * Specialization of the {@link LearningCache} interface for MMLT learning.
      *
-     * @param <I> Input type for non-delaying inputs
-     * @param <O> Output symbol type
+     * @param <I>
+     *         input symbol type (of non-delaying inputs)
+     * @param <O>
+     *         output symbol type
      */
-    interface MMLTLearningCache<I, O> extends LearningCache<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>>{
-        /**
-         * Lists all words that are currently in the cache.
-         * If a cached word is a prefix of another cached word, only the longer of them is returned.
-         *
-         * @return List of all stored words.
-         */
-        List<Word<TimedInput<I>>> listAllWords();
-    }
+    @FunctionalInterface
+    interface MMLTLearningCache<I, O> extends LearningCache<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>> {}
 }
