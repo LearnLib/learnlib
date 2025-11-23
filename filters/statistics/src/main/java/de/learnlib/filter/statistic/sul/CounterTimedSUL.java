@@ -15,13 +15,14 @@
  */
 package de.learnlib.filter.statistic.sul;
 
+import java.util.List;
+
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatisticsCollector;
 import de.learnlib.sul.TimedSUL;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedOutput;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -80,7 +81,7 @@ public class CounterTimedSUL<I, O> implements TimedSUL<I, O> {
     }
 
     @Override
-    public Word<TimedOutput<O>> collectTimeouts(TimeStepSequence<I> input) {
+    public List<TimedOutput<O>> collectTimeouts(TimeStepSequence<I> input) {
         stats.increaseCounter(withPrefix("sul_total_time"), withPrefix("Total query time"), input.timeSteps());
         return this.delegate.collectTimeouts(input);
     }

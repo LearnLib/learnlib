@@ -14,7 +14,7 @@ import de.learnlib.filter.statistic.oracle.CounterEQOracle;
 import de.learnlib.filter.statistic.sul.CounterTimedSUL;
 import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
 import de.learnlib.oracle.equivalence.MMLTEQOracleChain;
-import de.learnlib.oracle.equivalence.mmlt.RandomWpEQOracle;
+import de.learnlib.oracle.equivalence.mmlt.RandomWpMethodEQOracle;
 import de.learnlib.oracle.equivalence.mmlt.ResetSearchEQOracle;
 import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.membership.TimedSULOracle;
@@ -68,7 +68,7 @@ public class Example1 {
         MMLTEQOracleChain<String, String> chainOracle = new MMLTEQOracleChain<>();
         chainOracle.addOracle(new CounterEQOracle<>(cacheSUL.createCacheConsistencyTest(), "cache"));
         chainOracle.addOracle(new CounterEQOracle<>(new ResetSearchEQOracle<>(timeOracle, 100, 1.0, 1.0), "reset"));
-        chainOracle.addOracle(new CounterEQOracle<>(new RandomWpEQOracle<>(timeOracle, 100, 16, 0, 100), "wp"));
+        chainOracle.addOracle(new CounterEQOracle<>(new RandomWpMethodEQOracle<>(timeOracle, 100, 16, 0, 100), "wp"));
         chainOracle.addOracle(new CounterEQOracle<>(new SimulatorEQOracle<>(model.getReferenceAutomaton()), "sim")); // ensure that we eventually find an accurate model
 
         // Set up our L* learner:

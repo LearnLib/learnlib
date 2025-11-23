@@ -24,7 +24,6 @@ import java.util.Random;
 
 import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
 import de.learnlib.oracle.TimedQueryOracle;
-import de.learnlib.oracle.equivalence.RandomWpMethodEQOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatisticsCollector;
@@ -41,15 +40,16 @@ import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Implements the partial W-method for MMLT learning. The key modification compared to {@link RandomWpMethodEQOracle} is
- * that prefixes are sampled from entry prefixes only instead of all state prefixes.
+ * Implements the partial W-method for MMLT learning. The key modification compared to
+ * {@link de.learnlib.oracle.equivalence.RandomWpMethodEQOracle} is that prefixes are sampled from entry prefixes only
+ * instead of all state prefixes.
  *
  * @param <I>
  *         input symbol type (of non-delaying inputs)
  * @param <O>
  *         output symbol type
  */
-public class RandomWpEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
+public class RandomWpMethodEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
 
     public static final String KEY_TESTED_WORDS = "WP_TESTED_WORD";
 
@@ -61,11 +61,11 @@ public class RandomWpEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
     private final int rndLen;
     private final int bound;
 
-    public RandomWpEQOracle(TimedQueryOracle<I, O> timeOracle,
-                            long randomSeed,
-                            int minSize,
-                            int rndAddLength,
-                            int bound) {
+    public RandomWpMethodEQOracle(TimedQueryOracle<I, O> timeOracle,
+                                  long randomSeed,
+                                  int minSize,
+                                  int rndAddLength,
+                                  int bound) {
 
         this.timeOracle = timeOracle;
         this.statisticsCollector = Statistics.getCollector();

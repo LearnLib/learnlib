@@ -15,22 +15,24 @@
  */
 package de.learnlib.sul;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Interface for a SUL with MMLT semantics.
  *
  * @param <I>
- *         Input type for non-delaying inputs
+ *         input type (of non-delaying inputs)
  * @param <O>
- *         Output symbol type
+ *         output symbol type
  */
 public interface TimedSUL<I, O> extends SUL<InputSymbol<I>, TimedOutput<O>> {
 
@@ -54,12 +56,12 @@ public interface TimedSUL<I, O> extends SUL<InputSymbol<I>, TimedOutput<O>> {
      *         maximum waiting time to use for {@link TimeoutSymbol}s.
      */
     default void follow(Word<TimedInput<I>> input, long maxTimeout) {
-        for (TimedInput<I> s : input) {
-            if (s instanceof InputSymbol<I> ndi) {
+        for (TimedInput<I> i : input) {
+            if (i instanceof InputSymbol<I> ndi) {
                 this.step(ndi);
-            } else if (s instanceof TimeStepSequence<I>) {
-                this.collectTimeouts((TimeStepSequence<I>) s);
-            } else if (s instanceof TimeoutSymbol<I>) {
+            } else if (i instanceof TimeStepSequence<I> tss) {
+                this.collectTimeouts(tss);
+            } else if (i instanceof TimeoutSymbol<I>) {
                 if (maxTimeout <= 0) {
                     throw new IllegalArgumentException("Must supply timeout when using timeout symbols.");
                 }
@@ -97,15 +99,15 @@ public interface TimedSUL<I, O> extends SUL<InputSymbol<I>, TimedOutput<O>> {
     }
 
     /**
-     * Waits for the specified time and returns all observed timeouts.
+     * Waits for the duration of the given time step and returns all observed timeouts.
      *
      * @param input
-     *         Waiting time.
+     *         the time step to wait.
      *
-     * @return Observed timeouts. Empty, if none.
+     * @return a list of observed timeouts (may be empty if no time outs occurred in the given time)
      */
-    default Word<TimedOutput<O>> collectTimeouts(TimeStepSequence<I> input) {
-        WordBuilder<TimedOutput<O>> wbOutput = new WordBuilder<>();
+    default List<TimedOutput<O>> collectTimeouts(TimeStepSequence<I> input) {
+        List<TimedOutput<O>> timeouts = new ArrayList<>();
 
         long remainingTime = input.timeSteps();
         while (remainingTime > 0) {
@@ -114,12 +116,12 @@ public interface TimedSUL<I, O> extends SUL<InputSymbol<I>, TimedOutput<O>> {
                 // No timer will expire during remaining waiting time:
                 break;
             } else {
-                wbOutput.append(nextTimeout);
+                timeouts.add(nextTimeout);
                 remainingTime -= nextTimeout.delay();
             }
         }
 
-        return wbOutput.toWord();
+        return timeouts;
     }
 
     @Override
