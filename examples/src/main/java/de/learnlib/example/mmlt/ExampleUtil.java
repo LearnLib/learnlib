@@ -48,7 +48,7 @@ public class ExampleUtil {
         new ObservationTableASCIIWriter<>().write(learner.getObservationTable(), System.out);
 
         System.out.println("Final hypothesis:");
-        //Visualization.visualize(finalHypothesis.graphView(), new MMLTVisualizationHelper<>(finalHypothesis, true, true));
+        Visualization.visualize(finalHypothesis.graphView(), new MMLTVisualizationHelper<>(finalHypothesis, true, true));
 
         return finalHypothesis;
     }
