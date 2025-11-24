@@ -96,8 +96,7 @@ public class RandomWpMethodEQOracle<I, O> implements MMLTEquivalenceOracle<I, O>
 
         // Get list of prefixes in deterministic order (so we can reproduce experiments easily):
         Map<S, Word<TimedInput<I>>> locationCover = MMLTCover.getMMLTLocationCover(hypothesis, listAlphabet);
-        List<Word<TimedInput<I>>> prefixList =
-                locationCover.values().stream().sorted(Comparator.comparing(AbstractPrintable::toString)).toList();
+        List<Word<TimedInput<I>>> prefixList = new ArrayList<>(locationCover.values());
 
         // Generate test words:
         for (int i = 0; i < this.bound; i++) {

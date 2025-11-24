@@ -133,9 +133,6 @@ public class ResetSearchEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
             }
         }
 
-        // Sort alphabetically, so that experiments are easily reproducible:
-        prefixes.sort(Comparator.comparing(AbstractPrintable::toString));
-
         // Determine number of tested locations:
         int randPrefixes = (int) Math.round(testedLocPercentage * prefixes.size());
         if (randPrefixes == 0) {
