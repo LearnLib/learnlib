@@ -17,13 +17,48 @@ import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 
 /**
- * This example shows how to learn a Mealy machine with local timers (MMLT),
+ * This example shows a basic learning setup for Mealy machine with local timers (MMLT),
  * an automaton model for real-time systems.
- * <p>
- * MMLTs extend Mealy machines with multiple timers. More information about MMLTs can be found
- * in the included README file.
- * <p>
- * This example uses a very basic learner set-up.
+ *
+ * <p><em>Mealy Machines with Local Timers</em> (MMLTs) are an extension of Mealy machines for real-time behavior.
+ * They extend Mealy machines with multiple <em>timers</em>. A timer in an MMLT counts down as time progresses.
+ * When reaching zero, it stops and triggers an action.</p>
+ *
+ * <ul>
+ *   <li>A timer in an MMLT is bound to a specific location. It can only time out in its associated location and only be reset
+ *   at transitions that target this location.</li>
+ *   <li>The timeout-action of a timer $x$ is modeled with a transition that uses the internal input <code>to[x]</code>. These inputs
+ *   cannot be provided to the model directly. Instead, they are internally triggered after sufficient time has passed. All
+ *   other input symbols are called <em>non-delaying inputs</em>.</li>
+ *   <li>The output of a timer at timeout must not be silent.</li>
+ *   <li>There are two types of timers:
+ *     <ul>
+ *       <li>A <em>periodic timer</em> automatically resets itself on timeout. It cannot cause a change to a different location.</li>
+ *       <li>A <em>one-shot timer</em> may cause a change to a different location on timeout. Regardless of that, it resets all timers
+ *       of the targeted location.</li>
+ *     </ul>
+ *   </li>
+ *   <li>All timers of a location reset to their initial value when this location is entered from a <em>different</em> location. If
+ *   the initial location has timers, they are reset when the system is activated.</li>
+ *   <li>A self-loop with a non-delaying input does not reset timers by default. However, it might optionally reset all timers
+ *   of its source location. This behavior is called a <em>local reset</em>.</li>
+ *   <li>A location can have multiple timers:
+ *     <ul>
+ *       <li>A location can also have multiple periodic timers. These can even time out simultaneously. Then, their outputs are
+ *       combined to a single output through concatenation.</li>
+ *       <li>A periodic and a one-shot timer must never time out simultaneously.</li>
+ *     </ul>
+ *   </li>
+ * </ul>
+ *
+ * <p>As for many other real-time systems, the <em>semantics</em> of an MMLT are defined with an associated transition system.
+ * For MMLTs, this system is a Mealy machine. When inferring the behavior of the unknown system, the learner
+ * conceptually interacts with this Mealy machine.
+ * The inputs of this machine are the non-delaying inputs of the MMLT, discrete time steps,
+ * and a symbolic <em>timeout symbol</em>. The latter prompts a delay until the next timeout.</p>
+ *
+ * <p>More information about MMLTs can be found here:
+ * <a href="https://doi.org/10.14279/depositonce-24731">Learning Mealy Machines with Local Timers</a>.</p>
  */
 public class Example1 {
 
