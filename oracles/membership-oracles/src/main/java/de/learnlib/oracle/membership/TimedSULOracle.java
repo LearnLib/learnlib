@@ -143,11 +143,12 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
             return new TimerQueryResult<>(false, Collections.emptyList()); // no timeouts found
         }
 
-        if (this.modelParams.outputCombiner().isCombinedSymbol(firstTimeout.symbol())) {
+        List<O> firstTimeoutOutputs = this.modelParams.outputCombiner().separateSymbols(firstTimeout.symbol());
+        if (firstTimeoutOutputs.size() > 1) {
             LOGGER.warn("Multiple timers expiring at first timeout, automaton may not be minimal.");
         }
 
-        knownTimers.add(new TimerInfo<>(getUniqueTimerName(), firstTimeout.delay(), firstTimeout.symbol(), null));
+        knownTimers.add(new TimerInfo<>(getUniqueTimerName(), firstTimeout.delay(), firstTimeoutOutputs, null, true));
 
         // Wait for further timeouts:
         long currentTimeStep = firstTimeout.delay(); // already waited for first timeout
@@ -202,8 +203,7 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
             // Timeout occurred at expected time -> check if matching expected output:
             Map<O, Long> expectedOutputs = knownTimers.stream()
                                                       .filter(t -> nextExpectedTime % t.initial() == 0)
-                                                      .map(t -> modelParams.outputCombiner()
-                                                                           .separateSymbols(t.output())) // separate output of timers with same initial value
+                                                      .map(TimerInfo::outputs) // outputs of timers with same initial value
                                                       .flatMap(Collection::stream)
                                                       .collect(Collectors.groupingBy(t -> t,
                                                                                      Collectors.counting())); // count occurrences
@@ -233,8 +233,9 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
                 // Same time and more outputs -> add new timer that uses the new outputs:
                 TimerInfo<?, O> newTimer = new TimerInfo<>(getUniqueTimerName(),
                                                            nextActualTime,
-                                                           this.modelParams.outputCombiner().combineSymbols(newOutputs),
-                                                           null);
+                                                           newOutputs,
+                                                           null,
+                                                    true);
                 return new TimerCheckResult<>(newTimer, false);
             }
         } else {

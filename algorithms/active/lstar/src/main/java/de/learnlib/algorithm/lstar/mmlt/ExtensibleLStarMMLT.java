@@ -236,7 +236,8 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
                         if (timerInfo == null) {
                             throw new AssertionError();
                         }
-                        output = new TimedOutput<>(timerInfo.output());
+                        var combinedOutput = this.hypData.getModelParams().outputCombiner().combineSymbols(timerInfo.outputs());
+                        output = new TimedOutput<>(combinedOutput);
                     } else {
                         output = this.timeOracle.answerQuery(prefix, Word.fromLetter(inputSym)).lastSymbol();
                     }
@@ -526,7 +527,7 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
 
             for (var timer : timerInfo.getLocalTimers().values()) {
                 if (timer.periodic()) {
-                    hypothesis.addPeriodicTimer(stateMap.get(rowContentId), timer.name(), timer.initial(), timer.output());
+                    hypothesis.addPeriodicTimer(stateMap.get(rowContentId), timer.name(), timer.initial(), timer.outputs());
                 } else {
                     // One-shot: use successor from table
                     TimedInput<I> symbol = new TimeStepSequence<>(timer.initial());
@@ -534,7 +535,7 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
                     int symIdx = hypData.getAlphabet().getSymbolIndex(symbol);
                     int successorId = spLocation.getSuccessor(symIdx).getRowContentId();
 
-                    hypothesis.addOneShotTimer(stateMap.get(rowContentId), timer.name(), timer.initial(), timer.output(), stateMap.get(successorId));
+                    hypothesis.addOneShotTimer(stateMap.get(rowContentId), timer.name(), timer.initial(), timer.outputs(), stateMap.get(successorId));
                 }
             }
         }
