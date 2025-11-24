@@ -8,6 +8,8 @@ import java.util.stream.Stream;
 
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
+import de.learnlib.filter.symbol.AcceptAllSymbolFilter;
+import de.learnlib.filter.symbol.CachedSymbolFilter;
 import de.learnlib.time.MMLTModelParams;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
@@ -68,6 +70,25 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
     /**
      * Instantiates a new Rivest-Schapire learner for MMLTs.
      * <p>
+     * Uses the close-shortest strategy for closing the observation table,
+     * binary-backwards search for decomposing counterexamples, and no symbol filter.
+     *
+     * @param alphabet        Alphabet of non-delaying inputs
+     * @param modelParams     LocalTimerMealyModel parameters
+     * @param initialSuffixes Initial set of suffixes. May be empty.
+     * @param timeOracle      The output query oracle for MMLTs.
+     */
+    public ExtensibleLStarMMLT(Alphabet<I> alphabet,
+                               MMLTModelParams<O> modelParams,
+                               List<Word<TimedInput<I>>> initialSuffixes,
+                               TimedQueryOracle<I, O> timeOracle) {
+        this(alphabet, modelParams, initialSuffixes, ClosingStrategies.CLOSE_SHORTEST, timeOracle,
+                new CachedSymbolFilter<>(new AcceptAllSymbolFilter<>()), AcexAnalyzers.BINARY_SEARCH_BWD);
+    }
+
+    /**
+     * Instantiates a new Rivest-Schapire learner for MMLTs.
+     * <p>
      * Uses the close-shortest strategy for closing the observation table and
      * binary-backwards search for decomposing counterexamples.
      *
@@ -116,8 +137,8 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
 
         // Init hypothesis data:
         this.hypData = new MMLTHypDataContainer<>(internalAlphabet, modelParams,
-                                                  new MMLTObservationTable<>(internalAlphabet,
-                                           modelParams.maxTimerQueryWaitingTime(), symbolFilter, modelParams.silentOutput()));
+                new MMLTObservationTable<>(internalAlphabet,
+                        modelParams.maxTimerQueryWaitingTime(), symbolFilter, modelParams.silentOutput()));
 
         this.cexAnalyzer = new MMLTCounterexampleHandler<>(timeOracle, analyzer, symbolFilter);
         this.symbolFilter = symbolFilter;
@@ -270,9 +291,9 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
         }
 
         return new MMLTOutputInconsistency<>(shortQuery.getPrefix(),
-                                             shortQuery.getSuffix(),
-                                             shortQuery.getOutput(),
-                                             shortHypOutput);
+                shortQuery.getSuffix(),
+                shortQuery.getOutput(),
+                shortHypOutput);
     }
 
     private boolean refineHypothesisSingle(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> ceQuery) {
@@ -379,8 +400,8 @@ public class ExtensibleLStarMMLT<I, O> implements OTLearner<MMLT<Integer, I, ?, 
 
         // Remove all timers with greater timeout (are now redundant):
         var subsequentTimers = locationTimerInfo.getSortedTimers().stream()
-                                                .filter(t -> t.initial() > timeout.initial())
-                                                .map(TimerInfo::name).toList();
+                .filter(t -> t.initial() > timeout.initial())
+                .map(TimerInfo::name).toList();
         subsequentTimers.forEach(locationTimerInfo::removeTimer);
 
         // Change from periodic to one-shot:

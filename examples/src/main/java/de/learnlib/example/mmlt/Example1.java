@@ -2,44 +2,33 @@ package de.learnlib.example.mmlt;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
-import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.driver.simulator.MMLTSimulatorSUL;
-import de.learnlib.filter.SymbolFilter;
 import de.learnlib.filter.cache.mmlt.TimedSULTreeCache;
 import de.learnlib.filter.cache.mmlt.TimeoutReducerSUL;
-import de.learnlib.filter.statistic.oracle.CounterEQOracle;
 import de.learnlib.filter.statistic.sul.CounterTimedSUL;
-import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
-import de.learnlib.oracle.equivalence.MMLTEQOracleChain;
-import de.learnlib.oracle.equivalence.mmlt.RandomWpMethodEQOracle;
-import de.learnlib.oracle.equivalence.mmlt.ResetSearchEQOracle;
 import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.membership.TimedSULOracle;
-import de.learnlib.filter.symbol.CachedSymbolFilter;
-import de.learnlib.algorithm.lstar.mmlt.filter.MMLTRandomSymbolFilter;
-import de.learnlib.algorithm.lstar.mmlt.filter.MMLTStatisticsSymbolFilter;
-import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
 import de.learnlib.testsupport.example.mmlt.MMLTExamples;
-import net.automatalib.automaton.visualization.MMLTVisualizationHelper;
-import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimedInput;
-import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.TimeoutSymbol;
-import net.automatalib.visualization.Visualization;
 import net.automatalib.word.Word;
 
 /**
- * This example shows how to learn a Mealy machine with local timers,
+ * This example shows how to learn a Mealy machine with local timers (MMLT),
  * an automaton model for real-time systems.
+ * <p>
+ * MMLTs extend Mealy machines with multiple timers. More information about MMLTs can be found
+ * in the included README file.
+ * <p>
+ * This example uses a very basic learner set-up.
  */
 public class Example1 {
 
     public static void main(String[] args) {
+        // We use the included sensor collector model as reference automaton:
         var model = MMLTExamples.sensorCollector();
 
         // We first create a statistics container.
@@ -64,73 +53,24 @@ public class Example1 {
         // We use a query oracle to answer queries from the learner:
         var timeOracle = new TimedSULOracle<>(toReducerSul, model.getParams());
 
-        // We use a chain of different equivalence oracles:
-        MMLTEQOracleChain<String, String> chainOracle = new MMLTEQOracleChain<>();
-        chainOracle.addOracle(new CounterEQOracle<>(cacheSUL.createCacheConsistencyTest(), "cache"));
-        chainOracle.addOracle(new CounterEQOracle<>(new ResetSearchEQOracle<>(timeOracle, 100, 1.0, 1.0), "reset"));
-        chainOracle.addOracle(new CounterEQOracle<>(new RandomWpMethodEQOracle<>(timeOracle, 100, 16, 0, 100), "wp"));
-        chainOracle.addOracle(new CounterEQOracle<>(new SimulatorEQOracle<>(model.getReferenceAutomaton()), "sim")); // ensure that we eventually find an accurate model
+        // In the basic set-up, we use a simulator oracle to answer equivalence queries.
+        // This oracle has perfect knowledge of the reference automaton.
+        var eqOracle = new SimulatorEQOracle<>(model.getReferenceAutomaton());
 
         // Set up our L* learner:
+
+        // We provide the learner with an initial set of suffixes.
+        // We include all untimed inputs and the symbolic timeout symbol, which causes the learner to wait
+        // until the next timeout (but no longer than model.getParams().maxTimeoutWaitingTime()).
         List<Word<TimedInput<String>>> suffixes = new ArrayList<>();
         model.getReferenceAutomaton().getInputAlphabet().forEach(s -> suffixes.add(Word.fromLetter(TimedInput.input(s))));
         suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
 
-        // A symbol filter allows us to reduce queries by exploiting prior knowledge.
-        // For this example, we use a AbstractRandomSymbolFilter. This filter correctly predicts
-        // whether a transition silently self-loops with an accuracy of 90%:
-        SymbolFilter<TimedInput<String>, InputSymbol<String>> filter =
-                new MMLTRandomSymbolFilter<>(model.getReferenceAutomaton(), 0.1, new Random(100));
-
-        filter = new MMLTStatisticsSymbolFilter<>(model.getReferenceAutomaton(), filter, stats);
-        var cachedFilter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
-
-        var learner = new ExtensibleLStarMMLT<>(model.getReferenceAutomaton().getInputAlphabet(), model.getParams(), suffixes, timeOracle, cachedFilter);
+        var learner = new ExtensibleLStarMMLT<>(model.getReferenceAutomaton().getInputAlphabet(), model.getParams(), suffixes, timeOracle);
 
         // Start learning:
-        runExperiment(learner, chainOracle, stats, 100);
+        ExampleUtil.runExperiment(learner, eqOracle, stats, 100);
 
-        // Troubleshooting
-        // If you attempt to learn a model of some application and the learner
-        // throws assertion errors or illegal state exceptions,
-        // your SUL likely has no MMLT semantics.
-        // In this case, you can try to learn a partial model by excluding TimeStepSymbol
-        // from the input alphabet for the counterexample search:
-        // Replace tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
-        // with: tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet().stream().filter(s -> !(s instanceof TimeStepSymbol<String>)).toList());
     }
 
-    private static void runExperiment(ExtensibleLStarMMLT<String, String> learner,
-                                      MMLTEquivalenceOracle<String, String> tester,
-                                      StatisticsCollector statisticsCollector, int maxRounds) {
-        statisticsCollector.startOrResumeClock("learningRt", "Processing time");
-        learner.startLearning();
-
-        var hyp = learner.getHypothesisModel();
-        DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>> cex = tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
-        statisticsCollector.increaseCounter("roundCount", "CEX queries");
-
-        int roundCount = 1;
-        while (cex != null && roundCount < maxRounds) {
-            learner.refineHypothesis(cex);
-            hyp = learner.getHypothesisModel();
-            cex = tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
-            statisticsCollector.increaseCounter("roundCount", null);
-            roundCount += 1;
-        }
-        statisticsCollector.pauseClock("learningRt");
-
-        final var finalHypothesis = learner.getHypothesisModel();
-
-        // Add some more stats:
-        statisticsCollector.setCounter("result_locs", "Locations in result", finalHypothesis.getStates().size());
-
-        // Print final result + statistics:
-        System.out.println(statisticsCollector.printStats());
-
-        new ObservationTableASCIIWriter<>().write(learner.getObservationTable(), System.out);
-
-        System.out.println("Final hypothesis:");
-        Visualization.visualize(finalHypothesis.graphView(), new MMLTVisualizationHelper<>(finalHypothesis, true, true));
-    }
 }
