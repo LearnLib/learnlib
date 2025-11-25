@@ -1,4 +1,21 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithm.lstar.mmlt.cex;
+
+import java.util.function.Function;
 
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.oracle.TimedQueryOracle;
@@ -8,17 +25,17 @@ import net.automatalib.word.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.function.Function;
-
 /**
  * An abstract counterexample used by the MMLT learner.
  *
- * @param <I> Input type for non-delaying inputs
- * @param <O> Output symbol type
+ * @param <I>
+ *         input symbol type (of non-delaying inputs)
+ * @param <O>
+ *         output symbol type
  */
 public class MMLTInconsPrefixTransformAcex<I, O> extends AbstractBaseCounterexample<Word<TimedOutput<O>>> {
 
-    private final static Logger logger = LoggerFactory.getLogger(MMLTInconsPrefixTransformAcex.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MMLTInconsPrefixTransformAcex.class);
 
     private final TimedQueryOracle<I, O> timeOracle;
     private final Word<TimedInput<I>> suffix;
@@ -28,19 +45,20 @@ public class MMLTInconsPrefixTransformAcex<I, O> extends AbstractBaseCounterexam
     /**
      * Constructor.
      *
-     * @param suffix      suffix of the counterexample (= the word that we analyze)
-     * @param timeOracle  membership oracle
-     * @param asTransform retrieves the prefix of the system state in the hypothesis addressed by a word
+     * @param suffix
+     *         suffix of the counterexample, i.e., the word that we analyze
+     * @param timeOracle
+     *         membership oracle
+     * @param asTransform
+     *         retrieves the prefix of the system state in the hypothesis addressed by a word
      */
-    public MMLTInconsPrefixTransformAcex(Word<TimedInput<I>> suffix, TimedQueryOracle<I, O> timeOracle, Function<Word<TimedInput<I>>, Word<TimedInput<I>>> asTransform) {
+    public MMLTInconsPrefixTransformAcex(Word<TimedInput<I>> suffix,
+                                         TimedQueryOracle<I, O> timeOracle,
+                                         Function<Word<TimedInput<I>>, Word<TimedInput<I>>> asTransform) {
         super(suffix.length());
         this.timeOracle = timeOracle;
         this.suffix = suffix;
         this.asTransform = asTransform;
-    }
-
-    public Function<Word<TimedInput<I>>, Word<TimedInput<I>>> getAsTransform() {
-        return asTransform;
     }
 
     @Override
@@ -56,11 +74,10 @@ public class MMLTInconsPrefixTransformAcex<I, O> extends AbstractBaseCounterexam
         return this.timeOracle.answerQuery(accessSequence, suffix);
     }
 
-
     @Override
     public boolean checkEffects(Word<TimedOutput<O>> eff1, Word<TimedOutput<O>> eff2) {
         // Same behavior at different indices?
-        logger.debug(String.format("Comparing (%s) AND (%s): %s", eff1, eff2, eff2.isSuffixOf(eff1)));
+        LOGGER.debug("Comparing ({}) AND ({}): {}", eff1, eff2, eff2.isSuffixOf(eff1));
         return eff2.isSuffixOf(eff1);
     }
 }

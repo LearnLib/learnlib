@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import de.learnlib.statistic.StatisticsCollector;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link StatisticsCollector} that stores all statistics in a {@link Map}.
@@ -50,7 +51,7 @@ public class MapStatisticsCollector implements StatisticsCollector {
     }
 
     @Override
-    public synchronized void addText(String id, String description, String text) {
+    public synchronized void addText(String id, @Nullable String description, String text) {
         statistics.put(id, new TextStatistic(id, description, text));
     }
 
@@ -64,7 +65,7 @@ public class MapStatisticsCollector implements StatisticsCollector {
     }
 
     @Override
-    public synchronized void setFlag(String id, String description, boolean value) {
+    public synchronized void setFlag(String id, @Nullable String description, boolean value) {
         statistics.put(id, new FlagStatistic(id, description, value));
     }
 
@@ -78,7 +79,7 @@ public class MapStatisticsCollector implements StatisticsCollector {
     }
 
     @Override
-    public synchronized void startOrResumeClock(String id, String description) {
+    public synchronized void startOrResumeClock(String id, @Nullable String description) {
         AbstractStatistic value = statistics.get(id);
         if (value instanceof StopClockStatistic clockStatistic) {
             clockStatistic.resume();
@@ -108,7 +109,7 @@ public class MapStatisticsCollector implements StatisticsCollector {
     }
 
     @Override
-    public synchronized void increaseCounter(String id, String description, long increment) {
+    public synchronized void increaseCounter(String id, @Nullable String description, long increment) {
         AbstractStatistic value = statistics.get(id);
         if (value instanceof CounterStatistic counterStatistic) {
             counterStatistic.increase(increment);
@@ -119,7 +120,7 @@ public class MapStatisticsCollector implements StatisticsCollector {
     }
 
     @Override
-    public synchronized void setCounter(String id, String description, long count) {
+    public synchronized void setCounter(String id, @Nullable String description, long count) {
         statistics.put(id, new CounterStatistic(id, description, count));
     }
 

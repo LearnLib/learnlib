@@ -1,46 +1,70 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithm.lstar.mmlt;
 
-import de.learnlib.datastructure.observationtable.MutableObservationTable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import de.learnlib.datastructure.observationtable.RowImpl;
+import de.learnlib.filter.FilterResponse;
 import de.learnlib.filter.MutableSymbolFilter;
 import de.learnlib.oracle.TimedQueryOracle;
-import de.learnlib.oracle.MembershipOracle;
-import de.learnlib.filter.FilterResponse;
+import de.learnlib.oracle.TimedQueryOracle.TimerQueryResult;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.mmlt.TimerInfo;
-import net.automatalib.symbol.time.TimedOutput;
-import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
-import net.automatalib.symbol.time.TimeoutSymbol;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 /**
  * The observation table used by the MMLT learner.
  * <p>
- * Unlike an OT for standard Mealy learning, includes prefixes for the timeout transitions of one-shot timers.
- * Intended to be used with a symbol filter. The filter is queried before adding a new transition for a non-delaying input.
- * If the filter considers the transition to be a silent self-loop, the output of the transition is first verified.
- * If it is actually silent the learner considers the transition to be a silent self-loop. Consequently,
- * it does not add a transition for it. Transitions may be added later if an input was falsely ignored.
+ * Unlike an OT for standard Mealy learning, includes prefixes for the timeout transitions of one-shot timers. Intended
+ * to be used with a symbol filter. The filter is queried before adding a new transition for a non-delaying input. If
+ * the filter considers the transition to be a silent self-loop, the output of the transition is first verified. If it
+ * is actually silent the learner considers the transition to be a silent self-loop. Consequently, it does not add a
+ * transition for it. Transitions may be added later if an input was falsely ignored.
  * <p>
  * Assumes that all short prefixes lead to different locations (-> no need to make canonical)
  *
- * @param <I> Input type for non-delaying inputs
- * @param <O> Output symbol type
+ * @param <I>
+ *         input symbol type (of non-delaying inputs)
+ * @param <O>
+ *         output symbol type
  */
-public class MMLTObservationTable<I, O> implements MutableObservationTable<TimedInput<I>, Word<TimedOutput<O>>> {
+public class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word<TimedOutput<O>>> {
 
-    private static final Logger logger = LoggerFactory.getLogger(MMLTObservationTable.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MMLTObservationTable.class);
+    private static final int NO_CONTENT = -1;
 
     private final MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
 
@@ -49,11 +73,11 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
     private final Map<Word<TimedInput<I>>, RowImpl<TimedInput<I>>> shortPrefixRowMap; // label -> row info
     private final Map<Word<TimedInput<I>>, RowImpl<TimedInput<I>>> longPrefixRowMap; // label -> row info
 
-    private final List<RowImpl<TimedInput<I>>> sortedShortPrefixes; // values of shortPrefixRowMap sorted by label, for faster access.
+    private final List<RowImpl<TimedInput<I>>> sortedShortPrefixes;
+    // values of shortPrefixRowMap sorted by label, for faster access.
     private final List<RowImpl<TimedInput<I>>> longPrefixList; // values of longPrefixRowMap as list, for faster access.
 
     private final Map<Integer, RowContent<O>> rowContentMap; // contentID -> row content
-    private static final int NO_CONTENT = -1;
 
     private final List<Word<TimedInput<I>>> suffixes = new ArrayList<>();
     private final Set<Word<TimedInput<I>>> suffixSet = new HashSet<>();
@@ -62,8 +86,10 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
     private final long minTimerQueryWaitTime;
     private final TimedOutput<O> silentOutput; // used for symbol filtering
 
-    public MMLTObservationTable(Alphabet<TimedInput<I>> alphabet, long minTimerQueryWaitTime,
-                                @NonNull MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter, O silentOutput) {
+    public MMLTObservationTable(Alphabet<TimedInput<I>> alphabet,
+                                long minTimerQueryWaitTime,
+                                MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter,
+                                O silentOutput) {
         this.alphabet = alphabet;
 
         this.symbolFilter = symbolFilter;
@@ -84,21 +110,23 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
     /**
      * Infers local timers for the provided location.
      *
-     * @param location Source location.
+     * @param location
+     *         source location
      */
     private void identifyLocalTimers(LocationTimerInfo<I, O> location, TimedQueryOracle<I, O> timeOracle) {
-        var timerQueryResponse = timeOracle.queryTimers(location.getPrefix(), this.minTimerQueryWaitTime);
-        var timers = timerQueryResponse.timers();
+        TimerQueryResult<O> timerQueryResponse =
+                timeOracle.queryTimers(location.getPrefix(), this.minTimerQueryWaitTime);
+        List<TimerInfo<?, O>> timers = timerQueryResponse.timers();
 
         if (timerQueryResponse.aborted()) {
-            var end = ExtensibleLStarMMLT.selectOneShotTimer(timers, Long.MAX_VALUE);
+            int end = ExtensibleLStarMMLT.selectOneShotTimer(timers, Long.MAX_VALUE);
             timers.set(end, timers.get(end).asOneShot());
         }
 
         // Add timers up to one-shot:
-        for (var timer : timerQueryResponse.timers()) {
+        for (TimerInfo<?, O> timer : timerQueryResponse.timers()) {
             location.addTimer(timer);
-            this.extendAlphabet(new TimeStepSequence<>(timer.initial()));
+            this.extendAlphabet(TimedInput.step(timer.initial()));
             if (!timer.periodic()) {
                 break;
             }
@@ -108,7 +136,8 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
     /**
      * Extends the global alphabet without adding new transitions.
      *
-     * @param symbol New alphabet symbol
+     * @param symbol
+     *         new alphabet symbol
      */
     private void extendAlphabet(TimeStepSequence<I> symbol) {
         if (!alphabet.containsSymbol(symbol)) {
@@ -123,7 +152,7 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
     /**
      * Adds the initial location.
      *
-     * @return Corresponding row in the OT
+     * @return corresponding row in the observation table
      */
     private RowImpl<TimedInput<I>> addInitialLocation() {
         RowImpl<TimedInput<I>> newRow = new RowImpl<>(Word.epsilon(), 0, alphabet.size());
@@ -135,13 +164,14 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         return newRow;
     }
 
-
     /**
-     * Adds a new location that belongs to the provided short-prefix row.
-     * Infers timers for this location and creates outgoing transitions.
+     * Adds a new location that belongs to the provided short-prefix row. Infers timers for this location and creates
+     * outgoing transitions.
      *
-     * @param newRow     Newly-added short prefix row
-     * @param timeOracle Time oracle
+     * @param newRow
+     *         newly-added short prefix row
+     * @param timeOracle
+     *         time oracle
      */
     private void initLocation(RowImpl<TimedInput<I>> newRow, TimedQueryOracle<I, O> timeOracle) {
         LocationTimerInfo<I, O> timerInfo = new LocationTimerInfo<>(newRow.getLabel());
@@ -152,22 +182,27 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         }
 
         // Add outgoing transitions:
-        List<RowImpl<TimedInput<I>>> transitions = this.createOutgoingTransitions(newRow, timeOracle);
-        transitions.forEach(t -> this.queryAllSuffixes(t, timeOracle));
+        for (RowImpl<TimedInput<I>> t : this.createOutgoingTransitions(newRow, timeOracle)) {
+            this.queryAllSuffixes(t, timeOracle);
+        }
     }
 
     /**
-     * Creates transitions for the provided short-prefix row. Adds transitions for non-delaying inputs
-     * and a transition for the one-shot timer of the location, if present.
+     * Creates transitions for the provided short-prefix row. Adds transitions for non-delaying inputs and a transition
+     * for the one-shot timer of the location, if present.
      * <p>
-     * If a symbol filter is provided, the filter is queried before adding a transition for a non-delaying input.
-     * If the filter considers the input a silent self-loop, no transition is explicitly created for the input.
+     * If a symbol filter is provided, the filter is queried before adding a transition for a non-delaying input. If the
+     * filter considers the input a silent self-loop, no transition is explicitly created for the input.
      *
-     * @param spRow      Short prefix row
-     * @param timeOracle Time query oracle
-     * @return New transitions
+     * @param spRow
+     *         short prefix row
+     * @param timeOracle
+     *         time query oracle
+     *
+     * @return new transitions
      */
-    private List<RowImpl<TimedInput<I>>> createOutgoingTransitions(RowImpl<TimedInput<I>> spRow, TimedQueryOracle<I, O> timeOracle) {
+    private List<RowImpl<TimedInput<I>>> createOutgoingTransitions(RowImpl<TimedInput<I>> spRow,
+                                                                   TimedQueryOracle<I, O> timeOracle) {
         List<RowImpl<TimedInput<I>>> transitions = new ArrayList<>();
 
         Word<TimedInput<I>> sp = spRow.getLabel();
@@ -175,55 +210,58 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         // First, add transitions for non-delaying symbols:
         for (int i = 0; i < alphabet.size(); i++) {
             TimedInput<I> sym = alphabet.getSymbol(i);
-            if (sym instanceof TimeStepSequence<I> || sym instanceof TimeoutSymbol<I>) {
-                continue;
-            }
+            if (sym instanceof InputSymbol<I> in) {
 
-            Word<TimedInput<I>> lp = sp.append(sym);
-            assert !this.shortPrefixRowMap.containsKey(lp);
+                Word<TimedInput<I>> lp = sp.append(sym);
+                assert !this.shortPrefixRowMap.containsKey(lp);
 
-            RowImpl<TimedInput<I>> succRow = this.longPrefixRowMap.get(lp);
-            if (succRow == null) {
-                // Query symbol filter before adding transition:
-                var filterResponse = this.symbolFilter.query(sp, (InputSymbol<I>) sym);
-                if (filterResponse == FilterResponse.IGNORE) {
-                    // Verify that output is silent:
-                    var response = timeOracle.answerQuery(sp, Word.fromLetter(sym));
-                    assert response.size() == 1;
-                    if (!response.firstSymbol().equals(silentOutput)) {
-                        // Not silent -> cannot be silent self-loop:
-                        filterResponse = FilterResponse.ACCEPT;
+                RowImpl<TimedInput<I>> succRow = this.longPrefixRowMap.get(lp);
+                if (succRow == null) {
+                    // Query symbol filter before adding transition:
+                    FilterResponse filterResponse = this.symbolFilter.query(sp, in);
+                    if (filterResponse == FilterResponse.IGNORE) {
+                        // Verify that output is silent:
+                        Word<TimedOutput<O>> response = timeOracle.answerQuery(sp, Word.fromLetter(sym));
+                        assert response.size() == 1;
+                        if (!response.firstSymbol().equals(silentOutput)) {
+                            // Not silent -> cannot be silent self-loop:
+                            filterResponse = FilterResponse.ACCEPT;
 
-                        // Update filter:
-                        this.symbolFilter.accept(sp, (InputSymbol<I>) sym);
+                            // Update filter:
+                            this.symbolFilter.accept(sp, in);
+                        }
+                    }
+
+                    if (filterResponse == FilterResponse.ACCEPT) {
+                        // Treat as usual:
+                        succRow = this.createLpRow(lp);
                     }
                 }
 
-                if (filterResponse == FilterResponse.ACCEPT) {
-                    // Treat as usual:
-                    succRow = this.createLpRow(lp);
+                spRow.setSuccessor(i, succRow);
+                if (succRow != null) {
+                    transitions.add(succRow);
                 }
             }
 
-            spRow.setSuccessor(i, succRow);
-            if (succRow != null) {
-                transitions.add(succRow);
-            }
         }
 
         // Second, add one-shot timer transition (if any):
-        var locTimers = timerInfoMap.getOrDefault(spRow.getLabel(), null);
-        if (locTimers != null && !locTimers.getLastTimer().periodic()) {
-            TimedInput<I> waitSym = new TimeStepSequence<>(locTimers.getLastTimer().initial());
-            Word<TimedInput<I>> lp = sp.append(waitSym);
-            assert !this.shortPrefixRowMap.containsKey(lp);
+        LocationTimerInfo<I, O> locTimers = timerInfoMap.get(spRow.getLabel());
+        if (locTimers != null) {
+            TimerInfo<?, O> lastTimer = locTimers.getLastTimer();
+            if (lastTimer != null && !lastTimer.periodic()) {
+                TimedInput<I> waitSym = new TimeStepSequence<>(lastTimer.initial());
+                Word<TimedInput<I>> lp = sp.append(waitSym);
+                assert !this.shortPrefixRowMap.containsKey(lp);
 
-            RowImpl<TimedInput<I>> succRow = this.longPrefixRowMap.get(lp);
-            if (succRow == null) {
-                succRow = this.createLpRow(lp);
+                RowImpl<TimedInput<I>> succRow = this.longPrefixRowMap.get(lp);
+                if (succRow == null) {
+                    succRow = this.createLpRow(lp);
+                }
+                spRow.setSuccessor(this.alphabet.getSymbolIndex(waitSym), succRow);
+                transitions.add(succRow);
             }
-            spRow.setSuccessor(this.alphabet.getSymbolIndex(waitSym), succRow);
-            transitions.add(succRow);
         }
 
         return transitions;
@@ -233,7 +271,7 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         RowImpl<TimedInput<I>> newRow = new RowImpl<>(prefix, 0);
         this.longPrefixRowMap.put(prefix, newRow);
         this.longPrefixList.add(newRow);
-        if (this.longPrefixList.size() != this.longPrefixRowMap.size()) throw new AssertionError();
+        assert this.longPrefixList.size() == this.longPrefixRowMap.size();
 
         newRow.setLpIndex(0); // unused
 
@@ -241,21 +279,19 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
     }
 
     /**
-     * Identify transitions that have not been closed.
-     * I.e., there is no state with the same suffix behavior.
-     * Also removes unused content ids.
-     * <p>
-     * Guarantees that returned transition list order is deterministic.
+     * Identify transitions that have not been closed, i.e., there is no state with the same suffix behavior. Also
+     * removes unused content ids.
+     *
+     * @return the list of unclosed transition, in a deterministic order
      */
     public List<List<Row<TimedInput<I>>>> findUnclosedTransitions() {
         // Identify contentIds for locations:
-        Set<Integer> spContentIds = this.shortPrefixRowMap.values().stream()
-                .map(RowImpl::getRowContentId)
-                .collect(Collectors.toSet());
+        Set<Integer> spContentIds =
+                this.shortPrefixRowMap.values().stream().map(RowImpl::getRowContentId).collect(Collectors.toSet());
 
         // Group lp rows by their content id:
         Map<Integer, List<Row<TimedInput<I>>>> lpContentMap = new HashMap<>();
-        for (var lpRow : this.longPrefixRowMap.values()) {
+        for (RowImpl<TimedInput<I>> lpRow : this.longPrefixRowMap.values()) {
             lpContentMap.putIfAbsent(lpRow.getRowContentId(), new ArrayList<>());
             lpContentMap.get(lpRow.getRowContentId()).add(lpRow);
         }
@@ -263,7 +299,7 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         // Identify ids that are not used by any SP:
         List<List<Row<TimedInput<I>>>> unclosedRows = new ArrayList<>();
         List<Integer> sortedLpIds = lpContentMap.keySet().stream().sorted().toList();
-        for (var lpId : sortedLpIds) {
+        for (Integer lpId : sortedLpIds) {
             if (spContentIds.contains(lpId)) {
                 continue;
             }
@@ -275,8 +311,10 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         }
 
         // Remove unused content ids:
-        Set<Integer> usedContentIds = Stream.concat(this.shortPrefixRowMap.values().stream(), this.longPrefixRowMap.values().stream())
-                .map(RowImpl::getRowContentId).collect(Collectors.toSet());
+        Set<Integer> usedContentIds =
+                Stream.concat(this.shortPrefixRowMap.values().stream(), this.longPrefixRowMap.values().stream())
+                      .map(RowImpl::getRowContentId)
+                      .collect(Collectors.toSet());
 
         List<Integer> oldContentIds = this.rowContentMap.keySet().stream().toList();
         for (int oldId : oldContentIds) {
@@ -285,23 +323,18 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
             }
         }
 
-
         return unclosedRows;
     }
 
-    @Override
     public List<List<Row<TimedInput<I>>>> initialize(List<Word<TimedInput<I>>> initialShortPrefixes,
                                                      List<Word<TimedInput<I>>> initialSuffixes,
-                                                     MembershipOracle<TimedInput<I>, Word<TimedOutput<O>>> oracle) {
+                                                     TimedQueryOracle<I, O> oracle) {
 
         if (isInitialized()) {
             throw new IllegalStateException("Called initialize, but there are already rows present");
         }
         if (!initialShortPrefixes.isEmpty()) {
             throw new IllegalArgumentException("Init with short prefixes is not supported.");
-        }
-        if (!(oracle instanceof TimedQueryOracle<I, O> timedOracle)) {
-            throw new IllegalArgumentException("Must use timed oracle!");
         }
 
         // Add initial suffixes:
@@ -312,9 +345,9 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         }
 
         // 1. Create initial location:
-        var newLoc = this.addInitialLocation();
-        this.initLocation(newLoc, timedOracle);
-        this.queryAllSuffixes(newLoc, timedOracle);
+        RowImpl<TimedInput<I>> newLoc = this.addInitialLocation();
+        this.initLocation(newLoc, oracle);
+        this.queryAllSuffixes(newLoc, oracle);
 
         // 2. Identify unclosed transitions:
         return this.findUnclosedTransitions();
@@ -344,27 +377,17 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         row.setRowContentId(contentId);
     }
 
-    @Override
-    public boolean isInitialized() {
+    private boolean isInitialized() {
         return !(shortPrefixRowMap.isEmpty() && longPrefixRowMap.isEmpty());
     }
 
-    @Override
-    public boolean isInitialConsistencyCheckRequired() {
-        return false;
-    }
-
-    @Override
-    public List<List<Row<TimedInput<I>>>> addSuffixes(Collection<? extends Word<TimedInput<I>>> newSuffixes, MembershipOracle<TimedInput<I>, Word<TimedOutput<O>>> oracle) {
-        if (!(oracle instanceof TimedQueryOracle<I, O> timedOracle)) {
-            throw new IllegalArgumentException();
-        }
-
+    public List<List<Row<TimedInput<I>>>> addSuffixes(Collection<? extends Word<TimedInput<I>>> newSuffixes,
+                                                      TimedQueryOracle<I, O> oracle) {
         // 1. Extend current suffixes + identify new suffixes:
         List<Word<TimedInput<I>>> newSuffixList = new ArrayList<>();
         for (Word<TimedInput<I>> suffix : newSuffixes) {
             if (this.suffixSet.add(suffix)) {
-                logger.debug(String.format("Adding new suffix '%s'", suffix));
+                LOGGER.debug("Adding new suffix '{}'", suffix);
 
                 newSuffixList.add(suffix);
                 this.suffixes.add(suffix);
@@ -383,7 +406,7 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
             }
 
             for (Word<TimedInput<I>> suffix : newSuffixList) {
-                Word<TimedOutput<O>> output = timedOracle.answerQuery(row.getLabel(), suffix);
+                Word<TimedOutput<O>> output = oracle.answerQuery(row.getLabel(), suffix);
                 updatedOutputs.add(output);
             }
 
@@ -393,26 +416,17 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         return this.findUnclosedTransitions();
     }
 
-    @Override
-    public List<List<Row<TimedInput<I>>>> addShortPrefixes(List<? extends Word<TimedInput<I>>> shortPrefixes, MembershipOracle<TimedInput<I>, Word<TimedOutput<O>>> oracle) {
-        throw new IllegalStateException("Not supported.");
-    }
-
-    @Override
-    public List<List<Row<TimedInput<I>>>> toShortPrefixes(List<Row<TimedInput<I>>> lpRows, MembershipOracle<TimedInput<I>, Word<TimedOutput<O>>> oracle) {
-        if (!(oracle instanceof TimedQueryOracle<I, O> timedOracle)) {
-            throw new IllegalArgumentException();
-        }
-
+    public List<List<Row<TimedInput<I>>>> toShortPrefixes(List<Row<TimedInput<I>>> lpRows,
+                                                          TimedQueryOracle<I, O> oracle) {
         for (Row<TimedInput<I>> row : lpRows) {
-            logger.debug(String.format("Adding new location with prefix '%s'", row.getLabel()));
+            LOGGER.debug("Adding new location with prefix '{}'", row.getLabel());
 
             final RowImpl<TimedInput<I>> lpRow = (RowImpl<TimedInput<I>>) row;
 
             // Delete from LP rows:
-            var removed = this.longPrefixRowMap.remove(row.getLabel());
+            RowImpl<TimedInput<I>> removed = this.longPrefixRowMap.remove(row.getLabel());
             this.longPrefixList.remove(removed);
-            if (this.longPrefixList.size() != this.longPrefixRowMap.size()) throw new AssertionError();
+            assert this.longPrefixList.size() == this.longPrefixRowMap.size();
 
             // Add to SP rows:
             this.shortPrefixRowMap.put(row.getLabel(), lpRow);
@@ -421,14 +435,9 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
 
             lpRow.makeShort(alphabet.size());
 
-            this.initLocation(lpRow, timedOracle);
+            this.initLocation(lpRow, oracle);
         }
         return this.findUnclosedTransitions();
-    }
-
-    @Override
-    public List<List<Row<TimedInput<I>>>> addAlphabetSymbol(TimedInput<I> symbol, MembershipOracle<TimedInput<I>, Word<TimedOutput<O>>> oracle) {
-        throw new IllegalStateException("Not supported.");
     }
 
     @Override
@@ -438,7 +447,7 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
 
     @Override
     public Collection<Row<TimedInput<I>>> getShortPrefixRows() {
-        if (this.sortedShortPrefixes.size() != this.shortPrefixRowMap.size()) throw new AssertionError();
+        assert this.sortedShortPrefixes.size() == this.shortPrefixRowMap.size();
         return Collections.unmodifiableList(this.sortedShortPrefixes);
     }
 
@@ -474,7 +483,6 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
     }
 
     @Override
-    @Nullable
     public List<Word<TimedOutput<O>>> rowContents(Row<TimedInput<I>> row) {
         if (this.rowContentMap.isEmpty()) {
             // OT may be empty if only single location with timers:
@@ -492,37 +500,41 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         throw new IllegalStateException("Not implemented.");
     }
 
-
     @Override
     public boolean isAccessSequence(Word<TimedInput<I>> word) {
         throw new IllegalStateException("Not implemented.");
     }
 
     public @Nullable TimerInfo<?, O> getTimerInfo(Word<TimedInput<I>> prefix, long initial) {
-        var info = this.timerInfoMap.get(prefix);
+        LocationTimerInfo<I, O> info = this.timerInfoMap.get(prefix);
         if (info != null) {
             return info.getTimerInfo(initial);
         }
         return null;
     }
 
-    @Nullable
-    public LocationTimerInfo<I, O> getLocationTimerInfo(Row<TimedInput<I>> sp) {
+    public @Nullable LocationTimerInfo<I, O> getLocationTimerInfo(Row<TimedInput<I>> sp) {
         return this.timerInfoMap.getOrDefault(sp.getLabel(), null);
     }
 
     /**
-     * Adds an outgoing transition for the given symbol to the given location
-     * and subsequently tests for unclosed transitions.
+     * Adds an outgoing transition for the given symbol to the given location and subsequently tests for unclosed
+     * transitions.
      * <p>
      * Raises an error if this transition already exists.
      *
-     * @param spRow      Source location
-     * @param symbol     Input symbol
-     * @param timeOracle Oracle
+     * @param spRow
+     *         Source location
+     * @param symbol
+     *         Input symbol
+     * @param timeOracle
+     *         Oracle
+     *
      * @return List of unclosed rows. Empty, if none.
      */
-    public List<List<Row<TimedInput<I>>>> addOutgoingTransition(Row<TimedInput<I>> spRow, TimedInput<I> symbol, TimedQueryOracle<I, O> timeOracle) {
+    public List<List<Row<TimedInput<I>>>> addOutgoingTransition(Row<TimedInput<I>> spRow,
+                                                                TimedInput<I> symbol,
+                                                                TimedQueryOracle<I, O> timeOracle) {
         if (!this.alphabet.containsSymbol(symbol)) {
             throw new IllegalArgumentException("Unknown symbol.");
         }
@@ -546,15 +558,18 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         return this.findUnclosedTransitions();
     }
 
-    public List<List<Row<TimedInput<I>>>> addTimerTransition(Row<TimedInput<I>> spRow, TimerInfo<?, O> timeout, TimedQueryOracle<I, O> timeOracle) {
+    public List<List<Row<TimedInput<I>>>> addTimerTransition(Row<TimedInput<I>> spRow,
+                                                             TimerInfo<?, O> timeout,
+                                                             TimedQueryOracle<I, O> timeOracle) {
         return this.addOutgoingTransition(spRow, new TimeStepSequence<>(timeout.initial()), timeOracle);
     }
 
     /**
-     * Removes a long prefix row. Should only be used when removing a transition of a former one-shot timer.
-     * When turning a long into a short prefix, use toShortPrefix instead,
+     * Removes a long prefix row. Should only be used when removing a transition of a former one-shot timer. When
+     * turning a long into a short prefix, use toShortPrefix instead,
      *
-     * @param prefix Row prefix
+     * @param prefix
+     *         Row prefix
      */
     public void removeLpRow(Word<TimedInput<I>> prefix) {
         if (!this.longPrefixRowMap.containsKey(prefix)) {
@@ -562,9 +577,9 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
         }
 
         // Remove lp row:
-        var removed = this.longPrefixRowMap.remove(prefix);
+        RowImpl<TimedInput<I>> removed = this.longPrefixRowMap.remove(prefix);
         this.longPrefixList.remove(removed);
-        if (this.longPrefixList.size() != this.longPrefixRowMap.size()) throw new AssertionError();
+        assert this.longPrefixList.size() == this.longPrefixRowMap.size();
 
         // Unset as successor:
         int symIdx = this.alphabet.getSymbolIndex(prefix.lastSymbol());
@@ -576,13 +591,6 @@ public class MMLTObservationTable<I, O> implements MutableObservationTable<Timed
 
     // =============================
 
-    private record RowContent<O>(List<Word<TimedOutput<O>>> outputs) {
-
-        @Override
-        public int hashCode() {
-            return outputs.toString().hashCode();
-        }
-    }
-
+    private record RowContent<O>(List<Word<TimedOutput<O>>> outputs) {}
 
 }

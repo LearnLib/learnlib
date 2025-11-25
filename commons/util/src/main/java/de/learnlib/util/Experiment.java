@@ -22,6 +22,7 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatisticsCollector;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
@@ -36,11 +37,12 @@ import org.slf4j.LoggerFactory;
  * @param <A>
  *         the automaton type
  */
-public class Experiment<A extends Object> {
+public class Experiment<A extends FiniteRepresentation> {
 
     public static final String LEARNING_PROFILE_KEY = "exp-expl-dur";
     public static final String COUNTEREXAMPLE_PROFILE_KEY = "exp-ce-dur";
     public static final String LEARNING_ROUNDS_KEY = "exp-rnd";
+    public static final String FINAL_SIZE_KEY = "hyp-size";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Experiment.class);
     private final ExperimentImpl<?, ?> impl;
@@ -122,6 +124,7 @@ public class Experiment<A extends Object> {
                 statisticsCollector.pauseClock(COUNTEREXAMPLE_PROFILE_KEY);
 
                 if (ce == null) {
+                    statisticsCollector.setCounter(FINAL_SIZE_KEY, "Final hypothesis size", hyp.size());
                     return hyp;
                 }
 

@@ -44,11 +44,11 @@ public class CounterTimedSUL<I, O> implements TimedSUL<I, O> {
         this(delegate, null);
     }
 
-    public CounterTimedSUL(TimedSUL<I, O> delegate, String name) {
+    public CounterTimedSUL(TimedSUL<I, O> delegate, @Nullable String name) {
         this(delegate, name, Statistics.getCollector());
     }
 
-    protected CounterTimedSUL(TimedSUL<I, O> delegate, String name, StatisticsCollector statistics) {
+    protected CounterTimedSUL(TimedSUL<I, O> delegate, @Nullable String name, StatisticsCollector statistics) {
         this.delegate = delegate;
         this.name = name;
         this.stats = statistics;

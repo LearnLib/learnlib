@@ -99,7 +99,7 @@ public interface EquivalenceOracle<A, I, D> {
      * A specialization of the {@link EquivalenceOracle} interface for an {@link MMLT} learning scenario.
      *
      * @param <I>
-     *         input type (of non-delaying inputs)
+     *         input symbol type (of non-delaying inputs)
      * @param <O>
      *         output symbol type
      */

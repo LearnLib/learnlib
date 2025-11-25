@@ -148,7 +148,7 @@ public interface StatisticsCollector {
      * @param increment
      *         the amount to increase the counter by (must be greater than zero)
      */
-    void increaseCounter(String id, String description, long increment);
+    void increaseCounter(String id, @Nullable String description, long increment);
 
     /**
      * Sets the counter with the given id to the provided value. If no counter with this id exists, it is created.

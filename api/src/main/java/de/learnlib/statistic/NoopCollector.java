@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * A no-op implementation of a {@link StatisticsCollector} that does nothing.
  */
@@ -34,7 +36,7 @@ class NoopCollector implements StatisticsCollector {
     public void clear() {}
 
     @Override
-    public void addText(String id, String description, String text) {}
+    public void addText(String id, @Nullable String description, String text) {}
 
     @Override
     public Optional<String> getText(String id) {
@@ -42,7 +44,7 @@ class NoopCollector implements StatisticsCollector {
     }
 
     @Override
-    public void setFlag(String id, String description, boolean value) {}
+    public void setFlag(String id, @Nullable String description, boolean value) {}
 
     @Override
     public Optional<Boolean> getFlag(String id) {
@@ -50,7 +52,7 @@ class NoopCollector implements StatisticsCollector {
     }
 
     @Override
-    public void startOrResumeClock(String id, String description) {}
+    public void startOrResumeClock(String id, @Nullable String description) {}
 
     @Override
     public void pauseClock(String id) {}
@@ -61,10 +63,10 @@ class NoopCollector implements StatisticsCollector {
     }
 
     @Override
-    public void increaseCounter(String id, String description, long increment) {}
+    public void increaseCounter(String id, @Nullable String description, long increment) {}
 
     @Override
-    public void setCounter(String id, String description, long count) {}
+    public void setCounter(String id, @Nullable String description, long count) {}
 
     @Override
     public Optional<Long> getCount(String id) {

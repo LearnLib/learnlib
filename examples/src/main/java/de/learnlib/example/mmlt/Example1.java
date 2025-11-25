@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.example.mmlt;
 
 import java.util.ArrayList;
@@ -17,12 +32,12 @@ import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 
 /**
- * This example shows a basic learning setup for Mealy machine with local timers (MMLT),
- * an automaton model for real-time systems.
- *
- * <p><em>Mealy Machines with Local Timers</em> (MMLTs) are an extension of Mealy machines for real-time behavior.
- * They extend Mealy machines with multiple <em>timers</em>. A timer in an MMLT counts down as time progresses.
- * When reaching zero, it stops and triggers an action.</p>
+ * This example shows a basic learning setup for Mealy machine with local timers (MMLT), an automaton model for
+ * real-time systems.
+ * <p>
+ * <em>Mealy Machines with Local Timers</em> (MMLTs) are an extension of Mealy machines for real-time behavior.
+ * They extend Mealy machines with multiple <em>timers</em>. A timer in an MMLT counts down as time progresses. When
+ * reaching zero, it stops and triggers an action.</p>
  *
  * <ul>
  *   <li>A timer in an MMLT is bound to a specific location. It can only time out in its associated location and only be reset
@@ -60,23 +75,30 @@ import net.automatalib.word.Word;
  * <p>More information about MMLTs can be found here:
  * <a href="https://doi.org/10.14279/depositonce-24731">Learning Mealy Machines with Local Timers</a>.</p>
  */
-public class Example1 {
+@SuppressWarnings("PMD.UseExplicitTypes") // allow vars in examples
+public final class Example1 {
+
+    private Example1() {
+        // prevent instantiation
+    }
 
     public static void main(String[] args) {
         // We use the included sensor collector model as reference automaton:
         var model = MMLTExamples.sensorCollector();
+        var mmlt = model.getReferenceAutomaton();
+        var alphabet = mmlt.getInputAlphabet();
 
         // We first create a statistics container.
         // This container will store various statistical data during learning:
         var stats = Statistics.getCollector();
         stats.addText("LocalTimerMealyModel", null, model.toString());
-        stats.setCounter("original_locs", "Locations in original", model.getReferenceAutomaton().getStates().size());
-        stats.setCounter("original_inputs", "Untimed alphabet size in original", model.getReferenceAutomaton().getInputAlphabet().size());
+        stats.setCounter("original_locs", "Locations in original", mmlt.getStates().size());
+        stats.setCounter("original_inputs", "Untimed alphabet size in original", alphabet.size());
 
         // ======================
         // Set up the pipeline:
         // We use a simulator SUL to simulate our automaton:
-        var sul = new MMLTSimulatorSUL<>(model.getReferenceAutomaton().getSemantics());
+        var sul = new MMLTSimulatorSUL<>(mmlt.getSemantics());
 
         // We count all operations that are performed on the SUL with a stats-SUL:
         var statsAfterCache = new CounterTimedSUL<>(sul);
@@ -90,7 +112,7 @@ public class Example1 {
 
         // In the basic set-up, we use a simulator oracle to answer equivalence queries.
         // This oracle has perfect knowledge of the reference automaton.
-        var eqOracle = new SimulatorEQOracle<>(model.getReferenceAutomaton());
+        var eqOracle = new SimulatorEQOracle<>(mmlt);
 
         // Set up our L* learner:
 
@@ -98,14 +120,13 @@ public class Example1 {
         // We include all untimed inputs and the symbolic timeout symbol, which causes the learner to wait
         // until the next timeout (but no longer than model.getParams().maxTimeoutWaitingTime()).
         List<Word<TimedInput<String>>> suffixes = new ArrayList<>();
-        model.getReferenceAutomaton().getInputAlphabet().forEach(s -> suffixes.add(Word.fromLetter(TimedInput.input(s))));
+        alphabet.forEach(s -> suffixes.add(Word.fromLetter(TimedInput.input(s))));
         suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
 
-        var learner = new ExtensibleLStarMMLT<>(model.getReferenceAutomaton().getInputAlphabet(), model.getParams(), suffixes, timeOracle);
+        var learner = new ExtensibleLStarMMLT<>(alphabet, model.getParams(), suffixes, timeOracle);
 
         // Start learning:
-        ExampleUtil.runExperiment(learner, eqOracle, stats, 100);
-
+        ExampleRunner.runExperiment(learner, eqOracle, mmlt.getSemantics().getInputAlphabet(), stats);
     }
 
 }

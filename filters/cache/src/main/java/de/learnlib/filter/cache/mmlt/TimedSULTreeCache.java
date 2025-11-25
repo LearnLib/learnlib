@@ -53,7 +53,7 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
     private final TimedSUL<I, O> delegate;
 
     private final CacheTreeNode<I, O> cacheRoot;
-    private CacheTreeNode<I, O> currentState;
+    private @Nullable CacheTreeNode<I, O> currentState;
 
     private final MMLTModelParams<O> modelParams;
     private final TimedOutput<O> silentOutput;
@@ -212,8 +212,8 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
     }
 
     /**
-     * Lists all words that are currently in the cache. If a cached word is a prefix of another cached word, only
-     * the longer of them is returned.
+     * Lists all words that are currently in the cache. If a cached word is a prefix of another cached word, only the
+     * longer of them is returned.
      *
      * @return List of all stored words.
      */
@@ -262,7 +262,7 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
                 }
                 mealy.addAlphabetSymbol(new TimeStepSequence<>(current.getTimeout()));
                 mealy.addTransition(stateMap.get(current),
-                                    new TimeStepSequence<>(current.getTimeout()),
+                                    TimedInput.step(current.getTimeout()),
                                     stateMap.get(child),
                                     current.getTimeoutOutput());
             }

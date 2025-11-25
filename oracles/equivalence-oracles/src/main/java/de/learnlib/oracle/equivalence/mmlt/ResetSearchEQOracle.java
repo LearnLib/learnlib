@@ -17,7 +17,6 @@ package de.learnlib.oracle.equivalence.mmlt;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,7 +30,6 @@ import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.State;
 import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.common.util.random.RandomUtil;
-import net.automatalib.common.util.string.AbstractPrintable;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;

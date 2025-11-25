@@ -30,7 +30,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Interface for a SUL with MMLT semantics.
  *
  * @param <I>
- *         input type (of non-delaying inputs)
+ *         input symbol type (of non-delaying inputs)
  * @param <O>
  *         output symbol type
  */

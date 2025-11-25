@@ -38,7 +38,7 @@ public class MMLTSimulatorSUL<S, I, T, O> implements TimedSUL<I, O> {
 
     private final MMLTSemantics<S, I, T, O> semantics;
 
-    private State<S, O> currentConfiguration;
+    private @Nullable State<S, O> currentConfiguration;
 
     public MMLTSimulatorSUL(MMLTSemantics<S, I, T, O> semantics) {
         this.semantics = semantics;

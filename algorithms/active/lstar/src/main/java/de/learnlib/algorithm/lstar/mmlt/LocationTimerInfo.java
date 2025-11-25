@@ -1,25 +1,45 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithm.lstar.mmlt;
 
-import net.automatalib.symbol.time.TimedInput;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.automatalib.automaton.mmlt.TimerInfo;
+import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
-import java.util.*;
-
 /**
  * Stores information about local timers of a location.
  *
- * @param <I> Input type for non-delaying inputs
- * @param <O> Output symbol type
+ * @param <I>
+ *         input symbol type (of non-delaying inputs)
+ * @param <O>
+ *         output symbol type
  */
-public class LocationTimerInfo<I, O> implements Serializable {
+public class LocationTimerInfo<I, O> {
 
-    private static final Logger logger = LoggerFactory.getLogger(LocationTimerInfo.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocationTimerInfo.class);
 
     private final Map<String, TimerInfo<?, O>> timers; // name -> info
 
@@ -43,6 +63,9 @@ public class LocationTimerInfo<I, O> implements Serializable {
     /**
      * Adds a local timer to this location.
      *
+     * @param timer
+     *         the timer to add
+     *
      */
     public void addTimer(TimerInfo<?, O> timer) {
         this.timers.put(timer.name(), timer);
@@ -51,28 +74,37 @@ public class LocationTimerInfo<I, O> implements Serializable {
     }
 
     public void removeTimer(String timerName) {
-        if (!this.timers.containsKey(timerName)) {
-            logger.warn("Attempted to remove an unknown timer.");
-            return;
+        final TimerInfo<?, O> removedTimer = this.timers.remove(timerName);
+        if (removedTimer == null) {
+            LOGGER.warn("Attempted to remove an unknown timer.");
+        } else {
+            this.sortedTimers.remove(removedTimer);
         }
-        TimerInfo<?, O> removedTimer = this.timers.remove(timerName);
-        this.sortedTimers.remove(removedTimer);
     }
-
-    @Nullable
-    public TimerInfo<?, O> getTimerInfo(long initial) {
-        Optional<TimerInfo<?, O>> timer = this.sortedTimers.stream().filter(t -> t.initial() == initial).findAny();
-        return timer.orElse(null);
-    }
-
 
     /**
-     * Returns the timer with the highest initial value
+     * Returns the timer with the given initial value.
      *
-     * @return Timer with maximum timeout. Null, if no timers defined.
+     * @param initial
+     *         the queried initial value
+     *
+     * @return the timer with given timeout, {@code null} if no such timer exists
      */
-    @Nullable
-    public TimerInfo<?, O> getLastTimer() {
+    public @Nullable TimerInfo<?, O> getTimerInfo(long initial) {
+        for (TimerInfo<?, O> t : this.sortedTimers) {
+            if (t.initial() == initial) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the timer with the highest initial value.
+     *
+     * @return the timer with maximum timeout, {@code null} if no timers defined
+     */
+    public @Nullable TimerInfo<?, O> getLastTimer() {
         if (this.timers.isEmpty()) {
             return null;
         }
@@ -80,13 +112,14 @@ public class LocationTimerInfo<I, O> implements Serializable {
     }
 
     /**
-     * Sets the given timer to one-shot, ensuring that there is only one one-shot timer at a time.
-     * This is preferred over setting the timer property.
+     * Sets the given timer to one-shot, ensuring that there is only one one-shot timer at a time. This is preferred
+     * over setting the timer property.
      *
-     * @param name Name of the new one-shot timer
+     * @param name
+     *         name of the new one-shot timer
      */
     public void setOneShotTimer(String name) {
-        var oneShotTimer = this.timers.get(name);
+        TimerInfo<?, O> oneShotTimer = this.timers.get(name);
         if (oneShotTimer == null) {
             throw new IllegalArgumentException("Unknown one-shot timer name.");
         }
@@ -95,7 +128,7 @@ public class LocationTimerInfo<I, O> implements Serializable {
         }
 
         // update references
-        var newTimer = oneShotTimer.asOneShot();
+        TimerInfo<?, O> newTimer = oneShotTimer.asOneShot();
         this.timers.put(name, newTimer);
         this.sortedTimers.set(sortedTimers.size() - 1, newTimer);
     }
@@ -103,19 +136,17 @@ public class LocationTimerInfo<I, O> implements Serializable {
     /**
      * Returns a list of all timers defined in this location, sorted by their initial value.
      *
-     * @return List of local timers. Empty, if none.
+     * @return list of local timers, may be empty
      */
     public List<TimerInfo<?, O>> getSortedTimers() {
         return Collections.unmodifiableList(sortedTimers);
     }
 
     /**
-     * Returns an unmodifiable view of the timers defined for this location.
-     * Format: name -> info
+     * Returns an unmodifiable view of the timers defined for this location. Format: name -> info
      *
-     * @return Map of local timers. Empty, if none defined.
+     * @return map of local timers, may be empty
      */
-    @NonNull
     public Map<String, TimerInfo<?, O>> getLocalTimers() {
         return Collections.unmodifiableMap(this.timers);
     }

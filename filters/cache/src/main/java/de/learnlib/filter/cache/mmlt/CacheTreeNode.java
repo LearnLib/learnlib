@@ -23,6 +23,7 @@ import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -38,12 +39,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 class CacheTreeNode<I, O> {
 
     private @Nullable CacheTreeNode<I, O> parent;
-    private TimedInput<I> parentInput;
+    private @Nullable TimedInput<I> parentInput;
     private long timeout;
     private @Nullable CacheTreeTransition<I, O> timeTransition;
     private final Map<InputSymbol<I>, CacheTreeTransition<I, O>> untimedChildren;
 
-    CacheTreeNode(CacheTreeNode<I, O> parent, TimedInput<I> parentInput) {
+    CacheTreeNode(@Nullable CacheTreeNode<I, O> parent, @Nullable TimedInput<I> parentInput) {
         this.parent = parent;
         this.parentInput = parentInput;
 
@@ -66,6 +67,7 @@ class CacheTreeNode<I, O> {
 
     // -------------------------------------------------------
 
+    @EnsuresNonNullIf(result = true, expression = "this.timeTransition")
     public boolean hasTimeChild() {
         return this.timeTransition != null;
     }

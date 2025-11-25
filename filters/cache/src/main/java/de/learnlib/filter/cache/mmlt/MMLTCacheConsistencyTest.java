@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
@@ -114,7 +115,7 @@ public class MMLTCacheConsistencyTest<I, O> implements MMLTEquivalenceOracle<I, 
                 wbInput.append(ds);
                 wbOutput.append(outputSym);
             } else if (inputSym instanceof TimeStepSequence<I> ws) {
-                if (!outputSym.symbol().equals(this.modelParams.silentOutput()) ||
+                if (!Objects.equals(outputSym.symbol(), this.modelParams.silentOutput()) ||
                     ws.timeSteps() == this.modelParams.maxTimeoutWaitingTime()) {
                     // Found a timeout OR no timeout after max_delay:
                     wbInput.append(new TimeoutSymbol<>());
@@ -131,7 +132,7 @@ public class MMLTCacheConsistencyTest<I, O> implements MMLTEquivalenceOracle<I, 
                 long combinedWaitTime = ws.timeSteps();
                 TimedOutput<O> combinedOutput = outputSym;
 
-                while (combinedOutput.symbol().equals(this.modelParams.silentOutput()) &&
+                while (Objects.equals(combinedOutput.symbol(), this.modelParams.silentOutput()) &&
                        combinedWaitTime < this.modelParams.maxTimeoutWaitingTime() && symIdx < queryInput.length() &&
                        queryInput.getSymbol(symIdx) instanceof TimeStepSequence<I> nextWs) {
                     combinedWaitTime += nextWs.timeSteps();
@@ -140,10 +141,10 @@ public class MMLTCacheConsistencyTest<I, O> implements MMLTEquivalenceOracle<I, 
                 }
 
                 if (combinedWaitTime >= this.modelParams.maxTimeoutWaitingTime() ||
-                    !combinedOutput.symbol().equals(this.modelParams.silentOutput())) {
+                    !Objects.equals(combinedOutput.symbol(), this.modelParams.silentOutput())) {
                     wbInput.append(new TimeoutSymbol<>());
 
-                    if (combinedOutput.symbol().equals(this.modelParams.silentOutput())) {
+                    if (Objects.equals(combinedOutput.symbol(), this.modelParams.silentOutput())) {
                         // Reached max delay -> waiting for any time will now produce no more timeouts:
                         wbOutput.append(new TimedOutput<>(this.modelParams.silentOutput()));
                     } else {

@@ -27,7 +27,7 @@ import net.automatalib.word.Word;
  * An oracle for querying {@link TimedInput timed inputs} and timers by observing timeouts.
  *
  * @param <I>
- *         input type (of non-delaying inputs)
+ *         input symbol type (of non-delaying inputs)
  * @param <O>
  *         output symbol type
  */

@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2025 TU Dortmund University
+ * This file is part of LearnLib <https://learnlib.de>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.learnlib.algorithm.lstar.mmlt;
 
 import java.util.Map;
@@ -6,7 +21,6 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.mmlt.State;
 import net.automatalib.automaton.mmlt.SymbolCombiner;
 import net.automatalib.automaton.mmlt.impl.CompactMMLT;
-import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.word.Word;
 
@@ -14,9 +28,9 @@ import net.automatalib.word.Word;
  * An MMLT hypothesis that includes a prefix mapping. This mapping assigns a short prefix to each location.
  *
  * @param <I>
- *         Input type for non-delaying inputs
+ *         input symbol type (of non-delaying inputs)
  * @param <O>
- *         Output symbol type
+ *         output symbol type
  */
 public class MMLTHypothesis<I, O> extends CompactMMLT<I, O> {
 
@@ -42,16 +56,29 @@ public class MMLTHypothesis<I, O> extends CompactMMLT<I, O> {
      * @return Assigned prefix
      */
     public Word<TimedInput<I>> getPrefix(State<Integer, O> configuration) {
-        var locPrefix = getLocationPrefix(configuration);
+        Word<TimedInput<I>> locPrefix = getLocationPrefix(configuration);
         if (configuration.isEntryConfig()) {
             return locPrefix; // entry distance = 0
         } else {
-            return locPrefix.append(new TimeStepSequence<>(configuration.getEntryDistance()));
+            return locPrefix.append(TimedInput.step(configuration.getEntryDistance()));
         }
     }
 
+    /**
+     * Returns a prefix for the given location. This prefix is deterministic in the learner.
+     *
+     * @param location
+     *         Location
+     *
+     * @return Location prefix
+     */
+    public Word<TimedInput<I>> getPrefix(Integer location) {
+        return prefixMap.get(location);
+    }
+
     public Word<TimedInput<I>> getPrefix(Word<TimedInput<I>> prefix) {
-        var resultingConfig = getSemantics().getState(prefix);
+        State<Integer, O> resultingConfig = getSemantics().getState(prefix);
+        assert resultingConfig != null;
         return getPrefix(resultingConfig);
     }
 
@@ -64,20 +91,8 @@ public class MMLTHypothesis<I, O> extends CompactMMLT<I, O> {
      * @return Assigned prefix
      */
     public Word<TimedInput<I>> getLocationPrefix(State<Integer, O> configuration) {
-        var locPrefix = this.prefixMap.get(configuration.getLocation());
-        if (locPrefix == null) {throw new AssertionError();}
+        Word<TimedInput<I>> locPrefix = this.prefixMap.get(configuration.getLocation());
+        assert locPrefix != null;
         return locPrefix;
-    }
-
-    /**
-     * Returns a prefix for the given location. This prefix is deterministic in the RS learner.
-     *
-     * @param location
-     *         Location
-     *
-     * @return Location prefix
-     */
-    public Word<TimedInput<I>> getPrefix(Integer location) {
-        return prefixMap.get(location);
     }
 }

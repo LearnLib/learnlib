@@ -17,7 +17,6 @@ package de.learnlib.oracle.equivalence.mmlt;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -30,7 +29,6 @@ import de.learnlib.statistic.StatisticsCollector;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.State;
 import net.automatalib.automaton.mmlt.impl.ReducedMMLTSemantics;
-import net.automatalib.common.util.string.AbstractPrintable;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.util.automaton.Automata;

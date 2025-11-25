@@ -15,6 +15,8 @@
  */
 package de.learnlib.filter.statistic.container;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * A counter that can be increased and set to a particular positive number.
  */
@@ -22,11 +24,11 @@ class CounterStatistic extends AbstractStatistic {
 
     private long count;
 
-    CounterStatistic(String id, String description) {
+    CounterStatistic(String id, @Nullable String description) {
         this(id, description, 0);
     }
 
-    CounterStatistic(String id, String description, long count) {
+    CounterStatistic(String id, @Nullable String description, long count) {
         super(id, description);
         this.count = count;
     }

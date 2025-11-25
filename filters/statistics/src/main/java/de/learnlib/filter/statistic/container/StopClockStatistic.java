@@ -25,7 +25,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 class StopClockStatistic extends AbstractStatistic {
 
-    private Instant started;
+    private @Nullable Instant started;
     private Duration elapsed;
 
     StopClockStatistic(String id, @Nullable String description) {
