@@ -195,9 +195,12 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
                                                   long nextExpectedTime,
                                                   TimedOutput<O> nextOutput,
                                                   List<TimerInfo<?, O>> knownTimers) {
+
+        var nextOutputSymbols = this.modelParams.outputCombiner().separateSymbols(nextOutput.symbol());
+
         if (nextActualTime < nextExpectedTime) {
             // A timeout occurred before we expected one -> new timer:
-            TimerInfo<?, O> newTimer = new TimerInfo<>(getUniqueTimerName(), nextActualTime, nextOutput.symbol(), null);
+            TimerInfo<?, O> newTimer = new TimerInfo<>(getUniqueTimerName(), nextActualTime, nextOutputSymbols, null, true);
             return new TimerCheckResult<>(newTimer, false);
         } else if (nextActualTime == nextExpectedTime) {
             // Timeout occurred at expected time -> check if matching expected output:
@@ -208,27 +211,32 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
                                                       .collect(Collectors.groupingBy(t -> t,
                                                                                      Collectors.counting())); // count occurrences
 
-            Map<O, Long> actualOutputs = this.modelParams.outputCombiner()
-                                                         .separateSymbols(nextOutput.symbol())
-                                                         .stream()
-                                                         .collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+            Map<O, Long> actualOutputs = nextOutputSymbols.stream()
+                                                          .collect(Collectors.groupingBy(e -> e, Collectors.counting()));
 
-            // Any missing outputs?
+            // Any outputs that were expected but are not present?
             boolean missingOutputs = expectedOutputs.keySet()
                                                     .stream()
                                                     .anyMatch(o -> actualOutputs.getOrDefault(o, 0L) <
-                                                                   expectedOutputs.get(o)); // less than expected
+                                                                      expectedOutputs.get(o)); // less than expected
             if (missingOutputs) {
                 // Same time but missing output -> missed location change:
                 return new TimerCheckResult<>(null, true);
             }
 
-            // Any new outputs?
-            List<O> newOutputs = actualOutputs.keySet()
-                                              .stream()
-                                              .filter(o -> expectedOutputs.getOrDefault(o, 0L) <
-                                                           actualOutputs.get(o)) // less than actual
-                                              .toList();
+            // At least all expected outputs are present.
+            // Check for additional outputs:
+            List<O> newOutputs = new ArrayList<>();
+            for (O output : actualOutputs.keySet()) {
+                long expectedCount = expectedOutputs.getOrDefault(output, 0L);
+                long actualCount = actualOutputs.get(output);
+
+                long additional = actualCount - expectedCount;
+                for (int i = 0; i < additional; i++) {
+                    newOutputs.add(output);
+                }
+            }
+
             if (!newOutputs.isEmpty()) {
                 // Same time and more outputs -> add new timer that uses the new outputs:
                 TimerInfo<?, O> newTimer = new TimerInfo<>(getUniqueTimerName(),
