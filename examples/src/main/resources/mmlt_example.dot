@@ -1,4 +1,4 @@
-// This MMLT model demonstrates various features of the file syntax:
+// This file demonstrates the syntax for defining a custom MMLT.
 digraph g {
     s0 [label="L0" timers="a=2"]
     s1 [label="L1" timers="b=4,c=6"]
