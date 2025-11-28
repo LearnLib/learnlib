@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
+import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLTBuilder;
 import de.learnlib.algorithm.lstar.mmlt.filter.MMLTRandomSymbolFilter;
 import de.learnlib.algorithm.lstar.mmlt.filter.MMLTStatisticsSymbolFilter;
 import de.learnlib.driver.simulator.MMLTSimulatorSUL;
@@ -83,14 +83,14 @@ public final class Example3 {
         // We first create a statistics container.
         // This container will store various statistical data during learning:
         var stats = Statistics.getCollector();
-        stats.addText("LocalTimerMealyModel", null, model.toString());
+        stats.addText("model", null, model.toString());
         stats.setCounter("original_locs", "Locations in original", mmlt.getStates().size());
         stats.setCounter("original_inputs", "Untimed alphabet size in original", alphabet.size());
 
         // ======================
         // Set up the pipeline:
         // We use a simulator SUL to simulate our automaton:
-        var sul = new MMLTSimulatorSUL<>(mmlt.getSemantics());
+        var sul = new MMLTSimulatorSUL<>(mmlt);
 
         // We count all operations that are performed on the SUL with a stats-SUL:
         var statsAfterCache = new CounterTimedSUL<>(sul);
@@ -128,7 +128,12 @@ public final class Example3 {
         // To facilitate this, we wrap our filter with a CachedFilter:
         var cachedFilter = new CachedSymbolFilter<>(filter);
 
-        var learner = new ExtensibleLStarMMLT<>(alphabet, model.getParams(), suffixes, timeOracle, cachedFilter);
+        var learner = new ExtensibleLStarMMLTBuilder<String, String>().withAlphabet(alphabet)
+                                                                      .withModelParams(model.getParams())
+                                                                      .withTimeOracle(timeOracle)
+                                                                      .withInitialSuffixes(suffixes)
+                                                                      .withSymbolFilter(cachedFilter)
+                                                                      .create();
 
         // Start learning:
         var finalModel =
@@ -138,7 +143,7 @@ public final class Example3 {
         // This allows us to check that we learned an accurate model:
         var simOracle = new SimulatorEQOracle<>(mmlt);
         if (simOracle.findCounterExample(finalModel, finalModel.getSemantics().getInputAlphabet()) != null) {
-            throw new AssertionError("Incorrect model learned.");
+            throw new IllegalStateException("Incorrect model learned.");
         }
     }
 

@@ -20,68 +20,70 @@ import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.MMLTSemantics;
 import net.automatalib.automaton.mmlt.State;
 import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
-import net.automatalib.symbol.time.TimeoutSymbol;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Simulates the semantics of an {@link MMLT}.
  *
- * @param <S>
- *         location type.
  * @param <I>
  *         input symbol type (of non-delaying inputs).
  * @param <O>
  *         output symbol type.
  */
-public class MMLTSimulatorSUL<S, I, T, O> implements TimedSUL<I, O> {
+public class MMLTSimulatorSUL<I, O> extends MealySimulatorSUL<InputSymbol<I>, TimedOutput<O>>
+        implements TimedSUL<I, O> {
 
-    private final MMLTSemantics<S, I, T, O> semantics;
+    private final MMLTSimulatorSULImpl<?, I, ?, O> impl;
 
-    private @Nullable State<S, O> currentConfiguration;
-
-    public MMLTSimulatorSUL(MMLTSemantics<S, I, T, O> semantics) {
-        this.semantics = semantics;
-        this.currentConfiguration = null;
+    public MMLTSimulatorSUL(MMLT<?, I, ?, O> semantics) {
+        this(new MMLTSimulatorSULImpl<>(semantics.getSemantics()));
     }
 
-    @Override
-    public TimedOutput<O> step(InputSymbol<I> input) {
-        if (this.currentConfiguration == null) {
-            throw new IllegalStateException("Not initialized!");
-        }
-
-        T trans = this.semantics.getTransition(this.currentConfiguration, input);
-        this.currentConfiguration = this.semantics.getSuccessor(trans);
-        return this.semantics.getTransitionOutput(trans);
+    private MMLTSimulatorSUL(MMLTSimulatorSULImpl<?, I, ?, O> impl) {
+        super(impl);
+        this.impl = impl;
     }
 
     @Override
     public @Nullable TimedOutput<O> timeoutStep(long maxTime) {
-        if (this.currentConfiguration == null) {
-            throw new IllegalStateException("Not initialized!");
-        }
-
-        T trans = this.semantics.getTransition(this.currentConfiguration, new TimeoutSymbol<>(), maxTime);
-        this.currentConfiguration = this.semantics.getSuccessor(trans);
-        TimedOutput<O> output = this.semantics.getTransitionOutput(trans);
-
-        if (output.equals(semantics.getSilentOutput())) {
-            // No timeout observed:
-            return null;
-        } else {
-            return output;
-        }
+        return this.impl.timeoutStep(maxTime);
     }
 
     @Override
-    public void pre() {
-        this.currentConfiguration = semantics.getInitialState();
+    public TimedSUL<I, O> fork() {
+        return new MMLTSimulatorSUL<>(this.impl.fork());
     }
 
-    @Override
-    public void post() {
-        this.currentConfiguration = null;
-    }
+    private static final class MMLTSimulatorSULImpl<S, I, T, O>
+            extends MealySimulatorSULImpl<State<S, O>, InputSymbol<I>, T, TimedOutput<O>> implements TimedSUL<I, O> {
 
+        private final MMLTSemantics<S, I, T, O> semantics;
+
+        MMLTSimulatorSULImpl(MMLTSemantics<S, I, T, O> semantics) {
+            super(semantics, semantics.getSilentOutput());
+            this.semantics = semantics;
+        }
+
+        @Override
+        public @Nullable TimedOutput<O> timeoutStep(long maxTime) {
+            final State<S, O> curr = getCurr();
+            final T trans = this.semantics.getTransition(curr, TimedInput.timeout(), maxTime);
+            setCurr(this.semantics.getSuccessor(trans));
+            TimedOutput<O> output = this.semantics.getTransitionOutput(trans);
+
+            if (output.equals(semantics.getSilentOutput())) {
+                // No timeout observed:
+                return null;
+            } else {
+                return output;
+            }
+        }
+
+        @Override
+        public MMLTSimulatorSULImpl<S, I, T, O> fork() {
+            return new MMLTSimulatorSULImpl<>(semantics);
+        }
+    }
 }

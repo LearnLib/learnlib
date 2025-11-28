@@ -68,36 +68,30 @@ public class ResetSearchEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
 
     private final long loopingInputSelectionSeed;
 
+    /**
+     * Constructor.
+     *
+     * @param timeOracle
+     *         the oracle to execute tests on
+     * @param seed
+     *         the seed for sampling prefixes
+     * @param loopInsertPercentage
+     *         the percentage of looping symbols that should be used for sampling the random infix (should be between 0
+     *         and 1)
+     * @param testedLocPercentage
+     *         the percentage of locations for which prefixes should be included (should be between 0 and 1)
+     */
     public ResetSearchEQOracle(TimedQueryOracle<I, O> timeOracle,
                                long seed,
                                double loopInsertPercentage,
                                double testedLocPercentage) {
         this.timeOracle = timeOracle;
         this.locPrefixRandom = new Random(seed);
-        this.loopInsertPercentage = loopInsertPercentage;
-        this.testedLocPercentage = testedLocPercentage;
+
+        this.loopInsertPercentage = Math.max(0, Math.min(loopInsertPercentage, 1));
+        this.testedLocPercentage = Math.max(0, Math.min(testedLocPercentage, 1));
 
         this.loopingInputSelectionSeed = seed;
-    }
-
-    private <S, T> List<TimedInput<I>> getLoopingSymbols(S sourceLoc,
-                                                         List<TimedInput<I>> alphabet,
-                                                         MMLT<S, I, T, O> hypothesis) {
-        final List<TimedInput<I>> loopingInputs = new ArrayList<>();
-
-        for (TimedInput<I> sym : alphabet) {
-            // only consider non-delaying inputs, as only these can perform local resets
-            if (sym instanceof InputSymbol<I> ndi) {
-                final T trans = hypothesis.getTransition(sourceLoc, ndi.symbol());
-
-                // Collect self-loops:
-                if (trans == null || Objects.equals(hypothesis.getSuccessor(trans), sourceLoc)) {
-                    loopingInputs.add(sym);
-                }
-            }
-        }
-
-        return loopingInputs;
     }
 
     @Override
@@ -106,18 +100,29 @@ public class ResetSearchEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
         if (loopInsertPercentage == 0) {
             return null; // oracle is disabled
         }
-        List<TimedInput<I>> listInputs = new ArrayList<>(inputs);
 
-        if (listInputs.stream().noneMatch(s -> s instanceof TimeStepSequence<I> || s instanceof TimeoutSymbol<I>)) {
-            LOGGER.warn(
-                    "ResetSearchOracle requires inputs to contain TimeoutSymbol and TimeStepSymbol. Will not find counterexample.");
+        if (!containsTimeoutAndTimeStep(inputs)) {
+            LOGGER.warn("Inputs must contain TimeoutSymbol and TimeStepSymbol. Will not find counterexample.");
             return null;
         }
-        return this.findCexInternal(hypothesis, listInputs);
+
+        return this.findCexInternal(hypothesis, inputs);
+    }
+
+    private boolean containsTimeoutAndTimeStep(Collection<? extends TimedInput<I>> inputs) {
+        boolean timeout = false;
+        boolean timestep = false;
+
+        for (TimedInput<I> i : inputs) {
+            timeout |= i instanceof TimeoutSymbol;
+            timestep |= i instanceof TimeStepSequence;
+        }
+
+        return timeout && timestep;
     }
 
     private <S, T> @Nullable DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> findCexInternal(MMLT<S, I, T, O> hypothesis,
-                                                                                               List<TimedInput<I>> inputs) {
+                                                                                               Collection<? extends TimedInput<I>> inputs) {
 
         // Retrieve prefixes from state cover, to establish some separation between learner and teacher:
         Map<S, Word<TimedInput<I>>> stateCover = MMLTCover.getMMLTLocationCover(hypothesis, inputs);
@@ -167,13 +172,33 @@ public class ResetSearchEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
             // Check if counterexample:
             Word<TimedInput<I>> testWord = wbTestWord.toWord();
 
-            Word<TimedOutput<O>> hypOutput = hypothesis.getSemantics().computeSuffixOutput(Word.epsilon(), testWord);
+            Word<TimedOutput<O>> hypOutput = hypothesis.getSemantics().computeOutput(testWord);
             Word<TimedOutput<O>> sulOutput = timeOracle.answerQuery(testWord);
             if (!hypOutput.equals(sulOutput)) {
                 return new DefaultQuery<>(testWord, sulOutput);
             }
         }
         return null;
+    }
+
+    private <S, T> List<TimedInput<I>> getLoopingSymbols(S sourceLoc,
+                                                         Collection<? extends TimedInput<I>> inputs,
+                                                         MMLT<S, I, T, O> hypothesis) {
+        final List<TimedInput<I>> loopingInputs = new ArrayList<>();
+
+        for (TimedInput<I> sym : inputs) {
+            // only consider non-delaying inputs, as only these can perform local resets
+            if (sym instanceof InputSymbol<I> ndi) {
+                final T trans = hypothesis.getTransition(sourceLoc, ndi.symbol());
+
+                // Collect self-loops:
+                if (trans != null && Objects.equals(hypothesis.getSuccessor(trans), sourceLoc)) {
+                    loopingInputs.add(sym);
+                }
+            }
+        }
+
+        return loopingInputs;
     }
 
 }

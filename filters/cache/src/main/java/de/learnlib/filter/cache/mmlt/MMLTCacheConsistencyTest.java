@@ -15,11 +15,9 @@
  */
 package de.learnlib.filter.cache.mmlt;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
@@ -167,12 +165,11 @@ public class MMLTCacheConsistencyTest<I, O> implements MMLTEquivalenceOracle<I, 
                                                                                     DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> query) {
         // Find the longest prefix with allowed inputs:
         int prefixLength = 0;
-        while (prefixLength < query.getInput().length() &&
-               allowedInputs.contains(query.getInput().getSymbol(prefixLength))) {
+        while (prefixLength < query.length() && allowedInputs.contains(query.getInput().getSymbol(prefixLength))) {
             prefixLength++;
         }
 
-        if (prefixLength == query.getInput().length()) {
+        if (prefixLength == query.length()) {
             return query; // maximum length -> no need to reduce
         } else {
             return new DefaultQuery<>(query.getInput().subWord(0, prefixLength),
@@ -186,11 +183,12 @@ public class MMLTCacheConsistencyTest<I, O> implements MMLTEquivalenceOracle<I, 
         Set<TimedInput<I>> allowedInputs = new HashSet<>(inputs);
         boolean allInputsConsidered = allowedInputs.containsAll(hypothesis.getSemantics().getInputAlphabet());
 
-        // Query all cached words:
-        List<Word<TimedInput<I>>> cachedWords = this.sulCache.listAllWords();
+        // Iterator over all cached words:
+        Iterator<Word<TimedInput<I>>> iter = this.sulCache.allWordsIterator();
 
-        List<DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>>> counterexamples = new ArrayList<>();
-        for (Word<TimedInput<I>> word : cachedWords) {
+        while (iter.hasNext()) {
+            Word<TimedInput<I>> word = iter.next();
+
             // First, query word as-is (may include wait-symbols in input):
             DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> rawCacheQuery = this.queryCache(word);
 
@@ -203,21 +201,14 @@ public class MMLTCacheConsistencyTest<I, O> implements MMLTEquivalenceOracle<I, 
                     allInputsConsidered ? convertedQuery : this.reduceToAllowedInputs(allowedInputs, convertedQuery);
 
             // Finally, query hypothesis using the converted query:
-            Word<TimedOutput<O>> hypOutput =
-                    hypothesis.getSemantics().computeSuffixOutput(Word.epsilon(), reducedQuery.getInput());
+            Word<TimedOutput<O>> hypOutput = hypothesis.getSemantics().computeOutput(reducedQuery.getInput());
 
             if (!hypOutput.equals(reducedQuery.getOutput())) {
                 // Hyp gives different output than cache (= SUL):
-                counterexamples.add(reducedQuery);
+                return reducedQuery;
             }
         }
 
-        if (counterexamples.isEmpty()) {
-            return null;
-        }
-
-        // Take the shortest word:
-        return counterexamples.stream().min(Comparator.comparingInt(w -> w.getInput().length())).get();
+        return null;
     }
-
 }

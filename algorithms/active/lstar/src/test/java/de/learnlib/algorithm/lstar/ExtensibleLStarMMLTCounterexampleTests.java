@@ -15,13 +15,11 @@
  */
 package de.learnlib.algorithm.lstar;
 
-import java.util.Collections;
 import java.util.List;
 
 import de.learnlib.algorithm.lstar.it.ExtensibleLStarMMLTIT.Example;
 import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
 import de.learnlib.driver.simulator.MMLTSimulatorSUL;
-import de.learnlib.filter.symbol.AcceptAllSymbolFilter;
 import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.membership.TimedSULOracle;
 import de.learnlib.query.DefaultQuery;
@@ -45,14 +43,10 @@ public class ExtensibleLStarMMLTCounterexampleTests {
                                           MMLTModelParams<O> params,
                                           List<Word<TimedInput<I>>> counterexamples) {
 
-        var sul = new MMLTSimulatorSUL<>(example.getSemantics());
+        var sul = new MMLTSimulatorSUL<>(example);
         var timeOracle = new TimedSULOracle<>(sul, params);
 
-        var learner = new ExtensibleLStarMMLT<>(example.getInputAlphabet(),
-                                                params,
-                                                Collections.emptyList(),
-                                                timeOracle,
-                                                new AcceptAllSymbolFilter<>());
+        var learner = new ExtensibleLStarMMLT<>(example.getInputAlphabet(), params, timeOracle);
 
         learner.startLearning();
 

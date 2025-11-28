@@ -24,6 +24,7 @@ import de.learnlib.statistic.Statistics;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.word.Word;
 
 public abstract class AbstractDFACacheTest
         extends AbstractCacheTest<DFACacheOracle<Character>, DFA<?, Character>, Character, Boolean> {
@@ -54,6 +55,11 @@ public abstract class AbstractDFACacheTest
         final DFACacheOracle<Character> fresh = getCache(counter);
         serializeResumable(original, fresh);
         return fresh;
+    }
+
+    @Override
+    protected Boolean computeOutput(DFA<?, Character> model, Word<Character> input) {
+        return model.computeOutput(input);
     }
 
     @Override

@@ -15,133 +15,110 @@
  */
 package de.learnlib.filter.cache.mmlt;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import de.learnlib.driver.simulator.MMLTSimulatorSUL;
-import de.learnlib.oracle.membership.TimedSULOracle;
-import de.learnlib.time.MMLTModelParams;
+import de.learnlib.filter.cache.AbstractCacheTest;
+import de.learnlib.filter.cache.CacheTestUtils;
+import de.learnlib.filter.cache.TimedSULLearningCacheOracle;
+import de.learnlib.filter.cache.sul.SULCaches;
+import de.learnlib.filter.statistic.sul.CounterTimedSUL;
+import de.learnlib.statistic.Statistics;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.automaton.mmlt.impl.CompactMMLT;
-import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
-import net.automatalib.common.util.random.RandomUtil;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
-public class MMLTCacheTest {
+public class MMLTCacheTest
+        extends AbstractCacheTest<TimedSULLearningCacheOracle<String, String, TimedSULTreeCache<String, String>>, MMLT<?, String, ?, String>, TimedInput<String>, Word<TimedOutput<String>>> {
 
-    private CompactMMLT<String, String> buildBaseModel() {
-        var alphabet = Alphabets.fromArray("p1", "p2", "abort", "collect");
-        var model = new CompactMMLT<>(alphabet, "void", StringSymbolCombiner.getInstance());
+    private final CounterTimedSUL<String, String> counter;
 
-        var s0 = model.addInitialState();
-        var s1 = model.addState();
-        var s2 = model.addState();
-        var s3 = model.addState();
-
-        model.addTransition(s0, "p1", s1, "go");
-        model.addTransition(s1, "abort", s1, "ok");
-        model.addLocalReset(s1, "abort");
-
-        model.addPeriodicTimer(s1, "a", 3, "part");
-        model.addPeriodicTimer(s1, "b", 6, "noise");
-        model.addOneShotTimer(s1, "c", 40, "done", s3);
-
-        model.addTransition(s0, "p2", s2, "go");
-        model.addTransition(s2, "abort", s3, "void");
-        model.addOneShotTimer(s2, "d", 4, "done", s3);
-
-        model.addTransition(s3, "collect", s0, "void");
-
-        return model;
+    public MMLTCacheTest() {
+        counter = new CounterTimedSUL<>(new MMLTSimulatorSUL<>(CacheTestUtils.MMLT));
     }
 
-    /**
-     * Tests if the information in the cache is consistent with the output of the SUL.
-     */
-    public void testCacheAndSULConsistency() {
-        Random random = new Random(100);
-
-        var automaton = buildBaseModel();
-        var params = new MMLTModelParams<>("void", StringSymbolCombiner.getInstance(), 4, 80);
-
-        var sul = new MMLTSimulatorSUL<>(automaton.getSemantics());
-        var cacheSUL = new TimedSULTreeCache<>(sul, params);
-        var timeOracleWithCache = new TimedSULOracle<>(cacheSUL, params);
-        var timeOracleWithoutCache = new TimedSULOracle<>(sul, params);
-
-        var listAlphabet = new ArrayList<>(automaton.getSemantics().getInputAlphabet());
-
-        // Generate some random words and compare outputs of the cache, SUL, and automaton:
-        List<Word<TimedInput<String>>> words = new ArrayList<>();
-        for (int i = 0; i < 500; i++) {
-            int maxLength = random.nextInt(1, 500);
-            var symbols = RandomUtil.sample(random, listAlphabet, maxLength);
-            var word = Word.fromList(symbols);
-            words.add(word);
-
-            var cacheOutput = timeOracleWithCache.answerQuery(word);
-            var sulOutput = timeOracleWithoutCache.answerQuery(word);
-            var automatonOutput = automaton.getSemantics().computeSuffixOutput(Word.epsilon(), word);
-
-            Assert.assertEquals(sulOutput,
-                                automatonOutput,
-                                "Automaton output does not match SUL output for word " + word);
-            Assert.assertEquals(cacheOutput, sulOutput, "Cache output does not match SUL output for word " + word);
-        }
-
-        // Now that the cache contents have changed, ensure that the results are still correct:
-        for (var word : words) {
-            var cacheOutput = timeOracleWithCache.answerQuery(word);
-            var sulOutput = timeOracleWithoutCache.answerQuery(word);
-
-            Assert.assertEquals(sulOutput, cacheOutput, "Cache output does not match SUL output for word " + word);
-        }
+    @Override
+    protected Alphabet<TimedInput<String>> getAlphabet() {
+        return CacheTestUtils.MMLT.getSemantics().getInputAlphabet();
     }
 
-    @Test
-    public void testCacheConsistencyTest() {
-        // Test if the cache consistency test works correctly:
-        var refAutomaton = buildBaseModel();
-        var params = new MMLTModelParams<>("void", StringSymbolCombiner.getInstance(), 4, 80);
+    @Override
+    protected Alphabet<TimedInput<String>> getExtensionAlphabet() {
+        return Alphabets.fromArray();
+    }
 
-        var sul = new MMLTSimulatorSUL<>(refAutomaton.getSemantics());
-        var cacheSUL = new TimedSULTreeCache<>(sul, params);
-        var timeOracleWithCache = new TimedSULOracle<>(cacheSUL, params);
+    @Override
+    protected MMLT<?, String, ?, String> getTargetModel() {
+        return CacheTestUtils.MMLT;
+    }
 
-        // Add word to cache:
+    @Override
+    protected MMLT<?, String, ?, String> getInvalidTargetModel() {
+        return CacheTestUtils.MMLT_INVALID;
+    }
+
+    @Override
+    protected TimedSULLearningCacheOracle<String, String, TimedSULTreeCache<String, String>> getCachedOracle() {
+        return TimedSULLearningCacheOracle.fromTimedSULCache(SULCaches.createTimedCache(counter,
+                                                                                        CacheTestUtils.MMLT_PARAMS),
+                                                             CacheTestUtils.MMLT_PARAMS);
+    }
+
+    @Override
+    protected TimedSULLearningCacheOracle<String, String, TimedSULTreeCache<String, String>> getResumedOracle(
+            TimedSULLearningCacheOracle<String, String, TimedSULTreeCache<String, String>> original) {
+        return original;
+    }
+
+    @Override
+    protected Word<TimedOutput<String>> computeOutput(MMLT<?, String, ?, String> model,
+                                                      Word<TimedInput<String>> input) {
+        return model.getSemantics().computeOutput(input);
+    }
+
+    @Override
+    protected long getNumberOfPosedQueries() {
+        return Statistics.getCollector().getCount(CounterTimedSUL.KEY_RESETS).orElse(0L);
+    }
+
+    @Override
+    protected boolean supportsPrefixes() {
+        return true;
+    }
+
+    @Override
+    protected boolean supportsGrowing() {
+        return false;
+    }
+
+    @Override
+    @Test(dependsOnMethods = "testPrefix")
+    public void testCacheConsistency() {
+        // Add word to cache to ensure counter example
         Word<TimedInput<String>> testWord =
                 Word.fromSymbols(TimedInput.input("p2"), TimedInput.timeout(), TimedInput.step(), TimedInput.timeout());
-        timeOracleWithCache.answerQuery(testWord);
+        super.oracle.getOracle().answerQuery(testWord);
 
-        // Create a bad hypothesis:
-        var badAutomaton = buildBaseModel();
-        badAutomaton.removeTimer(2, "d");
-        badAutomaton.addPeriodicTimer(2, "d", 4, "done");
+        super.testCacheConsistency();
+    }
 
-        // Query the cache for a counterexample:
-        Word<TimedInput<String>> expectedCex =
-                Word.fromSymbols(new InputSymbol<>("p2"), new TimeoutSymbol<>(), new TimeoutSymbol<>());
-
-        var cacheConsistencyTest = cacheSUL.createCacheConsistencyTest();
-        var cex = cacheConsistencyTest.findCounterExample(badAutomaton, refAutomaton.getSemantics().getInputAlphabet());
-        Assert.assertNotNull(cex);
-        Assert.assertEquals(cex.getInput(), expectedCex);
-
+    @Test(dependsOnMethods = "testCacheConsistency")
+    public void testReducedAlphabet() {
         // Now test with a reduced alphabet:
         var symbols = List.of("p1", "abort", "collect"); // not p1
-        GrowingMapAlphabet<TimedInput<String>> reducedAlphabet = new GrowingMapAlphabet<>();
-        symbols.forEach(s -> reducedAlphabet.add(new InputSymbol<>(s)));
+        var reducedAlphabet = symbols.stream().<TimedInput<String>>map(InputSymbol::new).collect(Alphabets.collector());
         reducedAlphabet.add(new TimeoutSymbol<>());
 
         // The only counterexample in the cache has the prefix p2, which is now omitted:
-        Assert.assertNull(cacheConsistencyTest.findCounterExample(badAutomaton, reducedAlphabet));
+        Assert.assertNull(super.oracle.createCacheConsistencyTest()
+                                      .findCounterExample(CacheTestUtils.MMLT_INVALID, reducedAlphabet));
     }
 }

@@ -17,6 +17,7 @@ package de.learnlib.driver.simulator;
 
 import de.learnlib.sul.SUL;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.ts.output.MealyTransitionSystem;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -105,11 +106,11 @@ public class MealySimulatorSUL<I, O> implements SUL<I, O> {
      */
     static class MealySimulatorSULImpl<S, I, T, O> implements SUL<I, O> {
 
-        private final MealyMachine<S, I, T, O> mealy;
+        private final MealyTransitionSystem<S, ? super I, T, O> mealy;
         private final O noTransOut;
         private @Nullable S curr;
 
-        MealySimulatorSULImpl(MealyMachine<S, I, T, O> mealy, O noTransOut) {
+        MealySimulatorSULImpl(MealyTransitionSystem<S, ? super I, T, O> mealy, O noTransOut) {
             this.mealy = mealy;
             this.noTransOut = noTransOut;
         }
@@ -154,6 +155,10 @@ public class MealySimulatorSUL<I, O> implements SUL<I, O> {
                 throw new IllegalStateException("SUL was not properly initialized");
             }
             return curr;
+        }
+
+        void setCurr(S curr) {
+            this.curr = curr;
         }
     }
 

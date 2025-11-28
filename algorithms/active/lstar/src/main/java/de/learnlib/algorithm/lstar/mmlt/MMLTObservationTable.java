@@ -61,7 +61,7 @@ import org.slf4j.LoggerFactory;
  * @param <O>
  *         output symbol type
  */
-public class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word<TimedOutput<O>>> {
+class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word<TimedOutput<O>>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MMLTObservationTable.class);
     private static final int NO_CONTENT = -1;
@@ -86,10 +86,10 @@ public class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I
     private final long minTimerQueryWaitTime;
     private final TimedOutput<O> silentOutput; // used for symbol filtering
 
-    public MMLTObservationTable(Alphabet<TimedInput<I>> alphabet,
-                                long minTimerQueryWaitTime,
-                                MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter,
-                                O silentOutput) {
+    MMLTObservationTable(Alphabet<TimedInput<I>> alphabet,
+                         long minTimerQueryWaitTime,
+                         MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter,
+                         O silentOutput) {
         this.alphabet = alphabet;
 
         this.symbolFilter = symbolFilter;
@@ -486,9 +486,7 @@ public class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I
     public List<Word<TimedOutput<O>>> rowContents(Row<TimedInput<I>> row) {
         if (this.rowContentMap.isEmpty()) {
             // OT may be empty if only single location with timers:
-            if (!this.suffixes.isEmpty()) {
-                throw new AssertionError();
-            }
+            assert this.suffixes.isEmpty();
             return Collections.emptyList();
         }
 
@@ -497,11 +495,6 @@ public class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I
 
     @Override
     public Word<TimedInput<I>> transformAccessSequence(Word<TimedInput<I>> word) {
-        throw new IllegalStateException("Not implemented.");
-    }
-
-    @Override
-    public boolean isAccessSequence(Word<TimedInput<I>> word) {
         throw new IllegalStateException("Not implemented.");
     }
 
@@ -542,9 +535,8 @@ public class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I
         Word<TimedInput<I>> transitionPrefix = spRow.getLabel().append(symbol);
 
         // Add long-prefix row:
-        if (this.getRow(transitionPrefix) != null) {
-            throw new AssertionError("Location already has an outgoing transition for the provided symbol");
-        }
+        assert this.getRow(transitionPrefix) == null :
+                "Location already has an outgoing transition for the provided symbol";
 
         RowImpl<TimedInput<I>> succRow = this.createLpRow(transitionPrefix);
 

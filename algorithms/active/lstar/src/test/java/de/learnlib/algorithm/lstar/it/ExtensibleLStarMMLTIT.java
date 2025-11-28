@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
-import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
+import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLTBuilder;
 import de.learnlib.algorithm.lstar.mmlt.filter.MMLTPerfectSymbolFilter;
 import de.learnlib.algorithm.lstar.mmlt.filter.MMLTRandomSymbolFilter;
 import de.learnlib.filter.SymbolFilter;
@@ -77,7 +77,12 @@ public class ExtensibleLStarMMLTIT extends AbstractMMLTLearnerIT {
 
             var cachedFilter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
 
-            var learner = new ExtensibleLStarMMLT<>(alphabet, example.getParams(), suffixes, mqOracle, cachedFilter);
+            var learner = new ExtensibleLStarMMLTBuilder<I, O>().withAlphabet(alphabet)
+                                                                .withModelParams(example.getParams())
+                                                                .withTimeOracle(mqOracle)
+                                                                .withInitialSuffixes(suffixes)
+                                                                .withSymbolFilter(cachedFilter)
+                                                                .create();
             variants.addLearnerVariant("system=" + example + ",filter=" + filterMode, learner, counters + mmlt.size());
         }
     }

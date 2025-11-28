@@ -202,7 +202,7 @@ public class Example3 {
         public void processQueries(Collection<? extends Query<String, Word<@Nullable String>>> queries) {
             for (Query<String, Word<@Nullable String>> query : queries) {
                 resets++;
-                symbols += query.getInput().size();
+                symbols += query.length();
 
                 BoundedStringQueue s = new BoundedStringQueue();
 

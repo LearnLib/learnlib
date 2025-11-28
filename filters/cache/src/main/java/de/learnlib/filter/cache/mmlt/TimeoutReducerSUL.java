@@ -23,8 +23,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Avoids redundant queries for timeouts.
  * <p>
- * Assume we waited maxDelay for a timeout and observed no expiration. Then, any consecutive timeout-input must also
- * show no timer (assuming sufficient maxDelay). Hence, we do not need to query the SUL for these.
+ * Assume we waited maxDelay for a timeout and observed no expiration. Then any consecutive timeout-input must also show
+ * no timer (assuming sufficient maxDelay). Hence, we do not need to query the SUL for these.
  * <p>
  * We may observe a timeout again after any non-delaying input, as this may trigger a location-change.
  *

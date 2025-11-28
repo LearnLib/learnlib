@@ -62,6 +62,11 @@ public abstract class AbstractMooreCacheTest
     }
 
     @Override
+    protected Word<Integer> computeOutput(MooreMachine<?, Character, ?, Integer> model, Word<Character> input) {
+        return model.computeOutput(input);
+    }
+
+    @Override
     protected long getNumberOfPosedQueries() {
         return Statistics.getCollector().getCount(MooreCounterOracle.QUERY_KEY).orElse(0L);
     }

@@ -22,6 +22,7 @@ import de.learnlib.oracle.membership.DFASimulatorOracle;
 import de.learnlib.statistic.Statistics;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.word.Word;
 
 public class DFAHashCacheTest
         extends AbstractCacheTest<DFAHashCacheOracle<Character>, DFA<?, Character>, Character, Boolean> {
@@ -52,6 +53,11 @@ public class DFAHashCacheTest
         final DFAHashCacheOracle<Character> fresh = DFACaches.createHashCache(counter);
         serializeResumable(original, fresh);
         return fresh;
+    }
+
+    @Override
+    protected Boolean computeOutput(DFA<?, Character> model, Word<Character> input) {
+        return model.computeOutput(input);
     }
 
     @Override

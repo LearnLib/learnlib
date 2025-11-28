@@ -61,7 +61,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The MMLT learner.
+ * An L*-based leaner for inferring {@link MMLT}s.
  *
  * @param <I>
  *         input symbol type (of non-delaying inputs)
@@ -87,88 +87,61 @@ public class ExtensibleLStarMMLT<I, O>
     private final MMLTCounterexampleHandler<I, O> cexAnalyzer;
 
     /**
-     * Instantiates a new Rivest-Schapire learner for MMLTs.
+     * Instantiates a new learner.
      * <p>
-     * Uses the close-shortest strategy for closing the observation table, binary-backwards search for decomposing
-     * counterexamples, and no symbol filter.
+     * This is a convenience constructor for
+     * {@link #ExtensibleLStarMMLT(Alphabet, MMLTModelParams, TimedQueryOracle, List, ClosingStrategy,
+     * MutableSymbolFilter, AcexAnalyzer)} which uses
+     * <ul>
+     *     <li>{@link Collections#emptyList()} for {@code initialSuffixes},</li>
+     *     <li>{@link ClosingStrategies#CLOSE_SHORTEST} for {@code closingStrategy},</li>
+     *     <li>{@link AcceptAllSymbolFilter} for {@code symbolFilter}, and</li>
+     *     <li>{@link AcexAnalyzers#BINARY_SEARCH_BWD} for {@code analyzer}.</li>
+     * </ul>
      *
      * @param alphabet
      *         alphabet (of non-delaying inputs)
      * @param modelParams
      *         model parameters
-     * @param initialSuffixes
-     *         initial set of suffixes (may be empty)
      * @param timeOracle
      *         the query oracle for MMLTs
      */
     public ExtensibleLStarMMLT(Alphabet<I> alphabet,
                                MMLTModelParams<O> modelParams,
-                               List<Word<TimedInput<I>>> initialSuffixes,
                                TimedQueryOracle<I, O> timeOracle) {
         this(alphabet,
              modelParams,
-             initialSuffixes,
-             ClosingStrategies.CLOSE_SHORTEST,
              timeOracle,
+             Collections.emptyList(),
+             ClosingStrategies.CLOSE_SHORTEST,
              new AcceptAllSymbolFilter<>(),
              AcexAnalyzers.BINARY_SEARCH_BWD);
     }
 
     /**
-     * Instantiates a new Rivest-Schapire learner for MMLTs.
-     * <p>
-     * Uses the close-shortest strategy for closing the observation table and binary-backwards search for decomposing
-     * counterexamples.
+     * Instantiates a new learner.
      *
      * @param alphabet
      *         alphabet (of non-delaying inputs)
      * @param modelParams
      *         model parameters
-     * @param initialSuffixes
-     *         initial set of suffixes (may be empty)
      * @param timeOracle
      *         the query oracle for MMLTs
-     * @param symbolFilter
-     *         the symbol filter
-     */
-    public ExtensibleLStarMMLT(Alphabet<I> alphabet,
-                               MMLTModelParams<O> modelParams,
-                               List<Word<TimedInput<I>>> initialSuffixes,
-                               TimedQueryOracle<I, O> timeOracle,
-                               MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter) {
-        this(alphabet,
-             modelParams,
-             initialSuffixes,
-             ClosingStrategies.CLOSE_SHORTEST,
-             timeOracle,
-             symbolFilter,
-             AcexAnalyzers.BINARY_SEARCH_BWD);
-    }
-
-    /**
-     * Instantiates a new Rivest-Schapire learner for MMLTs.
-     *
-     * @param alphabet
-     *         alphabet (of non-delaying inputs)
-     * @param modelParams
-     *         model parameters
      * @param initialSuffixes
      *         initial set of suffixes (may be empty)
      * @param closingStrategy
      *         closing strategy for the observation table.
-     * @param timeOracle
-     *         the query oracle for MMLTs
      * @param symbolFilter
      *         the symbol filter
      * @param analyzer
-     *         The strategy for decomposing counterexamples.
+     *         the strategy for decomposing counterexamples.
      */
     @GenerateBuilder(defaults = BuilderDefaults.class)
     public ExtensibleLStarMMLT(Alphabet<I> alphabet,
                                MMLTModelParams<O> modelParams,
+                               TimedQueryOracle<I, O> timeOracle,
                                List<Word<TimedInput<I>>> initialSuffixes,
                                ClosingStrategy<? super TimedInput<I>, ? super Word<TimedOutput<O>>> closingStrategy,
-                               TimedQueryOracle<I, O> timeOracle,
                                MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter,
                                AcexAnalyzer analyzer) {
         this.closingStrategy = closingStrategy;
@@ -195,18 +168,21 @@ public class ExtensibleLStarMMLT<I, O>
     }
 
     /**
-     * Heuristically chooses a new one-shot timer from the provided timers: takes the timer with the highest initial
-     * value that a) does not exceed maxInitialValue and b) has not timer with a lower initial value that times out at
-     * the same time.
+     * Heuristically chooses a new one-shot timer from the provided timers. Takes the timer with the highest initial
+     * value that
+     * <ul>
+     *     <li>does not exceed {@code maxInitialValue} and</li>
+     *     <li>has not timer with a lower initial value that times out at the same time.</li>
+     * </ul>
      *
      * @param sortedTimers
-     *         Timers, sorted ascendingly by their initial value
+     *         timers, sorted ascendingly by their initial value
      * @param maxInitialValue
-     *         Max. initial value to consider
+     *         max. initial value to consider
      * @param <O>
-     *         Output type
+     *         output type
      *
-     * @return New one-shot timer
+     * @return the index (in {@code sortedTimers}) of the new one-shot candidate
      */
     public static <O> int selectOneShotTimer(List<? extends TimerInfo<?, O>> sortedTimers, long maxInitialValue) {
 
@@ -237,28 +213,23 @@ public class ExtensibleLStarMMLT<I, O>
         throw new IllegalStateException("Max. initial value is too low; must include at least one timer.");
     }
 
-    /**
-     * Constructs an MMLT hypothesis. This updates all transition outputs, if required.
-     *
-     * @return MMLT hypothesis
-     */
     @Override
     public MMLT<Integer, I, ?, O> getHypothesisModel() {
-        return getInternalLocalTimerMealyHypothesis();
+        return getInternalHypothesisModel();
     }
 
     /**
-     * Like the construction above, but returns an LocalTimerMealyHypothesis object instead. This objects provides
+     * Like {@link #getHypothesisModel()}, but returns an {@link MMLTHypothesis} object instead. This objects provides
      * additional functions that are just intended for the learner but not the teacher.
      *
-     * @return MMLT hypothesis
+     * @return the internal hypothesis
      */
-    private MMLTHypothesis<I, O> getInternalLocalTimerMealyHypothesis() {
+    private MMLTHypothesis<I, O> getInternalHypothesisModel() {
         this.updateOutputs();
         return constructHypothesis(this.hypData);
     }
 
-    protected List<Row<TimedInput<I>>> selectClosingRows(List<List<Row<TimedInput<I>>>> unclosed) {
+    private List<Row<TimedInput<I>>> selectClosingRows(List<List<Row<TimedInput<I>>>> unclosed) {
         return closingStrategy.selectClosingRows(unclosed, hypData.getTable(), timeOracle);
     }
 
@@ -354,7 +325,7 @@ public class ExtensibleLStarMMLT<I, O>
 
     private boolean refineHypothesisSingle(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> ceQuery) {
         // 1. Update hypothesis (may have changed since last refinement):
-        MMLTHypothesis<I, O> hypothesis = this.getInternalLocalTimerMealyHypothesis();
+        MMLTHypothesis<I, O> hypothesis = this.getInternalHypothesisModel();
 
         // 2. Transform to output inconsistency:
         MMLTOutputInconsistency<I, O> outputIncons = this.toOutputInconsistency(ceQuery, hypothesis);
@@ -476,7 +447,7 @@ public class ExtensibleLStarMMLT<I, O>
      * @param unclosed
      *         the unclosed rows (equivalence classes) to start with.
      */
-    protected void completeConsistentTable(List<List<Row<TimedInput<I>>>> unclosed) {
+    private void completeConsistentTable(List<List<Row<TimedInput<I>>>> unclosed) {
         List<List<Row<TimedInput<I>>>> unclosedIter = unclosed;
         while (!unclosedIter.isEmpty()) {
             List<Row<TimedInput<I>>> closingRows = this.selectClosingRows(unclosedIter);

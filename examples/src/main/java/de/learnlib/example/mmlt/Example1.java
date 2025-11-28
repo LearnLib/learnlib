@@ -18,7 +18,7 @@ package de.learnlib.example.mmlt;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
+import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLTBuilder;
 import de.learnlib.driver.simulator.MMLTSimulatorSUL;
 import de.learnlib.filter.cache.mmlt.TimedSULTreeCache;
 import de.learnlib.filter.cache.mmlt.TimeoutReducerSUL;
@@ -42,7 +42,7 @@ import net.automatalib.word.Word;
  * <ul>
  *   <li>A timer in an MMLT is bound to a specific location. It can only time out in its associated location and only be reset
  *   at transitions that target this location.</li>
- *   <li>The timeout-action of a timer $x$ is modeled with a transition that uses the internal input <code>to[x]</code>. These inputs
+ *   <li>The timeout-action of a timer $x$ is modeled with a transition that uses the internal input {@code to[x]}. These inputs
  *   cannot be provided to the model directly. Instead, they are internally triggered after sufficient time has passed. All
  *   other input symbols are called <em>non-delaying inputs</em>.</li>
  *   <li>The output of a timer at timeout must not be silent.</li>
@@ -91,14 +91,14 @@ public final class Example1 {
         // We first create a statistics container.
         // This container will store various statistical data during learning:
         var stats = Statistics.getCollector();
-        stats.addText("LocalTimerMealyModel", null, model.toString());
+        stats.addText("model", null, model.toString());
         stats.setCounter("original_locs", "Locations in original", mmlt.getStates().size());
         stats.setCounter("original_inputs", "Untimed alphabet size in original", alphabet.size());
 
         // ======================
         // Set up the pipeline:
         // We use a simulator SUL to simulate our automaton:
-        var sul = new MMLTSimulatorSUL<>(mmlt.getSemantics());
+        var sul = new MMLTSimulatorSUL<>(mmlt);
 
         // We count all operations that are performed on the SUL with a stats-SUL:
         var statsAfterCache = new CounterTimedSUL<>(sul);
@@ -123,7 +123,11 @@ public final class Example1 {
         alphabet.forEach(s -> suffixes.add(Word.fromLetter(TimedInput.input(s))));
         suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
 
-        var learner = new ExtensibleLStarMMLT<>(alphabet, model.getParams(), suffixes, timeOracle);
+        var learner = new ExtensibleLStarMMLTBuilder<String, String>().withAlphabet(alphabet)
+                                                                      .withModelParams(model.getParams())
+                                                                      .withTimeOracle(timeOracle)
+                                                                      .withInitialSuffixes(suffixes)
+                                                                      .create();
 
         // Start learning:
         ExampleRunner.runExperiment(learner, eqOracle, mmlt.getSemantics().getInputAlphabet(), stats);

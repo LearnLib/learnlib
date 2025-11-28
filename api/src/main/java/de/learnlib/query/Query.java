@@ -25,8 +25,8 @@ import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A query is the basic form of interaction between a {@link LearningAlgorithm learner} and a {@link MembershipOracle
- * (membership) oracle}, or teacher.
+ * A query is the basic form of interaction between a {@link LearningAlgorithm learner} and a
+ * {@link MembershipOracle (membership) oracle}, or teacher.
  * <p>
  * In LearnLib, queries are performed in a callback-like fashion: an oracle does not <i>return</i> the responses to the
  * queries, but rather invokes the {@link #answer(Object)} method on the query objects it was provided with. This allows
@@ -35,9 +35,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * is no need for maintaining a common (synchronized) result data structure such as a map. However, this means that a
  * learner cannot rely on the {@link #answer(Object)} method of a query being called from the same thread which invoked
  * {@link MembershipOracle#processQueries(java.util.Collection)}. If this causes concurrency issues, a safe choice is to
- * use queries of class {@link DefaultQuery}, which simply store the response and make it accessible via {@link
- * DefaultQuery#getOutput()} for processing after the {@link MembershipOracle#processQueries(java.util.Collection)} call
- * returns, guaranteeing thread-safety.
+ * use queries of class {@link DefaultQuery}, which simply store the response and make it accessible via
+ * {@link DefaultQuery#getOutput()} for processing after the
+ * {@link MembershipOracle#processQueries(java.util.Collection)} call returns, guaranteeing thread-safety.
  * <p>
  * Conceptually, a query is divided into a {@link #getPrefix() prefix} and a {@link #getSuffix()} suffix. The prefix
  * part of a query identifies a state in the (unknown) target system, whereas the suffix is the "experiment" which is
@@ -73,8 +73,8 @@ public abstract class Query<I, D> {
      * throwing an exception.
      *
      * @param output
-     *         the output, i.e., the directly observable response to the query's suffix (cf. {@link Query main
-     *         documentation})
+     *         the output, i.e., the directly observable response to the query's suffix (cf.
+     *         {@link Query main documentation})
      */
     public abstract void answer(D output);
 
@@ -104,6 +104,16 @@ public abstract class Query<I, D> {
      */
     public abstract Word<I> getSuffix();
 
+    /**
+     * Returns the number of symbols of this query by adding the {@link Word#length() lengths} of the
+     * {@link #getPrefix() prefix} and {@link #getSuffix() suffix}.
+     *
+     * @return the length of this query
+     */
+    public int length() {
+        return getPrefix().length() + getSuffix().length();
+    }
+
     @Override
     public final int hashCode() {
         if (hashCode != 0) {
@@ -125,8 +135,8 @@ public abstract class Query<I, D> {
     /**
      * Returns the string representation of this query.
      *
-     * @return A string of the form {@code "Query[<prefix>|<suffix>]"} for queries not containing an answer or {@code
-     * "Query[<prefix>|<suffix> / <answer>]"} if an answer may be specified.
+     * @return A string of the form {@code "Query[<prefix>|<suffix>]"} for queries not containing an answer or
+     * {@code "Query[<prefix>|<suffix> / <answer>]"} if an answer may be specified.
      */
     @Override
     public String toString() {

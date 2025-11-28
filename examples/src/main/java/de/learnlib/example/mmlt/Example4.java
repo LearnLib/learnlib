@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
+import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLTBuilder;
 import de.learnlib.driver.simulator.MMLTSimulatorSUL;
 import de.learnlib.filter.cache.mmlt.TimedSULTreeCache;
 import de.learnlib.filter.cache.mmlt.TimeoutReducerSUL;
@@ -91,13 +91,13 @@ public final class Example4 {
         // Proceed as in Example1:
 
         var stats = Statistics.getCollector();
-        stats.addText("LocalTimerMealyModel", null, "mmlt_example.dot");
+        stats.addText("model", null, "mmlt_example.dot");
         stats.setCounter("original_locs", "Locations in original", targetModel.getStates().size());
         stats.setCounter("original_inputs", "Untimed alphabet size in original", targetModel.getInputAlphabet().size());
 
         // Set up the pipeline:
         // We use a simulator SUL to simulate our automaton:
-        var sul = new MMLTSimulatorSUL<>(targetModel.getSemantics());
+        var sul = new MMLTSimulatorSUL<>(targetModel);
 
         // We count all operations that are performed on the SUL with a stats-SUL:
         var statsAfterCache = new CounterTimedSUL<>(sul);
@@ -122,11 +122,14 @@ public final class Example4 {
         targetModel.getInputAlphabet().forEach(s -> suffixes.add(Word.fromLetter(TimedInput.input(s))));
         suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
 
-        var learner = new ExtensibleLStarMMLT<>(targetModel.getInputAlphabet(), params, suffixes, timeOracle);
+        var learner = new ExtensibleLStarMMLTBuilder<String, String>().withAlphabet(targetModel.getInputAlphabet())
+                                                                      .withModelParams(params)
+                                                                      .withTimeOracle(timeOracle)
+                                                                      .withInitialSuffixes(suffixes)
+                                                                      .create();
 
         // Start learning:
         ExampleRunner.runExperiment(learner, eqOracle, targetModel.getSemantics().getInputAlphabet(), stats);
-
     }
 
 }

@@ -113,6 +113,24 @@ public class ExamplesTest {
     }
 
     @Test
+    public void testMMLTExample2() {
+        requireJVMCompatibility();
+        de.learnlib.example.mmlt.Example2.main(new String[0]);
+    }
+
+    @Test
+    public void testMMLTExample3() {
+        requireJVMCompatibility();
+        de.learnlib.example.mmlt.Example3.main(new String[0]);
+    }
+
+    @Test
+    public void testMMLTExample4() {
+        requireJVMCompatibility();
+        de.learnlib.example.mmlt.Example4.main(new String[0]);
+    }
+
+    @Test
     public void testParallelismExample1() {
         de.learnlib.example.parallelism.ParallelismExample1.main(new String[0]);
     }

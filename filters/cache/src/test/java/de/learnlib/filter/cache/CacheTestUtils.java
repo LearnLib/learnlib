@@ -29,9 +29,13 @@ import de.learnlib.oracle.membership.MealySimulatorOracle;
 import de.learnlib.oracle.membership.MooreSimulatorOracle;
 import de.learnlib.sul.SUL;
 import de.learnlib.sul.StateLocalInputSUL;
+import de.learnlib.time.MMLTModelParams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.mmlt.MMLT;
+import net.automatalib.automaton.mmlt.impl.CompactMMLT;
+import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
@@ -50,6 +54,9 @@ public final class CacheTestUtils {
     public static final CompactMealy<Character, Integer> MEALY_INVALID;
     public static final CompactMoore<Character, Integer> MOORE;
     public static final CompactMoore<Character, Integer> MOORE_INVALID;
+    public static final CompactMMLT<String, String> MMLT;
+    public static final MMLTModelParams<String> MMLT_PARAMS;
+    public static final CompactMMLT<String, String> MMLT_INVALID;
 
     public static final SUL<Character, Integer> SUL;
     public static final StateLocalInputSUL<Character, Integer> SLI_SUL;
@@ -73,11 +80,43 @@ public final class CacheTestUtils {
         MEALY_INVALID = RandomAutomata.randomMealy(random, size, combinedAlphabet, OUTPUT_ALPHABET);
         MOORE_INVALID = RandomAutomata.randomMoore(random, size, combinedAlphabet, OUTPUT_ALPHABET);
 
+        MMLT = buildMMLT();
+        MMLT_PARAMS = new MMLTModelParams<>("void", StringSymbolCombiner.getInstance(), 4, 80);
+        MMLT_INVALID = buildMMLT();
+        MMLT_INVALID.removeTimer(2, "d");
+        MMLT_INVALID.addPeriodicTimer(2, "d", 4, "done");
+
         SUL = new MealySimulatorSUL<>(MEALY);
         SLI_SUL = new StateLocalInputMealySimulatorSUL<>(MEALY);
     }
 
     private CacheTestUtils() {}
+
+    private static CompactMMLT<String, String> buildMMLT() {
+        var alphabet = Alphabets.fromArray("p1", "p2", "abort", "collect");
+        var model = new CompactMMLT<>(alphabet, "void", StringSymbolCombiner.getInstance());
+
+        var s0 = model.addInitialState();
+        var s1 = model.addState();
+        var s2 = model.addState();
+        var s3 = model.addState();
+
+        model.addTransition(s0, "p1", s1, "go");
+        model.addTransition(s1, "abort", s1, "ok");
+        model.addLocalReset(s1, "abort");
+
+        model.addPeriodicTimer(s1, "a", 3, "part");
+        model.addPeriodicTimer(s1, "b", 6, "noise");
+        model.addOneShotTimer(s1, "c", 40, "done", s3);
+
+        model.addTransition(s0, "p2", s2, "go");
+        model.addTransition(s2, "abort", s3, "void");
+        model.addOneShotTimer(s2, "d", 4, "done", s3);
+
+        model.addTransition(s3, "collect", s0, "void");
+
+        return model;
+    }
 
     public static <I> DFACounterOracle<I> getCounter(net.automatalib.automaton.fsa.DFA<?, I> delegate) {
         return new DFACounterOracle<>(new DFASimulatorOracle<>(delegate));

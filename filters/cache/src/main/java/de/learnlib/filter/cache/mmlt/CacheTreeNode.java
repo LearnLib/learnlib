@@ -54,11 +54,8 @@ class CacheTreeNode<I, O> {
         this.untimedChildren = new HashMap<>();
     }
 
-    public CacheTreeNode<I, O> addTimeChild(long timeout, TimedOutput<O> output) {
-        if (this.hasTimeChild()) {
-            throw new IllegalStateException("State already has time child.");
-        }
-
+    CacheTreeNode<I, O> addTimeChild(long timeout, TimedOutput<O> output) {
+        assert !this.hasTimeChild() : "State already has time child.";
         CacheTreeNode<I, O> newChild = new CacheTreeNode<>(this, new TimeStepSequence<>(timeout));
         this.timeout = timeout;
         this.timeTransition = new CacheTreeTransition<>(output, newChild);
@@ -68,28 +65,22 @@ class CacheTreeNode<I, O> {
     // -------------------------------------------------------
 
     @EnsuresNonNullIf(result = true, expression = "this.timeTransition")
-    public boolean hasTimeChild() {
+    boolean hasTimeChild() {
         return this.timeTransition != null;
     }
 
-    public long getTimeout() {
-        if (!this.hasTimeChild()) {
-            throw new IllegalStateException();
-        }
+    long getTimeout() {
+        assert this.hasTimeChild();
         return timeout;
     }
 
-    public TimedOutput<O> getTimeoutOutput() {
-        if (!this.hasTimeChild()) {
-            throw new IllegalStateException();
-        }
+    TimedOutput<O> getTimeoutOutput() {
+        assert this.hasTimeChild();
         return this.timeTransition.output();
     }
 
-    public CacheTreeNode<I, O> getTimeoutChild() {
-        if (!this.hasTimeChild()) {
-            throw new IllegalStateException();
-        }
+    CacheTreeNode<I, O> getTimeoutChild() {
+        assert this.hasTimeChild();
         return this.timeTransition.target();
     }
 
@@ -104,10 +95,8 @@ class CacheTreeNode<I, O> {
      *
      * @return New child node
      */
-    public CacheTreeNode<I, O> splitTimeout(long newTimeout, TimedOutput<O> output) {
-        if (this.timeTransition == null || newTimeout >= this.getTimeout()) {
-            throw new IllegalArgumentException("Must split at lower timeout.");
-        }
+    CacheTreeNode<I, O> splitTimeout(long newTimeout, TimedOutput<O> output) {
+        assert this.hasTimeChild() && newTimeout < this.getTimeout() : "Must split at lower timeout.";
 
         CacheTreeNode<I, O> newChild = new CacheTreeNode<>(this, new TimeStepSequence<>(newTimeout));
         newChild.timeout = this.timeout - newTimeout;
@@ -121,45 +110,42 @@ class CacheTreeNode<I, O> {
     }
 
     // -------------------------------------------------------
-    public CacheTreeNode<I, O> getParent() {
+    CacheTreeNode<I, O> getParent() {
         return parent;
     }
 
-    public TimedInput<I> getParentInput() {
+    TimedInput<I> getParentInput() {
         return parentInput;
     }
 
-    public void setParent(CacheTreeNode<I, O> parent, TimedInput<I> parentInput) {
+    void setParent(CacheTreeNode<I, O> parent, TimedInput<I> parentInput) {
         this.parent = parent;
         this.parentInput = parentInput;
     }
 
     // -------------------------------------------------------
-    public boolean hasChild(InputSymbol<I> input) {
+    boolean hasChild(InputSymbol<I> input) {
         return this.untimedChildren.containsKey(input);
     }
 
-    public TimedOutput<O> getOutput(InputSymbol<I> input) {
+    TimedOutput<O> getOutput(InputSymbol<I> input) {
         return this.untimedChildren.get(input).output();
     }
 
-    public CacheTreeNode<I, O> getChild(InputSymbol<I> input) {
+    CacheTreeNode<I, O> getChild(InputSymbol<I> input) {
         return this.untimedChildren.get(input).target();
     }
 
-    public CacheTreeNode<I, O> addUntimedChild(InputSymbol<I> input, TimedOutput<O> output) {
-        if (untimedChildren.containsKey(input)) {
-            throw new IllegalArgumentException("State already has an child for this input.");
-        }
-
+    CacheTreeNode<I, O> addUntimedChild(InputSymbol<I> input, TimedOutput<O> output) {
+        assert !untimedChildren.containsKey(input) : "State already has an child for this input.";
         CacheTreeNode<I, O> child = new CacheTreeNode<>(this, input);
         this.untimedChildren.put(input, new CacheTreeTransition<>(output, child));
         return child;
     }
 
-    public Map<InputSymbol<I>, CacheTreeTransition<I, O>> getUntimedChildren() {
+    Map<InputSymbol<I>, CacheTreeTransition<I, O>> getUntimedChildren() {
         return Collections.unmodifiableMap(this.untimedChildren);
     }
 
-    public record CacheTreeTransition<I, O>(TimedOutput<O> output, CacheTreeNode<I, O> target) {}
+    record CacheTreeTransition<I, O>(TimedOutput<O> output, CacheTreeNode<I, O> target) {}
 }

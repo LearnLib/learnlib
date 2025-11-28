@@ -35,6 +35,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class CounterTimedSUL<I, O> implements TimedSUL<I, O> {
 
+    public static final String KEY_RESETS = "sul_resets_counter";
+
     private final TimedSUL<I, O> delegate;
     private final StatisticsCollector stats;
 
@@ -89,7 +91,7 @@ public class CounterTimedSUL<I, O> implements TimedSUL<I, O> {
     @Override
     public void pre() {
         this.delegate.pre();
-        stats.increaseCounter(withPrefix("sul_resets_counter"), withPrefix("SUL resets"));
+        stats.increaseCounter(withPrefix(KEY_RESETS), withPrefix("SUL resets"));
     }
 
     @Override

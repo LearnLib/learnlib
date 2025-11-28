@@ -16,39 +16,35 @@
 package de.learnlib.filter.cache.mmlt;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Iterator;
 
 import de.learnlib.filter.cache.LearningCache.MMLTLearningCache;
+import de.learnlib.filter.cache.mmlt.CacheTreeNode.CacheTreeTransition;
 import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatisticsCollector;
 import de.learnlib.sul.TimedSUL;
 import de.learnlib.time.MMLTModelParams;
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.automaton.transducer.impl.CompactMealy;
-import net.automatalib.graph.Graph;
-import net.automatalib.graph.concept.GraphViewable;
+import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.symbol.time.InputSymbol;
-import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Caches queries sent to a LocalTimerMealySUL.
+ * Caches queries sent to a {@link TimedSUL}.
  *
  * @param <I>
  *         input symbol type (of non-delaying inputs)
  * @param <O>
  *         output symbol type
  */
-public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCache<I, O>, GraphViewable {
+public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCache<I, O> {
 
     private final TimedSUL<I, O> delegate;
 
@@ -177,113 +173,70 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
         }
     }
 
-    // -------------------------------------------------------
-
-    /**
-     * Returns the leaves of the cache tree.
-     *
-     * @return List of leaf nodes.
-     */
-    private List<CacheTreeNode<I, O>> getLeaves() {
-        List<CacheTreeNode<I, O>> leaves = new ArrayList<>();
-
-        Deque<CacheTreeNode<I, O>> unvisited = new ArrayDeque<>();
-        unvisited.add(this.cacheRoot);
-
-        while (!unvisited.isEmpty()) {
-            CacheTreeNode<I, O> currentNode = unvisited.remove();
-
-            int successors = 0;
-            if (currentNode.hasTimeChild()) {
-                unvisited.add(currentNode.getTimeoutChild());
-                successors++;
-            }
-
-            for (InputSymbol<I> sym : currentNode.getUntimedChildren().keySet()) {
-                unvisited.add(currentNode.getChild(sym));
-                successors++;
-            }
-            if (successors == 0) { // leaf
-                leaves.add(currentNode);
-            }
-        }
-
-        return leaves;
-    }
-
-    /**
-     * Lists all words that are currently in the cache. If a cached word is a prefix of another cached word, only the
-     * longer of them is returned.
-     *
-     * @return List of all stored words.
-     */
-    public List<Word<TimedInput<I>>> listAllWords() {
-        List<CacheTreeNode<I, O>> leaves = this.getLeaves();
-
-        List<Word<TimedInput<I>>> finalWords = new ArrayList<>(leaves.size());
-
-        for (CacheTreeNode<I, O> leaf : leaves) {
-            WordBuilder<TimedInput<I>> wbInput = new WordBuilder<>();
-
-            // Move towards the root:
-            CacheTreeNode<I, O> current = leaf;
-            while (current.getParent() != null) {
-                wbInput.append(current.getParentInput());
-                current = current.getParent();
-            }
-
-            // Start at root -> flip buffer:
-            wbInput.reverse();
-            finalWords.add(wbInput.toWord());
-        }
-
-        return finalWords;
-    }
-
-    @Override
-    public Graph<?, ?> graphView() {
-        // Convert tree to a mealy automaton:
-        CompactMealy<TimedInput<I>, TimedOutput<O>> mealy = new CompactMealy<>(new GrowingMapAlphabet<>());
-
-        Map<CacheTreeNode<I, O>, Integer> stateMap = new HashMap<>();
-        stateMap.put(this.cacheRoot, mealy.addInitialState());
-
-        Deque<CacheTreeNode<I, O>> pending = new ArrayDeque<>();
-        pending.add(this.cacheRoot);
-
-        while (!pending.isEmpty()) {
-            CacheTreeNode<I, O> current = pending.remove();
-
-            if (current.hasTimeChild()) {
-                CacheTreeNode<I, O> child = current.getTimeoutChild();
-                if (!stateMap.containsKey(child)) {
-                    stateMap.put(child, mealy.addState());
-                    pending.add(child);
-                }
-                mealy.addAlphabetSymbol(new TimeStepSequence<>(current.getTimeout()));
-                mealy.addTransition(stateMap.get(current),
-                                    TimedInput.step(current.getTimeout()),
-                                    stateMap.get(child),
-                                    current.getTimeoutOutput());
-            }
-
-            for (InputSymbol<I> sym : current.getUntimedChildren().keySet()) {
-                CacheTreeNode<I, O> child = current.getChild(sym);
-                if (!stateMap.containsKey(child)) {
-                    stateMap.put(child, mealy.addState());
-                    pending.add(child);
-                }
-                mealy.addAlphabetSymbol(sym);
-                mealy.addTransition(stateMap.get(current), sym, stateMap.get(child), current.getOutput(sym));
-            }
-        }
-
-        return mealy.graphView();
-    }
-
     @Override
     public MMLTEquivalenceOracle<I, O> createCacheConsistencyTest() {
         return new MMLTCacheConsistencyTest<>(this, this.modelParams);
     }
 
+    /**
+     * Returns an iterator that traverses all words (leaves of this tree) in a BFS-style fashion.
+     *
+     * @return iterator over all words of this tree
+     */
+    public Iterator<Word<TimedInput<I>>> allWordsIterator() {
+        return IteratorUtil.map(new LeavesIterator<>(this.cacheRoot), this::extractWord);
+    }
+
+    private Word<TimedInput<I>> extractWord(CacheTreeNode<I, O> leaf) {
+        final WordBuilder<TimedInput<I>> wb = new WordBuilder<>();
+
+        // Move towards the root:
+        CacheTreeNode<I, O> current = leaf;
+        while (current.getParent() != null) {
+            wb.append(current.getParentInput());
+            current = current.getParent();
+        }
+
+        // Start at root -> flip buffer:
+        wb.reverse();
+        return wb.toWord();
+    }
+
+    private static final class LeavesIterator<I, O> extends AbstractSimplifiedIterator<CacheTreeNode<I, O>> {
+
+        private final Deque<CacheTreeNode<I, O>> queue;
+
+        private LeavesIterator(CacheTreeNode<I, O> root) {
+            this.queue = new ArrayDeque<>();
+            this.queue.add(root);
+        }
+
+        @Override
+        protected boolean calculateNext() {
+
+            while (!queue.isEmpty()) {
+                @SuppressWarnings("nullness") //false positive https://github.com/typetools/checker-framework/issues/399
+                final @NonNull CacheTreeNode<I, O> node = queue.poll();
+
+                boolean hasChildren = false;
+
+                if (node.hasTimeChild()) {
+                    queue.add(node.getTimeoutChild());
+                    hasChildren = true;
+                }
+
+                for (CacheTreeTransition<I, O> t : node.getUntimedChildren().values()) {
+                    queue.add(t.target());
+                    hasChildren = true;
+                }
+
+                if (!hasChildren) {
+                    super.nextValue = node;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
 }

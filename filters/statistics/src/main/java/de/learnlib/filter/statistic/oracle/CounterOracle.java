@@ -88,9 +88,7 @@ public class CounterOracle<I, D> implements MembershipOracle<I, D> {
     public void processQueries(Collection<? extends Query<I, D>> queries) {
         statisticsCollector.increaseCounter(QUERY_KEY + id, "Number of queries", queries.size());
         for (Query<I, D> qry : queries) {
-            statisticsCollector.increaseCounter(SYMBOL_KEY + id,
-                                                "Number of symbols",
-                                                qry.getPrefix().length() + qry.getSuffix().length());
+            statisticsCollector.increaseCounter(SYMBOL_KEY + id, "Number of symbols", qry.length());
         }
         statisticsCollector.startOrResumeClock(DUR_KEY + id, "Duration of queries");
         delegate.processQueries(queries);

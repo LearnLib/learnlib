@@ -83,6 +83,11 @@ public class AdaptiveQueryCacheTest
     }
 
     @Override
+    protected Word<Integer> computeOutput(MealyMachine<?, Character, ?, Integer> model, Word<Character> input) {
+        return model.computeOutput(input);
+    }
+
+    @Override
     protected long getNumberOfPosedQueries() {
         return Statistics.getCollector().getCount(CounterAdaptiveQueryOracle.RESET_KEY).orElse(0L);
     }

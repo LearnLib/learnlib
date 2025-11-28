@@ -52,8 +52,7 @@ public abstract class AbstractMMLTLearnerIT {
 
         final Alphabet<I> alphabet = example.getUntimedAlphabet();
         final TimedQueryOracle<I, O> mqOracle =
-                new TimedSULOracle<>(new MMLTSimulatorSUL<>(example.getReferenceAutomaton().getSemantics()),
-                                     example.getParams());
+                new TimedSULOracle<>(new MMLTSimulatorSUL<>(example.getReferenceAutomaton()), example.getParams());
         final MMLTLearnerVariantListImpl<I, O> variants = new MMLTLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, mqOracle, example, variants);
 

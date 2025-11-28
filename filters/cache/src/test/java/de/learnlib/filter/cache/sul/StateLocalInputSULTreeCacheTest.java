@@ -147,6 +147,11 @@ public class StateLocalInputSULTreeCacheTest
     }
 
     @Override
+    protected Word<Integer> computeOutput(MealyMachine<?, Character, ?, Integer> model, Word<Character> input) {
+        return model.computeOutput(input);
+    }
+
+    @Override
     protected long getNumberOfPosedQueries() {
         return Statistics.getCollector().getCount(CounterStateLocalInputSUL.RESET_KEY).orElse(0L);
     }

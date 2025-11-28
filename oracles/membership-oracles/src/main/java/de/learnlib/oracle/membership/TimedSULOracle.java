@@ -93,7 +93,7 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
      * @param timeouts
      *         known timeouts
      * @param currentTime
-     *         current time.
+     *         current time
      *
      * @return next timeout time
      */
@@ -204,7 +204,8 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
             TimerInfo<?, O> newTimer =
                     new TimerInfo<>(getUniqueTimerName(), nextActualTime, nextOutputSymbols, null, true);
             return new TimerCheckResult<>(newTimer, false);
-        } else if (nextActualTime == nextExpectedTime) {
+        } else {
+            assert nextActualTime == nextExpectedTime;
             // Timeout occurred at expected time -> check if matching expected output:
             Map<O, Long> expectedOutputs = knownTimers.stream()
                                                       .filter(t -> nextExpectedTime % t.initial() == 0)
@@ -246,8 +247,6 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
                         new TimerInfo<>(getUniqueTimerName(), nextActualTime, newOutputs, null, true);
                 return new TimerCheckResult<>(newTimer, false);
             }
-        } else {
-            throw new IllegalStateException();
         }
 
         return new TimerCheckResult<>(null, false);
