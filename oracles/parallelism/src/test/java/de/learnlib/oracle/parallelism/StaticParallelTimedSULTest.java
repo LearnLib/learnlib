@@ -17,28 +17,35 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
+import de.learnlib.oracle.parallelism.AbstractStaticParallelTimedQueryOracleTest.TestSULOutput;
+import de.learnlib.time.MMLTModelParams;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 
-public class StaticParallelObservableSULTest extends AbstractStaticParallelOmegaOracleTest<Word<TestSULOutput>> {
+public class StaticParallelTimedSULTest extends AbstractStaticParallelTimedQueryOracleTest<TestSULOutput> {
 
     @Override
-    protected StaticParallelOmegaOracleBuilder<?, Integer, Word<TestSULOutput>> getBuilder() {
+    protected StaticParallelTimedQueryOracleBuilder<Integer, TestSULOutput> getBuilder() {
         // since we fork our initial SUL, start at -1
-        return ParallelOracleBuilders.newStaticParallelOmegaOracle(new TestSUL(new AtomicInteger(-1)));
+        return ParallelOracleBuilders.newStaticParallelTimedQueryOracle(new TestSUL(new AtomicInteger(-1)),
+                                                                        new MMLTModelParams<>(null, null, 0, 0));
     }
 
     @Override
-    protected TestOutput extractTestOutput(Word<TestSULOutput> output) {
+    protected TestOutput extractTestOutput(Word<TimedOutput<TestSULOutput>> output) {
         Assert.assertFalse(output.isEmpty());
 
-        final TestSULOutput lastSym = output.lastSymbol();
+        final TestSULOutput lastSym = output.lastSymbol().symbol();
         final int oracleId = lastSym.oracleId;
         final int batchSeqId = lastSym.batchSeqId;
-        final Word<Integer> word = lastSym.word;
 
-        return new TestOutput(oracleId, batchSeqId, word);
+        final Word<TimedInput<Integer>> word = lastSym.word;
+        final Word<TimedInput<Integer>> prefix = word.prefix(word.size() - output.size());
+        final Word<TimedInput<Integer>> suffix = word.subWord(word.size() - output.size());
+
+        return new TestOutput(oracleId, batchSeqId, prefix, suffix);
     }
 
     @Override

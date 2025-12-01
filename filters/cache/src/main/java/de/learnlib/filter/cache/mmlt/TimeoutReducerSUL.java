@@ -26,7 +26,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Assume we waited maxDelay for a timeout and observed no expiration. Then any consecutive timeout-input must also show
  * no timer (assuming sufficient maxDelay). Hence, we do not need to query the SUL for these.
  * <p>
- * We may observe a timeout again after any non-delaying input, as this may trigger a location-change.
+ * We may observe a timeout again after any non-delaying input, as this may trigger a change of location.
  *
  * @param <I>
  *         input symbol type (of non-delaying inputs)

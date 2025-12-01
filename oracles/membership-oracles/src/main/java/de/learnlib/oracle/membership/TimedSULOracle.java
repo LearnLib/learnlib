@@ -16,16 +16,15 @@
 package de.learnlib.oracle.membership;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
+import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleMMLT;
 import de.learnlib.oracle.TimedQueryOracle;
-import de.learnlib.query.Query;
 import de.learnlib.sul.TimedSUL;
 import de.learnlib.time.MMLTModelParams;
 import net.automatalib.automaton.mmlt.TimerInfo;
@@ -48,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * @param <O>
  *         output symbol type
  */
-public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
+public class TimedSULOracle<I, O> implements SingleQueryOracleMMLT<I, O> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TimedSULOracle.class);
 
@@ -67,10 +66,43 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
     }
 
     @Override
-    public void processQueries(Collection<? extends Query<TimedInput<I>, Word<TimedOutput<O>>>> queries) {
-        for (Query<TimedInput<I>, Word<TimedOutput<O>>> q : queries) {
-            this.querySuffixOutputInternal(q);
+    public Word<TimedOutput<O>> answerQuery(Word<TimedInput<I>> prefix, Word<TimedInput<I>> suffix) {
+        sul.pre();
+        sul.follow(prefix, this.modelParams.maxTimeoutWaitingTime());
+
+        // Query the SUL, one symbol at a time:
+        WordBuilder<TimedOutput<O>> wbOutput = new WordBuilder<>();
+        for (TimedInput<I> s : suffix) {
+            if (s instanceof TimeoutSymbol<I>) {
+                TimedOutput<O> output = sul.timeoutStep(this.modelParams.maxTimeoutWaitingTime());
+                if (output != null) {
+                    wbOutput.append(output);
+                } else {
+                    wbOutput.append(new TimedOutput<>(this.modelParams.silentOutput())); // no output in time -> silent
+                }
+            } else if (s instanceof InputSymbol<I> ndi) {
+                TimedOutput<O> output = sul.step(ndi);
+                wbOutput.append(output);
+            } else if (s instanceof TimeStepSequence<I> ws) {
+                if (ws.timeSteps() > 1) {
+                    throw new IllegalArgumentException("Only single wait step allowed in suffix.");
+                }
+
+                // Wait for a single time step:
+                TimedOutput<O> output = sul.timeStep();
+                if (output != null) {
+                    wbOutput.append(output);
+                } else {
+                    wbOutput.append(new TimedOutput<>(this.modelParams.silentOutput())); // no output in time -> silent
+                }
+
+            } else {
+                throw new IllegalArgumentException("Only timeout or untimed symbols allowed in suffix.");
+            }
         }
+
+        sul.post();
+        return wbOutput.toWord();
     }
 
     @Override
@@ -115,7 +147,7 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
         return minNext;
     }
 
-    private String getUniqueTimerName() {
+    private String newUniqueTimerName() {
         return "t_" + (++this.timerCounter);
     }
 
@@ -149,7 +181,7 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
             LOGGER.warn("Multiple timers expiring at first timeout, automaton may not be minimal.");
         }
 
-        knownTimers.add(new TimerInfo<>(getUniqueTimerName(), firstTimeout.delay(), firstTimeoutOutputs, null, true));
+        knownTimers.add(new TimerInfo<>(newUniqueTimerName(), firstTimeout.delay(), firstTimeoutOutputs, null, true));
 
         // Wait for further timeouts:
         long currentTimeStep = firstTimeout.delay(); // already waited for first timeout
@@ -202,29 +234,31 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
         if (nextActualTime < nextExpectedTime) {
             // A timeout occurred before we expected one -> new timer:
             TimerInfo<?, O> newTimer =
-                    new TimerInfo<>(getUniqueTimerName(), nextActualTime, nextOutputSymbols, null, true);
+                    new TimerInfo<>(newUniqueTimerName(), nextActualTime, nextOutputSymbols, null, true);
             return new TimerCheckResult<>(newTimer, false);
         } else {
             assert nextActualTime == nextExpectedTime;
             // Timeout occurred at expected time -> check if matching expected output:
-            Map<O, Long> expectedOutputs = knownTimers.stream()
-                                                      .filter(t -> nextExpectedTime % t.initial() == 0)
-                                                      .map(TimerInfo::outputs) // outputs of timers with same initial value
-                                                      .flatMap(Collection::stream)
-                                                      .collect(Collectors.groupingBy(t -> t,
-                                                                                     Collectors.counting())); // count occurrences
+            Map<O, Long> expectedOutputs = new HashMap<>();
+            for (TimerInfo<?, O> t : knownTimers) {
+                if (nextExpectedTime % t.initial() == 0) {
+                    for (O o : t.outputs()) {
+                        expectedOutputs.merge(o, 1L, Long::sum);
+                    }
+                }
+            }
 
-            Map<O, Long> actualOutputs =
-                    nextOutputSymbols.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+            Map<O, Long> actualOutputs = new HashMap<>();
+            for (O o : nextOutputSymbols) {
+                actualOutputs.merge(o, 1L, Long::sum);
+            }
 
             // Any outputs that were expected but are not present?
-            boolean missingOutputs = expectedOutputs.keySet()
-                                                    .stream()
-                                                    .anyMatch(o -> actualOutputs.getOrDefault(o, 0L) <
-                                                                   expectedOutputs.get(o)); // less than expected
-            if (missingOutputs) {
-                // Same time but missing output -> missed location change:
-                return new TimerCheckResult<>(null, true);
+            for (Entry<O, Long> e : expectedOutputs.entrySet()) {
+                if (actualOutputs.getOrDefault(e.getKey(), 0L) < e.getValue()) {
+                    // Same time but missing output -> missed location change:
+                    return new TimerCheckResult<>(null, true);
+                }
             }
 
             // At least all expected outputs are present.
@@ -244,52 +278,12 @@ public class TimedSULOracle<I, O> implements TimedQueryOracle<I, O> {
             if (!newOutputs.isEmpty()) {
                 // Same time and more outputs -> add new timer that uses the new outputs:
                 TimerInfo<?, O> newTimer =
-                        new TimerInfo<>(getUniqueTimerName(), nextActualTime, newOutputs, null, true);
+                        new TimerInfo<>(newUniqueTimerName(), nextActualTime, newOutputs, null, true);
                 return new TimerCheckResult<>(newTimer, false);
             }
         }
 
         return new TimerCheckResult<>(null, false);
-    }
-
-    private void querySuffixOutputInternal(Query<TimedInput<I>, Word<TimedOutput<O>>> query) {
-
-        sul.pre();
-        sul.follow(query.getPrefix(), this.modelParams.maxTimeoutWaitingTime());
-
-        // Query the SUL, one symbol at a time:
-        WordBuilder<TimedOutput<O>> wbOutput = new WordBuilder<>();
-        for (TimedInput<I> s : query.getSuffix()) {
-            if (s instanceof TimeoutSymbol<I>) {
-                TimedOutput<O> output = sul.timeoutStep(this.modelParams.maxTimeoutWaitingTime());
-                if (output != null) {
-                    wbOutput.append(output);
-                } else {
-                    wbOutput.append(new TimedOutput<>(this.modelParams.silentOutput())); // no output in time -> silent
-                }
-            } else if (s instanceof InputSymbol<I> ndi) {
-                TimedOutput<O> output = sul.step(ndi);
-                wbOutput.append(output);
-            } else if (s instanceof TimeStepSequence<I> ws) {
-                if (ws.timeSteps() > 1) {
-                    throw new IllegalArgumentException("Only single wait step allowed in suffix.");
-                }
-
-                // Wait for a single time step:
-                TimedOutput<O> output = sul.timeStep();
-                if (output != null) {
-                    wbOutput.append(output);
-                } else {
-                    wbOutput.append(new TimedOutput<>(this.modelParams.silentOutput())); // no output in time -> silent
-                }
-
-            } else {
-                throw new IllegalArgumentException("Only timeout or untimed symbols allowed in suffix.");
-            }
-        }
-
-        sul.post();
-        query.answer(wbOutput.toWord());
     }
 
     private record TimerCheckResult<O>(@Nullable TimerInfo<?, O> newTimer, boolean inconsistent) {}

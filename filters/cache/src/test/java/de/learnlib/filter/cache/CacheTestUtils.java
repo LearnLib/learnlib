@@ -33,7 +33,6 @@ import de.learnlib.time.MMLTModelParams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
-import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.impl.CompactMMLT;
 import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
 import net.automatalib.automaton.transducer.MealyMachine;

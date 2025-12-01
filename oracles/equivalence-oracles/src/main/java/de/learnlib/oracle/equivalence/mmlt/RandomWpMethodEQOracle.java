@@ -100,37 +100,38 @@ public class RandomWpMethodEQOracle<I, O> implements MMLTEquivalenceOracle<I, O>
         for (int i = 0; i < this.bound; i++) {
             statisticsCollector.increaseCounter(KEY_TESTED_WORDS, "RandomWpOracle: tested words");
 
-            DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> sulAnswer =
+            Word<TimedInput<I>> testword =
                     this.generateTestword(prefixList, globalSuffixes, hypothesis, hypSemModel, listAlphabet);
-            Word<TimedOutput<O>> hypAnswer =
-                    hypothesis.getSemantics().computeSuffixOutput(sulAnswer.getPrefix(), sulAnswer.getSuffix());
+
+            Word<TimedOutput<O>> sulAnswer = timeOracle.answerQuery(testword);
+            Word<TimedOutput<O>> hypAnswer = hypothesis.getSemantics().computeOutput(testword);
 
             // Found inconsistency if outputs do no match:
-            if (!sulAnswer.getOutput().equals(hypAnswer)) {
-                return sulAnswer;
+            if (!sulAnswer.equals(hypAnswer)) {
+                return new DefaultQuery<>(testword, sulAnswer);
             }
         }
 
         return null;
     }
 
-    private <S, T> DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> generateTestword(List<Word<TimedInput<I>>> prefixes,
-                                                                                      List<Word<TimedInput<I>>> globalSuffixes,
-                                                                                      MMLT<S, I, ?, O> hypothesis,
-                                                                                      ReducedMMLTSemantics<S, I, O> hypSemModel,
-                                                                                      List<TimedInput<I>> alphabet) {
+    private <S> Word<TimedInput<I>> generateTestword(List<Word<TimedInput<I>>> prefixes,
+                                                     List<Word<TimedInput<I>>> globalSuffixes,
+                                                     MMLT<S, I, ?, O> hypothesis,
+                                                     ReducedMMLTSemantics<S, I, O> hypSemModel,
+                                                     List<TimedInput<I>> alphabet) {
 
-        WordBuilder<TimedInput<I>> wbTestWord = new WordBuilder<>();
+        WordBuilder<TimedInput<I>> wb = new WordBuilder<>();
 
         // 1. Pick a random entry config prefix:
         Word<TimedInput<I>> prefix = prefixes.get(this.random.nextInt(prefixes.size()));
-        wbTestWord.append(prefix);
+        wb.append(prefix);
 
         // 2. Add random middle part:
         int size = minSize;
         while (size > 0 || this.random.nextDouble() > 1 / (this.rndLen + 1.0)) {
             TimedInput<I> nextSymbol = alphabet.get(this.random.nextInt(alphabet.size()));
-            wbTestWord.append(nextSymbol);
+            wb.append(nextSymbol);
 
             if (size > 0) {
                 size--;
@@ -146,7 +147,7 @@ public class RandomWpMethodEQOracle<I, O> implements MMLTEquivalenceOracle<I, O>
             }
         } else {
             // Identify configuration reached by prefix:
-            State<S, O> currentConfig = hypothesis.getSemantics().getState(wbTestWord.toWord());
+            State<S, O> currentConfig = hypothesis.getSemantics().getState(wb);
             assert currentConfig != null;
             Integer state = hypSemModel.getStateForConfiguration(currentConfig, true);
             List<Word<TimedInput<I>>> localSuffixes = Automata.stateCharacterizingSet(hypSemModel, alphabet, state);
@@ -155,11 +156,9 @@ public class RandomWpMethodEQOracle<I, O> implements MMLTEquivalenceOracle<I, O>
                 suffix = localSuffixes.get(random.nextInt(localSuffixes.size()));
             }
         }
-        wbTestWord.append(suffix);
 
-        // Query SUL:
-        Word<TimedInput<I>> testWord = wbTestWord.toWord();
-        Word<TimedOutput<O>> sulAnswer = timeOracle.answerQuery(testWord);
-        return new DefaultQuery<>(testWord, sulAnswer);
+        wb.append(suffix);
+
+        return wb.toWord();
     }
 }

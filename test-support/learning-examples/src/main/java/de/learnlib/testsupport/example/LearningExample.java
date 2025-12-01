@@ -30,7 +30,9 @@ import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
 import net.automatalib.automaton.transducer.SubsequentialTransducer;
 import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimeoutSymbol;
 
 public interface LearningExample<I, A> {
 
@@ -69,11 +71,23 @@ public interface LearningExample<I, A> {
 
         MMLTModelParams<O> getParams();
 
+        /**
+         * Returns the fully timed alphabet, including the {@link TimeoutSymbol} and {@link TimeStepSequence} symbol.
+         *
+         * @return the full (semantic) alphabet
+         *
+         * @see #getUntimedAlphabet()
+         */
         @Override
         default Alphabet<TimedInput<I>> getAlphabet() {
             return getReferenceAutomaton().getSemantics().getInputAlphabet();
         }
 
+        /**
+         * Returns the direct inputs of the {@link MMLT#getInputAlphabet() MMLT}.
+         *
+         * @return the direct input alphabet
+         */
         default Alphabet<I> getUntimedAlphabet() {
             return getReferenceAutomaton().getInputAlphabet();
         }

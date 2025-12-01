@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -60,30 +61,27 @@ public class ExtensibleLStarMMLTIT extends AbstractMMLTLearnerIT {
                                              MMLTLearnerVariantList<I, O> variants) {
 
         var mmlt = example.getReferenceAutomaton();
-        int counters = countTimers(mmlt);
+        var counters = countTimers(mmlt);
 
         List<Word<TimedInput<I>>> suffixes = new ArrayList<>();
         alphabet.forEach(s -> suffixes.add(Word.fromLetter(TimedInput.input(s))));
         suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
 
-        for (FilterMode filterMode : FilterMode.values()) {
+        var filters = Arrays.asList(new MMLTPerfectSymbolFilter<>(mmlt),
+                                    new MMLTRandomSymbolFilter<>(mmlt, 0.1, new Random(42)),
+                                    new IgnoreAllSymbolFilter<TimedInput<I>, InputSymbol<I>>(),
+                                    new AcceptAllSymbolFilter<TimedInput<I>, InputSymbol<I>>());
 
-            SymbolFilter<TimedInput<I>, InputSymbol<I>> filter = switch (filterMode) {
-                case perfect -> new MMLTPerfectSymbolFilter<>(mmlt);
-                case random -> new MMLTRandomSymbolFilter<>(mmlt, 0.1, new Random(42));
-                case ignore_all -> new IgnoreAllSymbolFilter<>();
-                case none -> new AcceptAllSymbolFilter<>();
-            };
+        for (SymbolFilter<TimedInput<I>, InputSymbol<I>> filter : filters) {
 
             var cachedFilter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
-
             var learner = new ExtensibleLStarMMLTBuilder<I, O>().withAlphabet(alphabet)
                                                                 .withModelParams(example.getParams())
                                                                 .withTimeOracle(mqOracle)
                                                                 .withInitialSuffixes(suffixes)
                                                                 .withSymbolFilter(cachedFilter)
                                                                 .create();
-            variants.addLearnerVariant("system=" + example + ",filter=" + filterMode, learner, counters + mmlt.size());
+            variants.addLearnerVariant("system=" + example + ",filter=" + filter, learner, counters + mmlt.size());
         }
     }
 
@@ -124,13 +122,6 @@ public class ExtensibleLStarMMLTIT extends AbstractMMLTLearnerIT {
             throw new RuntimeException("Failed to list model files", e);
         }
         return models;
-    }
-
-    private enum FilterMode {
-        none,
-        random,
-        ignore_all,
-        perfect
     }
 
     public static class Example implements MMLTLearningExample<String, String> {
