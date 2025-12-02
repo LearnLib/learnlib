@@ -15,7 +15,7 @@
  */
 package de.learnlib.algorithm.lstar.mmlt;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +40,7 @@ import de.learnlib.filter.MutableSymbolFilter;
 import de.learnlib.filter.symbol.AcceptAllSymbolFilter;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.query.Query;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatisticsCollector;
 import de.learnlib.time.MMLTModelParams;
@@ -51,6 +52,7 @@ import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.common.util.HashUtil;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
@@ -235,22 +237,22 @@ public class ExtensibleLStarMMLT<I, O>
 
     private void updateOutputs() {
         // Query output of newly-added transitions:
-        updateOutputs(this.hypData.getTable().getShortPrefixRows());
-        updateOutputs(this.hypData.getTable().getLongPrefixRows());
-    }
+        MMLTObservationTable<I, O> ot = this.hypData.getTable();
+        List<OutputQuery<I, O>> queries = new ArrayList<>();
 
-    private void updateOutputs(Collection<Row<TimedInput<I>>> rows) {
-        for (Row<TimedInput<I>> row : rows) {
-            if (row.getLabel().isEmpty()) {
+        for (Row<TimedInput<I>> row : IterableUtil.concat(ot.getShortPrefixRows(), ot.getLongPrefixRows())) {
+            Word<TimedInput<I>> label = row.getLabel();
+
+            if (label.isEmpty()) {
                 continue; // initial state
             }
 
-            if (this.hypData.getTransitionOutputMap().containsKey(row.getLabel())) {
+            if (this.hypData.getTransitionOutputMap().containsKey(label)) {
                 continue; // already queried
             }
 
-            Word<TimedInput<I>> prefix = row.getLabel().prefix(-1);
-            TimedInput<I> inputSym = row.getLabel().suffix(1).lastSymbol();
+            Word<TimedInput<I>> prefix = label.prefix(-1);
+            TimedInput<I> inputSym = label.lastSymbol();
 
             TimedOutput<O> output;
             if (inputSym instanceof TimeStepSequence<I> ws) {
@@ -259,12 +261,17 @@ public class ExtensibleLStarMMLT<I, O>
                 assert timerInfo != null;
                 O combinedOutput = this.hypData.getModelParams().outputCombiner().combineSymbols(timerInfo.outputs());
                 output = new TimedOutput<>(combinedOutput);
+                this.hypData.getTransitionOutputMap().put(label, output);
             } else {
-                output = this.timeOracle.answerQuery(prefix, Word.fromLetter(inputSym)).lastSymbol();
+                queries.add(new OutputQuery<>(label, prefix));
             }
+        }
 
-            if (output != null) {
-                this.hypData.getTransitionOutputMap().put(row.getLabel(), output);
+        if (!queries.isEmpty()) {
+            timeOracle.processQueries(queries);
+
+            for (OutputQuery<I, O> q : queries) {
+                q.process(this.hypData.getTransitionOutputMap());
             }
         }
     }
@@ -402,8 +409,8 @@ public class ExtensibleLStarMMLT<I, O>
         // If it is a fringe prefix, we need to remove it:
         TimerInfo<?, O> lastTimer = locationTimerInfo.getLastTimer();
         assert lastTimer != null;
-        Word<TimedInput<I>> lastTimerTransPrefix = spRow.getLabel().append(TimedInput.step(lastTimer.initial()));
         if (!lastTimer.periodic()) {
+            Word<TimedInput<I>> lastTimerTransPrefix = spRow.getLabel().append(TimedInput.step(lastTimer.initial()));
             Row<TimedInput<I>> row = hypData.getTable().getRow(lastTimerTransPrefix);
             assert row != null;
             if (!row.isShortPrefixRow()) {
@@ -413,16 +420,15 @@ public class ExtensibleLStarMMLT<I, O>
         }
 
         // Prefix for timeout-transition of new one-shot timer:
-        Word<TimedInput<I>> timerTransPrefix = spRow.getLabel().append(TimedInput.step(timeout.initial()));
-        assert this.hypData.getTable().getRow(timerTransPrefix) == null : "Timer already appears to be one-shot.";
+        assert this.hypData.getTable().getRow(spRow.getLabel().append(TimedInput.step(timeout.initial()))) == null :
+                "Timer already appears to be one-shot.";
 
         // Remove all timers with greater timeout (are now redundant):
-        List<String> subsequentTimers = locationTimerInfo.getSortedTimers()
-                                                         .stream()
-                                                         .filter(t -> t.initial() > timeout.initial())
-                                                         .map(TimerInfo::name)
-                                                         .toList();
-        subsequentTimers.forEach(locationTimerInfo::removeTimer);
+        for (TimerInfo<?, O> t : new ArrayList<>(locationTimerInfo.getSortedTimers())) {
+            if (t.initial() > timeout.initial()) {
+                locationTimerInfo.removeTimer(t.name());
+            }
+        }
 
         // Change from periodic to one-shot:
         locationTimerInfo.setOneShotTimer(timeout.name());
@@ -501,9 +507,7 @@ public class ExtensibleLStarMMLT<I, O>
             }
         }
         // Ensure initial location:
-        if (hypothesis.getInitialState() == null) {
-            throw new IllegalArgumentException("Automaton must have an initial location.");
-        }
+        assert hypothesis.getInitialState() != null : "Automaton must have an initial location.";
 
         // 5. Create outgoing transitions for non-delaying inputs:
         for (Entry<Integer, Integer> e : stateMap.entrySet()) {
@@ -573,6 +577,44 @@ public class ExtensibleLStarMMLT<I, O>
         return hypothesis;
     }
 
+    private static final class OutputQuery<I, O> extends Query<TimedInput<I>, Word<TimedOutput<O>>> {
+
+        private final Word<TimedInput<I>> label;
+        private final Word<TimedInput<I>> prefix;
+        private TimedOutput<O> output;
+
+        private OutputQuery(Word<TimedInput<I>> label, Word<TimedInput<I>> prefix) {
+            this.label = label;
+            this.prefix = prefix;
+        }
+
+        @Override
+        public void answer(Word<TimedOutput<O>> output) {
+            assert output.size() == 1;
+            this.output = output.firstSymbol();
+        }
+
+        @Override
+        public Word<TimedInput<I>> getPrefix() {
+            return prefix;
+        }
+
+        @Override
+        public Word<TimedInput<I>> getSuffix() {
+            return Word.fromLetter(label.lastSymbol());
+        }
+
+        /**
+         * Processes the query result by mapping the given label to the (single) response.
+         *
+         * @param outputs
+         *         the output map to write the mapping to
+         */
+        void process(Map<Word<TimedInput<I>>, TimedOutput<O>> outputs) {
+            outputs.put(label, output);
+        }
+    }
+
     static final class BuilderDefaults {
 
         private BuilderDefaults() {
@@ -592,7 +634,7 @@ public class ExtensibleLStarMMLT<I, O>
         }
 
         static AcexAnalyzer analyzer() {
-            return AcexAnalyzers.LINEAR_BWD;
+            return AcexAnalyzers.BINARY_SEARCH_BWD;
         }
     }
 

@@ -18,14 +18,13 @@ package de.learnlib.algorithm.lstar.mmlt;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
@@ -34,8 +33,11 @@ import de.learnlib.filter.FilterResponse;
 import de.learnlib.filter.MutableSymbolFilter;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.oracle.TimedQueryOracle.TimerQueryResult;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.mmlt.TimerInfo;
+import net.automatalib.common.util.HashUtil;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
@@ -73,14 +75,10 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
     private final Map<Word<TimedInput<I>>, RowImpl<TimedInput<I>>> shortPrefixRowMap; // label -> row info
     private final Map<Word<TimedInput<I>>, RowImpl<TimedInput<I>>> longPrefixRowMap; // label -> row info
 
-    private final List<RowImpl<TimedInput<I>>> sortedShortPrefixes;
-    // values of shortPrefixRowMap sorted by label, for faster access.
-    private final List<RowImpl<TimedInput<I>>> longPrefixList; // values of longPrefixRowMap as list, for faster access.
-
     private final Map<Integer, RowContent<O>> rowContentMap; // contentID -> row content
 
-    private final List<Word<TimedInput<I>>> suffixes = new ArrayList<>();
-    private final Set<Word<TimedInput<I>>> suffixSet = new HashSet<>();
+    private final List<Word<TimedInput<I>>> suffixes;
+    private final Set<Word<TimedInput<I>>> suffixSet;
 
     private final Alphabet<TimedInput<I>> alphabet;
     private final long minTimerQueryWaitTime;
@@ -98,13 +96,13 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
 
         this.timerInfoMap = new HashMap<>();
 
-        this.shortPrefixRowMap = new HashMap<>();
-        this.sortedShortPrefixes = new ArrayList<>();
-
-        this.longPrefixRowMap = new HashMap<>();
-        this.longPrefixList = new ArrayList<>();
+        // use linked hashmaps for stable insertion-order
+        this.shortPrefixRowMap = new LinkedHashMap<>();
+        this.longPrefixRowMap = new LinkedHashMap<>();
 
         this.rowContentMap = new HashMap<>();
+        this.suffixes = new ArrayList<>();
+        this.suffixSet = new HashSet<>();
     }
 
     /**
@@ -158,8 +156,6 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
         RowImpl<TimedInput<I>> newRow = new RowImpl<>(Word.epsilon(), 0, alphabet.size());
         newRow.makeShort(alphabet.size());
         this.shortPrefixRowMap.put(Word.epsilon(), newRow);
-        this.sortedShortPrefixes.add(newRow);
-        this.sortedShortPrefixes.sort(Comparator.comparing(r -> r.getLabel().toString()));
 
         return newRow;
     }
@@ -182,9 +178,8 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
         }
 
         // Add outgoing transitions:
-        for (RowImpl<TimedInput<I>> t : this.createOutgoingTransitions(newRow, timeOracle)) {
-            this.queryAllSuffixes(t, timeOracle);
-        }
+        List<RowImpl<TimedInput<I>>> transitions = this.createOutgoingTransitions(newRow, timeOracle);
+        this.queryAllSuffixes(transitions, timeOracle);
     }
 
     /**
@@ -270,8 +265,6 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
     private RowImpl<TimedInput<I>> createLpRow(Word<TimedInput<I>> prefix) {
         RowImpl<TimedInput<I>> newRow = new RowImpl<>(prefix, 0);
         this.longPrefixRowMap.put(prefix, newRow);
-        this.longPrefixList.add(newRow);
-        assert this.longPrefixList.size() == this.longPrefixRowMap.size();
 
         newRow.setLpIndex(0); // unused
 
@@ -284,58 +277,37 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
      *
      * @return the list of unclosed transition, in a deterministic order
      */
-    public List<List<Row<TimedInput<I>>>> findUnclosedTransitions() {
+    List<List<Row<TimedInput<I>>>> findUnclosedTransitions() {
         // Identify contentIds for locations:
-        Set<Integer> spContentIds =
-                this.shortPrefixRowMap.values().stream().map(RowImpl::getRowContentId).collect(Collectors.toSet());
+        Set<Integer> spContentIds = new HashSet<>(this.shortPrefixRowMap.size());
 
-        // Group lp rows by their content id:
-        Map<Integer, List<Row<TimedInput<I>>>> lpContentMap = new HashMap<>();
-        for (RowImpl<TimedInput<I>> lpRow : this.longPrefixRowMap.values()) {
-            lpContentMap.putIfAbsent(lpRow.getRowContentId(), new ArrayList<>());
-            lpContentMap.get(lpRow.getRowContentId()).add(lpRow);
+        for (RowImpl<TimedInput<I>> row : this.shortPrefixRowMap.values()) {
+            spContentIds.add(row.getRowContentId());
         }
 
-        // Identify ids that are not used by any SP:
-        List<List<Row<TimedInput<I>>>> unclosedRows = new ArrayList<>();
-        List<Integer> sortedLpIds = lpContentMap.keySet().stream().sorted().toList();
-        for (Integer lpId : sortedLpIds) {
-            if (spContentIds.contains(lpId)) {
-                continue;
-            }
+        // Identify ids that are not used by any SP and group them by their content id:
+        Map<Integer, List<Row<TimedInput<I>>>> lpContentMap =
+                new HashMap<>(HashUtil.capacity(this.longPrefixRowMap.size()));
 
-            // Sort row s.t. list order deterministic:
-            List<Row<TimedInput<I>>> unclosedWithId = lpContentMap.get(lpId);
-            unclosedWithId.sort(Comparator.comparing(r -> r.getLabel().toString()));
-            unclosedRows.add(unclosedWithId);
+        for (RowImpl<TimedInput<I>> row : this.longPrefixRowMap.values()) {
+            int id = row.getRowContentId();
+
+            if (!spContentIds.contains(id)) {
+                lpContentMap.computeIfAbsent(id, k -> new ArrayList<>()).add(row);
+            }
         }
 
         // Remove unused content ids:
-        Set<Integer> usedContentIds =
-                Stream.concat(this.shortPrefixRowMap.values().stream(), this.longPrefixRowMap.values().stream())
-                      .map(RowImpl::getRowContentId)
-                      .collect(Collectors.toSet());
+        this.rowContentMap.keySet().removeIf(key -> !(spContentIds.contains(key) || lpContentMap.containsKey(key)));
 
-        List<Integer> oldContentIds = this.rowContentMap.keySet().stream().toList();
-        for (int oldId : oldContentIds) {
-            if (!usedContentIds.contains(oldId)) {
-                this.rowContentMap.remove(oldId);
-            }
-        }
-
-        return unclosedRows;
+        return new ArrayList<>(lpContentMap.values());
     }
 
-    public List<List<Row<TimedInput<I>>>> initialize(List<Word<TimedInput<I>>> initialShortPrefixes,
-                                                     List<Word<TimedInput<I>>> initialSuffixes,
-                                                     TimedQueryOracle<I, O> oracle) {
+    List<List<Row<TimedInput<I>>>> initialize(List<Word<TimedInput<I>>> initialShortPrefixes,
+                                              List<Word<TimedInput<I>>> initialSuffixes,
+                                              TimedQueryOracle<I, O> oracle) {
 
-        if (isInitialized()) {
-            throw new IllegalStateException("Called initialize, but there are already rows present");
-        }
-        if (!initialShortPrefixes.isEmpty()) {
-            throw new IllegalArgumentException("Init with short prefixes is not supported.");
-        }
+        assert this.shortPrefixRowMap.isEmpty() && this.longPrefixRowMap.isEmpty() && initialShortPrefixes.isEmpty();
 
         // Add initial suffixes:
         for (Word<TimedInput<I>> suffix : initialSuffixes) {
@@ -347,22 +319,34 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
         // 1. Create initial location:
         RowImpl<TimedInput<I>> newLoc = this.addInitialLocation();
         this.initLocation(newLoc, oracle);
-        this.queryAllSuffixes(newLoc, oracle);
+        this.queryAllSuffixes(Collections.singleton(newLoc), oracle);
 
         // 2. Identify unclosed transitions:
         return this.findUnclosedTransitions();
     }
 
-    private void queryAllSuffixes(RowImpl<TimedInput<I>> row, TimedQueryOracle<I, O> timedOracle) {
-        Word<TimedInput<I>> prefix = row.getLabel();
+    private void queryAllSuffixes(Collection<RowImpl<TimedInput<I>>> rows, TimedQueryOracle<I, O> timedOracle) {
 
-        List<Word<TimedOutput<O>>> suffixOutputs = new ArrayList<>(this.suffixes.size());
-        for (Word<TimedInput<I>> suffix : this.suffixes) {
-            Word<TimedOutput<O>> output = timedOracle.answerQuery(prefix, suffix);
-            suffixOutputs.add(output);
+        int numSuffixes = this.suffixes.size();
+        List<DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>>> queries = new ArrayList<>(rows.size() * numSuffixes);
+
+        for (RowImpl<TimedInput<I>> row : rows) {
+            Word<TimedInput<I>> prefix = row.getLabel();
+
+            for (Word<TimedInput<I>> suffix : this.suffixes) {
+                queries.add(new DefaultQuery<>(prefix, suffix));
+            }
         }
 
-        this.processSuffixOutputs(row, suffixOutputs);
+        timedOracle.processQueries(queries);
+        Iterator<DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>>> iter = queries.iterator();
+
+        for (RowImpl<TimedInput<I>> row : rows) {
+            List<Word<TimedOutput<O>>> outputs = new ArrayList<>(numSuffixes);
+            fetchResults(iter, outputs, numSuffixes);
+
+            this.processSuffixOutputs(row, outputs);
+        }
     }
 
     private void processSuffixOutputs(RowImpl<TimedInput<I>> row, List<Word<TimedOutput<O>>> rowContents) {
@@ -377,61 +361,71 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
         row.setRowContentId(contentId);
     }
 
-    private boolean isInitialized() {
-        return !(shortPrefixRowMap.isEmpty() && longPrefixRowMap.isEmpty());
+    private static <I, D> void fetchResults(Iterator<DefaultQuery<I, D>> queryIt, List<D> output, int numSuffixes) {
+        for (int j = 0; j < numSuffixes; j++) {
+            DefaultQuery<I, D> qry = queryIt.next();
+            output.add(qry.getOutput());
+        }
     }
 
-    public List<List<Row<TimedInput<I>>>> addSuffixes(Collection<? extends Word<TimedInput<I>>> newSuffixes,
-                                                      TimedQueryOracle<I, O> oracle) {
+    List<List<Row<TimedInput<I>>>> addSuffixes(Collection<? extends Word<TimedInput<I>>> newSuffixes,
+                                               TimedQueryOracle<I, O> oracle) {
         // 1. Extend current suffixes + identify new suffixes:
-        List<Word<TimedInput<I>>> newSuffixList = new ArrayList<>();
+        int numOld = this.suffixes.size();
         for (Word<TimedInput<I>> suffix : newSuffixes) {
             if (this.suffixSet.add(suffix)) {
                 LOGGER.debug("Adding new suffix '{}'", suffix);
-
-                newSuffixList.add(suffix);
                 this.suffixes.add(suffix);
             }
         }
-        if (newSuffixList.isEmpty()) {
+        int numNew = this.suffixes.size();
+
+        if (numOld == numNew) {
             return Collections.emptyList();
         }
 
         // 2. Update row content:
-        Stream.concat(shortPrefixRowMap.values().stream(), longPrefixRowMap.values().stream()).forEach(row -> {
-            List<Word<TimedOutput<O>>> updatedOutputs = new ArrayList<>();
+        int numNewSuffixes = numNew - numOld;
+        List<DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>>> queries =
+                new ArrayList<>(numNewSuffixes * numberOfRows());
+        Iterable<RowImpl<TimedInput<I>>> rows =
+                IterableUtil.concat(shortPrefixRowMap.values(), longPrefixRowMap.values());
+        List<Word<TimedInput<I>>> newSuffixList = this.suffixes.subList(numOld, numNew);
+
+        for (RowImpl<TimedInput<I>> row : rows) {
+            for (Word<TimedInput<I>> suffix : newSuffixList) {
+                queries.add(new DefaultQuery<>(row.getLabel(), suffix));
+            }
+        }
+
+        oracle.processQueries(queries);
+        Iterator<DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>>> iterator = queries.iterator();
+
+        for (RowImpl<TimedInput<I>> row : rows) {
+            List<Word<TimedOutput<O>>> updatedOutputs = new ArrayList<>(numNew);
             if (row.getRowContentId() != NO_CONTENT) {
                 // Add existing suffix outputs:
-                updatedOutputs.addAll(this.rowContentMap.get(row.getRowContentId()).outputs());
+                updatedOutputs.addAll(rowContents(row));
             }
 
-            for (Word<TimedInput<I>> suffix : newSuffixList) {
-                Word<TimedOutput<O>> output = oracle.answerQuery(row.getLabel(), suffix);
-                updatedOutputs.add(output);
-            }
-
+            fetchResults(iterator, updatedOutputs, numNewSuffixes);
             this.processSuffixOutputs(row, updatedOutputs);
-        });
+        }
 
         return this.findUnclosedTransitions();
     }
 
-    public List<List<Row<TimedInput<I>>>> toShortPrefixes(List<Row<TimedInput<I>>> lpRows,
-                                                          TimedQueryOracle<I, O> oracle) {
+    List<List<Row<TimedInput<I>>>> toShortPrefixes(List<Row<TimedInput<I>>> lpRows, TimedQueryOracle<I, O> oracle) {
         for (Row<TimedInput<I>> row : lpRows) {
             LOGGER.debug("Adding new location with prefix '{}'", row.getLabel());
 
             final RowImpl<TimedInput<I>> lpRow = (RowImpl<TimedInput<I>>) row;
 
             // Delete from LP rows:
-            RowImpl<TimedInput<I>> removed = this.longPrefixRowMap.remove(row.getLabel());
-            this.longPrefixList.remove(removed);
-            assert this.longPrefixList.size() == this.longPrefixRowMap.size();
+            this.longPrefixRowMap.remove(row.getLabel());
 
             // Add to SP rows:
             this.shortPrefixRowMap.put(row.getLabel(), lpRow);
-            this.sortedShortPrefixes.add(lpRow);
-            this.sortedShortPrefixes.sort(Comparator.comparing(r -> r.getLabel().toString()));
 
             lpRow.makeShort(alphabet.size());
 
@@ -447,18 +441,17 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
 
     @Override
     public Collection<Row<TimedInput<I>>> getShortPrefixRows() {
-        assert this.sortedShortPrefixes.size() == this.shortPrefixRowMap.size();
-        return Collections.unmodifiableList(this.sortedShortPrefixes);
+        return Collections.unmodifiableCollection(this.shortPrefixRowMap.values());
     }
 
     @Override
     public Collection<Row<TimedInput<I>>> getLongPrefixRows() {
-        return Collections.unmodifiableList(this.longPrefixList);
+        return Collections.unmodifiableCollection(this.longPrefixRowMap.values());
     }
 
     @Override
     public Row<TimedInput<I>> getRow(int idx) {
-        throw new IllegalStateException("Not supported. Use prefix to access rows instead.");
+        throw new UnsupportedOperationException("Not supported. Use prefix to access rows instead.");
     }
 
     @Override
@@ -495,10 +488,10 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
 
     @Override
     public Word<TimedInput<I>> transformAccessSequence(Word<TimedInput<I>> word) {
-        throw new IllegalStateException("Not implemented.");
+        throw new UnsupportedOperationException("Not implemented.");
     }
 
-    public @Nullable TimerInfo<?, O> getTimerInfo(Word<TimedInput<I>> prefix, long initial) {
+    @Nullable TimerInfo<?, O> getTimerInfo(Word<TimedInput<I>> prefix, long initial) {
         LocationTimerInfo<I, O> info = this.timerInfoMap.get(prefix);
         if (info != null) {
             return info.getTimerInfo(initial);
@@ -506,7 +499,7 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
         return null;
     }
 
-    public @Nullable LocationTimerInfo<I, O> getLocationTimerInfo(Row<TimedInput<I>> sp) {
+    @Nullable LocationTimerInfo<I, O> getLocationTimerInfo(Row<TimedInput<I>> sp) {
         return this.timerInfoMap.getOrDefault(sp.getLabel(), null);
     }
 
@@ -525,9 +518,9 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
      *
      * @return List of unclosed rows. Empty, if none.
      */
-    public List<List<Row<TimedInput<I>>>> addOutgoingTransition(Row<TimedInput<I>> spRow,
-                                                                TimedInput<I> symbol,
-                                                                TimedQueryOracle<I, O> timeOracle) {
+    List<List<Row<TimedInput<I>>>> addOutgoingTransition(Row<TimedInput<I>> spRow,
+                                                         TimedInput<I> symbol,
+                                                         TimedQueryOracle<I, O> timeOracle) {
         if (!this.alphabet.containsSymbol(symbol)) {
             throw new IllegalArgumentException("Unknown symbol.");
         }
@@ -545,14 +538,14 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
         ((RowImpl<TimedInput<I>>) spRow).setSuccessor(symIdx, succRow);
 
         // Update suffixes:
-        this.queryAllSuffixes(succRow, timeOracle);
+        this.queryAllSuffixes(Collections.singleton(succRow), timeOracle);
 
         return this.findUnclosedTransitions();
     }
 
-    public List<List<Row<TimedInput<I>>>> addTimerTransition(Row<TimedInput<I>> spRow,
-                                                             TimerInfo<?, O> timeout,
-                                                             TimedQueryOracle<I, O> timeOracle) {
+    List<List<Row<TimedInput<I>>>> addTimerTransition(Row<TimedInput<I>> spRow,
+                                                      TimerInfo<?, O> timeout,
+                                                      TimedQueryOracle<I, O> timeOracle) {
         return this.addOutgoingTransition(spRow, new TimeStepSequence<>(timeout.initial()), timeOracle);
     }
 
@@ -563,15 +556,13 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
      * @param prefix
      *         Row prefix
      */
-    public void removeLpRow(Word<TimedInput<I>> prefix) {
+    void removeLpRow(Word<TimedInput<I>> prefix) {
         if (!this.longPrefixRowMap.containsKey(prefix)) {
             throw new IllegalArgumentException("Attempting to remove lp row that does not exist.");
         }
 
         // Remove lp row:
-        RowImpl<TimedInput<I>> removed = this.longPrefixRowMap.remove(prefix);
-        this.longPrefixList.remove(removed);
-        assert this.longPrefixList.size() == this.longPrefixRowMap.size();
+        this.longPrefixRowMap.remove(prefix);
 
         // Unset as successor:
         int symIdx = this.alphabet.getSymbolIndex(prefix.lastSymbol());
