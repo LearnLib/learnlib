@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
+import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
+import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
 import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLTBuilder;
 import de.learnlib.algorithm.lstar.mmlt.filter.MMLTPerfectSymbolFilter;
 import de.learnlib.algorithm.lstar.mmlt.filter.MMLTRandomSymbolFilter;
@@ -46,7 +48,7 @@ import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.dot.DOTParsers;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimedInput;
-import net.automatalib.symbol.time.TimeoutSymbol;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.util.automaton.mmlt.MMLTs;
 import net.automatalib.word.Word;
 import org.testng.annotations.Test;
@@ -65,23 +67,29 @@ public class ExtensibleLStarMMLTIT extends AbstractMMLTLearnerIT {
 
         List<Word<TimedInput<I>>> suffixes = new ArrayList<>();
         alphabet.forEach(s -> suffixes.add(Word.fromLetter(TimedInput.input(s))));
-        suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
+        // Do not include TimeoutSymbol because we want to check analyzing and handling counterexamples with it
+        // suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
+
+        var builder = new ExtensibleLStarMMLTBuilder<I, O>().withAlphabet(alphabet)
+                                                            .withModelParams(example.getParams())
+                                                            .withTimeOracle(mqOracle)
+                                                            .withInitialSuffixes(suffixes);
 
         var filters = Arrays.asList(new MMLTPerfectSymbolFilter<>(mmlt),
                                     new MMLTRandomSymbolFilter<>(mmlt, 0.1, new Random(42)),
                                     new IgnoreAllSymbolFilter<TimedInput<I>, InputSymbol<I>>(),
                                     new AcceptAllSymbolFilter<TimedInput<I>, InputSymbol<I>>());
 
-        for (SymbolFilter<TimedInput<I>, InputSymbol<I>> filter : filters) {
+        for (ClosingStrategy<? super TimedInput<I>, ? super Word<TimedOutput<O>>> strategy : ClosingStrategies.values()) {
+            builder.setClosingStrategy(strategy);
+            for (SymbolFilter<TimedInput<I>, InputSymbol<I>> filter : filters) {
 
-            var cachedFilter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
-            var learner = new ExtensibleLStarMMLTBuilder<I, O>().withAlphabet(alphabet)
-                                                                .withModelParams(example.getParams())
-                                                                .withTimeOracle(mqOracle)
-                                                                .withInitialSuffixes(suffixes)
-                                                                .withSymbolFilter(cachedFilter)
-                                                                .create();
-            variants.addLearnerVariant("system=" + example + ",filter=" + filter, learner, counters + mmlt.size());
+                var cachedFilter = new CachedSymbolFilter<>(filter); // need to wrap to enable updates to responses
+                var learner = builder.withSymbolFilter(cachedFilter).create();
+                variants.addLearnerVariant("system=" + example + ",strategy=" + strategy + ",filter=" + filter,
+                                           learner,
+                                           counters + mmlt.size());
+            }
         }
     }
 

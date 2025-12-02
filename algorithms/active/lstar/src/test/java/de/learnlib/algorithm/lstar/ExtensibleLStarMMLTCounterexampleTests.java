@@ -31,6 +31,7 @@ import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -65,6 +66,8 @@ public class ExtensibleLStarMMLTCounterexampleTests {
             learner.refineHypothesis(cex);
             hyp = learner.getHypothesisModel();
         }
+
+        Assert.assertEquals(learner.getObservationTable().numberOfDistinctRows(), hyp.size());
     }
 
     @Test
