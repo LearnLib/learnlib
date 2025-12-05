@@ -26,8 +26,9 @@ public class OneSEVPALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Bo
 
     OneSEVPALearnerITCase(LearnerVariant<OneSEVPA<?, I>, I, Boolean> variant,
                           OneSEVPALearningExample<I> example,
+                          SEVPALockableOracle<I> lockableOracle,
                           EquivalenceOracle<? super OneSEVPA<?, I>, I, Boolean> eqOracle) {
-        super(variant, example, eqOracle);
+        super(variant, example, lockableOracle, eqOracle);
         this.example = example;
     }
 

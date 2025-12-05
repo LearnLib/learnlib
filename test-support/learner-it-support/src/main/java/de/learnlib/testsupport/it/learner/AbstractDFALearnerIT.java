@@ -54,12 +54,14 @@ public abstract class AbstractDFALearnerIT {
             DFALearningExample<I> example) {
 
         final Alphabet<I> alphabet = example.getAlphabet();
-        final DFAMembershipOracle<I> mqOracle = new DFASimulatorOracle<>(example.getReferenceAutomaton());
+        final DFAMembershipOracle<I> simOracle = new DFASimulatorOracle<>(example.getReferenceAutomaton());
+        final DFALockableOracle<I> mqOracle = new DFALockableOracle<>(simOracle);
         final DFALearnerVariantListImpl<I> variants = new DFALearnerVariantListImpl<>();
         addLearnerVariants(alphabet, example.getReferenceAutomaton().size(), mqOracle, variants);
 
         return LearnerITUtil.createExampleITCases(example,
                                                   variants,
+                                                  mqOracle,
                                                   new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 

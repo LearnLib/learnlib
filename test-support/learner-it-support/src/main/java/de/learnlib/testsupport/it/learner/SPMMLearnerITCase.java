@@ -27,8 +27,9 @@ public class SPMMLearnerITCase<I, O> extends AbstractLearnerVariantITCase<I, Wor
 
     SPMMLearnerITCase(LearnerVariant<SPMM<?, I, ?, O>, I, Word<O>> variant,
                       SPMMLearningExample<I, O> example,
+                      SPMMLockableOracle<I, O> lockableOracle,
                       EquivalenceOracle<? super SPMM<?, I, ?, O>, I, Word<O>> eqOracle) {
-        super(variant, example, eqOracle);
+        super(variant, example, lockableOracle, eqOracle);
         this.example = example;
     }
 

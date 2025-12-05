@@ -40,18 +40,22 @@ abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation
 
     private final LearnerVariant<? extends M, I, D> variant;
     private final LearningExample<I, ? extends M> example;
+    private final LockableOracle<I, D> lockableOracle;
     private final EquivalenceOracle<? super M, I, D> eqOracle;
 
     AbstractLearnerVariantITCase(LearnerVariant<? extends M, I, D> variant,
                                  LearningExample<I, ? extends M> example,
+                                 LockableOracle<I, D> lockableOracle,
                                  EquivalenceOracle<? super M, I, D> eqOracle) {
         this.variant = variant;
         this.example = example;
+        this.lockableOracle = lockableOracle;
         this.eqOracle = eqOracle;
     }
 
     @Test
     public void testLearning() {
+        lockableOracle.lock();
         LearningAlgorithm<? extends M, I, D> learner = variant.getLearner();
 
         Alphabet<I> alphabet = example.getAlphabet();
@@ -64,7 +68,9 @@ abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation
 
         long start = System.nanoTime();
 
+        lockableOracle.unlock();
         learner.startLearning();
+        lockableOracle.lock();
 
         int roundCounter = 0;
         DefaultQuery<I, D> ceQuery;
@@ -76,7 +82,12 @@ abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation
                 Assert.fail("Learning took too many rounds (> " + maxRounds + ")");
             }
 
+            // this currently assumes as white-box equivalence oracle which does not pose any queries
+            // for situations where this is not the case, the EQ may be given a non-lockable MQ
+            lockableOracle.unlock();
             boolean refined = learner.refineHypothesis(ceQuery);
+            lockableOracle.lock();
+
             Assert.assertTrue(refined, "Real counterexample " + ceQuery.getInput() + " did not refine hypothesis");
             ceQueries.add(ceQuery);
         }

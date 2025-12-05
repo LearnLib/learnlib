@@ -57,12 +57,14 @@ public abstract class AbstractMealySymLearnerIT {
             MealyLearningExample<I, O> example) {
 
         final Alphabet<I> alphabet = example.getAlphabet();
-        final MealyMembershipOracle<I, O> mqOracle = new MealySimulatorOracle<>(example.getReferenceAutomaton());
+        final MealyMembershipOracle<I, O> simOracle = new MealySimulatorOracle<>(example.getReferenceAutomaton());
+        final MealyLockableOracle<I, O> mqOracle = new MealyLockableOracle<>(simOracle);
         final MealySymLearnerVariantListImpl<I, O> variants = new MealySymLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, MealyUtil.wrapWordOracle(mqOracle), variants);
 
         return LearnerITUtil.createExampleITCases(example,
                                                   variants.getMealyLearnerVariants(),
+                                                  mqOracle,
                                                   new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 

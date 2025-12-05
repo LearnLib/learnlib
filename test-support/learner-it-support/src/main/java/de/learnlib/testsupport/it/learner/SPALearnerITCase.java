@@ -26,8 +26,9 @@ public class SPALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Boolean
 
     SPALearnerITCase(LearnerVariant<SPA<?, I>, I, Boolean> variant,
                      SPALearningExample<I> example,
+                     SPALockableOracle<I> lockableOracle,
                      EquivalenceOracle<? super SPA<?, I>, I, Boolean> eqOracle) {
-        super(variant, example, eqOracle);
+        super(variant, example, lockableOracle, eqOracle);
         this.example = example;
     }
 

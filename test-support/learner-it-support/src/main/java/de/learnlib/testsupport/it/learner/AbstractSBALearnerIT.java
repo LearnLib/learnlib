@@ -49,12 +49,14 @@ public abstract class AbstractSBALearnerIT {
     private <I> List<SBALearnerITCase<I>> createAllVariantsITCase(SBALearningExample<I> example) {
 
         final ProceduralInputAlphabet<I> alphabet = example.getAlphabet();
-        final DFAMembershipOracle<I> mqOracle = new SBASimulatorOracle<>(example.getReferenceAutomaton());
+        final DFAMembershipOracle<I> simOracle = new SBASimulatorOracle<>(example.getReferenceAutomaton());
+        final SBALockableOracle<I> mqOracle = new SBALockableOracle<>(simOracle);
         final SBALearnerVariantListImpl<I> variants = new SBALearnerVariantListImpl<>();
         addLearnerVariants(alphabet, mqOracle, variants);
 
         return LearnerITUtil.createExampleITCases(example,
                                                   variants,
+                                                  mqOracle,
                                                   new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 

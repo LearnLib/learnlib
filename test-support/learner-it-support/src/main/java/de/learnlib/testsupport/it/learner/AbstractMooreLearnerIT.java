@@ -56,12 +56,13 @@ public abstract class AbstractMooreLearnerIT {
 
         final Alphabet<I> alphabet = example.getAlphabet();
         final MooreMachine<?, I, ?, O> reference = example.getReferenceAutomaton();
-        final MooreMembershipOracle<I, O> mqOracle = new MooreSimulatorOracle<>(reference);
+        final MooreMembershipOracle<I, O> simOracle = new MooreSimulatorOracle<>(reference);
+        final MooreLockableOracle<I, O> mqOracle = new MooreLockableOracle<>(simOracle);
         final MooreEquivalenceOracle<I, O> eqOracle = new MooreSimulatorEQOracle<>(reference);
         final MooreLearnerVariantListImpl<I, O> variants = new MooreLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, reference.size(), mqOracle, variants);
 
-        return LearnerITUtil.createExampleITCases(example, variants, eqOracle);
+        return LearnerITUtil.createExampleITCases(example, variants, mqOracle, eqOracle);
     }
 
     /**

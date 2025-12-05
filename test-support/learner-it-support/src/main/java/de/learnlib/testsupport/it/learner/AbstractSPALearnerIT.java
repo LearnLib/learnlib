@@ -49,12 +49,14 @@ public abstract class AbstractSPALearnerIT {
     private <I> List<SPALearnerITCase<I>> createAllVariantsITCase(SPALearningExample<I> example) {
 
         final ProceduralInputAlphabet<I> alphabet = example.getAlphabet();
-        final DFAMembershipOracle<I> mqOracle = new SPASimulatorOracle<>(example.getReferenceAutomaton());
+        final DFAMembershipOracle<I> simOracle = new SPASimulatorOracle<>(example.getReferenceAutomaton());
+        final SPALockableOracle<I> mqOracle = new SPALockableOracle<>(simOracle);
         final SPALearnerVariantListImpl<I> variants = new SPALearnerVariantListImpl<>();
         addLearnerVariants(alphabet, mqOracle, variants);
 
         return LearnerITUtil.createExampleITCases(example,
                                                   variants,
+                                                  mqOracle,
                                                   new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 

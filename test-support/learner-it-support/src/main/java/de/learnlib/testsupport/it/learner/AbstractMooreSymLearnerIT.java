@@ -57,12 +57,14 @@ public abstract class AbstractMooreSymLearnerIT {
             MooreLearningExample<I, O> example) {
 
         final Alphabet<I> alphabet = example.getAlphabet();
-        final MooreMembershipOracle<I, O> mqOracle = new MooreSimulatorOracle<>(example.getReferenceAutomaton());
+        final MooreMembershipOracle<I, O> simOracle = new MooreSimulatorOracle<>(example.getReferenceAutomaton());
+        final MooreLockableOracle<I, O> mqOracle = new MooreLockableOracle<>(simOracle);
         final MooreSymLearnerVariantListImpl<I, O> variants = new MooreSymLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, MooreUtil.wrapWordOracle(mqOracle), variants);
 
         return LearnerITUtil.createExampleITCases(example,
                                                   variants.getMooreLearnerVariants(),
+                                                  mqOracle,
                                                   new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 

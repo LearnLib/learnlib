@@ -62,6 +62,10 @@ limitations under the License.
 
         <!-- build -->
         <dependency>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>annotations</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
         </dependency>

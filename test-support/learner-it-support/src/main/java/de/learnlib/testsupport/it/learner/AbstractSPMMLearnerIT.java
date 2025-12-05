@@ -49,11 +49,12 @@ public abstract class AbstractSPMMLearnerIT {
     private <I, O> List<SPMMLearnerITCase<I, O>> createAllVariantsITCase(SPMMLearningExample<I, O> example) {
 
         final SPMM<?, I, ?, O> reference = example.getReferenceAutomaton();
-        final MealyMembershipOracle<I, O> mqOracle = new SPMMSimulatorOracle<>(reference);
+        final MealyMembershipOracle<I, O> simOracle = new SPMMSimulatorOracle<>(reference);
+        final SPMMLockableOracle<I, O> mqOracle = new SPMMLockableOracle<>(simOracle);
         final SPMMLearnerVariantListImpl<I, O> variants = new SPMMLearnerVariantListImpl<>();
         addLearnerVariants(example.getAlphabet(), reference.getErrorOutput(), mqOracle, variants);
 
-        return LearnerITUtil.createExampleITCases(example, variants, new SimulatorEQOracle<>(reference));
+        return LearnerITUtil.createExampleITCases(example, variants, mqOracle, new SimulatorEQOracle<>(reference));
     }
 
     /**

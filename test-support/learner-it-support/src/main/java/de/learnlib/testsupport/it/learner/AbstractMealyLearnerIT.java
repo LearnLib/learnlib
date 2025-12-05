@@ -67,12 +67,14 @@ public abstract class AbstractMealyLearnerIT {
 
         final Alphabet<I> alphabet = example.getAlphabet();
         final MealyMachine<?, I, ?, O> reference = example.getReferenceAutomaton();
-        final MealyMembershipOracle<I, O> mqOracle = new MealySimulatorOracle<>(reference);
+        final MealyMembershipOracle<I, O> simOracle = new MealySimulatorOracle<>(reference);
+        final MealyLockableOracle<I, O> mqOracle = new MealyLockableOracle<>(simOracle);
         final MealyLearnerVariantListImpl<I, O> variants = new MealyLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, reference.size(), mqOracle, variants);
 
         return LearnerITUtil.createExampleITCases(example,
                                                   variants,
+                                                  mqOracle,
                                                   new MealySimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 
@@ -87,15 +89,16 @@ public abstract class AbstractMealyLearnerIT {
         final StateLocalInputMealyMachine<?, I, ?, O> partialRef =
                 MealyFilter.pruneTransitionsWithOutput(reference, alphabet, undefinedOutput);
 
-        final MealyMembershipOracle<I, O> mqOracle =
+        final MealyMembershipOracle<I, O> simOracle =
                 new StateLocalInputSULOracle<>(new StateLocalInputMealySimulatorSUL<>(partialRef), undefinedOutput);
+        final MealyLockableOracle<I, O> mqOracle = new MealyLockableOracle<>(simOracle);
         final MealyLearnerVariantListImpl<I, O> variants = new MealyLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, reference.size(), mqOracle, variants);
 
         final MealyEquivalenceOracle<I, O> eqOracle =
                 new StateLocalInputMealySimulatorEQOracle<>(partialRef, alphabet, undefinedOutput);
 
-        return LearnerITUtil.createExampleITCases(example, variants, eqOracle);
+        return LearnerITUtil.createExampleITCases(example, variants, mqOracle, eqOracle);
     }
 
     /**

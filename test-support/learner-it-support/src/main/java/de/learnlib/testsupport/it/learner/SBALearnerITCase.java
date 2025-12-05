@@ -26,8 +26,9 @@ public class SBALearnerITCase<I> extends AbstractLearnerVariantITCase<I, Boolean
 
     SBALearnerITCase(LearnerVariant<SBA<?, I>, I, Boolean> variant,
                      SBALearningExample<I> example,
+                     SBALockableOracle<I> lockableOracle,
                      EquivalenceOracle<? super SBA<?, I>, I, Boolean> eqOracle) {
-        super(variant, example, eqOracle);
+        super(variant, example, lockableOracle, eqOracle);
         this.example = example;
     }
 

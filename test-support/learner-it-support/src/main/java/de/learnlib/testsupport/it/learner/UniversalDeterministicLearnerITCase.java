@@ -28,8 +28,9 @@ public class UniversalDeterministicLearnerITCase<I, D, M extends UniversalDeterm
 
     UniversalDeterministicLearnerITCase(LearnerVariant<M, I, D> variant,
                                         UniversalDeterministicLearningExample<I, ? extends M> example,
+                                        LockableOracle<I, D> lockableOracle,
                                         EquivalenceOracle<? super M, I, D> eqOracle) {
-        super(variant, example, eqOracle);
+        super(variant, example, lockableOracle, eqOracle);
         this.example = example;
     }
 

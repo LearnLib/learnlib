@@ -52,13 +52,14 @@ public abstract class AbstractMMLTLearnerIT {
     private <I, O> List<MMLTLearnerITCase<I, O>> createAllVariantsITCase(MMLTLearningExample<I, O> example) {
 
         final Alphabet<I> alphabet = example.getUntimedAlphabet();
-        final TimedQueryOracle<I, O> mqOracle =
-                new TimedSULOracle<>(new MMLTSimulatorSUL<>(example.getReferenceAutomaton()), example.getParams());
+        final TimedQueryOracle<I, O> simOracle = new TimedSULOracle<>(new MMLTSimulatorSUL<>(example.getReferenceAutomaton()), example.getParams());
+        final MMLTLockableOracle<I, O> mqOracle = new MMLTLockableOracle<>(simOracle);
         final MMLTLearnerVariantListImpl<I, O> variants = new MMLTLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, mqOracle, example, variants);
 
         return LearnerITUtil.createExampleITCases(example,
                                                   variants,
+                                                  mqOracle,
                                                   new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 

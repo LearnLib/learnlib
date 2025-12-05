@@ -48,12 +48,14 @@ public abstract class AbstractOneSEVPALearnerIT {
     private <I> List<OneSEVPALearnerITCase<I>> createAllVariantsITCase(OneSEVPALearningExample<I> example) {
 
         final VPAlphabet<I> alphabet = example.getAlphabet();
-        final DFAMembershipOracle<I> mqOracle = new SEVPASimulatorOracle<>(example.getReferenceAutomaton());
+        final DFAMembershipOracle<I> simOracle = new SEVPASimulatorOracle<>(example.getReferenceAutomaton());
+        final SEVPALockableOracle<I> mqOracle = new SEVPALockableOracle<>(simOracle);
         final OneSEVPALearnerVariantListImpl<I> variants = new OneSEVPALearnerVariantListImpl<>();
         addLearnerVariants(alphabet, mqOracle, variants);
 
         return LearnerITUtil.createExampleITCases(example,
                                                   variants,
+                                                  mqOracle,
                                                   new SimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 

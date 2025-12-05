@@ -30,8 +30,9 @@ public class MMLTLearnerITCase<I, O>
 
     MMLTLearnerITCase(LearnerVariant<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>> variant,
                       MMLTLearningExample<I, O> example,
+                      MMLTLockableOracle<I, O> lockableOracle,
                       EquivalenceOracle<? super MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>> eqOracle) {
-        super(variant, example, eqOracle);
+        super(variant, example, lockableOracle, eqOracle);
         this.example = example;
     }
 
