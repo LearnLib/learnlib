@@ -20,11 +20,11 @@ import java.util.Objects;
 
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
-import net.automatalib.automaton.concept.DetSuffixOutputAutomaton;
+import net.automatalib.automaton.concept.DeterministicSuffixOutputAutomaton;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class SymbolEQOracleWrapper<A extends DetSuffixOutputAutomaton<?, I, ?, Word<O>>, I, O>
+public class SymbolEQOracleWrapper<A extends DeterministicSuffixOutputAutomaton<?, I, ?, Word<O>>, I, O>
         implements EquivalenceOracle<A, I, O> {
 
     private final EquivalenceOracle<? super A, I, Word<O>> wordEqOracle;

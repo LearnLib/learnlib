@@ -31,7 +31,7 @@ import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
 import de.learnlib.tooling.annotation.refinement.Mapping;
 import de.learnlib.util.AbstractBFOracle;
-import net.automatalib.automaton.concept.DetOutputAutomaton;
+import net.automatalib.automaton.concept.DeterministicOutputAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
@@ -72,7 +72,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                     interfaces = {@Interface(clazz = MealyInclusionOracle.class,
                                              generics = {@Generic("I"), @Generic("O")}),
                                   @Interface(clazz = MealyOracle.class, generics = {@Generic("I"), @Generic("O")})})
-public abstract class AbstractBFInclusionOracle<A extends DetOutputAutomaton<?, I, ?, D>, I, D>
+public abstract class AbstractBFInclusionOracle<A extends DeterministicOutputAutomaton<?, I, ?, D>, I, D>
         extends AbstractBFOracle<A, I, D> implements InclusionOracle<A, I, D> {
 
     public AbstractBFInclusionOracle(MembershipOracle<I, D> membershipOracle, double multiplier) {

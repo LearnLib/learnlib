@@ -18,7 +18,7 @@ package de.learnlib.oracle.emptiness;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.testsupport.AbstractBFOracleTest;
 import de.learnlib.util.AbstractBFOracle;
-import net.automatalib.automaton.concept.DetOutputAutomaton;
+import net.automatalib.automaton.concept.DeterministicOutputAutomaton;
 import net.automatalib.ts.simple.SimpleDTS;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 /**
  * Tests any breadth-first emptiness oracle.
  */
-public abstract class AbstractBFEmptinessOracleTest<A extends DetOutputAutomaton<?, Character, ?, D>, D>
+public abstract class AbstractBFEmptinessOracleTest<A extends DeterministicOutputAutomaton<?, Character, ?, D>, D>
         extends AbstractBFOracleTest<D> {
 
     private AbstractBFEmptinessOracle<A, Character, D> bfeo;
