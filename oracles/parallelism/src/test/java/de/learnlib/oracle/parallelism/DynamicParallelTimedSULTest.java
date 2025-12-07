@@ -20,7 +20,7 @@ import de.learnlib.time.MMLTModelParams;
 public class DynamicParallelTimedSULTest extends AbstractDynamicParallelTimedQueryOracleTest<Void> {
 
     @Override
-    protected DynamicParallelTimedOracleQueryBuilder<Void, Void> getBuilder() {
+    protected DynamicParallelTimedQueryOracleBuilder<Void, Void> getBuilder() {
         return ParallelOracleBuilders.newDynamicParallelTimedQueryOracle(new NullSUL(),
                                                                          new MMLTModelParams<>(null, null, 0, 0));
     }

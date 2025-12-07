@@ -19,19 +19,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.learnlib.filter.FilterResponse;
-import de.learnlib.filter.MutableSymbolFilter;
+import de.learnlib.filter.RefutableSymbolFilter;
 import de.learnlib.filter.SymbolFilter;
 import net.automatalib.word.Word;
 
 /**
- * Wrapper for a symbol filter that caches previous responses + allows caller to update these.
+ * Wrapper for a symbol filter that caches previous responses and allows caller to update these.
  *
  * @param <U>
  *         input symbol type of the prefix
  * @param <V>
  *         input symbol type of the transition label
  */
-public class CachedSymbolFilter<U, V> implements MutableSymbolFilter<U, V> {
+public class CachedSymbolFilter<U, V> implements RefutableSymbolFilter<U, V> {
 
     private final Map<Word<U>, Map<V, Boolean>> previousResponses; // prefix -> (input -> legal/ignore)
     private final SymbolFilter<U, V> delegate;
@@ -43,8 +43,7 @@ public class CachedSymbolFilter<U, V> implements MutableSymbolFilter<U, V> {
 
     @Override
     public FilterResponse query(Word<U> prefix, V symbol) {
-        this.previousResponses.putIfAbsent(prefix, new HashMap<>());
-        Boolean oldResponse = this.previousResponses.get(prefix).get(symbol);
+        Boolean oldResponse = this.previousResponses.computeIfAbsent(prefix, k -> new HashMap<>()).get(symbol);
         if (oldResponse != null) {
             return oldResponse ? FilterResponse.ACCEPT : FilterResponse.IGNORE;
         }
@@ -60,7 +59,7 @@ public class CachedSymbolFilter<U, V> implements MutableSymbolFilter<U, V> {
     }
 
     private void update(Word<U> prefix, V symbol, FilterResponse response) {
-        this.previousResponses.putIfAbsent(prefix, new HashMap<>());
-        this.previousResponses.get(prefix).put(symbol, response == FilterResponse.ACCEPT);
+        this.previousResponses.computeIfAbsent(prefix, k -> new HashMap<>())
+                              .put(symbol, response == FilterResponse.ACCEPT);
     }
 }

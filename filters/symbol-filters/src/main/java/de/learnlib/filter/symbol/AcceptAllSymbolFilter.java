@@ -16,7 +16,7 @@
 package de.learnlib.filter.symbol;
 
 import de.learnlib.filter.FilterResponse;
-import de.learnlib.filter.MutableSymbolFilter;
+import de.learnlib.filter.RefutableSymbolFilter;
 import net.automatalib.word.Word;
 
 /**
@@ -27,7 +27,7 @@ import net.automatalib.word.Word;
  * @param <V>
  *         input symbol type of the transition label
  */
-public class AcceptAllSymbolFilter<U, V> implements MutableSymbolFilter<U, V> {
+public class AcceptAllSymbolFilter<U, V> implements RefutableSymbolFilter<U, V> {
 
     @Override
     public FilterResponse query(Word<U> prefix, V symbol) {

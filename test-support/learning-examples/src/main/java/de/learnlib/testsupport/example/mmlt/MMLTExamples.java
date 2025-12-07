@@ -39,7 +39,7 @@ public final class MMLTExamples {
     }
 
     /**
-     * Returns an MMLT example of an HVAC system.
+     * Returns an {@link MMLT} example of an HVAC system.
      * <p>
      * The system has been adapted from: Taylor and Taylor: Patterns in the Machine
      *
@@ -50,7 +50,7 @@ public final class MMLTExamples {
     }
 
     /**
-     * Returns an MMLT example of an endpoint in the stream control and transmission protocol.
+     * Returns an {@link MMLT} example of an endpoint in the stream control and transmission protocol.
      * <p>
      * The model has been adapted from: Stewart et al.: Stream Control Transmission Protocol (RFC 9260, Figure 3)
      *
@@ -61,7 +61,7 @@ public final class MMLTExamples {
     }
 
     /**
-     * Returns an MMLT example of a sensor collector.
+     * Returns an {@link MMLT} example of a sensor collector.
      * <p>
      * The sensor measures particulate matter and ambient noise. The measurement program automatically ends after some
      * time. The program may be restarted at any time. Alternatively, a self-check program can be entered. This also
@@ -74,7 +74,7 @@ public final class MMLTExamples {
     }
 
     /**
-     * Returns an MMLT example of a washing machine.
+     * Returns an {@link MMLT} example of a washing machine.
      * <p>
      * The machine is initially off. After powering it on and closing the door, the user can start either the short or
      * the normal program. An open door prevents starting and triggers a warning. Not choosing a program within 10
@@ -96,7 +96,7 @@ public final class MMLTExamples {
     }
 
     /**
-     * Returns an MMLT example of an oven with a time-controlled baking program.
+     * Returns an {@link MMLT} example of an oven with a time-controlled baking program.
      * <p>
      * After powering the oven on, the oven remains idle until the program is started. During the program, the oven
      * regularly measures and adjusts the temperature. At the end of the program, an alarm sounds. Then, the user may
@@ -110,7 +110,7 @@ public final class MMLTExamples {
     }
 
     /**
-     * Returns an MMLT example of a wireless sensor node.
+     * Returns an {@link MMLT} example of a wireless sensor node.
      * <p>
      * The node regularly collects and transmits data. If the battery is low, no data is transmitted. Then, a user may
      * collect the data manually. The node can be shut down at any time. If the battery is empty, it is shut down
@@ -139,6 +139,7 @@ public final class MMLTExamples {
                     DOTParsers.mmlt(silentOutput, outputCombiner);
 
             try (InputStream is = MMLTExamples.class.getResourceAsStream("/mmlt/" + name + ".dot")) {
+                assert is != null;
                 final DOTInputModelData<Integer, String, CompactMMLT<String, String>> model = parser.readModel(is);
                 final CompactMMLT<String, String> automaton = model.model;
 

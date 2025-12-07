@@ -30,7 +30,7 @@ import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
 import de.learnlib.datastructure.observationtable.RowImpl;
 import de.learnlib.filter.FilterResponse;
-import de.learnlib.filter.MutableSymbolFilter;
+import de.learnlib.filter.RefutableSymbolFilter;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.oracle.TimedQueryOracle.TimerQueryResult;
 import de.learnlib.query.DefaultQuery;
@@ -48,7 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The observation table used by the MMLT learner.
+ * The observation table used by the {@link ExtensibleLStarMMLT} learner.
  * <p>
  * Unlike an OT for standard Mealy learning, includes prefixes for the timeout transitions of one-shot timers. Intended
  * to be used with a symbol filter. The filter is queried before adding a new transition for a non-delaying input. If
@@ -68,14 +68,14 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
     private static final Logger LOGGER = LoggerFactory.getLogger(MMLTObservationTable.class);
     private static final int NO_CONTENT = -1;
 
-    private final MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
+    private final RefutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
 
     private final Map<Word<TimedInput<I>>, LocationTimerInfo<I, O>> timerInfoMap; // prefix -> timer info
 
     private final Map<Word<TimedInput<I>>, RowImpl<TimedInput<I>>> shortPrefixRowMap; // label -> row info
     private final Map<Word<TimedInput<I>>, RowImpl<TimedInput<I>>> longPrefixRowMap; // label -> row info
 
-    private final Map<Integer, RowContent<O>> rowContentMap; // contentID -> row content
+    private final Map<Integer, List<Word<TimedOutput<O>>>> rowContentMap; // contentID -> row content
 
     private final List<Word<TimedInput<I>>> suffixes;
     private final Set<Word<TimedInput<I>>> suffixSet;
@@ -86,7 +86,7 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
 
     MMLTObservationTable(Alphabet<TimedInput<I>> alphabet,
                          long minTimerQueryWaitTime,
-                         MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter,
+                         RefutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter,
                          O silentOutput) {
         this.alphabet = alphabet;
 
@@ -109,7 +109,7 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
      * Infers local timers for the provided location.
      *
      * @param location
-     *         source location
+     *         the source location
      */
     private void identifyLocalTimers(LocationTimerInfo<I, O> location, TimedQueryOracle<I, O> timeOracle) {
         TimerQueryResult<O> timerQueryResponse =
@@ -135,7 +135,7 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
      * Extends the global alphabet without adding new transitions.
      *
      * @param symbol
-     *         new alphabet symbol
+     *         the new alphabet symbol
      */
     private void extendAlphabet(TimeStepSequence<I> symbol) {
         if (!alphabet.containsSymbol(symbol)) {
@@ -150,7 +150,7 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
     /**
      * Adds the initial location.
      *
-     * @return corresponding row in the observation table
+     * @return the corresponding row in the observation table
      */
     private RowImpl<TimedInput<I>> addInitialLocation() {
         RowImpl<TimedInput<I>> newRow = new RowImpl<>(Word.epsilon(), 0, alphabet.size());
@@ -165,9 +165,9 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
      * outgoing transitions.
      *
      * @param newRow
-     *         newly-added short prefix row
+     *         the newly-added short prefix row
      * @param timeOracle
-     *         time oracle
+     *         the time oracle
      */
     private void initLocation(RowImpl<TimedInput<I>> newRow, TimedQueryOracle<I, O> timeOracle) {
         LocationTimerInfo<I, O> timerInfo = new LocationTimerInfo<>(newRow.getLabel());
@@ -190,11 +190,11 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
      * filter considers the input a silent self-loop, no transition is explicitly created for the input.
      *
      * @param spRow
-     *         short prefix row
+     *         the short prefix row
      * @param timeOracle
-     *         time query oracle
+     *         the time query oracle
      *
-     * @return new transitions
+     * @return the new transitions
      */
     private List<RowImpl<TimedInput<I>>> createOutgoingTransitions(RowImpl<TimedInput<I>> spRow,
                                                                    TimedQueryOracle<I, O> timeOracle) {
@@ -233,8 +233,8 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
                     }
                 }
 
-                spRow.setSuccessor(i, succRow);
                 if (succRow != null) {
+                    spRow.setSuccessor(i, succRow);
                     transitions.add(succRow);
                 }
             }
@@ -355,9 +355,8 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
             return;
         }
 
-        RowContent<O> content = new RowContent<>(rowContents);
-        int contentId = content.hashCode();
-        this.rowContentMap.putIfAbsent(contentId, content);
+        int contentId = rowContents.hashCode();
+        this.rowContentMap.putIfAbsent(contentId, rowContents);
         row.setRowContentId(contentId);
     }
 
@@ -477,13 +476,14 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
 
     @Override
     public List<Word<TimedOutput<O>>> rowContents(Row<TimedInput<I>> row) {
-        if (this.rowContentMap.isEmpty()) {
+        final List<Word<TimedOutput<O>>> content = this.rowContentMap.get(row.getRowContentId());
+        if (content == null) {
             // OT may be empty if only single location with timers:
             assert this.suffixes.isEmpty();
             return Collections.emptyList();
+        } else {
+            return content;
         }
-
-        return this.rowContentMap.get(row.getRowContentId()).outputs();
     }
 
     @Override
@@ -500,7 +500,7 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
     }
 
     @Nullable LocationTimerInfo<I, O> getLocationTimerInfo(Row<TimedInput<I>> sp) {
-        return this.timerInfoMap.getOrDefault(sp.getLabel(), null);
+        return this.timerInfoMap.get(sp.getLabel());
     }
 
     /**
@@ -510,11 +510,11 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
      * Raises an error if this transition already exists.
      *
      * @param spRow
-     *         Source location
+     *         the source location
      * @param symbol
-     *         Input symbol
+     *         the input symbol
      * @param timeOracle
-     *         Oracle
+     *         the oracle
      *
      * @return List of unclosed rows. Empty, if none.
      */
@@ -554,12 +554,10 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
      * turning a long into a short prefix, use toShortPrefix instead,
      *
      * @param prefix
-     *         Row prefix
+     *         the row prefix
      */
     void removeLpRow(Word<TimedInput<I>> prefix) {
-        if (!this.longPrefixRowMap.containsKey(prefix)) {
-            throw new IllegalArgumentException("Attempting to remove lp row that does not exist.");
-        }
+        assert this.longPrefixRowMap.containsKey(prefix) : "Attempting to remove lp row that does not exist.";
 
         // Remove lp row:
         this.longPrefixRowMap.remove(prefix);
@@ -571,9 +569,4 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
 
         spRow.setSuccessor(symIdx, null);
     }
-
-    // =============================
-
-    private record RowContent<O>(List<Word<TimedOutput<O>>> outputs) {}
-
 }

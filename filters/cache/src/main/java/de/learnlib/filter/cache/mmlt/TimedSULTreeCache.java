@@ -49,11 +49,12 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
     private final TimedSUL<I, O> delegate;
 
     private final CacheTreeNode<I, O> cacheRoot;
-    private @Nullable CacheTreeNode<I, O> currentState;
+    private CacheTreeNode<I, O> currentState;
 
     private final MMLTModelParams<O> modelParams;
     private final TimedOutput<O> silentOutput;
     private boolean cacheMiss;
+    private boolean init;
 
     private final StatisticsCollector statisticsCollector;
 
@@ -65,27 +66,18 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
 
         // Init cache:
         this.cacheRoot = new CacheTreeNode<>(null, null);
-        this.currentState = null;
+        this.currentState = this.cacheRoot;
     }
 
-    private void followCurrentPrefix() {
+    private void followCurrentPrefix(CacheTreeNode<I, O> current) {
+        Word<TimedInput<I>> prefix = extractWord(current);
         this.delegate.pre();
-
-        WordBuilder<TimedInput<I>> wbPrefix = new WordBuilder<>();
-
-        CacheTreeNode<I, O> current = this.currentState;
-        while (current.getParent() != null) {
-            wbPrefix.append(current.getParentInput());
-            current = current.getParent();
-        }
-
-        Word<TimedInput<I>> prefix = wbPrefix.reverse().toWord();
         this.delegate.follow(prefix);
     }
 
     @Override
     public TimedOutput<O> step(InputSymbol<I> input) {
-        if (this.currentState == null) {
+        if (!init) {
             throw new IllegalStateException();
         }
 
@@ -95,7 +87,7 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
                 this.currentState = this.currentState.getChild(input);
                 return output;
             }
-            this.followCurrentPrefix();
+            this.followCurrentPrefix(this.currentState);
             this.cacheMiss = true;
         }
 
@@ -107,7 +99,7 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
 
     @Override
     public @Nullable TimedOutput<O> timeoutStep(long maxTime) {
-        if (currentState == null) {
+        if (!init) {
             throw new IllegalStateException();
         }
 
@@ -139,7 +131,7 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
                 return null; // no timer in this state
             }
 
-            this.followCurrentPrefix();
+            this.followCurrentPrefix(this.currentState);
             this.cacheMiss = true;
         }
 
@@ -159,11 +151,12 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
     public void pre() {
         this.currentState = this.cacheRoot;
         this.cacheMiss = false;
+        this.init = true;
     }
 
     @Override
     public void post() {
-        this.currentState = null;
+        this.init = false;
 
         if (this.cacheMiss) {
             this.delegate.post();
@@ -181,7 +174,7 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
     /**
      * Returns an iterator that traverses all words (leaves of this tree) in a BFS-style fashion.
      *
-     * @return iterator over all words of this tree
+     * @return an iterator over all words of this tree
      */
     public Iterator<Word<TimedInput<I>>> allWordsIterator() {
         return IteratorUtil.map(new LeavesIterator<>(this.cacheRoot), this::extractWord);
@@ -191,10 +184,12 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
         final WordBuilder<TimedInput<I>> wb = new WordBuilder<>();
 
         // Move towards the root:
-        CacheTreeNode<I, O> current = leaf;
-        while (current.getParent() != null) {
-            wb.append(current.getParentInput());
-            current = current.getParent();
+        CacheTreeNode<I, O> nodeIter = leaf.getParent();
+        TimedInput<I> inputIter = leaf.getParentInput();
+        while (nodeIter != null && inputIter != null) {
+            wb.append(inputIter);
+            inputIter = nodeIter.getParentInput();
+            nodeIter = nodeIter.getParent();
         }
 
         // Start at root -> flip buffer:

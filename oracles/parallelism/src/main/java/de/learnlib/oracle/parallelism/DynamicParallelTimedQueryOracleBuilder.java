@@ -29,18 +29,18 @@ import net.automatalib.word.Word;
  * A specialized {@link AbstractDynamicBatchProcessorBuilder} for {@link TimedQueryOracle}s.
  *
  * @param <I>
- *         input symbol type
+ *         input symbol type (of non-delaying inputs)
  * @param <O>
  *         output symbol type
  */
-public class DynamicParallelTimedOracleQueryBuilder<I, O>
+public class DynamicParallelTimedQueryOracleBuilder<I, O>
         extends AbstractDynamicBatchProcessorBuilder<Query<TimedInput<I>, Word<TimedOutput<O>>>, TimedQueryOracle<I, O>, DynamicParallelTimedQueryOracle<I, O>> {
 
-    public DynamicParallelTimedOracleQueryBuilder(Supplier<? extends TimedQueryOracle<I, O>> oracleSupplier) {
+    public DynamicParallelTimedQueryOracleBuilder(Supplier<? extends TimedQueryOracle<I, O>> oracleSupplier) {
         super(oracleSupplier);
     }
 
-    public DynamicParallelTimedOracleQueryBuilder(Collection<? extends TimedQueryOracle<I, O>> oracles) {
+    public DynamicParallelTimedQueryOracleBuilder(Collection<? extends TimedQueryOracle<I, O>> oracles) {
         super(oracles);
     }
 

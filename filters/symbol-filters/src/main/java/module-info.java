@@ -31,9 +31,5 @@ open module de.learnlib.filter.symbol {
     requires de.learnlib.api;
     requires net.automatalib.api;
 
-    // annotations are 'provided'-scoped and do not need to be loaded at runtime
-    requires static de.learnlib.tooling.annotation;
-    requires static org.checkerframework.checker.qual;
-
     exports de.learnlib.filter.symbol;
 }

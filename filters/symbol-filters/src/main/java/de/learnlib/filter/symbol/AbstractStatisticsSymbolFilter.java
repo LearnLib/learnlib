@@ -16,7 +16,7 @@
 package de.learnlib.filter.symbol;
 
 import de.learnlib.filter.FilterResponse;
-import de.learnlib.filter.MutableSymbolFilter;
+import de.learnlib.filter.RefutableSymbolFilter;
 import de.learnlib.filter.SymbolFilter;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatisticsCollector;
@@ -31,7 +31,7 @@ import net.automatalib.word.Word;
  *         input symbol type of the transition label
  */
 public abstract class AbstractStatisticsSymbolFilter<U, V> extends AbstractTruthfulSymbolFilter<U, V>
-        implements MutableSymbolFilter<U, V> {
+        implements RefutableSymbolFilter<U, V> {
 
     public static final String KEY_QUERIES = "sf-qry-cnt";
     public static final String KEY_TRUE_POSITIVES = "sf-tp-cnt";
@@ -74,8 +74,8 @@ public abstract class AbstractStatisticsSymbolFilter<U, V> extends AbstractTruth
 
     @Override
     public void accept(Word<U> prefix, V symbol) {
-        if (delegate instanceof MutableSymbolFilter<U, V> mut) {
-            mut.accept(prefix, symbol);
+        if (delegate instanceof RefutableSymbolFilter<U, V> rfs) {
+            rfs.accept(prefix, symbol);
         } else {
             throw new UnsupportedOperationException("delegate filter does not support updates");
         }

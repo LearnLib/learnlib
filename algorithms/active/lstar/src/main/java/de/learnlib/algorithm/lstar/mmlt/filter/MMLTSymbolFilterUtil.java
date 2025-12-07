@@ -42,7 +42,9 @@ final class MMLTSymbolFilterUtil {
                                                    Word<TimedInput<I>> prefix,
                                                    InputSymbol<I> symbol) {
         State<S, O> targetConfig = semantics.getState(prefix);
+        assert targetConfig != null;
         T trans = semantics.getTransition(targetConfig, symbol);
+        assert trans != null;
         State<S, O> target = semantics.getSuccessor(trans);
         TimedOutput<O> output = semantics.getTransitionOutput(trans);
 

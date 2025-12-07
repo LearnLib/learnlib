@@ -25,11 +25,10 @@ import de.learnlib.testsupport.example.mealy.ExampleStack;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.concept.DetSuffixOutputAutomaton;
+import net.automatalib.automaton.concept.DeterministicSuffixOutputAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
-import net.automatalib.exception.UndefinedPropertyAccessException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -42,11 +41,10 @@ public class EmptyAutomatonOracleTest {
 
     @Test
     public void testEmptyMealy() {
-        Assert.assertThrows(UndefinedPropertyAccessException.class,
-                            () -> testEmptyAutomaton(ExampleStack.createExample(), new CompactMealy.Creator<>()));
+        testEmptyAutomaton(ExampleStack.createExample(), new CompactMealy.Creator<>());
     }
 
-    private <I, D, A extends DetSuffixOutputAutomaton<?, I, ?, D> & UniversalDeterministicAutomaton<?, I, ?, ?, ?>> void testEmptyAutomaton(
+    private <I, D, A extends DeterministicSuffixOutputAutomaton<?, I, ?, D> & UniversalDeterministicAutomaton<?, I, ?, ?, ?>> void testEmptyAutomaton(
             LearningExample<I, A> example,
             AutomatonCreator<? extends A, I> emptyCreator) {
 

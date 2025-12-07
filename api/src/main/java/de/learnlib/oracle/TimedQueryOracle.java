@@ -38,9 +38,9 @@ public interface TimedQueryOracle<I, O> extends MealyMembershipOracle<TimedInput
      * inconsistent behavior.
      *
      * @param prefix
-     *         input to give to the SUL.
+     *         the input to give to the SUL
      * @param maxTotalWaitingTime
-     *         maximum total time that is waited for timeouts.
+     *         the maximum total time that is waited for timeouts
      *
      * @return observed timeouts (may be empty)
      */
@@ -52,7 +52,7 @@ public interface TimedQueryOracle<I, O> extends MealyMembershipOracle<TimedInput
      * @param aborted
      *         {@code true} if query was aborted due to missing timeout, {@code false} otherwise.
      * @param timers
-     *         identified timers
+     *         the identified timers
      * @param <O>
      *         output symbol type
      */

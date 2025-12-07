@@ -36,7 +36,6 @@ open module de.learnlib.datastructure {
 
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
-    requires org.slf4j;
 
     exports de.learnlib.datastructure.discriminationtree;
     exports de.learnlib.datastructure.discriminationtree.iterators;

@@ -29,7 +29,7 @@ import net.automatalib.word.Word;
  * A specialized {@link AbstractStaticBatchProcessorBuilder} for {@link TimedQueryOracle}s.
  *
  * @param <I>
- *         input symbol type
+ *         input symbol type (of non-delaying inputs)
  * @param <O>
  *         output symbol type
  */

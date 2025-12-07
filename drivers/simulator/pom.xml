@@ -58,6 +58,7 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

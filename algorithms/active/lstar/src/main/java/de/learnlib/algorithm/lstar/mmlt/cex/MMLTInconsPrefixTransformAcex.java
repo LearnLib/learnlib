@@ -18,6 +18,7 @@ package de.learnlib.algorithm.lstar.mmlt.cex;
 import java.util.function.Function;
 
 import de.learnlib.acex.AbstractBaseCounterexample;
+import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
 import de.learnlib.oracle.TimedQueryOracle;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
@@ -26,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An abstract counterexample used by the MMLT learner.
+ * An abstract counterexample used by the {@link ExtensibleLStarMMLT} learner.
  *
  * @param <I>
  *         input symbol type (of non-delaying inputs)
@@ -46,11 +47,11 @@ public class MMLTInconsPrefixTransformAcex<I, O> extends AbstractBaseCounterexam
      * Constructor.
      *
      * @param suffix
-     *         suffix of the counterexample, i.e., the word that we analyze
+     *         the suffix of the counterexample, i.e., the word that we analyze
      * @param timeOracle
-     *         membership oracle
+     *         the membership oracle
      * @param asTransform
-     *         retrieves the prefix of the system state in the hypothesis addressed by a word
+     *         a mapping that transforms an access sequence of a system state to its canonical access sequence
      */
     public MMLTInconsPrefixTransformAcex(Word<TimedInput<I>> suffix,
                                          TimedQueryOracle<I, O> timeOracle,

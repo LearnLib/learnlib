@@ -18,7 +18,7 @@ package de.learnlib.oracle.parallelism;
 public class DynamicParallelTimedSupplierTest extends AbstractDynamicParallelTimedQueryOracleTest<Void> {
 
     @Override
-    protected DynamicParallelTimedOracleQueryBuilder<Void, Void> getBuilder() {
+    protected DynamicParallelTimedQueryOracleBuilder<Void, Void> getBuilder() {
         return ParallelOracleBuilders.newDynamicParallelTimedQueryOracle(NullOracle::new);
     }
 }

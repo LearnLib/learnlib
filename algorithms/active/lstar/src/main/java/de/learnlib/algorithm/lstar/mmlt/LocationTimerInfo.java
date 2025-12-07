@@ -116,7 +116,7 @@ public class LocationTimerInfo<I, O> {
      * over setting the timer property.
      *
      * @param name
-     *         name of the new one-shot timer
+     *         the name of the new one-shot timer
      */
     public void setOneShotTimer(String name) {
         TimerInfo<?, O> oneShotTimer = this.timers.get(name);
@@ -134,7 +134,7 @@ public class LocationTimerInfo<I, O> {
     }
 
     /**
-     * Returns a list of all timers defined in this location, sorted by their initial value.
+     * Returns an unmodifiable list of all timers defined in this location, sorted by their initial value.
      *
      * @return list of local timers, may be empty
      */

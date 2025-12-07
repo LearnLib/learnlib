@@ -23,11 +23,17 @@ import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.word.Word;
 
-public class MMLTStatisticsSymbolFilter<I, O> extends AbstractStatisticsSymbolFilter<TimedInput<I>, InputSymbol<I>> {
+/**
+ * A symbol filter that logs statistics about false accepts and false ignores.
+ *
+ * @param <I>
+ *         input symbol type (of non-delaying inputs)
+ */
+public class MMLTStatisticsSymbolFilter<I> extends AbstractStatisticsSymbolFilter<TimedInput<I>, InputSymbol<I>> {
 
-    private final MMLT<?, I, ?, O> automaton;
+    private final MMLT<?, I, ?, ?> automaton;
 
-    public MMLTStatisticsSymbolFilter(MMLT<?, I, ?, O> automaton,
+    public MMLTStatisticsSymbolFilter(MMLT<?, I, ?, ?> automaton,
                                       SymbolFilter<TimedInput<I>, InputSymbol<I>> delegate) {
         super(delegate);
         this.automaton = automaton;

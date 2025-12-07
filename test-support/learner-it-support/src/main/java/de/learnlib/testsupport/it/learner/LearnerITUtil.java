@@ -106,7 +106,7 @@ public final class LearnerITUtil {
      * @param eqOracle
      *         the equivalence oracle to use by the learning process
      * @param <I>
-     *         input symbol type
+     *         input symbol type (of non-delaying inputs)
      * @param <O>
      *         output symbol type
      *

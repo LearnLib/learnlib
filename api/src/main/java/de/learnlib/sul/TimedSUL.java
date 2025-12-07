@@ -18,6 +18,7 @@ package de.learnlib.sul;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
@@ -27,7 +28,7 @@ import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Interface for a SUL with MMLT semantics.
+ * Interface for a {@link SUL} with {@link MMLT} semantics.
  *
  * @param <I>
  *         input symbol type (of non-delaying inputs)
@@ -53,7 +54,7 @@ public interface TimedSUL<I, O> extends SUL<InputSymbol<I>, TimedOutput<O>> {
      * @param input
      *         the input word
      * @param maxTimeout
-     *         maximum waiting time to use for {@link TimeoutSymbol}s.
+     *         the maximum waiting time to use for {@link TimeoutSymbol}s.
      */
     default void follow(Word<TimedInput<I>> input, long maxTimeout) {
         for (TimedInput<I> i : input) {
@@ -77,9 +78,9 @@ public interface TimedSUL<I, O> extends SUL<InputSymbol<I>, TimedOutput<O>> {
      * is too small or if the active location has no timers.
      *
      * @param maxTime
-     *         maximum waiting time.
+     *         the maximum waiting time.
      *
-     * @return observed timer output with waiting time, or {@code null} if no timeout was observed.
+     * @return the observed timer output with waiting time, or {@code null} if no timeout was observed.
      */
     @Nullable TimedOutput<O> timeoutStep(long maxTime);
 

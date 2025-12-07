@@ -154,11 +154,7 @@ limitations under the License.
                     <configuration>
                         <!-- append to existing argLine to nicely work together with jacoco plugin -->
                         <!-- allow tests access to util and statistics -->
-                        <argLine>
-                            @{argLine}
-                            --add-reads=de.learnlib.algorithm.lstar=net.automatalib.util
-                            --add-reads=de.learnlib.algorithm.lstar=de.learnlib.filter.statistic
-                        </argLine>
+                        <argLine>@{argLine} --add-reads=de.learnlib.algorithm.lstar=net.automatalib.util</argLine>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -167,11 +163,7 @@ limitations under the License.
                     <configuration>
                         <!-- append to existing argLine to nicely work together with jacoco plugin -->
                         <!-- allow tests access to util and statistics -->
-                        <argLine>
-                            @{argLine}
-                            --add-reads=de.learnlib.algorithm.lstar=net.automatalib.util
-                            --add-reads=de.learnlib.algorithm.lstar=de.learnlib.filter.statistic
-                        </argLine>
+                        <argLine>@{argLine} --add-reads=de.learnlib.algorithm.lstar=net.automatalib.util</argLine>
                     </configuration>
                 </plugin>
             </plugins>

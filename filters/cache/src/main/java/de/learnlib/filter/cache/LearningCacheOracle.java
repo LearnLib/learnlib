@@ -71,7 +71,7 @@ public interface LearningCacheOracle<A, I, D> extends LearningCache<A, I, D>, Me
                                                      MooreMembershipOracle<I, O> {}
 
     /**
-     * Specialization of the {@link LearningCacheOracle} interface for MMLT learning.
+     * Specialization of the {@link LearningCacheOracle} interface for {@link MMLT} learning.
      *
      * @param <I>
      *         input symbol type

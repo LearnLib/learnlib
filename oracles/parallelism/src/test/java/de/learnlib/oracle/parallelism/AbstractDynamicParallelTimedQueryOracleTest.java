@@ -80,7 +80,7 @@ public abstract class AbstractDynamicParallelTimedQueryOracleTest<D> {
         }
     }
 
-    protected abstract DynamicParallelTimedOracleQueryBuilder<Void, D> getBuilder();
+    protected abstract DynamicParallelTimedQueryOracleBuilder<Void, D> getBuilder();
 
     protected static <D> List<AnswerOnceQuery<D>> createQueries(int numQueries) {
         List<AnswerOnceQuery<D>> queries = new ArrayList<>(numQueries);

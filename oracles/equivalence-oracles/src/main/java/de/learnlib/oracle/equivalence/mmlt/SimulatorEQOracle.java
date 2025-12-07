@@ -27,7 +27,7 @@ import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A simulator oracle for MMLTs.
+ * A simulator oracle for {@link MMLT}s.
  *
  * @param <I>
  *         input symbol type (of non-delaying inputs)

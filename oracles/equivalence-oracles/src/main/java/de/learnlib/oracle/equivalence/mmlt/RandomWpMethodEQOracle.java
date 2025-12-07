@@ -38,7 +38,7 @@ import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Implements the partial W-method for MMLT learning. The key modification compared to
+ * Implements the partial W-method for {@link MMLT} learning. The key modification compared to
  * {@link de.learnlib.oracle.equivalence.RandomWpMethodEQOracle} is that prefixes are sampled from entry prefixes only
  * instead of all state prefixes.
  *
@@ -81,8 +81,8 @@ public class RandomWpMethodEQOracle<I, O> implements MMLTEquivalenceOracle<I, O>
         return findCounterExampleInternal(hypothesis, inputs);
     }
 
-    private <S> DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> findCounterExampleInternal(MMLT<S, I, ?, O> hypothesis,
-                                                                                             Collection<? extends TimedInput<I>> inputs) {
+    private <S> @Nullable DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> findCounterExampleInternal(MMLT<S, I, ?, O> hypothesis,
+                                                                                                       Collection<? extends TimedInput<I>> inputs) {
         // Make expanded form of hypothesis:
         ReducedMMLTSemantics<S, I, O> hypSemModel = ReducedMMLTSemantics.forMMLT(hypothesis);
 

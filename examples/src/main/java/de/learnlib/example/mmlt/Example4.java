@@ -40,7 +40,7 @@ import net.automatalib.util.automaton.mmlt.MMLTs;
 import net.automatalib.word.Word;
 
 /**
- * This example demonstrates how to load an MMLT from a dot-file and learn it using the L* algorithm.
+ * This example demonstrates how to load an {@link MMLT} from a dot-file and learn it using the L* algorithm.
  * <p>
  * A description of the dot-file syntax for MMLTs can be found in AutomataLib (see {@link DOTMMLTParser}).
  */

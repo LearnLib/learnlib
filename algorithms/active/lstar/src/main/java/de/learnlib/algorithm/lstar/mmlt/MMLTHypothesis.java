@@ -18,6 +18,7 @@ package de.learnlib.algorithm.lstar.mmlt;
 import java.util.Map;
 
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.State;
 import net.automatalib.automaton.mmlt.SymbolCombiner;
 import net.automatalib.automaton.mmlt.impl.CompactMMLT;
@@ -25,7 +26,8 @@ import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.word.Word;
 
 /**
- * An MMLT hypothesis that includes a prefix mapping. This mapping assigns a short prefix to each location.
+ * The hypothesis model is a regular {@link MMLT} that includes an additional prefix mapping. This mapping assigns a
+ * short prefix to each location.
  *
  * @param <I>
  *         input symbol type (of non-delaying inputs)
@@ -51,9 +53,9 @@ public class MMLTHypothesis<I, O> extends CompactMMLT<I, O> {
      * entering its location (= entry distance).
      *
      * @param configuration
-     *         Considered configuration
+     *         the considered configuration
      *
-     * @return Assigned prefix
+     * @return the assigned prefix
      */
     public Word<TimedInput<I>> getPrefix(State<Integer, O> configuration) {
         Word<TimedInput<I>> locPrefix = getLocationPrefix(configuration);
@@ -68,14 +70,24 @@ public class MMLTHypothesis<I, O> extends CompactMMLT<I, O> {
      * Returns a prefix for the given location. This prefix is deterministic in the learner.
      *
      * @param location
-     *         Location
+     *         the location
      *
-     * @return Location prefix
+     * @return the location prefix
      */
     public Word<TimedInput<I>> getPrefix(Integer location) {
-        return prefixMap.get(location);
+        Word<TimedInput<I>> prefix = prefixMap.get(location);
+        assert prefix != null;
+        return prefix;
     }
 
+    /**
+     * Returns a prefix for the location reached by the given prefix. This prefix is deterministic in the learner.
+     *
+     * @param prefix
+     *         the access sequence to the location
+     *
+     * @return the (canonical) location prefix
+     */
     public Word<TimedInput<I>> getPrefix(Word<TimedInput<I>> prefix) {
         State<Integer, O> resultingConfig = getSemantics().getState(prefix);
         assert resultingConfig != null;
@@ -86,13 +98,11 @@ public class MMLTHypothesis<I, O> extends CompactMMLT<I, O> {
      * Returns the prefix assigned to the location that is active in the provided configuration.
      *
      * @param configuration
-     *         Considered configuration
+     *         the considered configuration
      *
-     * @return Assigned prefix
+     * @return the assigned prefix
      */
     public Word<TimedInput<I>> getLocationPrefix(State<Integer, O> configuration) {
-        Word<TimedInput<I>> locPrefix = this.prefixMap.get(configuration.getLocation());
-        assert locPrefix != null;
-        return locPrefix;
+        return getPrefix(configuration.getLocation());
     }
 }

@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
 public class DynamicParallelTimedQueryOracleTest extends AbstractDynamicParallelTimedQueryOracleTest<Void> {
 
     @Override
-    protected DynamicParallelTimedOracleQueryBuilder<Void, Void> getBuilder() {
+    protected DynamicParallelTimedQueryOracleBuilder<Void, Void> getBuilder() {
         return ParallelOracleBuilders.newDynamicParallelTimedQueryOracle(Arrays.asList(new NullOracle(),
                                                                                        new NullOracle(),
                                                                                        new NullOracle()));

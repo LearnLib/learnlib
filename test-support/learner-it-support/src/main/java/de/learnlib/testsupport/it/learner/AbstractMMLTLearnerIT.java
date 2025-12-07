@@ -28,6 +28,7 @@ import de.learnlib.testsupport.example.LearningExamples;
 import de.learnlib.testsupport.it.learner.LearnerVariantList.MMLTLearnerVariantList;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MMLTLearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.mmlt.MMLT;
 import org.testng.annotations.Factory;
 
 public abstract class AbstractMMLTLearnerIT {
@@ -66,7 +67,7 @@ public abstract class AbstractMMLTLearnerIT {
     }
 
     /**
-     * Adds, for a given setup, all the variants of the MMLT learner to be tested to the specified
+     * Adds, for a given setup, all the variants of the {@link MMLT} learner to be tested to the specified
      * {@link LearnerVariantList variant list}.
      *
      * @param <I>
@@ -80,7 +81,7 @@ public abstract class AbstractMMLTLearnerIT {
      * @param example
      *         the learning example to potentially extract additional information
      * @param variants
-     *         list to add the learner variants to
+     *         the list to add the learner variants to
      */
     protected abstract <I, O> void addLearnerVariants(Alphabet<I> alphabet,
                                                       TimedQueryOracle<I, O> mqOracle,

@@ -53,6 +53,7 @@ class MMLTCounterexampleDecomposer<I, O> {
         if (outIncons.suffix().length() == 1) {
             // Incorrect output:
             State<Integer, O> prefixState = hypothesis.getSemantics().getState(outIncons.prefix());
+            assert prefixState != null;
             return new ExtendedDecomposition<>(prefixState, outIncons.suffix().firstSymbol());
         }
 
@@ -65,10 +66,9 @@ class MMLTCounterexampleDecomposer<I, O> {
 
         if (acex.testEffects(0, acex.getLength() - 1)) {
             // Breakpoint condition not met -> must be incorrect output:
-            Word<TimedInput<I>> lastStatePrefix =
-                    outIncons.prefix().concat(outIncons.suffix().prefix(outIncons.suffix().length() - 1));
+            Word<TimedInput<I>> lastStatePrefix = outIncons.prefix().concat(outIncons.suffix().prefix(-1));
             State<Integer, O> lastState = hypothesis.getSemantics().getState(lastStatePrefix);
-
+            assert lastState != null;
             return new ExtendedDecomposition<>(lastState, outIncons.suffix().lastSymbol());
         }
 
@@ -83,6 +83,7 @@ class MMLTCounterexampleDecomposer<I, O> {
         Word<TimedInput<I>> discriminator = outIncons.suffix().subWord(breakpoint + 1);
 
         State<Integer, O> prefixState = hypothesis.getSemantics().getState(prefix);
+        assert prefixState != null;
 
         LOGGER.debug("""
                              Decomposing to {}|{}|{}
@@ -106,9 +107,9 @@ class MMLTCounterexampleDecomposer<I, O> {
      * input or a single time step.
      *
      * @param decomposition
-     *         extended decomposition
+     *         the extended decomposition
      *
-     * @return post-processed decomposition
+     * @return the post-processed decomposition
      */
     ExtendedDecomposition<I, O> postProcessExtendedDecomposition(ExtendedDecomposition<I, O> decomposition,
                                                                  MMLTHypothesis<I, O> hypothesis) {
@@ -141,6 +142,7 @@ class MMLTCounterexampleDecomposer<I, O> {
             } else {
                 newPrefixState =
                         hypothesis.getSemantics().getState(statePrefix.append(TimedInput.step(minWaitTime - 1)));
+                assert newPrefixState != null;
             }
 
             LOGGER.debug("Updated incorrect output at tout during post-processing.");
@@ -157,6 +159,7 @@ class MMLTCounterexampleDecomposer<I, O> {
                 } else {
                     newPrefixState =
                             hypothesis.getSemantics().getState(statePrefix.append(TimedInput.step(waitTime - 1)));
+                    assert newPrefixState != null;
                 }
 
                 LOGGER.debug("Updated incorrect target at tout during post-processing.");

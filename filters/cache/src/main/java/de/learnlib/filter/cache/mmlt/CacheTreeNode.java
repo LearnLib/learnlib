@@ -23,8 +23,12 @@ import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
+import org.checkerframework.checker.nullness.qual.EnsuresKeyFor;
+import org.checkerframework.checker.nullness.qual.EnsuresKeyForIf;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * A node in the {@link TimedSULTreeCache}. A node has a parent and children for an arbitrary number of transitions with
@@ -44,7 +48,7 @@ class CacheTreeNode<I, O> {
     private @Nullable CacheTreeTransition<I, O> timeTransition;
     private final Map<InputSymbol<I>, CacheTreeTransition<I, O>> untimedChildren;
 
-    CacheTreeNode(@Nullable CacheTreeNode<I, O> parent, @Nullable TimedInput<I> parentInput) {
+    CacheTreeNode(@PolyNull CacheTreeNode<I, O> parent, @PolyNull TimedInput<I> parentInput) {
         this.parent = parent;
         this.parentInput = parentInput;
 
@@ -89,19 +93,20 @@ class CacheTreeNode<I, O> {
      * child as child to cx.
      *
      * @param newTimeout
-     *         Time at which the timeout sequence is split
+     *         the time at which the timeout sequence is split
      * @param output
-     *         Output at the end of the new time sequence
+     *         the output at the end of the new time sequence
      *
-     * @return New child node
+     * @return the new child node
      */
     CacheTreeNode<I, O> splitTimeout(long newTimeout, TimedOutput<O> output) {
-        assert this.hasTimeChild() && newTimeout < this.getTimeout() : "Must split at lower timeout.";
+        CacheTreeTransition<I, O> trans = this.timeTransition;
+        assert trans != null && newTimeout < this.getTimeout() : "Must split at lower timeout.";
 
         CacheTreeNode<I, O> newChild = new CacheTreeNode<>(this, new TimeStepSequence<>(newTimeout));
         newChild.timeout = this.timeout - newTimeout;
-        newChild.timeTransition = this.timeTransition; // keep output + target
-        this.timeTransition.target().setParent(newChild, new TimeStepSequence<>(this.timeout - newTimeout));
+        newChild.timeTransition = trans; // keep output + target
+        trans.target().setParent(newChild, new TimeStepSequence<>(this.timeout - newTimeout));
 
         this.timeout = newTimeout;
         this.timeTransition = new CacheTreeTransition<>(output, newChild);
@@ -110,11 +115,11 @@ class CacheTreeNode<I, O> {
     }
 
     // -------------------------------------------------------
-    CacheTreeNode<I, O> getParent() {
+    @Nullable CacheTreeNode<I, O> getParent() {
         return parent;
     }
 
-    TimedInput<I> getParentInput() {
+    @Nullable TimedInput<I> getParentInput() {
         return parentInput;
     }
 
@@ -124,18 +129,20 @@ class CacheTreeNode<I, O> {
     }
 
     // -------------------------------------------------------
+    @EnsuresKeyForIf(result = true, expression = "#1", map = "this.untimedChildren")
     boolean hasChild(InputSymbol<I> input) {
         return this.untimedChildren.containsKey(input);
     }
 
-    TimedOutput<O> getOutput(InputSymbol<I> input) {
+    TimedOutput<O> getOutput(@KeyFor("this.untimedChildren") InputSymbol<I> input) {
         return this.untimedChildren.get(input).output();
     }
 
-    CacheTreeNode<I, O> getChild(InputSymbol<I> input) {
+    CacheTreeNode<I, O> getChild(@KeyFor("this.untimedChildren") InputSymbol<I> input) {
         return this.untimedChildren.get(input).target();
     }
 
+    @EnsuresKeyFor(value = "#1", map = "this.untimedChildren")
     CacheTreeNode<I, O> addUntimedChild(InputSymbol<I> input, TimedOutput<O> output) {
         assert !untimedChildren.containsKey(input) : "State already has an child for this input.";
         CacheTreeNode<I, O> child = new CacheTreeNode<>(this, input);

@@ -29,6 +29,7 @@ import de.learnlib.filter.FilterResponse;
 import de.learnlib.filter.SymbolFilter;
 import de.learnlib.oracle.TimedQueryOracle;
 import net.automatalib.automaton.impl.CompactTransition;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.State;
 import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.symbol.time.InputSymbol;
@@ -41,11 +42,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Processes a truncated counterexample for a hypothesis MMLT: searches for an extended decomposition, post-processes
- * it, and infers an inaccuracy from it.
+ * Processes a truncated counterexample for a hypothesis {@link MMLT} by searching for an extended decomposition,
+ * post-processing it, and inferring an inaccuracy from it.
  *
- * @param <I>input
- *         symbol type (of non-delaying inputs)
+ * @param <I>
+ *         input symbol type (of non-delaying inputs)
  * @param <O>
  *         output symbol type
  */
@@ -130,10 +131,12 @@ public class MMLTCounterexampleHandler<I, O> {
         if (!lastTimer.periodic()) {
             assert lastTimer.initial() - 1 == decomposition.state().getEntryDistance() :
                     "Incorrect target must be at timeout of non-periodic timer.";
+            Word<TimedInput<I>> discriminator = decomposition.discriminator();
+            assert discriminator != null;
             LOGGER.debug("Inferred missing discriminator at timeout.");
             return new MissingDiscriminatorResult<>(decomposition.state().getLocation(),
                                                     decomposition.input(),
-                                                    decomposition.discriminator());
+                                                    discriminator);
         } else if (!decomposition.state().isStableConfig()) {
             LOGGER.debug("Found missing one-shot via incorrect target in non-stable config.");
             return this.selectOneShotTimer(decomposition, hypothesis, decomposition.state().getEntryDistance());

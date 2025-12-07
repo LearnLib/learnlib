@@ -29,8 +29,8 @@ import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Stores various data used for describing the MMLT hypothesis. This includes the observation table, a list of local
- * resets, and a list of outputs.
+ * Stores various data used for describing the {@link MMLTHypothesis}. This includes the observation table, a list of
+ * local resets, and a list of outputs.
  *
  * @param <I>
  *         input symbol type (of non-delaying inputs)

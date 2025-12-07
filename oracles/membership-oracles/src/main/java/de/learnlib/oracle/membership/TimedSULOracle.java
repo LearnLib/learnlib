@@ -123,11 +123,11 @@ public class TimedSULOracle<I, O> implements SingleQueryOracleMMLT<I, O> {
      * Identifies the time at which the next known timeout(s) are expected.
      *
      * @param timeouts
-     *         known timeouts
+     *         the known timeouts
      * @param currentTime
-     *         current time
+     *         the current time
      *
-     * @return next timeout time
+     * @return the next timeout time
      */
     private long calcNextExpectedTimeout(List<TimerInfo<?, O>> timeouts, long currentTime) {
         assert !timeouts.isEmpty();
@@ -158,14 +158,14 @@ public class TimedSULOracle<I, O> implements SingleQueryOracleMMLT<I, O> {
      * expected timeout does not occur. In the latter case, the {@link TimerQueryResult#aborted()}} flag is set.
      *
      * @param maxTotalWaitingTime
-     *         maximum time until timeouts are collected
+     *         the maximum time until timeouts are collected
      *
-     * @return list of periodic timeouts or {@code null} if none observed
+     * @return the list of periodic timeouts or {@code null} if none observed
      */
     private TimerQueryResult<O> collectTimeouts(long maxTotalWaitingTime) {
         if (maxTotalWaitingTime < this.modelParams.maxTimeoutWaitingTime()) {
             throw new IllegalArgumentException(
-                    "Timer query waiting time must be at least max. waiting time for a single timeout.");
+                    "Timer query waiting time must be at least maximum waiting time for a single timeout.");
         }
 
         List<TimerInfo<?, O>> knownTimers = new ArrayList<>();
@@ -198,7 +198,7 @@ public class TimedSULOracle<I, O> implements SingleQueryOracleMMLT<I, O> {
             TimedOutput<O> nextOutput = this.sul.timeoutStep(nextWaiting);
             if (nextOutput == null) {
                 if (nextExpectedTime <= maxTotalWaitingTime) {
-                    // Expected a timeout within max. waiting time but nothing happened:
+                    // Expected a timeout within maximum waiting time but nothing happened:
                     inconsistent = true;
                 }
 

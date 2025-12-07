@@ -15,6 +15,7 @@
  */
 package de.learnlib.algorithm.lstar.mmlt.cex;
 
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.State;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.word.Word;
@@ -22,15 +23,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An extended decomposition represents a transition with an incorrect target or output in the expanded form of a
- * hypothesis MMLT.
+ * hypothesis {@link MMLT}.
  *
  * @param state
- *         source state in expanded form of hypothesis
+ *         the source state in expanded form of hypothesis
  * @param input
- *         input of some transition with incorrect output or target source state
+ *         the input of some transition with incorrect output or target source state
  * @param discriminator
- *         discriminator for identifying an incorrect target state (may be {@code null} if the decomposition identifies
- *         an incorrect output only)
+ *         the discriminator for identifying an incorrect target state (may be {@code null} if the decomposition
+ *         identifies an incorrect output only)
  * @param <I>
  *         input symbol type (of non-delaying inputs)
  * @param <O>

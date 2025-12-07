@@ -23,18 +23,16 @@ import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.word.Word;
 
 /**
- * A symbol filter for MMLTs that correctly accepts and ignores all transitions that silently self-loop.
+ * A symbol filter for {@link MMLT}s that correctly accepts and ignores all transitions that silently self-loop.
  *
  * @param <I>
  *         input symbol type (of non-delaying inputs)
- * @param <O>
- *         output symbol type
  */
-public class MMLTPerfectSymbolFilter<I, O> extends AbstractPerfectSymbolFilter<TimedInput<I>, InputSymbol<I>> {
+public class MMLTPerfectSymbolFilter<I> extends AbstractPerfectSymbolFilter<TimedInput<I>, InputSymbol<I>> {
 
-    private final MMLT<?, I, ?, O> automaton;
+    private final MMLT<?, I, ?, ?> automaton;
 
-    public MMLTPerfectSymbolFilter(MMLT<?, I, ?, O> automaton) {
+    public MMLTPerfectSymbolFilter(MMLT<?, I, ?, ?> automaton) {
         this.automaton = automaton;
     }
 

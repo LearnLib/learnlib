@@ -20,7 +20,7 @@ import de.learnlib.filter.SymbolFilter;
 import net.automatalib.word.Word;
 
 /**
- * A utility class that requires to answer the filter question truthfully.
+ * A utility class that requires extending classes to answer the filter question truthfully.
  *
  * @param <U>
  *         input symbol type of the prefix

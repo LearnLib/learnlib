@@ -36,13 +36,14 @@ import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.membership.TimedSULOracle;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.testsupport.example.mmlt.MMLTExamples;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 
 /**
- * This example illustrates how to learn MMLTs with symbol filtering.
+ * This example illustrates how to learn {@link MMLT}s with symbol filtering.
  * <p>
  * A symbol filter is a component that provides information about transitions that might silently self-loop. The learner
  * exploits this information to avoid redundant queries on the SUL. The symbol filter might incorrectly classify a

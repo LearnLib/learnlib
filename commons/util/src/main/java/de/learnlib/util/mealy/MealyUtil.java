@@ -22,8 +22,8 @@ import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
-import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -38,7 +38,7 @@ public final class MealyUtil {
         // prevent instantiation
     }
 
-    public static <I, O> int findMismatch(MealyMachine<?, I, ?, O> hypothesis, Word<I> input, Word<O> output) {
+    public static <I, O> int findMismatch(MealyTransitionSystem<?, I, ?, O> hypothesis, Word<I> input, Word<O> output) {
         return doFindMismatch(hypothesis, input, output);
     }
 
@@ -58,7 +58,9 @@ public final class MealyUtil {
         return NO_MISMATCH;
     }
 
-    private static <S, I, T, O> int doFindMismatch(MealyMachine<S, I, T, O> hypothesis, Word<I> input, Word<O> output) {
+    private static <S, I, T, O> int doFindMismatch(MealyTransitionSystem<S, I, T, O> hypothesis,
+                                                   Word<I> input,
+                                                   Word<O> output) {
         S state = hypothesis.getInitialState();
 
         if (state == null) {
@@ -86,7 +88,7 @@ public final class MealyUtil {
         return NO_MISMATCH;
     }
 
-    public static <I, O> @Nullable DefaultQuery<I, Word<O>> shortenCounterExample(SuffixOutput<I, Word<O>> hypothesis,
+    public static <I, O> @Nullable DefaultQuery<I, Word<O>> shortenCounterExample(MealyTransitionSystem<?, I, ?, O> hypothesis,
                                                                                   DefaultQuery<I, Word<O>> ceQuery) {
         Word<I> cePrefix = ceQuery.getPrefix(), ceSuffix = ceQuery.getSuffix();
         Word<O> hypOut = hypothesis.computeSuffixOutput(cePrefix, ceSuffix);
@@ -101,7 +103,7 @@ public final class MealyUtil {
         return new DefaultQuery<>(cePrefix, ceSuffix.prefix(mismatchIdx + 1), ceOut.prefix(mismatchIdx + 1));
     }
 
-    public static <I, O> @Nullable DefaultQuery<I, O> reduceCounterExample(MealyMachine<?, I, ?, O> hypothesis,
+    public static <I, O> @Nullable DefaultQuery<I, O> reduceCounterExample(MealyTransitionSystem<?, I, ?, O> hypothesis,
                                                                            DefaultQuery<I, Word<O>> ceQuery) {
         Word<I> cePrefix = ceQuery.getPrefix(), ceSuffix = ceQuery.getSuffix();
         Word<O> hypOut = hypothesis.computeSuffixOutput(cePrefix, ceSuffix);

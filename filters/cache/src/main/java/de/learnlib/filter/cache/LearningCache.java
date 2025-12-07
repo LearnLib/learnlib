@@ -89,7 +89,7 @@ public interface LearningCache<A, I, O> {
     interface MooreLearningCache<I, O> extends LearningCache<MooreMachine<?, I, ?, O>, I, Word<O>> {}
 
     /**
-     * Specialization of the {@link LearningCache} interface for MMLT learning.
+     * Specialization of the {@link LearningCache} interface for {@link MMLT} learning.
      *
      * @param <I>
      *         input symbol type (of non-delaying inputs)

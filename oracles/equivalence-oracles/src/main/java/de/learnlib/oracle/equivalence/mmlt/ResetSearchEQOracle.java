@@ -43,13 +43,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Searches for counterexamples that reveal local resets by
+ * Searches for counterexamples that reveal local resets. This is achieved by
  * <ul>
- *     <li>taking any prefix from a known location</li>
- *     <li>appending a single time step</li>
- *     <li>appending inputs of all non-delaying inputs that self-loop in that location</li>
- *     <li>appending timeout</li>
- * </ul>.
+ *     <li>taking any prefix from a known location,</li>
+ *     <li>appending a single time step,</li>
+ *     <li>appending inputs of all non-delaying inputs that self-loop in that location, and</li>
+ *     <li>appending a timeout.</li>
+ * </ul>
  *
  * @param <I>
  *         input symbol type (of non-delaying inputs)

@@ -32,7 +32,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
  * {@link ParallelTimedQueryOracle}.
  *
  * @param <I>
- *         input symbol type
+ *         input symbol type (of non-delaying inputs)
  * @param <O>
  *         output symbol type
  */

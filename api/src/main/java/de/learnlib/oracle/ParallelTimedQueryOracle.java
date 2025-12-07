@@ -16,13 +16,11 @@
 package de.learnlib.oracle;
 
 /**
- * {@link ParallelOracle} equivalent for {@link OmegaMembershipOracle}s.
+ * {@link ParallelOracle} equivalent for {@link TimedQueryOracle}s.
  *
- * @param <S>
- *         oracle state type
  * @param <I>
- *         input symbol type
- * @param <D>
- *         output domain type
+ *         input symbol type (of non-delaying inputs)
+ * @param <O>
+ *         output symbol type
  */
 public interface ParallelTimedQueryOracle<I, O> extends ThreadPool, TimedQueryOracle<I, O> {}

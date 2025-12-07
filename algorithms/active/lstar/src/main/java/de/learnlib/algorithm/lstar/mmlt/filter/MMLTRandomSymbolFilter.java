@@ -29,14 +29,12 @@ import net.automatalib.word.Word;
  *
  * @param <I>
  *         input symbol type (of non-delaying inputs)
- * @param <O>
- *         output symbol type
  */
-public class MMLTRandomSymbolFilter<I, O> extends AbstractRandomSymbolFilter<TimedInput<I>, InputSymbol<I>> {
+public class MMLTRandomSymbolFilter<I> extends AbstractRandomSymbolFilter<TimedInput<I>, InputSymbol<I>> {
 
-    private final MMLT<?, I, ?, O> automaton;
+    private final MMLT<?, I, ?, ?> automaton;
 
-    public MMLTRandomSymbolFilter(MMLT<?, I, ?, O> automaton, double inaccurateProb, Random random) {
+    public MMLTRandomSymbolFilter(MMLT<?, I, ?, ?> automaton, double inaccurateProb, Random random) {
         super(inaccurateProb, random);
         this.automaton = automaton;
     }

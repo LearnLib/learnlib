@@ -15,21 +15,22 @@
  */
 package de.learnlib.algorithm.lstar.mmlt.cex;
 
+import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
 
 /**
- * Represents an output inconsistency used by the MMLT learner.
+ * Represents an output inconsistency used by the {@link ExtensibleLStarMMLT} learner.
  *
  * @param prefix
- *         prefix
+ *         the prefix
  * @param suffix
- *         suffix input
+ *         the suffix input
  * @param targetOut
- *         suffix output in SUL
+ *         the suffix output in SUL
  * @param hypOut
- *         suffix output in hypothesis
+ *         the suffix output in hypothesis
  * @param <I>
  *         input symbol type (of non-delaying inputs)
  * @param <O>

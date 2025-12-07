@@ -36,7 +36,7 @@ import de.learnlib.algorithm.lstar.mmlt.cex.results.MissingResetResult;
 import de.learnlib.datastructure.observationtable.OTLearner;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.Row;
-import de.learnlib.filter.MutableSymbolFilter;
+import de.learnlib.filter.RefutableSymbolFilter;
 import de.learnlib.filter.symbol.AcceptAllSymbolFilter;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
@@ -49,6 +49,7 @@ import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.automaton.DeterministicAutomaton.FullIntAbstraction;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.common.util.HashUtil;
@@ -79,7 +80,7 @@ public class ExtensibleLStarMMLT<I, O>
     private final ClosingStrategy<? super TimedInput<I>, ? super Word<TimedOutput<O>>> closingStrategy;
 
     private final TimedQueryOracle<I, O> timeOracle;
-    private final MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
+    private final RefutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter;
 
     private final MMLTHypDataContainer<I, O> hypData;
 
@@ -93,7 +94,7 @@ public class ExtensibleLStarMMLT<I, O>
      * <p>
      * This is a convenience constructor for
      * {@link #ExtensibleLStarMMLT(Alphabet, MMLTModelParams, TimedQueryOracle, List, ClosingStrategy,
-     * MutableSymbolFilter, AcexAnalyzer)} which uses
+     * RefutableSymbolFilter, AcexAnalyzer)} which uses
      * <ul>
      *     <li>{@link Collections#emptyList()} for {@code initialSuffixes},</li>
      *     <li>{@link ClosingStrategies#CLOSE_SHORTEST} for {@code closingStrategy},</li>
@@ -102,9 +103,9 @@ public class ExtensibleLStarMMLT<I, O>
      * </ul>
      *
      * @param alphabet
-     *         alphabet (of non-delaying inputs)
+     *         the alphabet (of non-delaying inputs)
      * @param modelParams
-     *         model parameters
+     *         the model parameters
      * @param timeOracle
      *         the query oracle for MMLTs
      */
@@ -124,15 +125,15 @@ public class ExtensibleLStarMMLT<I, O>
      * Instantiates a new learner.
      *
      * @param alphabet
-     *         alphabet (of non-delaying inputs)
+     *         the alphabet (of non-delaying inputs)
      * @param modelParams
-     *         model parameters
+     *         the model parameters
      * @param timeOracle
      *         the query oracle for MMLTs
      * @param initialSuffixes
-     *         initial set of suffixes (may be empty)
+     *         the initial set of suffixes (may be empty)
      * @param closingStrategy
-     *         closing strategy for the observation table.
+     *         the closing strategy for the observation table.
      * @param symbolFilter
      *         the symbol filter
      * @param analyzer
@@ -144,7 +145,7 @@ public class ExtensibleLStarMMLT<I, O>
                                TimedQueryOracle<I, O> timeOracle,
                                List<Word<TimedInput<I>>> initialSuffixes,
                                ClosingStrategy<? super TimedInput<I>, ? super Word<TimedOutput<O>>> closingStrategy,
-                               MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter,
+                               RefutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter,
                                AcexAnalyzer analyzer) {
         this.closingStrategy = closingStrategy;
         this.timeOracle = timeOracle;
@@ -180,7 +181,7 @@ public class ExtensibleLStarMMLT<I, O>
      * @param sortedTimers
      *         timers, sorted ascendingly by their initial value
      * @param maxInitialValue
-     *         max. initial value to consider
+     *         the maximum initial value to consider
      * @param <O>
      *         output type
      *
@@ -212,7 +213,7 @@ public class ExtensibleLStarMMLT<I, O>
             }
         }
 
-        throw new IllegalStateException("Max. initial value is too low; must include at least one timer.");
+        throw new IllegalStateException("Maximum initial value is too low; must include at least one timer.");
     }
 
     @Override
@@ -237,10 +238,10 @@ public class ExtensibleLStarMMLT<I, O>
 
     private void updateOutputs() {
         // Query output of newly-added transitions:
-        MMLTObservationTable<I, O> ot = this.hypData.getTable();
+        MMLTObservationTable<I, O> table = this.hypData.getTable();
         List<OutputQuery<I, O>> queries = new ArrayList<>();
 
-        for (Row<TimedInput<I>> row : IterableUtil.concat(ot.getShortPrefixRows(), ot.getLongPrefixRows())) {
+        for (Row<TimedInput<I>> row : IterableUtil.concat(table.getShortPrefixRows(), table.getLongPrefixRows())) {
             Word<TimedInput<I>> label = row.getLabel();
 
             if (label.isEmpty()) {
@@ -401,7 +402,8 @@ public class ExtensibleLStarMMLT<I, O>
     }
 
     private void handleMissingTimeoutChange(Row<TimedInput<I>> spRow, TimerInfo<?, O> timeout) {
-        LocationTimerInfo<I, O> locationTimerInfo = hypData.getTable().getLocationTimerInfo(spRow);
+        MMLTObservationTable<I, O> table = hypData.getTable();
+        LocationTimerInfo<I, O> locationTimerInfo = table.getLocationTimerInfo(spRow);
         assert locationTimerInfo != null : "Location with missing one-shot timer must have timers.";
 
         // Only timer with highest initial value can be one-shot.
@@ -411,16 +413,16 @@ public class ExtensibleLStarMMLT<I, O>
         assert lastTimer != null;
         if (!lastTimer.periodic()) {
             Word<TimedInput<I>> lastTimerTransPrefix = spRow.getLabel().append(TimedInput.step(lastTimer.initial()));
-            Row<TimedInput<I>> row = hypData.getTable().getRow(lastTimerTransPrefix);
+            Row<TimedInput<I>> row = table.getRow(lastTimerTransPrefix);
             assert row != null;
             if (!row.isShortPrefixRow()) {
                 // Last timer is one-shot + has fringe prefix:
-                this.hypData.getTable().removeLpRow(lastTimerTransPrefix);
+                table.removeLpRow(lastTimerTransPrefix);
             }
         }
 
         // Prefix for timeout-transition of new one-shot timer:
-        assert this.hypData.getTable().getRow(spRow.getLabel().append(TimedInput.step(timeout.initial()))) == null :
+        assert table.getRow(spRow.getLabel().append(TimedInput.step(timeout.initial()))) == null :
                 "Timer already appears to be one-shot.";
 
         // Remove all timers with greater timeout (are now redundant):
@@ -434,8 +436,7 @@ public class ExtensibleLStarMMLT<I, O>
         locationTimerInfo.setOneShotTimer(timeout.name());
 
         // Update fringe prefixes + close table:
-        List<List<Row<TimedInput<I>>>> unclosed =
-                this.hypData.getTable().addTimerTransition(spRow, timeout, this.timeOracle);
+        List<List<Row<TimedInput<I>>>> unclosed = table.addTimerTransition(spRow, timeout, this.timeOracle);
         this.completeConsistentTable(unclosed);
     }
 
@@ -469,9 +470,12 @@ public class ExtensibleLStarMMLT<I, O>
      */
     private static <I, O> MMLTHypothesis<I, O> constructHypothesis(MMLTHypDataContainer<I, O> hypData) {
 
+        final MMLTObservationTable<I, O> table = hypData.getTable();
+        final MMLTModelParams<O> params = hypData.getModelParams();
+
         // 1. Create map that stores link between contentID and short-prefix row:
         final Map<Integer, Row<TimedInput<I>>> locationContentIdMap = new HashMap<>(); // contentId -> sp location
-        for (Row<TimedInput<I>> spRow : hypData.getTable().getShortPrefixRows()) {
+        for (Row<TimedInput<I>> spRow : table.getShortPrefixRows()) {
             // Multiple sp rows may have same contentID. Thus, assign each id only one location:
             locationContentIdMap.putIfAbsent(spRow.getRowContentId(), spRow);
         }
@@ -485,19 +489,19 @@ public class ExtensibleLStarMMLT<I, O>
         }
 
         // 3. Prepare objects for automaton, timers and resets:
-        int numLocations = hypData.getTable().numberOfShortPrefixRows();
+        int numLocations = table.numberOfShortPrefixRows();
         final Map<Integer, Integer> stateMap =
                 new HashMap<>(HashUtil.capacity(numLocations)); // row content id -> state id
         final Map<Integer, Word<TimedInput<I>>> prefixMap =
                 new HashMap<>(HashUtil.capacity(numLocations)); // state id -> location prefix
         MMLTHypothesis<I, O> hypothesis = new MMLTHypothesis<>(alphabet,
                                                                numLocations,
-                                                               hypData.getModelParams().silentOutput(),
-                                                               hypData.getModelParams().outputCombiner(),
+                                                               params.silentOutput(),
+                                                               params.outputCombiner(),
                                                                prefixMap); // we pass the prefix map as reference so that we can fill it later
 
         // 4. Create one state per location:
-        for (Row<TimedInput<I>> row : hypData.getTable().getShortPrefixRows()) {
+        for (Row<TimedInput<I>> row : table.getShortPrefixRows()) {
             int newStateId = hypothesis.addState();
             stateMap.putIfAbsent(row.getRowContentId(), newStateId);
             prefixMap.put(newStateId, row.getLabel());
@@ -514,11 +518,13 @@ public class ExtensibleLStarMMLT<I, O>
             Integer rowContentId = e.getKey();
             Row<TimedInput<I>> spLocation = locationContentIdMap.get(rowContentId);
 
+            assert spLocation != null;
+
             for (I symbol : alphabet) {
                 int symIdx = hypData.getAlphabet().getSymbolIndex(TimedInput.input(symbol));
 
                 TimedOutput<O> transOutput = hypData.getTransitionOutput(spLocation, symIdx);
-                O output = hypData.getModelParams().silentOutput(); // silent by default
+                O output = params.silentOutput(); // silent by default
                 if (transOutput != null) {
                     output = transOutput.symbol();
                 }
@@ -532,7 +538,7 @@ public class ExtensibleLStarMMLT<I, O>
 
                 // Add transition to automaton:
                 int sourceLocId = e.getValue();
-                int successorLocId = stateMap.get(successorId);
+                int successorLocId = stateMap.getOrDefault(successorId, FullIntAbstraction.INVALID_STATE);
                 hypothesis.addTransition(sourceLocId, symbol, successorLocId, output);
 
                 // Check for local reset:
@@ -541,7 +547,6 @@ public class ExtensibleLStarMMLT<I, O>
                     hypothesis.addLocalReset(sourceLocId, symbol);
                 }
             }
-
         }
 
         // 6. Add timeout transitions:
@@ -551,7 +556,7 @@ public class ExtensibleLStarMMLT<I, O>
 
             assert spLocation != null;
 
-            LocationTimerInfo<I, O> timerInfo = hypData.getTable().getLocationTimerInfo(spLocation);
+            LocationTimerInfo<I, O> timerInfo = table.getLocationTimerInfo(spLocation);
 
             if (timerInfo != null) {
                 for (TimerInfo<?, O> timer : timerInfo.getLocalTimers().values()) {
@@ -568,7 +573,8 @@ public class ExtensibleLStarMMLT<I, O>
                                                    timer.name(),
                                                    timer.initial(),
                                                    timer.outputs(),
-                                                   stateMap.get(successorId));
+                                                   stateMap.getOrDefault(successorId,
+                                                                         FullIntAbstraction.INVALID_STATE));
                     }
                 }
             }
@@ -629,7 +635,7 @@ public class ExtensibleLStarMMLT<I, O>
             return ClosingStrategies.CLOSE_SHORTEST;
         }
 
-        static <I> MutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter() {
+        static <I> RefutableSymbolFilter<TimedInput<I>, InputSymbol<I>> symbolFilter() {
             return new AcceptAllSymbolFilter<>();
         }
 

@@ -325,7 +325,7 @@ public final class ParallelOracleBuilders {
     }
 
     /**
-     * Creates a {@link DynamicParallelTimedOracleQueryBuilder} using the provided {@code sul} as a supplier. This
+     * Creates a {@link DynamicParallelTimedQueryOracleBuilder} using the provided {@code sul} as a supplier. This
      * requires that the sul is {@link SUL#canFork() forkable}.
      *
      * @param sul
@@ -339,14 +339,14 @@ public final class ParallelOracleBuilders {
      *
      * @return a preconfigured oracle builder
      */
-    public static <I, O> DynamicParallelTimedOracleQueryBuilder<I, O> newDynamicParallelTimedQueryOracle(TimedSUL<I, O> sul,
+    public static <I, O> DynamicParallelTimedQueryOracleBuilder<I, O> newDynamicParallelTimedQueryOracle(TimedSUL<I, O> sul,
                                                                                                          MMLTModelParams<O> params) {
         checkFork(sul);
         return newDynamicParallelTimedQueryOracle(toSupplier(sul, params));
     }
 
     /**
-     * Creates a {@link DynamicParallelTimedOracleQueryBuilder} using the provided supplier.
+     * Creates a {@link DynamicParallelTimedQueryOracleBuilder} using the provided supplier.
      *
      * @param oracleSupplier
      *         the supplier for spawning new thread-specific oracle instances
@@ -357,8 +357,8 @@ public final class ParallelOracleBuilders {
      *
      * @return a preconfigured oracle builder
      */
-    public static <I, O> DynamicParallelTimedOracleQueryBuilder<I, O> newDynamicParallelTimedQueryOracle(Supplier<? extends TimedQueryOracle<I, O>> oracleSupplier) {
-        return new DynamicParallelTimedOracleQueryBuilder<>(oracleSupplier);
+    public static <I, O> DynamicParallelTimedQueryOracleBuilder<I, O> newDynamicParallelTimedQueryOracle(Supplier<? extends TimedQueryOracle<I, O>> oracleSupplier) {
+        return new DynamicParallelTimedQueryOracleBuilder<>(oracleSupplier);
     }
 
     /**
@@ -376,14 +376,14 @@ public final class ParallelOracleBuilders {
      * @return a preconfigured oracle builder
      */
     @SafeVarargs
-    public static <I, O> DynamicParallelTimedOracleQueryBuilder<I, O> newDynamicParallelTimedQueryOracle(
+    public static <I, O> DynamicParallelTimedQueryOracleBuilder<I, O> newDynamicParallelTimedQueryOracle(
             TimedQueryOracle<I, O> firstOracle,
             TimedQueryOracle<I, O>... otherOracles) {
         return newDynamicParallelTimedQueryOracle(CollectionUtil.list(firstOracle, otherOracles));
     }
 
     /**
-     * Creates a {@link DynamicParallelTimedOracleQueryBuilder} using the provided collection of membership oracles. The
+     * Creates a {@link DynamicParallelTimedQueryOracleBuilder} using the provided collection of membership oracles. The
      * resulting parallel oracle will always use a {@link PoolPolicy#FIXED} pool policy and spawn a separate thread for
      * each of the provided oracles (so that the oracles do not need to care about synchronization if they don't share
      * state).
@@ -397,8 +397,8 @@ public final class ParallelOracleBuilders {
      *
      * @return the preconfigured oracle builder
      */
-    public static <I, O> DynamicParallelTimedOracleQueryBuilder<I, O> newDynamicParallelTimedQueryOracle(Collection<? extends TimedQueryOracle<I, O>> oracles) {
-        return new DynamicParallelTimedOracleQueryBuilder<>(oracles);
+    public static <I, O> DynamicParallelTimedQueryOracleBuilder<I, O> newDynamicParallelTimedQueryOracle(Collection<? extends TimedQueryOracle<I, O>> oracles) {
+        return new DynamicParallelTimedQueryOracleBuilder<>(oracles);
     }
 
     /**
@@ -426,8 +426,8 @@ public final class ParallelOracleBuilders {
      * @param sul
      *         the sul instance for spawning new thread-specific membership oracle instances
      * @param undefinedInput
-     *         the input symbol used for responding to inputs that are not {@link StateLocalInputSUL#currentlyEnabledInputs()
-     *         enabled}.
+     *         the input symbol used for responding to inputs that are not
+     *         {@link StateLocalInputSUL#currentlyEnabledInputs() enabled}.
      * @param <I>
      *         input symbol type
      * @param <O>
@@ -442,9 +442,9 @@ public final class ParallelOracleBuilders {
     }
 
     /**
-     * Creates a {@link StaticParallelOracleBuilder} using the provided supplier. Uses the further specified {@link
-     * StaticParallelOracleBuilder#withPoolPolicy(PoolPolicy)} and {@link StaticParallelOracleBuilder#withNumInstances(int)}}
-     * (or its defaults) to determine the thread pool.
+     * Creates a {@link StaticParallelOracleBuilder} using the provided supplier. Uses the further specified
+     * {@link StaticParallelOracleBuilder#withPoolPolicy(PoolPolicy)} and
+     * {@link StaticParallelOracleBuilder#withNumInstances(int)}} (or its defaults) to determine the thread pool.
      *
      * @param oracleSupplier
      *         the supplier for spawning new thread-specific membership oracle instances

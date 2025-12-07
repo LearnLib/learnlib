@@ -18,15 +18,15 @@ package de.learnlib.filter;
 import net.automatalib.word.Word;
 
 /**
- * A mutable extension of a {@link SymbolFilter} that allows one to override the query behavior. In particular,
- * previously ignored transitions can be marked as non-ignorable.
+ * An extension of a {@link SymbolFilter} that allows one to override the query behavior. In particular, previously
+ * ignored transitions can be marked as non-ignorable.
  *
  * @param <U>
  *         input symbol type of the prefix
  * @param <V>
  *         input symbol type of the transition label
  */
-public interface MutableSymbolFilter<U, V> extends SymbolFilter<U, V> {
+public interface RefutableSymbolFilter<U, V> extends SymbolFilter<U, V> {
 
     /**
      * Sets the response of the filter for the given transition to the provided response.

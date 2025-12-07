@@ -27,12 +27,13 @@ import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.membership.TimedSULOracle;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.testsupport.example.mmlt.MMLTExamples;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.symbol.time.TimedInput;
 import net.automatalib.symbol.time.TimeoutSymbol;
 import net.automatalib.word.Word;
 
 /**
- * This example shows a basic learning setup for Mealy machine with local timers (MMLT), an automaton model for
+ * This example shows a basic learning setup for Mealy machine with local timers ({@link MMLT}), an automaton model for
  * real-time systems.
  * <p>
  * <em>Mealy Machines with Local Timers</em> (MMLTs) are an extension of Mealy machines for real-time behavior.

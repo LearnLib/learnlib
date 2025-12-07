@@ -59,8 +59,8 @@ public class MMLTCacheConsistencyTest<I, O> implements MMLTEquivalenceOracle<I, 
     }
 
     private DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> queryCache(Word<TimedInput<I>> word) {
-        WordBuilder<TimedInput<I>> wbInput = new WordBuilder<>();
-        WordBuilder<TimedOutput<O>> wbOutput = new WordBuilder<>();
+        WordBuilder<TimedInput<I>> wbInput = new WordBuilder<>(word.length());
+        WordBuilder<TimedOutput<O>> wbOutput = new WordBuilder<>(word.length());
 
         this.sulCache.pre();
         for (TimedInput<I> sym : word) {
@@ -78,7 +78,7 @@ public class MMLTCacheConsistencyTest<I, O> implements MMLTEquivalenceOracle<I, 
                     wbOutput.append(res);
                 }
             } else {
-                throw new IllegalArgumentException("Symbol type must not be used in cache.");
+                throw new IllegalArgumentException("Symbol type " + sym.getClass() + " must not be used in cache.");
             }
         }
         this.sulCache.post();
@@ -92,9 +92,9 @@ public class MMLTCacheConsistencyTest<I, O> implements MMLTEquivalenceOracle<I, 
      * possible.
      *
      * @param originalQuery
-     *         Original query
+     *         the original query
      *
-     * @return Converted query
+     * @return the converted query
      */
     private DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> convertTimeSequences(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> originalQuery) {
         WordBuilder<TimedInput<I>> wbInput = new WordBuilder<>();
@@ -172,8 +172,7 @@ public class MMLTCacheConsistencyTest<I, O> implements MMLTEquivalenceOracle<I, 
         if (prefixLength == query.length()) {
             return query; // maximum length -> no need to reduce
         } else {
-            return new DefaultQuery<>(query.getInput().subWord(0, prefixLength),
-                                      query.getOutput().subWord(0, prefixLength));
+            return new DefaultQuery<>(query.getInput().prefix(prefixLength), query.getOutput().prefix(prefixLength));
         }
     }
 

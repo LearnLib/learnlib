@@ -1,7 +1,7 @@
 // This example demonstrates that there is no unique minimal form for an MMLT.
 // Learning this model with maxQueryTime=5 yields a model where s1 has two timers and s0 has one.
 // Setting maxQueryTime to 10 instead yields a model where the initial location has two timers and the following has one.
-// The total number of locations, timers, max. timers per location, and average timers per location are identical.
+// The total number of locations, timers, maximum timers per location, and average timers per location are identical.
 digraph g {
 
 	s0 [shape="circle" timers="a=5"];
