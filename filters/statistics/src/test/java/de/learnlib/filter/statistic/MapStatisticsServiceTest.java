@@ -34,6 +34,8 @@ import org.testng.annotations.Test;
 
 public class MapStatisticsServiceTest {
 
+    private static final int SLEEP = 50;
+
     private static final StatisticsKey KEY_TEXT = new StatisticsKey("key-text");
     private static final StatisticsKey KEY_FLAG = new StatisticsKey("key-flag");
     private static final StatisticsKey KEY_CLOCK = new StatisticsKey("key-clock");
@@ -125,7 +127,7 @@ public class MapStatisticsServiceTest {
     }
 
     @Test
-    public void testAggregationClock() {
+    public void testAggregationClock() throws InterruptedException {
         final Object owner1 = new Object();
         final Object owner2 = new Object();
 
@@ -141,6 +143,9 @@ public class MapStatisticsServiceTest {
 
         statistics.startOrResumeClock(key2, owner1);
         statistics.startOrResumeClock(key3, owner2);
+
+        // windows has too low of a timer resolution, therefore wait a bit
+        Thread.sleep(SLEEP);
 
         statistics.pauseClock(key1, owner1);
         statistics.pauseClock(key1, owner2);
@@ -252,7 +257,7 @@ public class MapStatisticsServiceTest {
     }
 
     @Test
-    public void testInsertRetrievalClock() {
+    public void testInsertRetrievalClock() throws InterruptedException {
 
         final StatisticsService statistics = Statistics.getService();
 
@@ -264,12 +269,18 @@ public class MapStatisticsServiceTest {
         statistics.startOrResumeClock(KEY_CLOCK);
         Assert.assertEquals(statistics.getClock(KEY_CLOCK).orElseThrow(), Duration.ZERO);
 
+        // windows has too low of a timer resolution, therefore wait a bit
+        Thread.sleep(SLEEP);
+
         statistics.pauseClock(KEY_CLOCK);
         Duration c1 = statistics.getClock(KEY_CLOCK).orElseThrow();
         Assert.assertTrue(c1.compareTo(Duration.ZERO) > 0);
 
         statistics.startOrResumeClock(KEY_CLOCK);
         Assert.assertTrue(statistics.getClock(KEY_CLOCK).isPresent());
+
+        // windows has too low of a timer resolution, therefore wait a bit
+        Thread.sleep(SLEEP);
 
         statistics.pauseClock(KEY_CLOCK);
         Duration c2 = statistics.getClock(KEY_CLOCK).orElseThrow();
