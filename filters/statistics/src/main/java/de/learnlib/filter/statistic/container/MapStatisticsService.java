@@ -83,10 +83,10 @@ public class MapStatisticsService implements StatisticsService {
     public String print() {
 
         final StringBuilder sb = new StringBuilder(125);
-        sb.append("Statistics:")
-          .append(System.lineSeparator())
-          .append("============================================")
-          .append(System.lineSeparator());
+        sb.append("""
+                          Statistics:
+                          ============================================
+                          """);
 
         final ReadLock lock = this.lock.readLock();
         lock.lock();
@@ -103,20 +103,16 @@ public class MapStatisticsService implements StatisticsService {
                     sb.append(": ").append(map.values().iterator().next());
                 } else {
                     for (Entry<Integer, StatisticContainer> e2 : map.entrySet()) {
-                        sb.append(System.lineSeparator())
-                          .append("  * Instance ")
-                          .append(e2.getKey())
-                          .append(": ")
-                          .append(e2.getValue());
+                        sb.append("\n  * Instance ").append(e2.getKey()).append(": ").append(e2.getValue());
                     }
                 }
-                sb.append(System.lineSeparator());
+                sb.append('\n');
             }
         } finally {
             lock.unlock();
         }
 
-        sb.append("============================================").append(System.lineSeparator());
+        sb.append("============================================\n");
 
         return sb.toString();
     }
@@ -343,7 +339,8 @@ public class MapStatisticsService implements StatisticsService {
                 LOGGER.debug("Key '{}' has been written by objects '{}', aggregating ...", key, stats.keySet());
             }
 
-            @NonNull T result = initialValue;
+            @NonNull
+            T result = initialValue;
             boolean written = false;
 
             for (StatisticContainer container : stats.values()) {

@@ -152,19 +152,19 @@ public class MapStatisticsServiceTest {
         final Duration c11 = tester.getClock(key1, owner1).orElseThrow();
         final Duration c12 = tester.getClock(key1, owner2).orElseThrow();
 
-        Assert.assertTrue(c11.getNano() > 0);
-        Assert.assertTrue(c12.getNano() > 0);
+        Assert.assertTrue(c11.compareTo(Duration.ZERO) > 0);
+        Assert.assertTrue(c12.compareTo(Duration.ZERO) > 0);
         Assert.assertEquals(tester.getClock(key1).orElseThrow(), c11.plus(c12));
 
         final Duration c21 = tester.getClock(key2, owner1).orElseThrow();
         final Duration c32 = tester.getClock(key3, owner2).orElseThrow();
 
-        Assert.assertTrue(c21.getNano() > 0);
-        Assert.assertTrue(c32.getNano() > 0);
+        Assert.assertTrue(c21.compareTo(Duration.ZERO) > 0);
+        Assert.assertTrue(c32.compareTo(Duration.ZERO) > 0);
         Assert.assertEquals(tester.getClock(key2, owner1).orElseThrow(), c21);
         Assert.assertEquals(tester.getClock(key3, owner2).orElseThrow(), c32);
 
-        Assert.assertEquals(new HashSet<>(tester.getClocks(key1).values()), Set.of(c11, c12));
+        Assert.assertEquals(new HashSet<>(tester.getClocks(key1).values()), new HashSet<>(Arrays.asList(c11, c12)));
         Assert.assertEquals(tester.getClocks(key2).values(), Collections.singleton(c21));
         Assert.assertEquals(tester.getClocks(key3).values(), Collections.singleton(c32));
 
@@ -265,15 +265,15 @@ public class MapStatisticsServiceTest {
         Assert.assertEquals(statistics.getClock(KEY_CLOCK).orElseThrow(), Duration.ZERO);
 
         statistics.pauseClock(KEY_CLOCK);
-        final long nanos1 = statistics.getClock(KEY_CLOCK).orElseThrow().toNanos();
-        Assert.assertTrue(nanos1 > 0L);
+        Duration c1 = statistics.getClock(KEY_CLOCK).orElseThrow();
+        Assert.assertTrue(c1.compareTo(Duration.ZERO) > 0);
 
         statistics.startOrResumeClock(KEY_CLOCK);
         Assert.assertTrue(statistics.getClock(KEY_CLOCK).isPresent());
 
         statistics.pauseClock(KEY_CLOCK);
-        final long nanos2 = statistics.getClock(KEY_CLOCK).orElseThrow().toNanos();
-        Assert.assertTrue(nanos2 > nanos1);
+        Duration c2 = statistics.getClock(KEY_CLOCK).orElseThrow();
+        Assert.assertTrue(c2.compareTo(c1) > 0);
 
         Assert.assertTrue(statistics.getText(KEY_TEXT).isEmpty());
         Assert.assertTrue(statistics.getFlag(KEY_FLAG).isEmpty());
@@ -444,6 +444,7 @@ public class MapStatisticsServiceTest {
                                                   ============================================
                                                   """);
 
-        Assert.assertTrue(pattern.matcher(statistics.print()).matches());
+        String output = statistics.print();
+        Assert.assertTrue(pattern.matcher(output).matches(), output);
     }
 }
