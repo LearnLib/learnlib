@@ -8,11 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+* Added a new (L*-based) learning algorithm for *Mealy machines with local timers* (MMLTs), including support for parallel queries, caching, and conformance testing (thanks to [Paul Kogel](https://github.com/pdev55)).
 * Added an `EarlyExitEQOracle` which for a given `AdaptiveMembershipOracle` and `TestWordGenerator` stops the evaluation of (potentially long) Mealy-based equivalence tests as soon as a mismatch with the hypothesis is detected, potentially improving the symbol performance of the given equivalence oracle.
 
 ### Changed
 
 * LearnLib now requires Java 17 at runtime.
+* Statistics collection has received a major rework. Previously, classes would implement the `StatisticCollector` interface and return a `StatisticData` object which 1) only allows for describing a very limited amount of data, and 2) requires you to keep track of all the objects that collect data. This approach has been *replaced* by a new `StatisticsService`. Instances of this service can be obtained similar to a logger via `Statistics.getService()` and require you to provide an implementation of this service on the classpath (a default one is provided by the `learnlib-statistics` module). The new service allows arbitrary components to collect various data which can be conveniently extracted based on the new `StatisticsKey`s used by the components. For more details on advanced scenarios (such as multi-threaded benchmarking), see the documentation of the respective classes. While this may require you to adjust the way you are collecting statistics, all functionality from beforehand should still be available.
+  * `SimpleProfiler` has been replaced by the new clock-based statistics.
 * The `generateTestWords` method of `AbstractTestWordEQOracle` now needs to be public.
 
 ### Fixed
