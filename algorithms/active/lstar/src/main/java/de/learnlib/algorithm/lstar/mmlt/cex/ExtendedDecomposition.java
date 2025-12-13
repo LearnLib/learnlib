@@ -47,13 +47,4 @@ record ExtendedDecomposition<I, O>(State<Integer, O> state, TimedInput<I> input,
     boolean isForIncorrectOutput() {
         return this.discriminator == null;
     }
-
-    @Override
-    public String toString() {
-        if (this.isForIncorrectOutput()) {
-            return String.format("Incorrect output (%s|%s)", state, input);
-        } else {
-            return String.format("Incorrect target (%s|%s|%s)", state, input, discriminator);
-        }
-    }
 }
