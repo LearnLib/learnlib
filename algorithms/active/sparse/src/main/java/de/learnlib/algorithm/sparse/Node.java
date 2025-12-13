@@ -19,11 +19,9 @@ import java.util.BitSet;
 import java.util.List;
 
 /**
- * For table compression and to cache suffix selection,
- * fringe rows do not store observations, but instead map to some node.
- * Each node is associated with a set of suffix-output pairs,
- * potentially representing multiple rows with identical observations.
- * Nodes are either leaves or separators.
+ * For table compression and to cache suffix selection, fringe rows do not store observations, but instead map to some
+ * node. Each node is associated with a set of suffix-output pairs, potentially representing multiple rows with
+ * identical observations. Nodes are either leaves or separators.
  */
 class Node<S, I, O> { // type parameters required for safe casting
 
@@ -33,9 +31,8 @@ class Node<S, I, O> { // type parameters required for safe casting
     final List<Integer> cellIds;
 
     /**
-     * Bit vector encoding which core rows remain compatible
-     * with the observations at this node.
-     * Rows are represented by their index.
+     * Bit vector encoding which core rows remain compatible with the observations at this node. Rows are represented by
+     * their index.
      */
     final BitSet remRows;
 

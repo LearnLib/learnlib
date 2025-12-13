@@ -23,12 +23,11 @@ import java.util.Map;
 import net.automatalib.word.Word;
 
 /**
- * Separators guide the classification of fringe prefixes.
- * A separator holds a suffix and a branch map.
- * The map points to the next node,
- * depending on the output produced by the suffix.
+ * Separators guide the classification of fringe prefixes. A separator holds a suffix and a branch map. The map points
+ * to the next node, depending on the output produced by the suffix.
  */
 class Separator<S, I, O> extends Node<S, I, O> {
+
     final Word<I> suffix;
     final Map<Word<O>, Node<S, I, O>> branchMap;
 

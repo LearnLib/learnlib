@@ -62,8 +62,8 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
     private final Map<Word<I>, FringeRow<S, I, O>> prefToFringe;
 
     /**
-     * List of unique suffix-output pairs, addressable by index.
-     * Used for table compression: table entries only hold cell index.
+     * List of unique suffix-output pairs, addressable by index. Used for table compression: table entries only hold
+     * cell index.
      */
     private final List<Pair<Word<I>, Word<O>>> cells;
 
@@ -257,8 +257,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
     }
 
     /**
-     * Adds suffix-output pair to index if not yet contained,
-     * and returns a unique identifier representing the pair.
+     * Adds suffix-output pair to index if not yet contained, and returns a unique identifier representing the pair.
      */
     private int getUniqueCellIdx(Word<I> suf, Word<O> out) {
         assert suf.length() == out.length();
@@ -296,8 +295,8 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
     }
 
     /**
-     * Takes fringe row and its observations, queries the missing entries,
-     * and returns a list containing the observations for all suffixes.
+     * Takes fringe row and its observations, queries the missing entries, and returns a list containing the
+     * observations for all suffixes.
      */
     private List<Integer> completeRowObservations(FringeRow<S, I, O> f, List<Integer> cellIds) {
         final List<Word<I>> sufsPresent = cellIds.stream().map(c -> this.cells.get(c).getFirst()).toList();

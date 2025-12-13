@@ -21,27 +21,25 @@ import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Leaves can be split or unsplit.
- * An unsplit leaf has a single compatible core row to which it points.
- * As new core rows emerge, the observations of the leaf may not suffice
- * anymore to uniquely assign it to some core row. Then, it becomes split.
- * Split leaves cache suffix selection by reference to separators.
- * Leaves remember how many core rows and suffixes existed at their last visit.
- * This information is used as a logical timestamp to check
- * if the separator is still known to be optimal
- * or if it needs to be recomputed.
+ * Leaves can be split or unsplit. An unsplit leaf has a single compatible core row to which it points. As new core rows
+ * emerge, the observations of the leaf may not suffice anymore to uniquely assign it to some core row. Then, it becomes
+ * split. Split leaves cache suffix selection by reference to separators. Leaves remember how many core rows and
+ * suffixes existed at their last visit. This information is used as a logical timestamp to check if the separator is
+ * still known to be optimal or if it needs to be recomputed.
  */
 class Leaf<S, I, O> extends Node<S, I, O> {
 
     /**
      * Core row associated with this leaf (null if split, see {@link Leaf}).
      */
-    @Nullable CoreRow<S, I, O> cRow;
+    @Nullable
+    CoreRow<S, I, O> cRow;
 
     /**
      * Separator cached by this leaf (see {@link Leaf}).
      */
-    @Nullable Separator<S, I, O> sep;
+    @Nullable
+    Separator<S, I, O> sep;
 
     private int lastNumCRows;
     private int lastNumSufs;
@@ -62,8 +60,7 @@ class Leaf<S, I, O> extends Node<S, I, O> {
     }
 
     /**
-     * Creates unsplit leaf associated with the given core row and observations
-     * (see {@link Leaf}).
+     * Creates unsplit leaf associated with the given core row and observations (see {@link Leaf}).
      */
     Leaf(CoreRow<S, I, O> cRow, int numCRows, int numSufs, List<Integer> cellIds) {
         this(numCRows, numSufs, cellIds);

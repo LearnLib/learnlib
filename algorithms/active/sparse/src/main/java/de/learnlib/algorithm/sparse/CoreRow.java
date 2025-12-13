@@ -23,8 +23,7 @@ import java.util.Set;
 import net.automatalib.word.Word;
 
 /**
- * Each core row represents some hypothesis state
- * and stores its outputs for all table suffixes.
+ * Each core row represents some hypothesis state and stores its outputs for all table suffixes.
  */
 class CoreRow<S, I, O> extends Row<S, I, O> {
 
@@ -34,8 +33,7 @@ class CoreRow<S, I, O> extends Row<S, I, O> {
     final S state;
 
     /**
-     * Index of this row in the core row list.
-     * Used as a unique address.
+     * Index of this row in the core row list. Used as a unique address.
      */
     final int idx;
 
@@ -45,8 +43,7 @@ class CoreRow<S, I, O> extends Row<S, I, O> {
     final Map<Word<I>, Word<O>> sufToOut;
 
     /**
-     * Identifiers of all suffix-output pairs in this row,
-     * used for fast compatibility checking.
+     * Identifiers of all suffix-output pairs in this row, used for fast compatibility checking.
      */
     final Set<Integer> cellIds;
 

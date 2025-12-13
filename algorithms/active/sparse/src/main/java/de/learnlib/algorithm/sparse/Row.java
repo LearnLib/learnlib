@@ -18,6 +18,7 @@ package de.learnlib.algorithm.sparse;
 import net.automatalib.word.Word;
 
 class Row<S, I, O> { // type parameters required for safe casting
+
     final Word<I> prefix;
 
     protected Row(Word<I> prefix) {
