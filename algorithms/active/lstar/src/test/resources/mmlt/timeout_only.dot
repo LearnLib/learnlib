@@ -1,0 +1,13 @@
+// This example consists of timeouts only, triggering certain cases in counterexample handling
+digraph g {
+
+	s0 [shape="circle" timers="a=2"];
+	s1 [shape="circle" timers="b=1"];
+
+	s0 -> s1 [label="to[a] / A"];
+	s1 -> s0 [label="to[b] / B"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s0;
+
+}

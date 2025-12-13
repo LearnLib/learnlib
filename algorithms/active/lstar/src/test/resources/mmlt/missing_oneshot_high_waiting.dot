@@ -5,11 +5,11 @@ digraph g {
 	s1 [timers="b=1" shape="circle"];
 	s2 [timers="c=2" shape="circle"];
 
-    s0 -> s1 [label="to[a] / A"];
-    s1 -> s2 [label="to[b] / B"];
-    s2 -> s2 [label="to[c] / C"];
+	s0 -> s1 [label="to[a] / A"];
+	s1 -> s2 [label="to[b] / B"];
+	s2 -> s2 [label="to[c] / C"];
 
-    s1 -> s1 [label="x / X"];
+	s1 -> s1 [label="x / X"];
 
 __start0 [label="" shape="none" width="0" height="0"];
 __start0 -> s0;

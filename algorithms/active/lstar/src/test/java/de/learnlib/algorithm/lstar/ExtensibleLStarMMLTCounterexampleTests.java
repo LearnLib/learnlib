@@ -42,7 +42,7 @@ public class ExtensibleLStarMMLTCounterexampleTests {
 
     private static <I, O> void learnModel(MMLT<?, I, ?, O> example,
                                           MMLTModelParams<O> params,
-                                          List<Word<TimedInput<I>>> counterexamples) {
+                                          List<DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>>> counterexamples) {
 
         var sul = new MMLTSimulatorSUL<>(example);
         var timeOracle = new TimedSULOracle<>(sul, params);
@@ -52,8 +52,8 @@ public class ExtensibleLStarMMLTCounterexampleTests {
         learner.startLearning();
 
         for (var cex : counterexamples) {
-            var output = timeOracle.answerQuery(cex);
-            learner.refineHypothesis(new DefaultQuery<>(cex, output));
+            cex.answer(timeOracle.answerQuery(cex.getPrefix(), cex.getSuffix()));
+            learner.refineHypothesis(cex);
         }
 
         // Now continue until arriving at an accurate model:
@@ -76,8 +76,10 @@ public class ExtensibleLStarMMLTCounterexampleTests {
         var model = new Example("over_approx_reset.dot");
 
         // Missing discriminator at non-del in stable config:
-        List<Word<TimedInput<String>>> cex1 =
-                List.of(Word.fromSymbols(TimedInput.step(), new InputSymbol<>("i"), new TimeoutSymbol<>()));
+        List<DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>>> cex1 =
+                List.of(new DefaultQuery<>(Word.fromSymbols(TimedInput.step(),
+                                                            new InputSymbol<>("i"),
+                                                            new TimeoutSymbol<>())));
 
         learnModel(model.getReferenceAutomaton(), model.getParams(), cex1);
     }
@@ -88,11 +90,12 @@ public class ExtensibleLStarMMLTCounterexampleTests {
         var model = new Example("recursive_decomp.dot", 3);
 
         // Missing discriminator at non-del in stable config:
-        List<Word<TimedInput<String>>> cex1 = List.of(Word.upcast(TimedInput.inputs("p", "f")),
-                                                      Word.fromWords(TimedInput.inputs("u"),
-                                                                     TimedInput.timeouts(4),
-                                                                     TimedInput.inputs("f")),
-                                                      Word.fromWords(TimedInput.inputs("u"), TimedInput.timeouts(5)));
+        List<DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>>> cex1 =
+                List.of(new DefaultQuery<>(Word.upcast(TimedInput.inputs("p", "f"))),
+                        new DefaultQuery<>(Word.fromWords(TimedInput.inputs("u"),
+                                                          TimedInput.timeouts(4),
+                                                          TimedInput.inputs("f"))),
+                        new DefaultQuery<>(Word.fromWords(TimedInput.inputs("u"), TimedInput.timeouts(5))));
 
         learnModel(model.getReferenceAutomaton(), model.getParams(), cex1);
     }
@@ -102,17 +105,19 @@ public class ExtensibleLStarMMLTCounterexampleTests {
         var model = MMLTExamples.sensorCollector();
 
         // Missing discriminator at non-del in stable config:
-        List<Word<TimedInput<String>>> cex1 = List.of(Word.upcast(TimedInput.inputs("p1", "p1")),
-                                                      Word.upcast(TimedInput.inputs("p2", "abort")),
-                                                      Word.fromSymbols(TimedInput.input("p2"),
-                                                                       TimedInput.step(),
-                                                                       TimedInput.input("abort"),
-                                                                       TimedInput.timeout()));
+        List<DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>>> cex1 =
+                List.of(new DefaultQuery<>(Word.upcast(TimedInput.inputs("p1", "p1"))),
+                        new DefaultQuery<>(Word.upcast(TimedInput.inputs("p2", "abort"))),
+                        new DefaultQuery<>(Word.fromSymbols(TimedInput.input("p2"),
+                                                            TimedInput.step(),
+                                                            TimedInput.input("abort"),
+                                                            TimedInput.timeout())));
 
         // Missing discriminator at one-shot:
-        List<Word<TimedInput<String>>> cex2 = List.of(Word.upcast(TimedInput.inputs("p1", "p1")),
-                                                      Word.upcast(TimedInput.inputs("p2", "abort")),
-                                                      Word.fromWords(TimedInput.inputs("p2"), TimedInput.timeouts(2)));
+        List<DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>>> cex2 =
+                List.of(new DefaultQuery<>(Word.upcast(TimedInput.inputs("p1", "p1"))),
+                        new DefaultQuery<>(Word.upcast(TimedInput.inputs("p2", "abort"))),
+                        new DefaultQuery<>(Word.fromWords(TimedInput.inputs("p2"), TimedInput.timeouts(2))));
 
         learnModel(model.getReferenceAutomaton(), model.getParams(), cex1);
         learnModel(model.getReferenceAutomaton(), model.getParams(), cex2);
@@ -125,20 +130,22 @@ public class ExtensibleLStarMMLTCounterexampleTests {
         var params = new MMLTModelParams<>(p.silentOutput(), p.outputCombiner(), p.maxTimeoutWaitingTime(), 40);
 
         // Missing reset in stable config:
-        List<Word<TimedInput<String>>> cex1 = List.of(Word.upcast(TimedInput.inputs("p1", "p1")),
-                                                      Word.upcast(TimedInput.inputs("p2", "abort")),
-                                                      Word.fromSymbols(TimedInput.input("p1"),
-                                                                       TimedInput.step(),
-                                                                       TimedInput.input("abort"),
-                                                                       TimedInput.timeout()));
+        List<DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>>> cex1 =
+                List.of(new DefaultQuery<>(Word.upcast(TimedInput.inputs("p1", "p1"))),
+                        new DefaultQuery<>(Word.upcast(TimedInput.inputs("p2", "abort"))),
+                        new DefaultQuery<>(Word.fromSymbols(TimedInput.input("p1"),
+                                                            TimedInput.step(),
+                                                            TimedInput.input("abort"),
+                                                            TimedInput.timeout())));
 
         // Missing reset in non-stable config:
-        List<Word<TimedInput<String>>> cex2 = List.of(Word.upcast(TimedInput.inputs("p1", "p1")),
-                                                      Word.upcast(TimedInput.inputs("p2", "abort")),
-                                                      Word.fromWords(TimedInput.inputs("p1"),
-                                                                     TimedInput.steps(3),
-                                                                     TimedInput.inputs("abort"),
-                                                                     TimedInput.timeouts(1)));
+        List<DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>>> cex2 =
+                List.of(new DefaultQuery<>(Word.upcast(TimedInput.inputs("p1", "p1"))),
+                        new DefaultQuery<>(Word.upcast(TimedInput.inputs("p2", "abort"))),
+                        new DefaultQuery<>(Word.fromWords(TimedInput.inputs("p1"),
+                                                          TimedInput.steps(3),
+                                                          TimedInput.inputs("abort"),
+                                                          TimedInput.timeouts(1))));
 
         learnModel(model.getReferenceAutomaton(), params, cex1);
         learnModel(model.getReferenceAutomaton(), params, cex2);
@@ -153,14 +160,16 @@ public class ExtensibleLStarMMLTCounterexampleTests {
         var params = new MMLTModelParams<>(p.silentOutput(), p.outputCombiner(), p.maxTimeoutWaitingTime(), 6);
 
         // Missing one-shot via bad return to entry:
-        List<Word<TimedInput<String>>> cex1 = List.of(Word.upcast(TimedInput.inputs("p1", "p1")),
-                                                      Word.upcast(TimedInput.inputs("p2", "abort")),
-                                                      Word.fromWords(TimedInput.inputs("p1"), TimedInput.timeouts(14)));
+        List<DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>>> cex1 =
+                List.of(new DefaultQuery<>(Word.upcast(TimedInput.inputs("p1", "p1"))),
+                        new DefaultQuery<>(Word.upcast(TimedInput.inputs("p2", "abort"))),
+                        new DefaultQuery<>(Word.fromWords(TimedInput.inputs("p1"), TimedInput.timeouts(14))));
 
         // Missing one-shot in location with single timer:
-        List<Word<TimedInput<String>>> cex2 = List.of(Word.upcast(TimedInput.inputs("p1", "p1")),
-                                                      Word.upcast(TimedInput.inputs("p2", "abort")),
-                                                      Word.fromWords(TimedInput.inputs("p2"), TimedInput.timeouts(2)));
+        List<DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>>> cex2 =
+                List.of(new DefaultQuery<>(Word.upcast(TimedInput.inputs("p1", "p1"))),
+                        new DefaultQuery<>(Word.upcast(TimedInput.inputs("p2", "abort"))),
+                        new DefaultQuery<>(Word.fromWords(TimedInput.inputs("p2"), TimedInput.timeouts(2))));
 
         learnModel(model.getReferenceAutomaton(), params, cex1);
         learnModel(model.getReferenceAutomaton(), params, cex2);
@@ -173,22 +182,35 @@ public class ExtensibleLStarMMLTCounterexampleTests {
         var params = new MMLTModelParams<>(p.silentOutput(), p.outputCombiner(), p.maxTimeoutWaitingTime(), 40);
 
         // Missing one-shot via bad output:
-        List<Word<TimedInput<String>>> cex1 = List.of(Word.upcast(TimedInput.inputs("p1", "p1")),
-                                                      Word.upcast(TimedInput.inputs("p2", "abort")),
-                                                      Word.fromWords(TimedInput.inputs("p1"),
-                                                                     TimedInput.steps(40),
-                                                                     TimedInput.timeouts(1))
-        );
+        List<DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>>> cex1 =
+                List.of(new DefaultQuery<>(Word.upcast(TimedInput.inputs("p1", "p1"))),
+                        new DefaultQuery<>(Word.upcast(TimedInput.inputs("p2", "abort"))),
+                        new DefaultQuery<>(Word.fromWords(TimedInput.inputs("p1"),
+                                                          TimedInput.steps(40),
+                                                          TimedInput.timeouts(1))));
 
         // Missing one-shot via bad target:
-        List<Word<TimedInput<String>>> cex2 = List.of(Word.upcast(TimedInput.inputs("p1", "p1")),
-                                                      Word.upcast(TimedInput.inputs("p2", "abort")),
-                                                      Word.fromWords(TimedInput.inputs("p1"),
-                                                                     TimedInput.timeouts(14),
-                                                                     TimedInput.inputs("collect", "p1")));
+        List<DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>>> cex2 =
+                List.of(new DefaultQuery<>(Word.upcast(TimedInput.inputs("p1", "p1"))),
+                        new DefaultQuery<>(Word.upcast(TimedInput.inputs("p2", "abort"))),
+                        new DefaultQuery<>(Word.fromWords(TimedInput.inputs("p1"),
+                                                          TimedInput.timeouts(14),
+                                                          TimedInput.inputs("collect", "p1"))));
 
         learnModel(model.getReferenceAutomaton(), params, cex1);
         learnModel(model.getReferenceAutomaton(), params, cex2);
+    }
+
+    @Test
+    public void testOnlyTimeouts() {
+        var model = new Example("timeout_only.dot");
+        var p = model.getParams();
+        var params = new MMLTModelParams<>(p.silentOutput(), p.outputCombiner(), p.maxTimeoutWaitingTime(), 3);
+
+        List<DefaultQuery<TimedInput<String>, Word<TimedOutput<String>>>> cex =
+                List.of(new DefaultQuery<>(Word.upcast(TimedInput.timeouts(2)), Word.upcast(TimedInput.timeouts(1))));
+
+        learnModel(model.getReferenceAutomaton(), params, cex);
     }
 
 }

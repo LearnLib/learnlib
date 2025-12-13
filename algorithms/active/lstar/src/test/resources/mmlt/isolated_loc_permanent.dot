@@ -5,13 +5,13 @@ digraph g {
 	s1 [timers="y=2, z=3" shape="circle"];
 	s2 [shape="circle"];
 
-    s0 -> s0 [label="a / A"];
-    s1 -> s1 [label="a / B"];
-    s2 -> s2 [label="a / C"];
+	s0 -> s0 [label="a / A"];
+	s1 -> s1 [label="a / B"];
+	s2 -> s2 [label="a / C"];
 
-    s0 -> s1 [label="to[x] / X"];
-    s1 -> s1 [label="to[y] / Y"];
-    s1 -> s2 [label="to[z] / Z"];
+	s0 -> s1 [label="to[x] / X"];
+	s1 -> s1 [label="to[y] / Y"];
+	s1 -> s2 [label="to[z] / Z"];
 
 __start0 [label="" shape="none" width="0" height="0"];
 __start0 -> s0;

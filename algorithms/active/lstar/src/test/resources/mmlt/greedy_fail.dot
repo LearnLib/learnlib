@@ -4,9 +4,9 @@ digraph g {
 	s0 [timers="a=3" shape="circle"];
 	s1 [timers="a=2,b=5" shape="circle"];
 
-    s0 -> s1 [label="to[a] / a"];
-    s1 -> s1 [label="to[a] / b"];
-    s1 -> s1 [label="to[b] / c"];
+	s0 -> s1 [label="to[a] / a"];
+	s1 -> s1 [label="to[a] / b"];
+	s1 -> s1 [label="to[b] / c"];
 
 __start0 [label="" shape="none" width="0" height="0"];
 __start0 -> s0;

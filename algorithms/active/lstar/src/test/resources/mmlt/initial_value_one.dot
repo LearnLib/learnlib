@@ -5,9 +5,9 @@ digraph g {
 
 	s0 [timers="x=1,y=2" shape="circle"];
 
-    s0 -> s0 [label="a / void" resets="x,y"];
-    s0 -> s0 [label="to[x] / X"];
-    s0 -> s0 [label="to[y] / Y"];
+	s0 -> s0 [label="a / void" resets="x,y"];
+	s0 -> s0 [label="to[x] / X"];
+	s0 -> s0 [label="to[y] / Y"];
 
 __start0 [label="" shape="none" width="0" height="0"];
 __start0 -> s0;

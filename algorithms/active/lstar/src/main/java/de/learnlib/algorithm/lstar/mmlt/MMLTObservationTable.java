@@ -466,7 +466,7 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
 
     @Override
     public int numberOfDistinctRows() {
-        return this.rowContentMap.size();
+        return this.shortPrefixRowMap.size();
     }
 
     @Override
