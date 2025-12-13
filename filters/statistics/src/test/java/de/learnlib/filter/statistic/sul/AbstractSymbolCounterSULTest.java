@@ -19,11 +19,11 @@ import java.util.Collection;
 
 import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.query.Query;
-import de.learnlib.statistic.StatisticSUL;
+import de.learnlib.sul.SUL;
 import net.automatalib.word.Word;
 
-public abstract class AbstractSymbolCounterSULTest<S extends StatisticSUL<Integer, Character>>
-        extends AbstractCounterSULTest<S> {
+public abstract class AbstractSymbolCounterSULTest<S extends SUL<I, O>, I, O>
+        extends AbstractCounterSULTest<S, I, O> {
 
     private static final int QUERY_LENGTH = 5;
 
@@ -33,7 +33,9 @@ public abstract class AbstractSymbolCounterSULTest<S extends StatisticSUL<Intege
     }
 
     @Override
-    protected Collection<Query<Integer, Word<Character>>> createQueries(int num) {
-        return TestQueries.createNoopQueries(num, QUERY_LENGTH, TestQueries.INPUTS);
+    protected Collection<Query<I, Word<O>>> createQueries(int num) {
+        return TestQueries.createNoopQueries(num, QUERY_LENGTH, getInputs());
     }
+
+    protected abstract Collection<I> getInputs();
 }

@@ -181,6 +181,11 @@ limitations under the License.
             <artifactId>learnlib-statistics</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-symbol-filters</artifactId>
+        </dependency>
+
         <!-- oracles -->
         <dependency>
             <groupId>de.learnlib</groupId>
@@ -452,6 +457,13 @@ limitations under the License.
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-statistics</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-symbol-filters</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

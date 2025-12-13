@@ -37,6 +37,7 @@ open module de.learnlib.algorithm.lstar {
     requires de.learnlib.common.counterexample;
     requires de.learnlib.common.util;
     requires de.learnlib.datastructure;
+    requires de.learnlib.filter.symbol;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
     requires net.automatalib.core;
@@ -51,6 +52,10 @@ open module de.learnlib.algorithm.lstar {
     exports de.learnlib.algorithm.lstar.closing;
     exports de.learnlib.algorithm.lstar.dfa;
     exports de.learnlib.algorithm.lstar.mealy;
+    exports de.learnlib.algorithm.lstar.mmlt;
+    exports de.learnlib.algorithm.lstar.mmlt.cex;
+    exports de.learnlib.algorithm.lstar.mmlt.cex.results;
+    exports de.learnlib.algorithm.lstar.mmlt.filter;
     exports de.learnlib.algorithm.lstar.moore;
     exports de.learnlib.algorithm.malerpnueli;
     exports de.learnlib.algorithm.rivestschapire;

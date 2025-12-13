@@ -15,8 +15,11 @@
  */
 package de.learnlib.filter.cache.sul;
 
+import de.learnlib.filter.cache.mmlt.TimedSULTreeCache;
 import de.learnlib.sul.SUL;
 import de.learnlib.sul.StateLocalInputSUL;
+import de.learnlib.sul.TimedSUL;
+import de.learnlib.time.MMLTModelParams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
@@ -33,8 +36,8 @@ public final class SULCaches {
     /**
      * Creates a {@link SULCache} for a given {@link SUL}.
      * <p>
-     * Note that this method does not specify the implementation to use for the cache. Currently, a DAG ({@link
-     * #createDAGCache}) is used; however, this may change in the future.
+     * Note that this method does not specify the implementation to use for the cache. Currently, a DAG
+     * ({@link #createDAGCache}) is used; however, this may change in the future.
      *
      * @param alphabet
      *         the input alphabet
@@ -94,8 +97,8 @@ public final class SULCaches {
     /**
      * Creates a {@link StateLocalInputSULCache} for a given {@link StateLocalInputSUL}.
      * <p>
-     * Note that this method does not specify the implementation to use for the cache. Currently, a tree ({@link
-     * #createStateLocalInputTreeCache}) is used; however, this may change in the future.
+     * Note that this method does not specify the implementation to use for the cache. Currently, a tree
+     * ({@link #createStateLocalInputTreeCache}) is used; however, this may change in the future.
      *
      * @param alphabet
      *         the input alphabet
@@ -133,5 +136,43 @@ public final class SULCaches {
     public static <I, O> StateLocalInputSULCache<I, O> createStateLocalInputTreeCache(Alphabet<I> alphabet,
                                                                                       StateLocalInputSUL<I, O> sul) {
         return new StateLocalInputSULCache<>(new IncrementalMealyTreeBuilder<>(alphabet), sul);
+    }
+
+    /**
+     * Creates a {@link TimedSULTreeCache} for a given {@link TimedSUL}.
+     *
+     * @param sul
+     *         the sul
+     * @param params
+     *         the specific parameter for time related queries
+     * @param <I>
+     *         input symbol type (of non-delaying inputs)
+     * @param <O>
+     *         output symbol type
+     *
+     * @return the cache
+     *
+     */
+    public static <I, O> TimedSULTreeCache<I, O> createTimedCache(TimedSUL<I, O> sul, MMLTModelParams<O> params) {
+        return createTimedTreeCache(sul, params);
+    }
+
+    /**
+     * Creates a {@link TimedSULTreeCache} for a given {@link TimedSUL}, using a tree for internal cache organization.
+     *
+     * @param sul
+     *         the sul
+     * @param params
+     *         the specific parameter for time related queries
+     * @param <I>
+     *         input symbol type (of non-delaying inputs)
+     * @param <O>
+     *         output symbol type
+     *
+     * @return the cache
+     *
+     */
+    public static <I, O> TimedSULTreeCache<I, O> createTimedTreeCache(TimedSUL<I, O> sul, MMLTModelParams<O> params) {
+        return new TimedSULTreeCache<>(sul, params);
     }
 }

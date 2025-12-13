@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.learnlib.filter.statistic.Counter;
-import de.learnlib.filter.statistic.CounterCollection;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.query.AdaptiveQuery;
 import de.learnlib.query.AdaptiveQuery.Response;
-import de.learnlib.statistic.StatisticCollector;
-import de.learnlib.statistic.StatisticData;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatisticsKey;
+import de.learnlib.statistic.StatisticsService;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A simple wrapper for counting the number of {@link Response#RESET resets} and {@link Response#SYMBOL symbols} of an
@@ -36,45 +36,79 @@ import de.learnlib.statistic.StatisticData;
  * @param <O>
  *         output symbol type
  */
-public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracle<I, O>, StatisticCollector {
+public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracle<I, O> {
+
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of {@link Response#RESET reset} and
+     * {@link Response#FINISHED finished} queries executed on the membership oracle.
+     */
+    public static final StatisticsKey KEY_RESET = new StatisticsKey("amq-reset-cnt", "Number of resets");
+
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of {@link Response#SYMBOL symbols} contained in
+     * the executed queries.
+     */
+    public static final StatisticsKey KEY_SYMBOL = new StatisticsKey("amq-sym-cnt", "Number of symbols");
 
     private final AdaptiveMembershipOracle<I, O> delegate;
-    private final Counter resetCounter;
-    private final Counter symbolCounter;
+    private final StatisticsService statistics;
+    private final StatisticsKey keyReset;
+    private final StatisticsKey keySymbol;
 
+    /**
+     * Convenience constructor for
+     * {@link CounterAdaptiveQueryOracle#CounterAdaptiveQueryOracle(AdaptiveMembershipOracle, String)} which uses
+     * {@code null} as {@code id}.
+     *
+     * @param delegate
+     *         the oracle to delegate calls to
+     */
     public CounterAdaptiveQueryOracle(AdaptiveMembershipOracle<I, O> delegate) {
+        this(delegate, null);
+    }
+
+    /**
+     * Constructs a new counter oracle that writes statistical data to a {@link StatisticsService}. The provided
+     * {@code id} is used to refine the supported {@link StatisticsKey}s and allows for using multiple instances of this
+     * class for different purposes.
+     *
+     * @param delegate
+     *         the oracle to delegate calls to
+     * @param id
+     *         the id used for specialising the statistics keys
+     */
+    public CounterAdaptiveQueryOracle(AdaptiveMembershipOracle<I, O> delegate, @Nullable String id) {
         this.delegate = delegate;
-        this.resetCounter = new Counter("Resets", "#");
-        this.symbolCounter = new Counter("Symbols", "#");
-    }
-
-    public Counter getResetCounter() {
-        return resetCounter;
-    }
-
-    public Counter getSymbolCounter() {
-        return symbolCounter;
+        this.statistics = Statistics.getService();
+        this.keyReset = KEY_RESET.withId(id);
+        this.keySymbol = KEY_SYMBOL.withId(id);
     }
 
     @Override
     public void processQueries(Collection<? extends AdaptiveQuery<I, O>> queries) {
-        final List<CountingQuery> wrappers = new ArrayList<>(queries.size());
+        final List<CountingQuery<I, O>> wrappers = new ArrayList<>(queries.size());
         for (AdaptiveQuery<I, O> q : queries) {
-            wrappers.add(new CountingQuery(q));
+            wrappers.add(new CountingQuery<>(q));
         }
 
         this.delegate.processQueries(wrappers);
 
+        // aggregate locally to prevent synchronization overhead
+        long numResets = 0;
+        long numSymbols = 0;
+        for (CountingQuery<I, O> wrapper : wrappers) {
+            numResets += wrapper.resets;
+            numSymbols += wrapper.symbols;
+        }
+
+        this.statistics.increaseCounter(keyReset, numResets, this);
+        this.statistics.increaseCounter(keySymbol, numSymbols, this);
     }
 
-    @Override
-    public StatisticData getStatisticalData() {
-        return new CounterCollection(this.resetCounter, this.symbolCounter);
-    }
-
-    private class CountingQuery implements AdaptiveQuery<I, O> {
+    private static class CountingQuery<I, O> implements AdaptiveQuery<I, O> {
 
         private final AdaptiveQuery<I, O> delegate;
+        private int symbols, resets;
 
         CountingQuery(AdaptiveQuery<I, O> delegate) {
             this.delegate = delegate;
@@ -87,12 +121,12 @@ public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracl
 
         @Override
         public Response processOutput(O out) {
-            symbolCounter.increment();
+            symbols++;
 
             final Response response = delegate.processOutput(out);
 
             if (response != Response.SYMBOL) {
-                resetCounter.increment();
+                resets++;
             }
 
             return response;

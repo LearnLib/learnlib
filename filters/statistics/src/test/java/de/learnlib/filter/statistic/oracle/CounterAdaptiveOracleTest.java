@@ -25,10 +25,12 @@ import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.query.AdaptiveQuery;
 import de.learnlib.query.AdaptiveQuery.Response;
 import de.learnlib.query.Query;
-import de.learnlib.statistic.StatisticData;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatisticsService;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class CounterAdaptiveOracleTest {
@@ -37,6 +39,11 @@ public class CounterAdaptiveOracleTest {
 
     public CounterAdaptiveOracleTest() {
         this.oracle = new CounterAdaptiveQueryOracle<>(new DummyOracle());
+    }
+
+    @BeforeClass
+    public void setUp() {
+        Statistics.getService().clear();
     }
 
     @Test
@@ -71,18 +78,16 @@ public class CounterAdaptiveOracleTest {
         verifyCounts(3, 11);
     }
 
-    @Test
+    @Test(dependsOnMethods = "testSecondQueryBatch")
     public void testStatistics() {
-        final StatisticData statisticalData = oracle.getStatisticalData();
-        Assert.assertTrue(statisticalData.getName().contains("\n"));
-        Assert.assertTrue(statisticalData.getUnit().contains("\n"));
-        Assert.assertTrue(statisticalData.getSummary().contains("\n"));
-        Assert.assertTrue(statisticalData.getDetails().contains("\n"));
+        final StatisticsService statisticsService = Statistics.getService();
+        Assert.assertFalse(statisticsService.getKeys().isEmpty());
     }
 
     private void verifyCounts(long queries, long symbols) {
-        Assert.assertEquals(oracle.getResetCounter().getCount(), queries);
-        Assert.assertEquals(oracle.getSymbolCounter().getCount(), symbols);
+        final StatisticsService statistics = Statistics.getService();
+        Assert.assertEquals(statistics.getCount(CounterAdaptiveQueryOracle.KEY_RESET).orElse(0L), queries);
+        Assert.assertEquals(statistics.getCount(CounterAdaptiveQueryOracle.KEY_SYMBOL).orElse(0L), symbols);
     }
 
     private Collection<Query<Integer, Word<Character>>> generateQueries(int numQueries,

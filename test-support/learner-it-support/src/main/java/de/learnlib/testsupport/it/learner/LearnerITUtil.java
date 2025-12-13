@@ -23,12 +23,14 @@ import java.util.Random;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.testsupport.example.LearningExample;
+import de.learnlib.testsupport.example.LearningExample.MMLTLearningExample;
 import de.learnlib.testsupport.example.LearningExample.OneSEVPALearningExample;
 import de.learnlib.testsupport.example.LearningExample.SBALearningExample;
 import de.learnlib.testsupport.example.LearningExample.SPALearningExample;
 import de.learnlib.testsupport.example.LearningExample.SPMMLearningExample;
 import de.learnlib.testsupport.example.LearningExample.UniversalDeterministicLearningExample;
 import de.learnlib.testsupport.example.PassiveLearningExample;
+import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.MMLTLearnerVariantListImpl;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.OneSEVPALearnerVariantListImpl;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SBALearnerVariantListImpl;
 import de.learnlib.testsupport.it.learner.LearnerVariantListImpl.SPALearnerVariantListImpl;
@@ -39,10 +41,13 @@ import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
@@ -89,6 +94,33 @@ public final class LearnerITUtil {
                 variants,
                 eqOracle,
                 UniversalDeterministicLearnerITCase::new);
+    }
+
+    /**
+     * Creates a list of per-example test cases for all learner variants.
+     *
+     * @param example
+     *         the example system
+     * @param variants
+     *         the list containing the various learner variants
+     * @param eqOracle
+     *         the equivalence oracle to use by the learning process
+     * @param <I>
+     *         input symbol type (of non-delaying inputs)
+     * @param <O>
+     *         output symbol type
+     *
+     * @return the list of test cases, one for each example
+     */
+    public static <I, O> List<MMLTLearnerITCase<I, O>> createExampleITCases(MMLTLearningExample<I, O> example,
+                                                                            MMLTLearnerVariantListImpl<I, O> variants,
+                                                                            EquivalenceOracle<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>> eqOracle) {
+        // explicit generics are required for correct type-inference
+        return LearnerITUtil.<TimedInput<I>, Word<TimedOutput<O>>, MMLT<?, I, ?, O>, MMLTLearningExample<I, O>, MMLTLearnerITCase<I, O>>createExampleITCasesInternal(
+                example,
+                variants,
+                eqOracle,
+                MMLTLearnerITCase::new);
     }
 
     /**
@@ -193,7 +225,7 @@ public final class LearnerITUtil {
                 OneSEVPALearnerITCase::new);
     }
 
-    private static <I, D, M extends FiniteRepresentation & Output<I, D>, L extends LearningExample<I, ? extends M>, C extends AbstractLearnerVariantITCase<I, D, M>> List<C> createExampleITCasesInternal(
+    private static <I, D, M extends FiniteRepresentation, L extends LearningExample<I, ? extends M>, C extends AbstractLearnerVariantITCase<I, D, M>> List<C> createExampleITCasesInternal(
             L example,
             LearnerVariantListImpl<M, I, D> variants,
             EquivalenceOracle<? super M, I, D> eqOracle,
@@ -266,7 +298,7 @@ public final class LearnerITUtil {
     }
 
     @FunctionalInterface
-    private interface ITCaseBuilder<I, D, M extends FiniteRepresentation & Output<I, D>, L extends LearningExample<I, ? extends M>, C extends AbstractLearnerVariantITCase<I, D, M>> {
+    private interface ITCaseBuilder<I, D, M extends FiniteRepresentation, L extends LearningExample<I, ? extends M>, C extends AbstractLearnerVariantITCase<I, D, M>> {
 
         C build(LearnerVariant<M, I, D> variant, L example, EquivalenceOracle<? super M, I, D> eqOracle);
     }

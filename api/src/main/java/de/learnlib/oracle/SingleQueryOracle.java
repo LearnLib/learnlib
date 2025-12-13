@@ -18,6 +18,8 @@ package de.learnlib.oracle;
 import java.util.Collection;
 
 import de.learnlib.query.Query;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
 
 /**
@@ -57,5 +59,8 @@ public interface SingleQueryOracle<I, D> extends MembershipOracle<I, D> {
 
     @FunctionalInterface
     interface SingleQueryOracleMoore<I, O> extends SingleQueryOracle<I, Word<O>>, MooreMembershipOracle<I, O> {}
+
+    interface SingleQueryOracleMMLT<I, O>
+            extends SingleQueryOracle<TimedInput<I>, Word<TimedOutput<O>>>, TimedQueryOracle<I, O> {}
 
 }

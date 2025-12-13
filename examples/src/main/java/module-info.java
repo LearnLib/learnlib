@@ -36,6 +36,7 @@ open module de.learnlib.example {
     requires de.learnlib.filter.cache;
     requires de.learnlib.filter.reuse;
     requires de.learnlib.filter.statistic;
+    requires de.learnlib.filter.symbol;
     requires de.learnlib.oracle.emptiness;
     requires de.learnlib.oracle.equivalence;
     requires de.learnlib.oracle.membership;

@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
 import net.automatalib.word.Word;
+import org.testng.Assert;
 
 public class StaticParallelObservableSULTest extends AbstractStaticParallelOmegaOracleTest<Word<TestSULOutput>> {
 
@@ -30,7 +31,7 @@ public class StaticParallelObservableSULTest extends AbstractStaticParallelOmega
 
     @Override
     protected TestOutput extractTestOutput(Word<TestSULOutput> output) {
-        assert !output.isEmpty();
+        Assert.assertFalse(output.isEmpty());
 
         final TestSULOutput lastSym = output.lastSymbol();
         final int oracleId = lastSym.oracleId;

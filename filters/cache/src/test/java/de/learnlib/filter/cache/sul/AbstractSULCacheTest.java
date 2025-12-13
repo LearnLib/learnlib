@@ -20,6 +20,7 @@ import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.cache.SULLearningCacheOracle;
 import de.learnlib.filter.statistic.sul.CounterSUL;
+import de.learnlib.statistic.Statistics;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
@@ -59,8 +60,13 @@ public abstract class AbstractSULCacheTest
     }
 
     @Override
+    protected Word<Integer> computeOutput(MealyMachine<?, Character, ?, Integer> model, Word<Character> input) {
+        return model.computeOutput(input);
+    }
+
+    @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getResetCounter().getCount();
+        return Statistics.getService().getCount(CounterSUL.KEY_QUERY).orElse(0L);
     }
 
     @Override

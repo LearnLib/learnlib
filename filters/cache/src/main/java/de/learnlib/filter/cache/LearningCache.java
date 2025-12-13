@@ -17,8 +17,11 @@ package de.learnlib.filter.cache;
 
 import de.learnlib.oracle.EquivalenceOracle;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
 
 /**
@@ -84,4 +87,15 @@ public interface LearningCache<A, I, O> {
      */
     @FunctionalInterface
     interface MooreLearningCache<I, O> extends LearningCache<MooreMachine<?, I, ?, O>, I, Word<O>> {}
+
+    /**
+     * Specialization of the {@link LearningCache} interface for {@link MMLT} learning.
+     *
+     * @param <I>
+     *         input symbol type (of non-delaying inputs)
+     * @param <O>
+     *         output symbol type
+     */
+    @FunctionalInterface
+    interface MMLTLearningCache<I, O> extends LearningCache<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>> {}
 }

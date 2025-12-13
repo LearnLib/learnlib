@@ -17,20 +17,20 @@ package de.learnlib.filter.statistic.oracle;
 
 import java.util.Collection;
 
-import de.learnlib.filter.statistic.Counter;
-import de.learnlib.filter.statistic.CounterCollection;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import de.learnlib.query.Query;
-import de.learnlib.statistic.StatisticData;
-import de.learnlib.statistic.StatisticOracle;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatisticsKey;
+import de.learnlib.statistic.StatisticsService;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
 import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link MembershipOracle} that counts both the number of queries and the total number of symbols occurring in all
@@ -66,47 +66,62 @@ import net.automatalib.word.Word;
                                             generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MooreMembershipOracle.class,
                                             generics = {@Generic("I"), @Generic("O")}))
-public class CounterOracle<I, D> implements StatisticOracle<I, D> {
+public class CounterOracle<I, D> implements MembershipOracle<I, D> {
+
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of
+     * {@link MembershipOracle#processQueries(Collection) queries} executed on the membership oracle.
+     */
+    public static final StatisticsKey KEY_QUERY = new StatisticsKey("mq-qry-cnt", "Number of queries");
+
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of {@link Query#length() symbols} contained in
+     * the executed queries.
+     */
+    public static final StatisticsKey KEY_SYMBOL = new StatisticsKey("mq-sym-cnt", "Number of symbols");
 
     private final MembershipOracle<I, D> delegate;
-    private final Counter queryCounter;
-    private final Counter symbolCounter;
+    private final StatisticsService statistics;
+    private final StatisticsKey keyQuery;
+    private final StatisticsKey keySymbol;
 
+    /**
+     * Convenience constructor for {@link CounterOracle#CounterOracle(MembershipOracle, String)} which uses {@code null}
+     * as {@code id}.
+     *
+     * @param delegate
+     *         the oracle to delegate calls to
+     */
     public CounterOracle(MembershipOracle<I, D> delegate) {
+        this(delegate, null);
+    }
+
+    /**
+     * Constructs a new counter oracle that writes statistical data to a {@link StatisticsService}. The provided
+     * {@code id} is used to refine the supported {@link StatisticsKey}s and allows for using multiple instances of this
+     * class for different purposes.
+     *
+     * @param delegate
+     *         the oracle to delegate calls to
+     * @param id
+     *         the id used for specialising the statistics keys
+     */
+    public CounterOracle(MembershipOracle<I, D> delegate, @Nullable String id) {
         this.delegate = delegate;
-        this.queryCounter = new Counter("Queries", "#");
-        this.symbolCounter = new Counter("Symbols", "#");
+
+        this.statistics = Statistics.getService();
+        this.keyQuery = KEY_QUERY.withId(id);
+        this.keySymbol = KEY_SYMBOL.withId(id);
     }
 
     @Override
     public void processQueries(Collection<? extends Query<I, D>> queries) {
-        queryCounter.increment(queries.size());
+        long symCounter = 0;
         for (Query<I, D> qry : queries) {
-            symbolCounter.increment(qry.getPrefix().length() + qry.getSuffix().length());
+            symCounter += qry.length();
         }
+        statistics.increaseCounter(keyQuery, queries.size(), this);
+        statistics.increaseCounter(keySymbol, symCounter, this);
         delegate.processQueries(queries);
-    }
-
-    /**
-     * Retrieves {@link Counter} for the number of queries posed to this oracle.
-     *
-     * @return the counter of queries
-     */
-    public Counter getQueryCounter() {
-        return queryCounter;
-    }
-
-    /**
-     * Retrieves the {@link Counter} for the number of symbols in all queries posed to this oracle.
-     *
-     * @return the counter of symbols
-     */
-    public Counter getSymbolCounter() {
-        return symbolCounter;
-    }
-
-    @Override
-    public StatisticData getStatisticalData() {
-        return new CounterCollection(queryCounter, symbolCounter);
     }
 }

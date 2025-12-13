@@ -1,0 +1,36 @@
+// This is an example of a model where the post-processing discovers an incorrect output while processing an incorrect target.
+// You need to set maximum the query time to three.
+// Use "TestDissExample" to send counterexamples that trigger the expected behavior.
+digraph g {
+
+	s0 [shape="circle"];
+	s1 [timers="a=2,b=3" shape="circle"];
+	s2 [shape="circle"];
+	s3 [timers="c=2" shape="circle"];
+	s4 [timers="d=1" shape="circle"];
+	s5 [timers="e=1" shape="circle"];
+	s6 [timers="f=2" shape="circle"];
+
+	s0 -> s0 [label="f / F"]
+
+	s0 -> s1 [label="p / P"];
+	s1 -> s1 [label="to[a] / A"];
+	s1 -> s2 [label="to[b] / B"];
+
+	s1 -> s1 [label="f / G"]
+	s2 -> s2 [label="f / H"]
+
+	// ----
+
+	s0 -> s3 [label="u / U"];
+	s3 -> s4 [label="to[c] / A"];
+	s4 -> s5 [label="to[d] / B"];
+	s5 -> s6 [label="to[e] / A"];
+	s6 -> s7 [label="to[f] / A|B"];
+
+	s3 -> s3 [label="f / G"]
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s0;
+
+}

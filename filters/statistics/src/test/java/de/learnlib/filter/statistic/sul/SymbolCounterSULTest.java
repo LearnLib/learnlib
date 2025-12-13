@@ -15,11 +15,16 @@
  */
 package de.learnlib.filter.statistic.sul;
 
-import de.learnlib.driver.simulator.MealySimulatorSUL;
-import de.learnlib.filter.statistic.Counter;
-import de.learnlib.filter.statistic.TestQueries;
+import java.util.Collection;
+import java.util.Optional;
 
-public class SymbolCounterSULTest extends AbstractSymbolCounterSULTest<CounterSUL<Integer, Character>> {
+import de.learnlib.driver.simulator.MealySimulatorSUL;
+import de.learnlib.filter.statistic.TestQueries;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatisticsService;
+
+public class SymbolCounterSULTest
+        extends AbstractSymbolCounterSULTest<CounterSUL<Integer, Character>, Integer, Character> {
 
     @Override
     protected CounterSUL<Integer, Character> getStatisticSUL() {
@@ -27,8 +32,14 @@ public class SymbolCounterSULTest extends AbstractSymbolCounterSULTest<CounterSU
     }
 
     @Override
-    protected Counter getCounter(CounterSUL<Integer, Character> sul) {
-        return sul.getSymbolCounter();
+    protected Optional<Long> getCount(CounterSUL<Integer, Character> sul) {
+        final StatisticsService statistics = Statistics.getService();
+        return statistics.getCount(CounterSUL.KEY_SYMBOL);
+    }
+
+    @Override
+    protected Collection<Integer> getInputs() {
+        return TestQueries.INPUTS;
     }
 }
 

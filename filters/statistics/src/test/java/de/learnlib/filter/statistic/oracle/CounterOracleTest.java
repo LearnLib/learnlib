@@ -21,10 +21,12 @@ import java.util.Collections;
 import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.Query;
-import de.learnlib.statistic.StatisticData;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatisticsService;
 import net.automatalib.word.Word;
 import org.mockito.Mockito;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class CounterOracleTest {
@@ -34,6 +36,11 @@ public class CounterOracleTest {
     @SuppressWarnings("unchecked")
     public CounterOracleTest() {
         this.oracle = new CounterOracle<Integer, Word<Character>>(Mockito.mock(MembershipOracle.class));
+    }
+
+    @BeforeClass
+    public void setUp() {
+        Statistics.getService().clear();
     }
 
     @Test
@@ -62,18 +69,16 @@ public class CounterOracleTest {
         verifyCounts(4, 10);
     }
 
-    @Test
+    @Test(dependsOnMethods = "testSecondQueryBatch")
     public void testStatistics() {
-        final StatisticData statisticalData = oracle.getStatisticalData();
-        Assert.assertTrue(statisticalData.getName().contains("\n"));
-        Assert.assertTrue(statisticalData.getUnit().contains("\n"));
-        Assert.assertTrue(statisticalData.getSummary().contains("\n"));
-        Assert.assertTrue(statisticalData.getDetails().contains("\n"));
+        final StatisticsService statisticsService = Statistics.getService();
+        Assert.assertFalse(statisticsService.getKeys().isEmpty());
     }
 
     private void verifyCounts(long queries, long symbols) {
-        Assert.assertEquals(oracle.getQueryCounter().getCount(), queries);
-        Assert.assertEquals(oracle.getSymbolCounter().getCount(), symbols);
+        final StatisticsService statistics = Statistics.getService();
+        Assert.assertEquals(statistics.getCount(CounterOracle.KEY_QUERY).orElse(0L), queries);
+        Assert.assertEquals(statistics.getCount(CounterOracle.KEY_SYMBOL).orElse(0L), symbols);
     }
 
 }

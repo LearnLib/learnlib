@@ -20,6 +20,7 @@ import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.statistic.oracle.MealyCounterOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.membership.MealySimulatorOracle;
+import de.learnlib.statistic.Statistics;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -61,8 +62,13 @@ public abstract class AbstractMealyCacheTest
     }
 
     @Override
+    protected Word<Integer> computeOutput(MealyMachine<?, Character, ?, Integer> model, Word<Character> input) {
+        return model.computeOutput(input);
+    }
+
+    @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getQueryCounter().getCount();
+        return Statistics.getService().getCount(MealyCounterOracle.KEY_QUERY).orElse(0L);
     }
 
     @Override

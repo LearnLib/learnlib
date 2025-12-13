@@ -46,4 +46,5 @@ open module de.learnlib.oracle.equivalence {
     exports de.learnlib.oracle.equivalence.spa;
     exports de.learnlib.oracle.equivalence.spmm;
     exports de.learnlib.oracle.equivalence.vpa;
+    exports de.learnlib.oracle.equivalence.mmlt;
 }

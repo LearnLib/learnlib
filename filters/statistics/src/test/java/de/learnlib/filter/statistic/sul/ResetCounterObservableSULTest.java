@@ -15,12 +15,14 @@
  */
 package de.learnlib.filter.statistic.sul;
 
+import java.util.Optional;
+
 import de.learnlib.driver.simulator.ObservableMealySimulatorSUL;
-import de.learnlib.filter.statistic.Counter;
 import de.learnlib.filter.statistic.TestQueries;
+import de.learnlib.statistic.Statistics;
 
 public class ResetCounterObservableSULTest
-        extends AbstractResetCounterSULTest<CounterObservableSUL<?, Integer, Character>> {
+        extends AbstractResetCounterSULTest<CounterObservableSUL<?, Integer, Character>, Integer, Character> {
 
     @Override
     protected CounterObservableSUL<?, Integer, Character> getStatisticSUL() {
@@ -28,7 +30,7 @@ public class ResetCounterObservableSULTest
     }
 
     @Override
-    protected Counter getCounter(CounterObservableSUL<?, Integer, Character> sul) {
-        return sul.getResetCounter();
+    protected Optional<Long> getCount(CounterObservableSUL<?, Integer, Character> sul) {
+        return Statistics.getService().getCount(CounterObservableSUL.KEY_QUERY);
     }
 }

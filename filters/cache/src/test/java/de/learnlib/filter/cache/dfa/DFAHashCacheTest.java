@@ -19,8 +19,10 @@ import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.statistic.oracle.DFACounterOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
+import de.learnlib.statistic.Statistics;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.word.Word;
 
 public class DFAHashCacheTest
         extends AbstractCacheTest<DFAHashCacheOracle<Character>, DFA<?, Character>, Character, Boolean> {
@@ -54,8 +56,13 @@ public class DFAHashCacheTest
     }
 
     @Override
+    protected Boolean computeOutput(DFA<?, Character> model, Word<Character> input) {
+        return model.computeOutput(input);
+    }
+
+    @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getQueryCounter().getCount();
+        return Statistics.getService().getCount(DFACounterOracle.KEY_QUERY).orElse(0L);
     }
 
     @Override

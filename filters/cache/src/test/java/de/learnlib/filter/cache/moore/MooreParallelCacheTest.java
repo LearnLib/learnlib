@@ -21,6 +21,7 @@ import de.learnlib.filter.cache.CacheCreator.MooreCacheCreator;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.statistic.oracle.MooreCounterOracle;
 import de.learnlib.oracle.ParallelOracle;
+import de.learnlib.statistic.Statistics;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
@@ -30,16 +31,15 @@ import org.testng.annotations.Factory;
 public class MooreParallelCacheTest
         extends AbstractParallelCacheTest<MooreMachine<?, Character, ?, Integer>, Character, Word<Integer>> {
 
-    private final MooreCounterOracle<Character, Integer> sul;
     private final ThreadSafeMooreCacheOracle<Character, Integer> cacheRepresentative;
     private final ParallelOracle<Character, Word<Integer>> parallelOracle;
 
     @Factory(dataProvider = "caches")
     public MooreParallelCacheTest(MooreCacheCreator<Character, Integer, ThreadSafeMooreCacheOracle<Character, Integer>> creator) {
-        this.sul = CacheTestUtils.getCounter(CacheTestUtils.MOORE);
+        MooreCounterOracle<Character, Integer> sul = CacheTestUtils.getCounter(CacheTestUtils.MOORE);
 
         final CacheConfig<Character, Word<Integer>, ThreadSafeMooreCacheOracle<Character, Integer>> config =
-                creator.apply(CacheTestUtils.INPUT_ALPHABET, this.sul);
+                creator.apply(CacheTestUtils.INPUT_ALPHABET, sul);
 
         this.cacheRepresentative = config.getRepresentative();
         this.parallelOracle = config.getParallelOracle();
@@ -75,6 +75,6 @@ public class MooreParallelCacheTest
 
     @Override
     protected long getNumberOfQueries() {
-        return this.sul.getQueryCounter().getCount();
+        return Statistics.getService().getCount(MooreCounterOracle.KEY_QUERY).orElse(0L);
     }
 }

@@ -46,8 +46,8 @@ public class SimulatorOracleTest {
         queries.add(q1);
         queries.add(q2);
 
-        Assert.assertEquals(queries.get(0).getInput().size(), 3);
-        Assert.assertEquals(queries.get(1).getInput().size(), 3);
+        Assert.assertEquals(queries.get(0).length(), 3);
+        Assert.assertEquals(queries.get(1).length(), 3);
 
         oracle.processQueries(queries);
 

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import de.learnlib.statistic.StatisticsProvider;
+
 /**
  * This module provides the core interfaces of LearnLib.
  * <p>
@@ -38,9 +40,13 @@ open module de.learnlib.api {
     exports de.learnlib;
     exports de.learnlib.algorithm;
     exports de.learnlib.exception;
+    exports de.learnlib.filter;
     exports de.learnlib.logging;
     exports de.learnlib.oracle;
     exports de.learnlib.query;
     exports de.learnlib.statistic;
     exports de.learnlib.sul;
+    exports de.learnlib.time;
+
+    uses StatisticsProvider;
 }

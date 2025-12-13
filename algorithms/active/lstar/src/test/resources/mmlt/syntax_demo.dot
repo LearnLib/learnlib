@@ -1,0 +1,35 @@
+// This file demonstrates the syntax for defining a custom MMLT.
+// It is identical to "mmlt_example.dot" in the "examples" module.
+digraph g {
+	s0 [label="L0" timers="a=2"]
+	s1 [label="L1" timers="b=4,c=6"]
+	s2 [label="L2" timers="d=2,e=3"]
+
+	// one-shot with location change:
+	s0 -> s1 [label="to[a] / A"]
+
+	// periodic with multiple outputs,
+	// assuming a {net.automatalib.automaton.mmlt.impl.StringSymbolCombiner} to combine and separate outputs:
+	s1 -> s1 [label="to[b] / B|Z"]
+
+	// one-shot with loop:
+	s1 -> s1 [label="to[c] / C" resets="b,c"]
+
+	// periodic with explicit resets:
+	s2 -> s2 [label="to[d] / D" resets="d"]
+
+	// periodic:
+	s2 -> s2 [label="to[e] / E"]
+
+	// normal transition with silent output:
+	s1 -> s2 [label="x / void"]
+
+	// loop with reset:
+	s1 -> s1 [label="y / Y" resets="b,c"]
+
+	// loop without reset:
+	s2 -> s2 [label="y / D"]
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s0;
+}

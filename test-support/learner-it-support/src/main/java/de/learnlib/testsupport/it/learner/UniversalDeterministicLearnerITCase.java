@@ -20,8 +20,6 @@ import de.learnlib.testsupport.example.LearningExample.UniversalDeterministicLea
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.util.automaton.Automata;
-import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class UniversalDeterministicLearnerITCase<I, D, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>>
         extends AbstractLearnerVariantITCase<I, D, M> {
@@ -36,9 +34,7 @@ public class UniversalDeterministicLearnerITCase<I, D, M extends UniversalDeterm
     }
 
     @Override
-    protected @Nullable Word<I> checkEquivalence(M hypothesis) {
-        return Automata.findSeparatingWord(this.example.getReferenceAutomaton(),
-                                           hypothesis,
-                                           this.example.getAlphabet());
+    protected boolean testEquivalence(M hypothesis) {
+        return Automata.testEquivalence(this.example.getReferenceAutomaton(), hypothesis, this.example.getAlphabet());
     }
 }

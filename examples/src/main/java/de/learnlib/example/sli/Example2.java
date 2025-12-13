@@ -34,6 +34,7 @@ import de.learnlib.oracle.equivalence.MealyEQOracleChain;
 import de.learnlib.oracle.equivalence.mealy.StateLocalInputMealySimulatorEQOracle;
 import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
+import de.learnlib.statistic.Statistics;
 import de.learnlib.sul.SUL;
 import de.learnlib.sul.StateLocalInputSUL;
 import de.learnlib.testsupport.example.mealy.ExampleRandomStateLocalInputMealy;
@@ -82,6 +83,8 @@ public final class Example2 {
      */
     static void runSLILearner(boolean withCache) {
 
+        Statistics.getService().clear();
+
         // setup SULs and counters
         final StateLocalInputSUL<Integer, Character> target = new StateLocalInputMealySimulatorSUL<>(TARGET);
         final CounterStateLocalInputSUL<Integer, Character> counterSUL = new CounterStateLocalInputSUL<>(target);
@@ -127,7 +130,7 @@ public final class Example2 {
         System.out.println("State Local Input SUL" + (withCache ? ", with cache" : ""));
         System.out.println("-------------------------------------------------------");
 
-        System.out.println(counterSUL.getStatisticalData().getSummary());
+        System.out.println(Statistics.getService().print());
 
         System.out.println("-------------------------------------------------------");
     }
@@ -136,6 +139,8 @@ public final class Example2 {
      * Uses the regular {@link SUL} interface that tries to perform unavailable transitions.
      */
     static void runNormalLearner(boolean withCache) {
+
+        Statistics.getService().clear();
 
         // setup SULs and counters
         final SUL<Integer, Character> target = new MealySimulatorSUL<>(TARGET, UNDEFINED);
@@ -181,7 +186,7 @@ public final class Example2 {
         System.out.println("Regular SUL" + (withCache ? ", with cache" : ""));
         System.out.println("-------------------------------------------------------");
 
-        System.out.println(counterSUL.getStatisticalData().getSummary());
+        System.out.println(Statistics.getService().print());
 
         System.out.println("-------------------------------------------------------");
     }

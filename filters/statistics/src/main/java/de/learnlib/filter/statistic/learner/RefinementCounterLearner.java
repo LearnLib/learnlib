@@ -19,26 +19,21 @@ import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
-import de.learnlib.filter.statistic.Counter;
 import de.learnlib.query.DefaultQuery;
-import de.learnlib.statistic.StatisticLearner;
-import de.learnlib.statistic.StatisticLearner.DFAStatisticLearner;
-import de.learnlib.statistic.StatisticLearner.MealyStatisticLearner;
-import de.learnlib.statistic.StatisticLearner.MooreStatisticLearner;
+import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatisticsKey;
+import de.learnlib.statistic.StatisticsService;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
-import de.learnlib.tooling.annotation.refinement.Interface;
 import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Counts the number of hypothesis refinements.
- * <p>
- * The value of the {@link Counter} returned by {@link #getStatisticalData()} returns the same value as
- * Experiment.getRounds().
  *
  * @param <M>
  *         automaton type
@@ -54,8 +49,7 @@ import net.automatalib.word.Word;
                                       @Generic(clazz = Boolean.class)},
                     typeMappings = @Mapping(from = LearningAlgorithm.class,
                                             to = DFALearner.class,
-                                            generics = @Generic("I")),
-                    interfaces = @Interface(clazz = DFAStatisticLearner.class, generics = @Generic("I")))
+                                            generics = @Generic("I")))
 @GenerateRefinement(name = "MealyRefinementCounterLearner",
                     generics = {@Generic(value = "I", desc = "input symbol type"),
                                 @Generic(value = "O", desc = "output symbol type")},
@@ -64,8 +58,6 @@ import net.automatalib.word.Word;
                                       @Generic(clazz = Word.class, generics = "O")},
                     typeMappings = @Mapping(from = LearningAlgorithm.class,
                                             to = MealyLearner.class,
-                                            generics = {@Generic("I"), @Generic("O")}),
-                    interfaces = @Interface(clazz = MealyStatisticLearner.class,
                                             generics = {@Generic("I"), @Generic("O")}))
 @GenerateRefinement(name = "MooreRefinementCounterLearner",
                     generics = {@Generic(value = "I", desc = "input symbol type"),
@@ -75,41 +67,62 @@ import net.automatalib.word.Word;
                                       @Generic(clazz = Word.class, generics = "O")},
                     typeMappings = @Mapping(from = LearningAlgorithm.class,
                                             to = MooreLearner.class,
-                                            generics = {@Generic("I"), @Generic("O")}),
-                    interfaces = @Interface(clazz = MooreStatisticLearner.class,
                                             generics = {@Generic("I"), @Generic("O")}))
-public class RefinementCounterLearner<M, I, D> implements StatisticLearner<M, I, D> {
+public class RefinementCounterLearner<M, I, D> implements LearningAlgorithm<M, I, D> {
 
-    private final LearningAlgorithm<M, I, D> learningAlgorithm;
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of
+     * {@link LearningAlgorithm#refineHypothesis(DefaultQuery) refinements} executed on the learning algorithm.
+     */
+    public static final StatisticsKey KEY_REF = new StatisticsKey("ref-cnt", "Number of refinements");
 
-    private final Counter counter;
+    private final LearningAlgorithm<M, I, D> delegate;
+    private final StatisticsService statistics;
+    private final StatisticsKey keyRef;
 
-    public RefinementCounterLearner(LearningAlgorithm<M, I, D> learningAlgorithm) {
-        this.learningAlgorithm = learningAlgorithm;
-        this.counter = new Counter("Refinements", "#");
+    /**
+     * Convenience constructor for {@link RefinementCounterLearner#RefinementCounterLearner(LearningAlgorithm, String)}
+     * which uses {@code null} as {@code id}.
+     *
+     * @param delegate
+     *         the learning algorithm to delegate calls to
+     */
+    public RefinementCounterLearner(LearningAlgorithm<M, I, D> delegate) {
+        this(delegate, null);
+    }
+
+    /**
+     * Constructs a new counter algorithm that writes statistical data to a {@link StatisticsService}. The provided
+     * {@code id} is used to refine the supported {@link StatisticsKey}s and allows for using multiple instances of this
+     * class for different purposes.
+     *
+     * @param delegate
+     *         the learning algorithm to delegate calls to
+     * @param id
+     *         the id used for specialising the statistics keys
+     */
+    public RefinementCounterLearner(LearningAlgorithm<M, I, D> delegate, @Nullable String id) {
+        this.delegate = delegate;
+        this.statistics = Statistics.getService();
+        this.keyRef = KEY_REF.withId(id);
     }
 
     @Override
     public void startLearning() {
-        learningAlgorithm.startLearning();
+        delegate.startLearning();
     }
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, D> ceQuery) {
-        final boolean refined = learningAlgorithm.refineHypothesis(ceQuery);
+        final boolean refined = delegate.refineHypothesis(ceQuery);
         if (refined) {
-            counter.increment();
+            statistics.increaseCounter(keyRef, this);
         }
         return refined;
     }
 
     @Override
     public M getHypothesisModel() {
-        return learningAlgorithm.getHypothesisModel();
-    }
-
-    @Override
-    public Counter getStatisticalData() {
-        return counter;
+        return delegate.getHypothesisModel();
     }
 }

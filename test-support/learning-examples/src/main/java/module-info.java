@@ -34,6 +34,7 @@ open module de.learnlib.testsupport.example {
     requires net.automatalib.api;
     requires net.automatalib.common.util;
     requires net.automatalib.core;
+    requires net.automatalib.serialization.dot;
     requires net.automatalib.serialization.learnlibv2;
     requires net.automatalib.util;
     requires org.slf4j;
@@ -50,4 +51,5 @@ open module de.learnlib.testsupport.example {
     exports de.learnlib.testsupport.example.spmm;
     exports de.learnlib.testsupport.example.sst;
     exports de.learnlib.testsupport.example.vpa;
+    exports de.learnlib.testsupport.example.mmlt;
 }

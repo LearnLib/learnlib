@@ -1,0 +1,61 @@
+// Model of an HVAC system
+// Adapted from Taylor and Taylor: Patterns in the Machine
+digraph g {
+
+	s0 [shape="circle"];
+	s1 [timers="a=2000" shape="circle"];
+	s2 [shape="circle"];
+	s3 [shape="circle"];
+	s4 [timers="a=2000" shape="circle"];
+	s5 [shape="circle"];
+	s6 [timers="a=2000" shape="circle"];
+	s7 [timers="a=2000" shape="circle"];
+	s8 [timers="a=2000" shape="circle"];
+	s9 [timers="a=2000" shape="circle"];
+	s10 [shape="circle"];
+	s0 -> s1 [resets="a" label="Supplementing.Active / FromTransition.init"];
+	s0 -> s2 [label="Supplementing.Inactive / Activity.initializeActive"];
+	s1 -> s10 [label="Activity.OffMode / Stage.init"];
+	s1 -> s2 [label="FromTransition.Completed / void"];
+	s1 -> s1 [resets="a" label="to[a] / FromTransition.check"];
+	s2 -> s10 [label="Activity.OffMode / Stage.init"];
+	s2 -> s3 [label="Capacity.Excess / void"];
+	s2 -> s5 [label="Capacity.NeedMore / Supplementing.enter"];
+	s2 -> s6 [resets="a" label="OffCycle.IsStartInOffCycle / OffCycle.startCycling,OffCycle.startOffTime,Stage.startingOff"];
+	s2 -> s8 [resets="a" label="OnCycle.IsStartInOnCycle / OnCycle.startCycling,OnCycle.startOnTime,Stage.startingOn"];
+	s3 -> s10 [label="Activity.OffMode / Stage.init"];
+	s3 -> s4 [resets="a" label="Activity.OnRequest / void"];
+	s3 -> s10 [label="Supplementing.Inactive / Stage.shutdown"];
+	s4 -> s10 [label="Activity.OffMode / Stage.init"];
+	s4 -> s10 [label="BackTransition.Completed / Stage.notifyLower,Stage.shutdown"];
+	s4 -> s4 [resets="a" label="to[a] / BackTransition.check"];
+	s5 -> s10 [label="Activity.OffMode / Stage.init"];
+	s5 -> s2 [label="Capacity.NeedLess / Supplementing.ext"];
+	s6 -> s10 [label="Activity.OffMode / Stage.init"];
+	s6 -> s3 [label="Capacity.Excess / void"];
+	s6 -> s5 [label="Capacity.NeedMore / Supplementing.enter"];
+	s6 -> s8 [resets="a" label="OffCycle.OffTimeExpired / OnCycle.startOnTime,Stage.startingOn"];
+	s6 -> s7 [resets="a" label="OffCycle.StartingOffTimeExpired / Stage.off"];
+	s6 -> s6 [resets="a" label="to[a] / OffCycle.checkStartingOffTime"];
+	s7 -> s10 [label="Activity.OffMode / Stage.init"];
+	s7 -> s3 [label="Capacity.Excess / void"];
+	s7 -> s5 [label="Capacity.NeedMore / Supplementing.enter"];
+	s7 -> s8 [resets="a" label="OffCycle.OffTimeExpired / OnCycle.startOnTime,Stage.startingOn"];
+	s7 -> s7 [resets="a" label="to[a] / OffCycle.checkOffTime"];
+	s8 -> s10 [label="Activity.OffMode / Stage.init"];
+	s8 -> s3 [label="Capacity.Excess / void"];
+	s8 -> s5 [label="Capacity.NeedMore / Supplementing.enter"];
+	s8 -> s6 [resets="a" label="OnCycle.OnTimeExpired / OffCycle.startOffTime,Stage.startingOff"];
+	s8 -> s9 [resets="a" label="OnCycle.StartingOnTimeExpired / Stage.on"];
+	s8 -> s8 [resets="a" label="to[a] / OnCycle.checkStartingOnTime"];
+	s9 -> s10 [label="Activity.OffMode / Stage.init"];
+	s9 -> s3 [label="Capacity.Excess / void"];
+	s9 -> s5 [label="Capacity.NeedMore / Supplementing.enter"];
+	s9 -> s6 [resets="a" label="OnCycle.OnTimeExpired / OffCycle.startOffTime,Stage.startingOff"];
+	s9 -> s9 [resets="a" label="to[a] / OnCycle.checkOnTime"];
+	s10 -> s0 [label="Activity.OnRequest / void"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s10;
+
+}

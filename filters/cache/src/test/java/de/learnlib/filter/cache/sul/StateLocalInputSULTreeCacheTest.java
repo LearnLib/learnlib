@@ -20,6 +20,7 @@ import de.learnlib.filter.cache.AbstractCacheTest;
 import de.learnlib.filter.cache.CacheTestUtils;
 import de.learnlib.filter.cache.SULLearningCacheOracle;
 import de.learnlib.filter.statistic.sul.CounterStateLocalInputSUL;
+import de.learnlib.statistic.Statistics;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
@@ -41,42 +42,47 @@ public class StateLocalInputSULTreeCacheTest
     @Override
     public void testNoQueriesReceived() {
         super.testNoQueriesReceived();
-        Assert.assertEquals(counter.getInputCounter().getCount(), 0);
+        Assert.assertEquals(Statistics.getService().getCount(CounterStateLocalInputSUL.KEY_INPUT).orElse(0L), 0);
     }
 
     @Test(dependsOnMethods = "testNoQueriesReceived")
     @Override
     public void testFirstQuery() {
         super.testFirstQuery();
-        Assert.assertEquals(counter.getInputCounter().getCount(), oracle.getCache().size());
+        Assert.assertEquals(Statistics.getService().getCount(CounterStateLocalInputSUL.KEY_INPUT).orElse(0L),
+                            oracle.getCache().size());
     }
 
     @Test(dependsOnMethods = "testFirstQuery")
     @Override
     public void testFirstDuplicate() {
         super.testFirstDuplicate();
-        Assert.assertEquals(counter.getInputCounter().getCount(), oracle.getCache().size());
+        Assert.assertEquals(Statistics.getService().getCount(CounterStateLocalInputSUL.KEY_INPUT).orElse(0L),
+                            oracle.getCache().size());
     }
 
     @Test(dependsOnMethods = "testFirstDuplicate")
     @Override
     public void testTwoQueriesOneDuplicate() {
         super.testTwoQueriesOneDuplicate();
-        Assert.assertEquals(counter.getInputCounter().getCount(), oracle.getCache().size());
+        Assert.assertEquals(Statistics.getService().getCount(CounterStateLocalInputSUL.KEY_INPUT).orElse(0L),
+                            oracle.getCache().size());
     }
 
     @Test(dependsOnMethods = "testTwoQueriesOneDuplicate")
     @Override
     public void testOneNewQuery() {
         super.testOneNewQuery();
-        Assert.assertEquals(counter.getInputCounter().getCount(), oracle.getCache().size());
+        Assert.assertEquals(Statistics.getService().getCount(CounterStateLocalInputSUL.KEY_INPUT).orElse(0L),
+                            oracle.getCache().size());
     }
 
     @Test(dependsOnMethods = "testOneNewQuery")
     @Override
     public void testPrefix() {
         super.testPrefix();
-        Assert.assertEquals(counter.getInputCounter().getCount(), oracle.getCache().size());
+        Assert.assertEquals(Statistics.getService().getCount(CounterStateLocalInputSUL.KEY_INPUT).orElse(0L),
+                            oracle.getCache().size());
     }
 
     @Test(dependsOnMethods = "testPrefix")
@@ -141,8 +147,13 @@ public class StateLocalInputSULTreeCacheTest
     }
 
     @Override
+    protected Word<Integer> computeOutput(MealyMachine<?, Character, ?, Integer> model, Word<Character> input) {
+        return model.computeOutput(input);
+    }
+
+    @Override
     protected long getNumberOfPosedQueries() {
-        return counter.getResetCounter().getCount();
+        return Statistics.getService().getCount(CounterStateLocalInputSUL.KEY_QUERY).orElse(0L);
     }
 
     @Override

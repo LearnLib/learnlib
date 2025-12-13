@@ -1,0 +1,26 @@
+// Model of an oven with a time-controlled baking program.
+// After powering the oven on, the oven remains idle until the program is started.
+// During the program, the oven regularly measures and adjusts the temperature.
+// At the end of the program, an alarm sounds. Then, the user may extend the program.
+// If not extended, the program ends either when the user opens the door, presses a button, or a timeout occurs.
+digraph g {
+
+	s0 [shape="circle"];
+	s1 [timers="a=3500,b=300000" shape="circle"];
+	s2 [timers="a=5000" shape="circle"];
+	s3 [shape="circle"];
+	s0 -> s3 [label="User.Power / void"];
+	s0 -> s1 [resets="a,b" label="User.Start / Temp.on"];
+	s1 -> s0 [label="User.Stop / Temp.off"];
+	s1 -> s1 [resets="a" label="to[a] / Temp.adjust"];
+	s1 -> s2 [resets="a" label="to[b] / Alarm.start,Temp.off"];
+	s2 -> s1 [resets="a,b" label="User.Extend / Alarm.stop,Temp.on"];
+	s2 -> s0 [label="User.Open / Alarm.stop"];
+	s2 -> s0 [label="User.Stop / Alarm.stop"];
+	s2 -> s0 [label="to[a] / Alarm.stop"];
+	s3 -> s0 [label="User.Power / void"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s3;
+
+}

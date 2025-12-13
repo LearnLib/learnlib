@@ -24,10 +24,10 @@ import de.learnlib.Resumable;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.query.Query;
+import de.learnlib.statistic.Statistics;
 import de.learnlib.testsupport.ResumeUtils;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.automaton.concept.Output;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.testng.Assert;
@@ -37,7 +37,7 @@ import org.testng.annotations.Test;
 /**
  * A simple test against various cache implementations.
  */
-public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>, A extends Output<I, D>, I, D> {
+public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>, A, I, D> {
 
     protected static final int LENGTH = 5;
     private final Random random = new Random(42);
@@ -50,6 +50,7 @@ public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>,
         alphabet = getAlphabet();
         oracle = getCachedOracle();
         queries = new ArrayList<>();
+        Statistics.getService().clear();
     }
 
     @Test
@@ -123,8 +124,8 @@ public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>,
         Assert.assertNull(targetCE);
         Assert.assertNotNull(invalidTargetCE);
 
-        Assert.assertNotEquals(invalidTarget.computeOutput(invalidTargetCE.getInput()),
-                               target.computeOutput(invalidTargetCE.getInput()));
+        Assert.assertNotEquals(computeOutput(invalidTarget, invalidTargetCE.getInput()),
+                               computeOutput(target, invalidTargetCE.getInput()));
     }
 
     @Test(dependsOnMethods = "testCacheConsistency")
@@ -247,6 +248,8 @@ public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>,
     protected abstract OR getCachedOracle();
 
     protected abstract OR getResumedOracle(OR original);
+
+    protected abstract D computeOutput(A model, Word<I> input);
 
     protected abstract long getNumberOfPosedQueries();
 

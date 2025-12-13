@@ -17,35 +17,40 @@ package de.learnlib.filter.statistic.sul;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
-import de.learnlib.filter.statistic.Counter;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.SingleQueryOracle.SingleQueryOracleMealy;
 import de.learnlib.query.Query;
-import de.learnlib.statistic.StatisticSUL;
+import de.learnlib.statistic.Statistics;
 import de.learnlib.sul.SUL;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public abstract class AbstractCounterSULTest<S extends StatisticSUL<Integer, Character>> {
+public abstract class AbstractCounterSULTest<S extends SUL<I, O>, I, O> {
 
     private S statisticSUL;
-    private MealyMembershipOracle<Integer, Character> asOracle;
+    private MealyMembershipOracle<I, O> asOracle;
 
     protected abstract S getStatisticSUL();
 
-    protected abstract Counter getCounter(S sul);
-
     protected abstract int getCountIncreasePerQuery();
 
-    protected abstract Collection<Query<Integer, Word<Character>>> createQueries(int num);
+    protected abstract Collection<Query<I, Word<O>>> createQueries(int num);
+
+    protected abstract Optional<Long> getCount(S sul);
+
+    private long getCount() {
+        return getCount(statisticSUL).orElse(0L);
+    }
 
     @BeforeClass
     public void setUp() {
         this.statisticSUL = getStatisticSUL();
         this.asOracle = getSimulator(this.statisticSUL);
+        Statistics.getService().clear();
     }
 
     @Test
@@ -55,7 +60,7 @@ public abstract class AbstractCounterSULTest<S extends StatisticSUL<Integer, Cha
 
     @Test(dependsOnMethods = "testInitialState")
     public void testFirstQueryBatch() {
-        final Collection<Query<Integer, Word<Character>>> queries = createQueries(2);
+        final Collection<Query<I, Word<O>>> queries = createQueries(2);
         final long oldCount = getCount();
 
         asOracle.processQueries(queries);
@@ -65,7 +70,7 @@ public abstract class AbstractCounterSULTest<S extends StatisticSUL<Integer, Cha
 
     @Test(dependsOnMethods = "testFirstQueryBatch")
     public void testEmptyQueryBatch() {
-        final Collection<Query<Integer, Word<Character>>> queries = Collections.emptySet();
+        final Collection<Query<I, Word<O>>> queries = Collections.emptySet();
         final long oldCount = getCount();
 
         asOracle.processQueries(queries);
@@ -75,7 +80,7 @@ public abstract class AbstractCounterSULTest<S extends StatisticSUL<Integer, Cha
 
     @Test(dependsOnMethods = "testEmptyQueryBatch")
     public void testSecondQueryBatch() {
-        final Collection<Query<Integer, Word<Character>>> queries = createQueries(1);
+        final Collection<Query<I, Word<O>>> queries = createQueries(1);
         final long oldCount = getCount();
 
         asOracle.processQueries(queries);
@@ -85,11 +90,11 @@ public abstract class AbstractCounterSULTest<S extends StatisticSUL<Integer, Cha
 
     @Test(dependsOnMethods = "testSecondQueryBatch")
     public void testSharedForkCounter() {
-        final MealyMembershipOracle<Integer, Character> mqo1 = getSimulator(statisticSUL.fork());
-        final MealyMembershipOracle<Integer, Character> mqo2 = getSimulator(statisticSUL.fork());
-        final MealyMembershipOracle<Integer, Character> mqo3 = getSimulator(statisticSUL.fork());
+        final MealyMembershipOracle<I, O> mqo1 = getSimulator(statisticSUL.fork());
+        final MealyMembershipOracle<I, O> mqo2 = getSimulator(statisticSUL.fork());
+        final MealyMembershipOracle<I, O> mqo3 = getSimulator(statisticSUL.fork());
 
-        final Collection<Query<Integer, Word<Character>>> queries = createQueries(2);
+        final Collection<Query<I, Word<O>>> queries = createQueries(2);
         final long oldCount = getCount();
 
         mqo1.processQueries(queries);
@@ -97,10 +102,6 @@ public abstract class AbstractCounterSULTest<S extends StatisticSUL<Integer, Cha
         mqo3.processQueries(queries);
 
         Assert.assertEquals(getCount(), oldCount + 2L * 3 * getCountIncreasePerQuery());
-    }
-
-    private long getCount() {
-        return getCounter(statisticSUL).getCount();
     }
 
     // use custom class to prevent cyclic dependency on learnlib-membership-oracles

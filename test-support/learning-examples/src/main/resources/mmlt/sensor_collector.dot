@@ -1,0 +1,26 @@
+// An MMLT model of a sensor that measures particulate matter and ambient noise.
+// The measurement program automatically ends after some time. It may be restarted at any time.
+// Alternatively, a self-check program can be entered. This also ends after some time and may be aborted.
+// At the end of either program, the collected data may be retrieved.
+digraph g {
+   s0 [label="L0" timers=""]
+   s1 [label="L1" timers="a=3,b=6,c=40"]
+   s2 [label="L2" timers="d=4"]
+   s3 [label="L3" timers=""]
+
+   s0 -> s1 [label="p1/go"]
+
+   s1 -> s1 [label="abort / ok" resets="a,b,c"]
+   s1 -> s1 [label="to[a] / part"]
+   s1 -> s1 [label="to[b] / noise"]
+   s1 -> s3 [label="to[c] / done"]
+
+   s0 -> s2 [label="p2 / go"]
+   s2 -> s3 [label="abort / void"]
+   s2 -> s3 [label="to[d] / done"]
+
+   s3 -> s0 [label="collect / void"]
+
+   __start0 [label="" shape="none" width="0" height="0"];
+   __start0 -> s0;
+}

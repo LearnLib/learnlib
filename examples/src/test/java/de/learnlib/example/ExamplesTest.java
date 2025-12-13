@@ -28,12 +28,14 @@ import javax.swing.SwingUtilities;
 import com.github.caciocavallosilano.cacio.ctc.junit.CacioExtension;
 import de.learnlib.example.aaar.AlternatingBitExampleExplicit;
 import de.learnlib.example.aaar.AlternatingBitExampleGeneric;
+import de.learnlib.statistic.Statistics;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class ExamplesTest {
@@ -56,6 +58,12 @@ public class ExamplesTest {
                 w.dispatchEvent(new WindowEvent(w, WindowEvent.WINDOW_CLOSING));
             }, AWTEvent.WINDOW_FOCUS_EVENT_MASK);
         }
+    }
+
+    @BeforeMethod
+    public void setUp() {
+        // clear statistics to not pollute output
+        Statistics.getService().clear();
     }
 
     @Test
@@ -104,6 +112,30 @@ public class ExamplesTest {
     public void testBBCExample4() {
         requireLTSminAvailability(3, 1, 0);
         de.learnlib.example.bbc.Example4.main(new String[0]);
+    }
+
+    @Test
+    public void testMMLTExample1() {
+        requireJVMCompatibility();
+        de.learnlib.example.mmlt.Example1.main(new String[0]);
+    }
+
+    @Test
+    public void testMMLTExample2() {
+        requireJVMCompatibility();
+        de.learnlib.example.mmlt.Example2.main(new String[0]);
+    }
+
+    @Test
+    public void testMMLTExample3() {
+        requireJVMCompatibility();
+        de.learnlib.example.mmlt.Example3.main(new String[0]);
+    }
+
+    @Test
+    public void testMMLTExample4() {
+        requireJVMCompatibility();
+        de.learnlib.example.mmlt.Example4.main(new String[0]);
     }
 
     @Test

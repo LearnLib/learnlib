@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import de.learnlib.filter.statistic.MapStatisticsProvider;
+import de.learnlib.statistic.StatisticsProvider;
+
 /**
  * This module provides filters for collecting statistical data.
  * <p>
@@ -31,12 +34,18 @@ open module de.learnlib.filter.statistic {
     requires de.learnlib.api;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
+    requires org.slf4j;
 
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static de.learnlib.tooling.annotation;
+    requires static org.checkerframework.checker.qual;
+    requires static org.kohsuke.metainf_services;
 
     exports de.learnlib.filter.statistic;
+    exports de.learnlib.filter.statistic.container;
     exports de.learnlib.filter.statistic.learner;
     exports de.learnlib.filter.statistic.oracle;
     exports de.learnlib.filter.statistic.sul;
+
+    provides StatisticsProvider with MapStatisticsProvider;
 }

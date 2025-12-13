@@ -19,8 +19,11 @@ import java.util.Collection;
 
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -92,4 +95,15 @@ public interface EquivalenceOracle<A, I, D> {
     @FunctionalInterface
     interface MooreEquivalenceOracle<I, O> extends EquivalenceOracle<MooreMachine<?, I, ?, O>, I, Word<O>> {}
 
+    /**
+     * A specialization of the {@link EquivalenceOracle} interface for an {@link MMLT} learning scenario.
+     *
+     * @param <I>
+     *         input symbol type (of non-delaying inputs)
+     * @param <O>
+     *         output symbol type
+     */
+    @FunctionalInterface
+    interface MMLTEquivalenceOracle<I, O>
+            extends EquivalenceOracle<MMLT<?, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>> {}
 }
