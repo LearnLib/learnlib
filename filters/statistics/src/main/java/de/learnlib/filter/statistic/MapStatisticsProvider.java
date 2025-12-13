@@ -13,32 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.filter.statistic.container;
+package de.learnlib.filter.statistic;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import de.learnlib.filter.statistic.container.MapStatisticsService;
+import de.learnlib.statistic.StatisticsProvider;
+import de.learnlib.statistic.StatisticsService;
+import org.kohsuke.MetaInfServices;
 
-/**
- * A boolean flag that is unset by default and can be set.
- */
-class FlagStatistic extends AbstractStatistic {
+@MetaInfServices(StatisticsProvider.class)
+public class MapStatisticsProvider implements StatisticsProvider {
 
-    private boolean flagged;
+    final ThreadLocal<MapStatisticsService> threadLocal = ThreadLocal.withInitial(MapStatisticsService::new);
 
-    FlagStatistic(String id, @Nullable String description, boolean value) {
-        super(id, description);
-        this.flagged = value;
-    }
-
-    public void setFlag(boolean value) {
-        this.flagged = value;
-    }
-
-    public boolean isFlagged() {
-        return flagged;
+    @Override
+    public int getPriority() {
+        return 0;
     }
 
     @Override
-    public String renderValue() {
-        return Boolean.toString(flagged);
+    public StatisticsService getService() {
+        return threadLocal.get();
     }
 }

@@ -21,7 +21,8 @@ import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
+import de.learnlib.statistic.StatisticsKey;
+import de.learnlib.statistic.StatisticsService;
 import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Mapping;
@@ -29,10 +30,10 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Counts the number of hypothesis refinements.
- * <p>
  *
  * @param <M>
  *         automaton type
@@ -69,38 +70,59 @@ import net.automatalib.word.Word;
                                             generics = {@Generic("I"), @Generic("O")}))
 public class RefinementCounterLearner<M, I, D> implements LearningAlgorithm<M, I, D> {
 
-    public static final String KEY_CNT = "ref-cnt";
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of
+     * {@link LearningAlgorithm#refineHypothesis(DefaultQuery) refinements} executed on the learning algorithm.
+     */
+    public static final StatisticsKey KEY_REF = new StatisticsKey("ref-cnt", "Number of refinements");
 
-    private final LearningAlgorithm<M, I, D> learningAlgorithm;
-    private final StatisticsCollector statisticsCollector;
-    private final String id;
+    private final LearningAlgorithm<M, I, D> delegate;
+    private final StatisticsService statistics;
+    private final StatisticsKey keyRef;
 
-    public RefinementCounterLearner(LearningAlgorithm<M, I, D> learningAlgorithm) {
-        this(learningAlgorithm, "");
+    /**
+     * Convenience constructor for {@link RefinementCounterLearner#RefinementCounterLearner(LearningAlgorithm, String)}
+     * which uses {@code null} as {@code id}.
+     *
+     * @param delegate
+     *         the learning algorithm to delegate calls to
+     */
+    public RefinementCounterLearner(LearningAlgorithm<M, I, D> delegate) {
+        this(delegate, null);
     }
 
-    public RefinementCounterLearner(LearningAlgorithm<M, I, D> learningAlgorithm, String id) {
-        this.learningAlgorithm = learningAlgorithm;
-        this.id = id;
-        this.statisticsCollector = Statistics.getCollector();
+    /**
+     * Constructs a new counter algorithm that writes statistical data to a {@link StatisticsService}. The provided
+     * {@code id} is used to refine the supported {@link StatisticsKey}s and allows for using multiple instances of this
+     * class for different purposes.
+     *
+     * @param delegate
+     *         the learning algorithm to delegate calls to
+     * @param id
+     *         the id used for specialising the statistics keys
+     */
+    public RefinementCounterLearner(LearningAlgorithm<M, I, D> delegate, @Nullable String id) {
+        this.delegate = delegate;
+        this.statistics = Statistics.getService();
+        this.keyRef = KEY_REF.withId(id);
     }
 
     @Override
     public void startLearning() {
-        learningAlgorithm.startLearning();
+        delegate.startLearning();
     }
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, D> ceQuery) {
-        final boolean refined = learningAlgorithm.refineHypothesis(ceQuery);
+        final boolean refined = delegate.refineHypothesis(ceQuery);
         if (refined) {
-            statisticsCollector.increaseCounter(KEY_CNT + id, "Number of refinements");
+            statistics.increaseCounter(keyRef, this);
         }
         return refined;
     }
 
     @Override
     public M getHypothesisModel() {
-        return learningAlgorithm.getHypothesisModel();
+        return delegate.getHypothesisModel();
     }
 }

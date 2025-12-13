@@ -13,29 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.filter.statistic.sul;
+package de.learnlib.filter.statistic.container;
 
-import java.util.Collection;
+class TextContainer implements StatisticContainer {
 
-import de.learnlib.filter.statistic.TestQueries;
-import de.learnlib.query.Query;
-import de.learnlib.sul.SUL;
-import net.automatalib.word.Word;
+    private String text;
 
-public abstract class AbstractSymbolCounterSULTest<S extends SUL<I, O>, I, O>
-        extends AbstractCounterSULTest<S, I, O> {
+    TextContainer() {
+        this.text = "";
+    }
 
-    private static final int QUERY_LENGTH = 5;
+    String getText() {
+        return text;
+    }
 
-    @Override
-    protected int getCountIncreasePerQuery() {
-        return QUERY_LENGTH;
+    void setText(String text) {
+        this.text = text;
     }
 
     @Override
-    protected Collection<Query<I, Word<O>>> createQueries(int num) {
-        return TestQueries.createNoopQueries(num, QUERY_LENGTH, getInputs());
+    public String toString() {
+        return text;
     }
-
-    protected abstract Collection<I> getInputs();
 }

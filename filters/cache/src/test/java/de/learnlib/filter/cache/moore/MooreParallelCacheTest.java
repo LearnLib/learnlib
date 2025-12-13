@@ -75,6 +75,6 @@ public class MooreParallelCacheTest
 
     @Override
     protected long getNumberOfQueries() {
-        return Statistics.getCollector().getCount(MooreCounterOracle.QUERY_KEY).orElse(0L);
+        return Statistics.getService().getCount(MooreCounterOracle.KEY_QUERY).orElse(0L);
     }
 }

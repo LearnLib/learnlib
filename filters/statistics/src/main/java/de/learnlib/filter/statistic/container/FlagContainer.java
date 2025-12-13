@@ -15,22 +15,27 @@
  */
 package de.learnlib.filter.statistic.container;
 
-import de.learnlib.statistic.StatisticsCollector;
-import de.learnlib.statistic.StatisticsProvider;
-import org.kohsuke.MetaInfServices;
+/**
+ * A boolean flag that is unset by default and can be set.
+ */
+class FlagContainer implements StatisticContainer {
 
-@MetaInfServices(StatisticsProvider.class)
-public class MapStatsProvider implements StatisticsProvider {
+    private boolean flagged;
 
-    final ThreadLocal<StatisticsCollector> threadLocal = ThreadLocal.withInitial(MapStatisticsCollector::new);
+    FlagContainer() {
+        this.flagged = false;
+    }
 
-    @Override
-    public int getPriority() {
-        return 0;
+    void setFlag(boolean value) {
+        this.flagged = value;
+    }
+
+    boolean isFlagged() {
+        return flagged;
     }
 
     @Override
-    public StatisticsCollector getCollector() {
-        return threadLocal.get();
+    public String toString() {
+        return Boolean.toString(flagged);
     }
 }

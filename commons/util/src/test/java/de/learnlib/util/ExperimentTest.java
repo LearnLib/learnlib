@@ -22,7 +22,7 @@ import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
+import de.learnlib.statistic.StatisticsService;
 import de.learnlib.util.Experiment.DFAExperiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -52,10 +52,10 @@ public class ExperimentTest {
         final MockUpLearner<Character> learner = new MockUpLearner<>(target, intermediateTarget);
         final DFAEquivalenceOracle<Character> eq = new MockUpOracle<>(intermediateTarget);
 
-        final StatisticsCollector statMock = Mockito.mock(StatisticsCollector.class);
+        final StatisticsService statMock = Mockito.mock(StatisticsService.class);
 
         try (MockedStatic<Statistics> statistics = Mockito.mockStatic(Statistics.class)) {
-            statistics.when(Statistics::getCollector).thenReturn(statMock);
+            statistics.when(Statistics::getService).thenReturn(statMock);
 
             DFAExperiment<Character> experiment = new DFAExperiment<>(learner, eq, alphabet);
 
@@ -74,17 +74,15 @@ public class ExperimentTest {
             Assert.assertEquals(learner.refinementSteps, REFINEMENT_STEPS);
 
             Mockito.verify(statMock, Mockito.atLeastOnce())
-                   .startOrResumeClock(ArgumentMatchers.eq(Experiment.LEARNING_PROFILE_KEY),
-                                       ArgumentMatchers.anyString());
+                   .startOrResumeClock(ArgumentMatchers.eq(Experiment.KEY_DUR_LEARN), ArgumentMatchers.eq(experiment));
             Mockito.verify(statMock, Mockito.atLeastOnce())
-                   .pauseClock(ArgumentMatchers.eq(Experiment.LEARNING_PROFILE_KEY));
+                   .pauseClock(ArgumentMatchers.eq(Experiment.KEY_DUR_LEARN), ArgumentMatchers.eq(experiment));
             Mockito.verify(statMock, Mockito.atLeastOnce())
-                   .startOrResumeClock(ArgumentMatchers.eq(Experiment.COUNTEREXAMPLE_PROFILE_KEY),
-                                       ArgumentMatchers.anyString());
+                   .startOrResumeClock(ArgumentMatchers.eq(Experiment.KEY_DUR_CEX), ArgumentMatchers.eq(experiment));
             Mockito.verify(statMock, Mockito.atLeastOnce())
-                   .pauseClock(ArgumentMatchers.eq(Experiment.COUNTEREXAMPLE_PROFILE_KEY));
+                   .pauseClock(ArgumentMatchers.eq(Experiment.KEY_DUR_CEX), ArgumentMatchers.eq(experiment));
             Mockito.verify(statMock, Mockito.atLeastOnce())
-                   .increaseCounter(ArgumentMatchers.eq(Experiment.LEARNING_ROUNDS_KEY), ArgumentMatchers.anyString());
+                   .increaseCounter(ArgumentMatchers.eq(Experiment.KEY_ROUNDS), ArgumentMatchers.eq(experiment));
         }
     }
 

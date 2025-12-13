@@ -22,24 +22,27 @@ import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatisticsService;
+import net.automatalib.symbol.time.InputSymbol;
+import net.automatalib.symbol.time.TimedInput;
+import net.automatalib.symbol.time.TimedOutput;
 
-public class SymbolCounterSULTest
-        extends AbstractSymbolCounterSULTest<CounterSUL<Integer, Character>, Integer, Character> {
+public class SymbolCounterTimedSULTest
+        extends AbstractSymbolCounterSULTest<CounterTimedSUL<Integer, Character>, InputSymbol<Integer>, TimedOutput<Character>> {
 
     @Override
-    protected CounterSUL<Integer, Character> getStatisticSUL() {
-        return new CounterSUL<>(new MealySimulatorSUL<>(TestQueries.DELEGATE));
+    protected CounterTimedSUL<Integer, Character> getStatisticSUL() {
+        return new CounterTimedSUL<>(new ResetCounterTimedSULTest.MealyAsMMLTSUL<>(new MealySimulatorSUL<>(TestQueries.DELEGATE)));
     }
 
     @Override
-    protected Optional<Long> getCount(CounterSUL<Integer, Character> sul) {
+    protected Optional<Long> getCount(CounterTimedSUL<Integer, Character> sul) {
         final StatisticsService statistics = Statistics.getService();
-        return statistics.getCount(CounterSUL.KEY_SYMBOL);
+        return statistics.getCount(CounterTimedSUL.KEY_SYMBOL);
     }
 
     @Override
-    protected Collection<Integer> getInputs() {
-        return TestQueries.INPUTS;
+    protected Collection<InputSymbol<Integer>> getInputs() {
+        return TestQueries.INPUTS.stream().map(TimedInput::input).toList();
     }
 }
 

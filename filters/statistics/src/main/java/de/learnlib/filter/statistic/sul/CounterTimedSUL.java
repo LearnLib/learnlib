@@ -18,7 +18,8 @@ package de.learnlib.filter.statistic.sul;
 import java.util.List;
 
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
+import de.learnlib.statistic.StatisticsKey;
+import de.learnlib.statistic.StatisticsService;
 import de.learnlib.sul.TimedSUL;
 import net.automatalib.symbol.time.InputSymbol;
 import net.automatalib.symbol.time.TimeStepSequence;
@@ -33,40 +34,46 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <O>
  *         output symbol type
  */
-public class CounterTimedSUL<I, O> implements TimedSUL<I, O> {
+public class CounterTimedSUL<I, O> extends CounterSUL<InputSymbol<I>, TimedOutput<O>> implements TimedSUL<I, O> {
 
-    public static final String KEY_RESETS = "sul_resets_counter";
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of
+     * {@link TimeStepSequence#timeSteps() time steps} executed on the SUL.
+     */
+    public static final StatisticsKey KEY_TIMESTEPS = new StatisticsKey("sul-timestep-cnt", "Number of timed steps");
 
     private final TimedSUL<I, O> delegate;
-    private final StatisticsCollector stats;
+    private final StatisticsKey keyTimesteps;
 
-    private final @Nullable String name;
-
+    /**
+     * Convenience constructor for {@link CounterTimedSUL#CounterTimedSUL(TimedSUL, String)} which uses {@code null} as
+     * {@code id}.
+     *
+     * @param delegate
+     *         the SUL to delegate calls to
+     */
     public CounterTimedSUL(TimedSUL<I, O> delegate) {
         this(delegate, null);
     }
 
-    public CounterTimedSUL(TimedSUL<I, O> delegate, @Nullable String name) {
-        this(delegate, name, Statistics.getCollector());
+    /**
+     * Constructs a new counter SUL that writes statistical data to a {@link StatisticsService}. The provided {@code id}
+     * is used to refine the supported {@link StatisticsKey}s and allows for using multiple instances of this class for
+     * different purposes.
+     *
+     * @param delegate
+     *         the SUL to delegate calls to
+     * @param id
+     *         the id used for specialising the statistics keys
+     */
+    public CounterTimedSUL(TimedSUL<I, O> delegate, @Nullable String id) {
+        this(delegate, id, Statistics.getService());
     }
 
-    protected CounterTimedSUL(TimedSUL<I, O> delegate, @Nullable String name, StatisticsCollector statistics) {
+    protected CounterTimedSUL(TimedSUL<I, O> delegate, @Nullable String id, StatisticsService statistics) {
+        super(delegate, id, statistics);
         this.delegate = delegate;
-        this.name = name;
-        this.stats = statistics;
-    }
-
-    private String withPrefix(String label) {
-        if (this.name == null) {
-            return label;
-        }
-        return this.name + ":" + label;
-    }
-
-    @Override
-    public TimedOutput<O> step(InputSymbol<I> input) {
-        stats.increaseCounter(withPrefix("sul_untimed_syms_counter"), withPrefix("Total untimed symbols"));
-        return this.delegate.step(input);
+        this.keyTimesteps = KEY_TIMESTEPS.withId(id); // already incremented by parent
     }
 
     @Override
@@ -74,9 +81,9 @@ public class CounterTimedSUL<I, O> implements TimedSUL<I, O> {
         TimedOutput<O> res = this.delegate.timeoutStep(maxTime);
         if (res == null) {
             // Waited until maxTime, no timeout occurred:
-            stats.increaseCounter(withPrefix("sul_total_time"), withPrefix("Total query time"), maxTime);
+            super.statistics.increaseCounter(this.keyTimesteps, maxTime, this);
         } else {
-            stats.increaseCounter(withPrefix("sul_total_time"), withPrefix("Total query time"), res.delay());
+            super.statistics.increaseCounter(this.keyTimesteps, res.delay(), this);
         }
 
         return res;
@@ -84,29 +91,13 @@ public class CounterTimedSUL<I, O> implements TimedSUL<I, O> {
 
     @Override
     public List<TimedOutput<O>> collectTimeouts(TimeStepSequence<I> input) {
-        stats.increaseCounter(withPrefix("sul_total_time"), withPrefix("Total query time"), input.timeSteps());
+        super.statistics.increaseCounter(this.keyTimesteps, input.timeSteps(), this);
         return this.delegate.collectTimeouts(input);
     }
 
     @Override
-    public void pre() {
-        this.delegate.pre();
-        stats.increaseCounter(withPrefix(KEY_RESETS), withPrefix("SUL resets"));
-    }
-
-    @Override
-    public void post() {
-        this.delegate.post();
-    }
-
-    @Override
-    public boolean canFork() {
-        return this.delegate.canFork();
-    }
-
-    @Override
     public TimedSUL<I, O> fork() {
-        return new CounterTimedSUL<>(this.delegate.fork(), this.name, this.stats);
+        return new CounterTimedSUL<>(this.delegate.fork(), super.id, super.statistics);
     }
 
 }

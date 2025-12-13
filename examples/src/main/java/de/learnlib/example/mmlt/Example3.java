@@ -83,10 +83,10 @@ public final class Example3 {
 
         // We first create a statistics container.
         // This container will store various statistical data during learning:
-        var stats = Statistics.getCollector();
-        stats.addText("model", null, model.toString());
-        stats.setCounter("original_locs", "Locations in original", mmlt.getStates().size());
-        stats.setCounter("original_inputs", "Untimed alphabet size in original", alphabet.size());
+        var statistics = Statistics.getService();
+        statistics.setText(Example1.KEY_MODEL, model.toString());
+        statistics.setCounter(Example1.KEY_LOCS, mmlt.getStates().size());
+        statistics.setCounter(Example1.KEY_SYMS, alphabet.size());
 
         // ======================
         // Set up the pipeline:
@@ -94,14 +94,15 @@ public final class Example3 {
         var sul = new MMLTSimulatorSUL<>(mmlt);
 
         // We count all operations that are performed on the SUL with a stats-SUL:
-        var statsAfterCache = new CounterTimedSUL<>(sul);
+        var statsAfterCache = new CounterTimedSUL<>(sul, "post-cache");
 
         // We use a cache to avoid redundant operations:
         var cacheSUL = new TimedSULTreeCache<>(statsAfterCache, model.getParams());
         var toReducerSul = new TimeoutReducerSUL<>(cacheSUL, model.getParams().maxTimeoutWaitingTime());
+        var statsBeforeCache = new CounterTimedSUL<>(toReducerSul, "pre-cache");
 
         // We use a query oracle to answer queries from the learner:
-        var timeOracle = new TimedSULOracle<>(toReducerSul, model.getParams());
+        var timeOracle = new TimedSULOracle<>(statsBeforeCache, model.getParams());
 
         // We use a chain of different equivalence oracles (see Example2):
         MMLTEQOracleChain<String, String> chainOracle = new MMLTEQOracleChain<>();
@@ -137,8 +138,7 @@ public final class Example3 {
                                                                       .create();
 
         // Start learning:
-        var finalModel =
-                ExampleRunner.runExperiment(learner, chainOracle, mmlt.getSemantics().getInputAlphabet(), stats);
+        var finalModel = ExampleRunner.runExperiment(learner, chainOracle, mmlt.getSemantics().getInputAlphabet());
 
         // In this set-up, we actually know the reference automaton.
         // This allows us to check that we learned an accurate model:

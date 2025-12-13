@@ -31,6 +31,7 @@ import de.learnlib.oracle.ParallelOracle;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatisticsService;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -55,6 +56,7 @@ public class ParallelismExample2 {
     private final int numInstances;
 
     private final Collection<DefaultQuery<Integer, Word<Character>>> queries;
+    private final StatisticsService statistics = Statistics.getService();
 
     public ParallelismExample2() {
         final Alphabet<Integer> inputs = Alphabets.integers(0, 9);
@@ -113,7 +115,6 @@ public class ParallelismExample2 {
         // print results
         System.out.println("Single-threaded cache performance:");
         answerQueries(cache);
-        System.out.println(Statistics.getCollector().printStats());
 
         parallelOracle.shutdownNow();
     }
@@ -145,17 +146,21 @@ public class ParallelismExample2 {
         // print results
         System.out.println("Shared cache performance:");
         answerQueries(parallelOracle);
-        System.out.println(Statistics.getCollector().printStats());
 
         parallelOracle.shutdownNow();
     }
 
     private void answerQueries(MembershipOracle<Integer, Word<Character>> oracle) {
+        statistics.clear();
         long t0 = System.currentTimeMillis();
         oracle.processQueries(queries);
         long t1 = System.currentTimeMillis();
 
         System.out.println("  Answering queries took " + (t1 - t0) + "ms");
+        System.out.println(
+                "  " + CounterSUL.KEY_QUERY + ": " + statistics.getCount(CounterSUL.KEY_QUERY).orElseThrow());
+        System.out.println(
+                "  " + CounterSUL.KEY_SYMBOL + ": " + statistics.getCount(CounterSUL.KEY_SYMBOL).orElseThrow());
     }
 
 }

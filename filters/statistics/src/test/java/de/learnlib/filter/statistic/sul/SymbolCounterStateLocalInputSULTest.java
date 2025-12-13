@@ -15,15 +15,15 @@
  */
 package de.learnlib.filter.statistic.sul;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
 import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
 
 public class SymbolCounterStateLocalInputSULTest
-        extends AbstractSymbolCounterSULTest<CounterStateLocalInputSUL<Integer, Character>> {
+        extends AbstractSymbolCounterSULTest<CounterStateLocalInputSUL<Integer, Character>, Integer, Character> {
 
     @Override
     protected CounterStateLocalInputSUL<Integer, Character> getStatisticSUL() {
@@ -32,7 +32,11 @@ public class SymbolCounterStateLocalInputSULTest
 
     @Override
     protected Optional<Long> getCount(CounterStateLocalInputSUL<Integer, Character> sul) {
-        final StatisticsCollector statisticsCollector = Statistics.getCollector();
-        return statisticsCollector.getCount(CounterStateLocalInputSUL.SYMBOL_KEY);
+        return Statistics.getService().getCount(CounterStateLocalInputSUL.KEY_SYMBOL);
+    }
+
+    @Override
+    protected Collection<Integer> getInputs() {
+        return TestQueries.INPUTS;
     }
 }

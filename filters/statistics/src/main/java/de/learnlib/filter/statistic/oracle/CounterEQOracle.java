@@ -19,38 +19,76 @@ import java.util.Collection;
 
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.query.Query;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
+import de.learnlib.statistic.StatisticsKey;
+import de.learnlib.statistic.StatisticsService;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Wrapper for a {@link EquivalenceOracle} that gathers various statistics on queries sent to this oracle.
+ *
+ * @param <A>
+ *         automaton type
+ * @param <I>
+ *         input symbol type
+ * @param <D>
+ *         output domain type
+ */
 public class CounterEQOracle<A, I, D> implements EquivalenceOracle<A, I, D> {
 
-    public static final String KEY_CEX_CNT = "cex-cnt";
-    public static final String KEY_CEX_DUR = "cex-dur";
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of
+     * {@link EquivalenceOracle#findCounterExample(Object, Collection) found counterexamples} of the equivalence
+     * oracle.
+     */
+    public static final StatisticsKey KEY_COUNT = new StatisticsKey("cex-cnt", "Number of found counterexamples");
+
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of {@link Query#length() symbols} contained in
+     * the found counterexamples.
+     */
+    public static final StatisticsKey KEY_LEN = new StatisticsKey("cex-len", "Length (cumulated) of counterexamples");
 
     private final EquivalenceOracle<A, I, D> delegate;
-    private final StatisticsCollector statisticsCollector;
-    private final String id;
+    private final StatisticsService statistics;
+    private final StatisticsKey keyCount;
+    private final StatisticsKey keyLen;
 
+    /**
+     * Convenience constructor for {@link CounterEQOracle#CounterEQOracle(EquivalenceOracle, String)} which uses
+     * {@code null} as {@code id}.
+     *
+     * @param delegate
+     *         the oracle to delegate calls to
+     */
     public CounterEQOracle(EquivalenceOracle<A, I, D> delegate) {
-        this(delegate, "");
+        this(delegate, null);
     }
 
-    public CounterEQOracle(EquivalenceOracle<A, I, D> delegate, String id) {
+    /**
+     * Constructs a new counter oracle that writes statistical data to a {@link StatisticsService}. The provided
+     * {@code id} is used to refine the supported {@link StatisticsKey}s and allows for using multiple instances of this
+     * class for different purposes.
+     *
+     * @param delegate
+     *         the oracle to delegate calls to
+     * @param id
+     *         the id used for specialising the statistics keys
+     */
+    public CounterEQOracle(EquivalenceOracle<A, I, D> delegate, @Nullable String id) {
         this.delegate = delegate;
-        this.id = id;
-        this.statisticsCollector = Statistics.getCollector();
+        this.statistics = Statistics.getService();
+        this.keyCount = KEY_COUNT.withId(id);
+        this.keyLen = KEY_LEN.withId(id);
     }
 
     @Override
     public @Nullable DefaultQuery<I, D> findCounterExample(A hypothesis, Collection<? extends I> inputs) {
-        final String suffix = id.isEmpty() ? "" : " from '" + id + '\'';
-
-        statisticsCollector.startOrResumeClock(KEY_CEX_DUR + id, "Duration of CEX search" + suffix);
         final DefaultQuery<I, D> cex = this.delegate.findCounterExample(hypothesis, inputs);
-        statisticsCollector.pauseClock(KEY_CEX_DUR + id);
         if (cex != null) {
-            statisticsCollector.increaseCounter(KEY_CEX_CNT + id, "Found CEX" + suffix);
+            statistics.increaseCounter(keyLen, cex.length(), this);
+            statistics.increaseCounter(keyCount, this);
         }
         return cex;
     }

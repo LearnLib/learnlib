@@ -62,7 +62,7 @@ public class DFAHashCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return Statistics.getCollector().getCount(DFACounterOracle.QUERY_KEY).orElse(0L);
+        return Statistics.getService().getCount(DFACounterOracle.KEY_QUERY).orElse(0L);
     }
 
     @Override

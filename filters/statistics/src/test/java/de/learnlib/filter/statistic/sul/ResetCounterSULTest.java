@@ -20,9 +20,9 @@ import java.util.Optional;
 import de.learnlib.driver.simulator.MealySimulatorSUL;
 import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
 
-public class ResetCounterSULTest extends AbstractResetCounterSULTest<CounterSUL<Integer, Character>> {
+public class ResetCounterSULTest
+        extends AbstractResetCounterSULTest<CounterSUL<Integer, Character>, Integer, Character> {
 
     @Override
     protected CounterSUL<Integer, Character> getStatisticSUL() {
@@ -31,7 +31,6 @@ public class ResetCounterSULTest extends AbstractResetCounterSULTest<CounterSUL<
 
     @Override
     protected Optional<Long> getCount(CounterSUL<Integer, Character> sul) {
-        final StatisticsCollector statisticsCollector = Statistics.getCollector();
-        return statisticsCollector.getCount(CounterSUL.RESET_KEY);
+        return Statistics.getService().getCount(CounterSUL.KEY_QUERY);
     }
 }

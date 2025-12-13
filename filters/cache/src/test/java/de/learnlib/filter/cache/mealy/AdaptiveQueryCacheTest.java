@@ -89,7 +89,7 @@ public class AdaptiveQueryCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return Statistics.getCollector().getCount(CounterAdaptiveQueryOracle.RESET_KEY).orElse(0L);
+        return Statistics.getService().getCount(CounterAdaptiveQueryOracle.KEY_RESET).orElse(0L);
     }
 
     @Override

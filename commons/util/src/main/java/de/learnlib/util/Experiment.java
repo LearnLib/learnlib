@@ -20,7 +20,8 @@ import de.learnlib.logging.Category;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
+import de.learnlib.statistic.StatisticsKey;
+import de.learnlib.statistic.StatisticsService;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.fsa.DFA;
@@ -39,21 +40,37 @@ import org.slf4j.LoggerFactory;
  */
 public class Experiment<A extends FiniteRepresentation> {
 
-    public static final String LEARNING_PROFILE_KEY = "exp-expl-dur";
-    public static final String COUNTEREXAMPLE_PROFILE_KEY = "exp-ce-dur";
-    public static final String LEARNING_ROUNDS_KEY = "exp-rnd";
-    public static final String FINAL_SIZE_KEY = "hyp-size";
+    /**
+     * The {@link StatisticsKey} this class uses for clocking the duration of the exploration phase of the learning
+     * algorithm.
+     */
+    public static final StatisticsKey KEY_DUR_LEARN = new StatisticsKey("exp-expl-dur", "Duration of exploration");
+
+    /**
+     * The {@link StatisticsKey} this class uses for clocking the duration of the counterexample search of the
+     * equivalence oracle.
+     */
+    public static final StatisticsKey KEY_DUR_CEX =
+            new StatisticsKey("exp-ce-dur", "Duration of counterexample search");
+
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of learning rounds of this experiment.
+     */
+    public static final StatisticsKey KEY_ROUNDS = new StatisticsKey("exp-rnd", "Number of learning rounds");
+
+    /**
+     * The {@link StatisticsKey} this class uses for counting the size of the final hypothesis.
+     */
+    public static final StatisticsKey KEY_FINAL_SIZE = new StatisticsKey("exp-hyp-size", "Size of final hypothesis");
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Experiment.class);
     private final ExperimentImpl<?, ?> impl;
-    private final StatisticsCollector statisticsCollector;
     private @Nullable A finalHypothesis;
 
     public <I, D> Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
                              EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
                              Alphabet<I> inputs) {
         this.impl = new ExperimentImpl<>(learningAlgorithm, equivalenceAlgorithm, inputs);
-        this.statisticsCollector = Statistics.getCollector();
     }
 
     /**
@@ -94,6 +111,7 @@ public class Experiment<A extends FiniteRepresentation> {
         private final LearningAlgorithm<? extends A, I, D> learningAlgorithm;
         private final EquivalenceOracle<? super A, I, D> equivalenceAlgorithm;
         private final Alphabet<I> inputs;
+        private final StatisticsService statistics;
         private int rounds;
 
         ExperimentImpl(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
@@ -102,29 +120,30 @@ public class Experiment<A extends FiniteRepresentation> {
             this.learningAlgorithm = learningAlgorithm;
             this.equivalenceAlgorithm = equivalenceAlgorithm;
             this.inputs = inputs;
+            this.statistics = Statistics.getService();
         }
 
         public A run() {
             rounds++;
-            statisticsCollector.increaseCounter(LEARNING_ROUNDS_KEY, "Number of learning rounds");
+            statistics.increaseCounter(KEY_ROUNDS, Experiment.this);
             LOGGER.info(Category.PHASE, "Starting round {}", rounds);
             LOGGER.info(Category.PHASE, "Learning");
 
-            statisticsCollector.startOrResumeClock(LEARNING_PROFILE_KEY, "Duration of exploration");
+            statistics.startOrResumeClock(KEY_DUR_LEARN, Experiment.this);
             learningAlgorithm.startLearning();
-            statisticsCollector.pauseClock(LEARNING_PROFILE_KEY);
+            statistics.pauseClock(KEY_DUR_LEARN, Experiment.this);
 
             while (true) {
                 final A hyp = learningAlgorithm.getHypothesisModel();
 
                 LOGGER.info(Category.PHASE, "Searching for counterexample");
 
-                statisticsCollector.startOrResumeClock(COUNTEREXAMPLE_PROFILE_KEY, "Duration of counterexample search");
+                statistics.startOrResumeClock(KEY_DUR_CEX, Experiment.this);
                 DefaultQuery<I, D> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
-                statisticsCollector.pauseClock(COUNTEREXAMPLE_PROFILE_KEY);
+                statistics.pauseClock(KEY_DUR_CEX, Experiment.this);
 
                 if (ce == null) {
-                    statisticsCollector.setCounter(FINAL_SIZE_KEY, "Final hypothesis size", hyp.size());
+                    statistics.setCounter(KEY_FINAL_SIZE, hyp.size(), Experiment.this);
                     return hyp;
                 }
 
@@ -132,13 +151,13 @@ public class Experiment<A extends FiniteRepresentation> {
 
                 // next round ...
                 rounds++;
-                statisticsCollector.increaseCounter(LEARNING_ROUNDS_KEY, "Number of learning rounds");
+                statistics.increaseCounter(KEY_ROUNDS, Experiment.this);
                 LOGGER.info(Category.PHASE, "Starting round {}", rounds);
                 LOGGER.info(Category.PHASE, "Learning");
 
-                statisticsCollector.startOrResumeClock(LEARNING_PROFILE_KEY, "Duration of exploration");
+                statistics.startOrResumeClock(KEY_DUR_LEARN, Experiment.this);
                 final boolean refined = learningAlgorithm.refineHypothesis(ce);
-                statisticsCollector.pauseClock(LEARNING_PROFILE_KEY);
+                statistics.pauseClock(KEY_DUR_LEARN, Experiment.this);
 
                 assert refined;
             }

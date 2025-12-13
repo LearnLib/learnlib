@@ -22,8 +22,6 @@ import java.util.Iterator;
 import de.learnlib.filter.cache.LearningCache.MMLTLearningCache;
 import de.learnlib.filter.cache.mmlt.CacheTreeNode.CacheTreeTransition;
 import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
-import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
 import de.learnlib.sul.TimedSUL;
 import de.learnlib.time.MMLTModelParams;
 import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
@@ -56,13 +54,10 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
     private boolean cacheMiss;
     private boolean init;
 
-    private final StatisticsCollector statisticsCollector;
-
     public TimedSULTreeCache(TimedSUL<I, O> delegate, MMLTModelParams<O> modelParams) {
         this.delegate = delegate;
         this.modelParams = modelParams;
         this.silentOutput = new TimedOutput<>(modelParams.silentOutput());
-        this.statisticsCollector = Statistics.getCollector();
 
         // Init cache:
         this.cacheRoot = new CacheTreeNode<>(null, null);
@@ -157,12 +152,8 @@ public class TimedSULTreeCache<I, O> implements TimedSUL<I, O>, MMLTLearningCach
     @Override
     public void post() {
         this.init = false;
-
         if (this.cacheMiss) {
             this.delegate.post();
-            statisticsCollector.increaseCounter("Cache_Missed_Count", "Cache misses");
-        } else {
-            statisticsCollector.increaseCounter("Cache_Hit_Count", "Cache hits");
         }
     }
 

@@ -83,7 +83,7 @@ public final class Example2 {
      */
     static void runSLILearner(boolean withCache) {
 
-        Statistics.getCollector().clear();
+        Statistics.getService().clear();
 
         // setup SULs and counters
         final StateLocalInputSUL<Integer, Character> target = new StateLocalInputMealySimulatorSUL<>(TARGET);
@@ -130,7 +130,7 @@ public final class Example2 {
         System.out.println("State Local Input SUL" + (withCache ? ", with cache" : ""));
         System.out.println("-------------------------------------------------------");
 
-        System.out.println(Statistics.getCollector().printStats());
+        System.out.println(Statistics.getService().print());
 
         System.out.println("-------------------------------------------------------");
     }
@@ -140,7 +140,7 @@ public final class Example2 {
      */
     static void runNormalLearner(boolean withCache) {
 
-        Statistics.getCollector().clear();
+        Statistics.getService().clear();
 
         // setup SULs and counters
         final SUL<Integer, Character> target = new MealySimulatorSUL<>(TARGET, UNDEFINED);
@@ -186,7 +186,7 @@ public final class Example2 {
         System.out.println("Regular SUL" + (withCache ? ", with cache" : ""));
         System.out.println("-------------------------------------------------------");
 
-        System.out.println(Statistics.getCollector().printStats());
+        System.out.println(Statistics.getService().print());
 
         System.out.println("-------------------------------------------------------");
     }

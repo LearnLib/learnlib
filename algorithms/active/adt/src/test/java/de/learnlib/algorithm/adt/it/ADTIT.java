@@ -131,7 +131,7 @@ public class ADTIT extends AbstractMealyLearnerIT {
                     for (int seed = 0; seed < 50; seed++) {
                         long last = 0;
                         for (int iter = 0; iter < 5; iter++) {
-                            Statistics.getCollector().clear();
+                            Statistics.getService().clear();
                             final CounterAdaptiveQueryOracle<String, String> counter =
                                     new CounterAdaptiveQueryOracle<>(aqo);
                             final ADTLearner<String, String> learner = new ADTLearner<>(alphabet,
@@ -154,7 +154,7 @@ public class ADTIT extends AbstractMealyLearnerIT {
                             exp.run();
 
                             final long count =
-                                    Statistics.getCollector().getCount(CounterAdaptiveQueryOracle.RESET_KEY).orElse(0L);
+                                    Statistics.getService().getCount(CounterAdaptiveQueryOracle.KEY_RESET).orElse(0L);
 
                             if (iter == 0) {
                                 last = count;

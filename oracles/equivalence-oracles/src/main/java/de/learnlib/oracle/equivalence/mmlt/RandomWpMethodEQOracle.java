@@ -24,8 +24,6 @@ import java.util.Random;
 import de.learnlib.oracle.EquivalenceOracle.MMLTEquivalenceOracle;
 import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
-import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.State;
 import net.automatalib.automaton.mmlt.impl.ReducedMMLTSemantics;
@@ -49,10 +47,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class RandomWpMethodEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
 
-    public static final String KEY_TESTED_WORDS = "WP_TESTED_WORD";
-
     private final TimedQueryOracle<I, O> timeOracle;
-    private final StatisticsCollector statisticsCollector;
 
     private final Random random;
     private final int minSize;
@@ -66,8 +61,6 @@ public class RandomWpMethodEQOracle<I, O> implements MMLTEquivalenceOracle<I, O>
                                   int bound) {
 
         this.timeOracle = timeOracle;
-        this.statisticsCollector = Statistics.getCollector();
-
         this.random = new Random(randomSeed);
 
         this.minSize = minSize;
@@ -98,8 +91,6 @@ public class RandomWpMethodEQOracle<I, O> implements MMLTEquivalenceOracle<I, O>
 
         // Generate test words:
         for (int i = 0; i < this.bound; i++) {
-            statisticsCollector.increaseCounter(KEY_TESTED_WORDS, "RandomWpOracle: tested words");
-
             Word<TimedInput<I>> testword =
                     this.generateTestword(prefixList, globalSuffixes, hypothesis, hypSemModel, listAlphabet);
 

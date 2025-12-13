@@ -66,7 +66,7 @@ public abstract class AbstractSULCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return Statistics.getCollector().getCount(CounterSUL.RESET_KEY).orElse(0L);
+        return Statistics.getService().getCount(CounterSUL.KEY_QUERY).orElse(0L);
     }
 
     @Override

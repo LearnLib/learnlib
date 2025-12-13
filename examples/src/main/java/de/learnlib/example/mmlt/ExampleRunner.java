@@ -18,7 +18,7 @@ package de.learnlib.example.mmlt;
 import de.learnlib.algorithm.lstar.mmlt.ExtensibleLStarMMLT;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import de.learnlib.oracle.EquivalenceOracle;
-import de.learnlib.statistic.StatisticsCollector;
+import de.learnlib.statistic.Statistics;
 import de.learnlib.util.Experiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.mmlt.MMLT;
@@ -35,8 +35,7 @@ final class ExampleRunner {
 
     static MMLT<Integer, String, ?, String> runExperiment(ExtensibleLStarMMLT<String, String> learner,
                                                           EquivalenceOracle.MMLTEquivalenceOracle<String, String> tester,
-                                                          Alphabet<TimedInput<String>> alphabet,
-                                                          StatisticsCollector statisticsCollector) {
+                                                          Alphabet<TimedInput<String>> alphabet) {
         // Start learning:
         final var experiment = new Experiment<>(learner, tester, alphabet);
         experiment.run();
@@ -44,7 +43,7 @@ final class ExampleRunner {
         final var finalHypothesis = experiment.getFinalHypothesis();
 
         // Print final result + statistics:
-        System.out.println(statisticsCollector.printStats());
+        System.out.println(Statistics.getService().print());
 
         new ObservationTableASCIIWriter<>().write(learner.getObservationTable(), System.out);
 

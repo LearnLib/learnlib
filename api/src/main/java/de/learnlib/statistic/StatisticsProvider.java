@@ -18,7 +18,7 @@ package de.learnlib.statistic;
 import java.util.ServiceLoader;
 
 /**
- * A statistics provider is means to register different implementations of {@link StatisticsCollector}s via
+ * A statistics provider is a means to register different implementations of {@link StatisticsService}s via
  * {@link ServiceLoader service loading}.
  */
 public interface StatisticsProvider {
@@ -32,12 +32,12 @@ public interface StatisticsProvider {
     int getPriority();
 
     /**
-     * Returns the instance of the {@link StatisticsCollector}. Note that the returned instances should behave as
+     * Returns the instance of the {@link StatisticsService}. Note that the returned instances should behave as
      * "per-thread-singletons", i.e., within a thread, the same instance should be returned as to enable client-code to
      * collect statistics over various invocations across different components. However, in a multi-threaded benchmark
-     * scenario, each thread should obtain its own copy.
+     * scenario, each thread should obtain its own instance.
      *
-     * @return the statistics collector
+     * @return the statistics service
      */
-    StatisticsCollector getCollector();
+    StatisticsService getService();
 }

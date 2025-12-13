@@ -50,7 +50,7 @@ public abstract class AbstractCacheTest<OR extends LearningCacheOracle<A, I, D>,
         alphabet = getAlphabet();
         oracle = getCachedOracle();
         queries = new ArrayList<>();
-        Statistics.getCollector().clear();
+        Statistics.getService().clear();
     }
 
     @Test

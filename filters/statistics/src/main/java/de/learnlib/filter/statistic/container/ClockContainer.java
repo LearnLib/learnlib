@@ -23,35 +23,37 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * A stop clock that can be paused and resumed.
  */
-class StopClockStatistic extends AbstractStatistic {
+class ClockContainer implements StatisticContainer {
 
     private @Nullable Instant started;
     private Duration elapsed;
 
-    StopClockStatistic(String id, @Nullable String description) {
-        super(id, description);
+    ClockContainer() {
         this.elapsed = Duration.ZERO;
         this.started = null;
     }
 
-    public void resume() {
+    void resume() {
+        if (this.started != null) {
+            throw new IllegalStateException("You cannot resume a timer that is still running");
+        }
         this.started = Instant.now();
     }
 
-    public void pause() {
+    void pause() {
         if (started == null) {
-            return;
+            throw new IllegalStateException("You cannot pause a timer that has not been started");
         }
         this.elapsed = this.elapsed.plus(Duration.between(started, Instant.now()));
         this.started = null;
     }
 
-    public Duration getElapsed() {
+    Duration getElapsed() {
         return this.elapsed;
     }
 
     @Override
-    public String renderValue() {
+    public String toString() {
         return elapsed.toMillis() + " ms";
     }
 }

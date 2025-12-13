@@ -26,7 +26,7 @@ import de.learnlib.query.AdaptiveQuery;
 import de.learnlib.query.AdaptiveQuery.Response;
 import de.learnlib.query.Query;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
+import de.learnlib.statistic.StatisticsService;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.testng.Assert;
@@ -43,7 +43,7 @@ public class CounterAdaptiveOracleTest {
 
     @BeforeClass
     public void setUp() {
-        Statistics.getCollector().clear();
+        Statistics.getService().clear();
     }
 
     @Test
@@ -80,14 +80,14 @@ public class CounterAdaptiveOracleTest {
 
     @Test(dependsOnMethods = "testSecondQueryBatch")
     public void testStatistics() {
-        final StatisticsCollector statisticsCollector = Statistics.getCollector();
-        Assert.assertFalse(statisticsCollector.getKeys().isEmpty());
+        final StatisticsService statisticsService = Statistics.getService();
+        Assert.assertFalse(statisticsService.getKeys().isEmpty());
     }
 
     private void verifyCounts(long queries, long symbols) {
-        final StatisticsCollector statisticsCollector = Statistics.getCollector();
-        Assert.assertEquals(statisticsCollector.getCount(CounterAdaptiveQueryOracle.RESET_KEY).orElse(0L), queries);
-        Assert.assertEquals(statisticsCollector.getCount(CounterAdaptiveQueryOracle.SYMBOL_KEY).orElse(0L), symbols);
+        final StatisticsService statistics = Statistics.getService();
+        Assert.assertEquals(statistics.getCount(CounterAdaptiveQueryOracle.KEY_RESET).orElse(0L), queries);
+        Assert.assertEquals(statistics.getCount(CounterAdaptiveQueryOracle.KEY_SYMBOL).orElse(0L), symbols);
     }
 
     private Collection<Query<Integer, Word<Character>>> generateQueries(int numQueries,

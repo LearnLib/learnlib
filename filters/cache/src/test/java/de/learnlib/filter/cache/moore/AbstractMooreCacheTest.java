@@ -68,7 +68,7 @@ public abstract class AbstractMooreCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return Statistics.getCollector().getCount(MooreCounterOracle.QUERY_KEY).orElse(0L);
+        return Statistics.getService().getCount(MooreCounterOracle.KEY_QUERY).orElse(0L);
     }
 
     @Override

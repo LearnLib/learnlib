@@ -15,23 +15,7 @@
  */
 package de.learnlib.filter.statistic.container;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
-class TextStatistic extends AbstractStatistic {
-
-    private final String text;
-
-    TextStatistic(String id, @Nullable String description, String text) {
-        super(id, description);
-        this.text = text;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    @Override
-    public String renderValue() {
-        return text;
-    }
-}
+/**
+ * Umbrella type for storing statistical data in a {@link MapStatisticsService}.
+ */
+interface StatisticContainer {}

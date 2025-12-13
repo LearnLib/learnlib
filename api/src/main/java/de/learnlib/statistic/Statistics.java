@@ -18,7 +18,7 @@ package de.learnlib.statistic;
 import java.util.ServiceLoader;
 
 /**
- * Factory for obtaining {@link StatisticsCollector}s.
+ * Factory for obtaining {@link StatisticsService}s.
  */
 public final class Statistics {
 
@@ -42,20 +42,20 @@ public final class Statistics {
     }
 
     /**
-     * Returns a {@link StatisticsCollector} for collecting statistics. Note that the returned instances should behave
+     * Returns a {@link StatisticsService} for collecting statistics. Note that the returned instances should behave
      * as "per-thread-singletons", i.e., within a thread, the same instance should be returned as to enable client-code
      * to collect statistics over various invocations across different components. However, in a multi-threaded
-     * benchmark scenario, each thread should obtain its own copy.
+     * benchmark scenario, each thread should obtain its own instance.
      *
-     * @return the collector
+     * @return the service
      */
-    public static StatisticsCollector getCollector() {
-        return PROVIDER.getCollector();
+    public static StatisticsService getService() {
+        return PROVIDER.getService();
     }
 
     private static final class NoopProvider implements StatisticsProvider {
 
-        private static final StatisticsCollector COLLECTOR = new NoopCollector();
+        private static final StatisticsService SERVICE = new NoopService();
 
         @Override
         public int getPriority() {
@@ -63,8 +63,8 @@ public final class Statistics {
         }
 
         @Override
-        public StatisticsCollector getCollector() {
-            return COLLECTOR;
+        public StatisticsService getService() {
+            return SERVICE;
         }
     }
 }

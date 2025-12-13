@@ -20,10 +20,9 @@ import java.util.Optional;
 import de.learnlib.driver.simulator.StateLocalInputMealySimulatorSUL;
 import de.learnlib.filter.statistic.TestQueries;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
 
 public class ResetCounterStateLocalInputSULTest
-        extends AbstractResetCounterSULTest<CounterStateLocalInputSUL<Integer, Character>> {
+        extends AbstractResetCounterSULTest<CounterStateLocalInputSUL<Integer, Character>, Integer, Character> {
 
     @Override
     protected CounterStateLocalInputSUL<Integer, Character> getStatisticSUL() {
@@ -32,7 +31,6 @@ public class ResetCounterStateLocalInputSULTest
 
     @Override
     protected Optional<Long> getCount(CounterStateLocalInputSUL<Integer, Character> sul) {
-        final StatisticsCollector statisticsCollector = Statistics.getCollector();
-        return statisticsCollector.getCount(CounterStateLocalInputSUL.RESET_KEY);
+        return Statistics.getService().getCount(CounterStateLocalInputSUL.KEY_QUERY);
     }
 }

@@ -82,6 +82,6 @@ public class MealyParallelCacheTest
 
     @Override
     protected long getNumberOfQueries() {
-        return Statistics.getCollector().getCount(MealyCounterOracle.QUERY_KEY).orElse(0L);
+        return Statistics.getService().getCount(MealyCounterOracle.KEY_QUERY).orElse(0L);
     }
 }

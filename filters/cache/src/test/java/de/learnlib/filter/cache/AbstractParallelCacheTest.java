@@ -65,7 +65,7 @@ public abstract class AbstractParallelCacheTest<A, I, D> {
         this.targetModel = getTargetModel();
         this.cache = getCacheRepresentative();
         this.parallelOracle = getParallelOracle();
-        Statistics.getCollector().clear();
+        Statistics.getService().clear();
     }
 
     @AfterClass

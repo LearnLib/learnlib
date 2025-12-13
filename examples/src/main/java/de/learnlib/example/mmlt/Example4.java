@@ -29,6 +29,7 @@ import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.membership.TimedSULOracle;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.time.MMLTModelParams;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.impl.StringSymbolCombiner;
 import net.automatalib.exception.FormatException;
@@ -53,7 +54,8 @@ public final class Example4 {
 
     public static void main(String[] args) {
         // First, we load the file "mmlt_example.dot" from the "resources" folder:
-        MMLT<?, String, ?, String> targetModel;
+        MMLT<?, String, ?, String> mmlt;
+        Alphabet<String> alphabet;
         MMLTModelParams<String> params;
 
         // We define the output that represents silence:
@@ -67,21 +69,22 @@ public final class Example4 {
 
         try (InputStream is = Example4.class.getResourceAsStream("/mmlt_example.dot")) {
             var parsedModel = parser.readModel(is);
-            targetModel = parsedModel.model;
+            mmlt = parsedModel.model;
+            alphabet = parsedModel.alphabet;
 
             // During learning, we use a symbolic "timeout" symbol to indicate that the
             // teacher should wait for the next timeout. To avoid an infinite runtime,
             // we set a maximum waiting time for these symbols.
             // This time should be at least the maximum time to the next timeout in any
             // state of the system. We configure this as follows:
-            long maxTimeoutDelay = MMLTs.getMaximumTimeoutDelay(targetModel);
+            long maxTimeoutDelay = MMLTs.getMaximumTimeoutDelay(mmlt);
 
             // After adding a new location, the learner infers timers for it by watching the SUL for timeouts.
             // To learn an accurate model, the maximum time to watch for these timeouts must be at
             // least the value of "maxTimeoutDelay".
             // If the maximum initial value of timers in the SUL is known or can be reasonably estimated,
             // setting the watch time to twice that value usually yields good results:
-            long maxTimerQueryWaitingFinal = MMLTs.getMaximumInitialTimerValue(targetModel) * 2;
+            long maxTimerQueryWaitingFinal = MMLTs.getMaximumInitialTimerValue(mmlt) * 2;
 
             params = new MMLTModelParams<>(silentOutput, outputCombiner, maxTimeoutDelay, maxTimerQueryWaitingFinal);
         } catch (IOException | FormatException e) {
@@ -90,28 +93,29 @@ public final class Example4 {
 
         // Proceed as in Example1:
 
-        var stats = Statistics.getCollector();
-        stats.addText("model", null, "mmlt_example.dot");
-        stats.setCounter("original_locs", "Locations in original", targetModel.getStates().size());
-        stats.setCounter("original_inputs", "Untimed alphabet size in original", targetModel.getInputAlphabet().size());
+        var statistics = Statistics.getService();
+        statistics.setText(Example1.KEY_MODEL, "mmlt_example.dot");
+        statistics.setCounter(Example1.KEY_LOCS, mmlt.getStates().size());
+        statistics.setCounter(Example1.KEY_SYMS, alphabet.size());
 
         // Set up the pipeline:
         // We use a simulator SUL to simulate our automaton:
-        var sul = new MMLTSimulatorSUL<>(targetModel);
+        var sul = new MMLTSimulatorSUL<>(mmlt);
 
         // We count all operations that are performed on the SUL with a stats-SUL:
-        var statsAfterCache = new CounterTimedSUL<>(sul);
+        var statsAfterCache = new CounterTimedSUL<>(sul, "post-cache");
 
         // We use a cache to avoid redundant operations:
         var cacheSUL = new TimedSULTreeCache<>(statsAfterCache, params);
         var toReducerSul = new TimeoutReducerSUL<>(cacheSUL, params.maxTimeoutWaitingTime());
+        var statsBeforeCache = new CounterTimedSUL<>(toReducerSul, "pre-cache");
 
         // We use a query oracle to answer queries from the learner:
-        var timeOracle = new TimedSULOracle<>(toReducerSul, params);
+        var timeOracle = new TimedSULOracle<>(statsBeforeCache, params);
 
         // In the basic set-up, we use a simulator oracle to answer equivalence queries.
         // This oracle has perfect knowledge of the reference automaton.
-        var eqOracle = new SimulatorEQOracle<>(targetModel);
+        var eqOracle = new SimulatorEQOracle<>(mmlt);
 
         // Set up our L* learner:
 
@@ -119,17 +123,17 @@ public final class Example4 {
         // We include all untimed inputs and the symbolic timeout symbol, which causes the learner to wait
         // until the next timeout (but no longer than params.maxTimeoutWaitingTime()).
         List<Word<TimedInput<String>>> suffixes = new ArrayList<>();
-        targetModel.getInputAlphabet().forEach(s -> suffixes.add(Word.fromLetter(TimedInput.input(s))));
+        alphabet.forEach(s -> suffixes.add(Word.fromLetter(TimedInput.input(s))));
         suffixes.add(Word.fromLetter(new TimeoutSymbol<>()));
 
-        var learner = new ExtensibleLStarMMLTBuilder<String, String>().withAlphabet(targetModel.getInputAlphabet())
+        var learner = new ExtensibleLStarMMLTBuilder<String, String>().withAlphabet(alphabet)
                                                                       .withModelParams(params)
                                                                       .withTimeOracle(timeOracle)
                                                                       .withInitialSuffixes(suffixes)
                                                                       .create();
 
         // Start learning:
-        ExampleRunner.runExperiment(learner, eqOracle, targetModel.getSemantics().getInputAlphabet(), stats);
+        ExampleRunner.runExperiment(learner, eqOracle, mmlt.getSemantics().getInputAlphabet());
     }
 
 }

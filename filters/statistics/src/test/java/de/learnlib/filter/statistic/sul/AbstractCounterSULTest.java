@@ -29,16 +29,16 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public abstract class AbstractCounterSULTest<S extends SUL<Integer, Character>> {
+public abstract class AbstractCounterSULTest<S extends SUL<I, O>, I, O> {
 
     private S statisticSUL;
-    private MealyMembershipOracle<Integer, Character> asOracle;
+    private MealyMembershipOracle<I, O> asOracle;
 
     protected abstract S getStatisticSUL();
 
     protected abstract int getCountIncreasePerQuery();
 
-    protected abstract Collection<Query<Integer, Word<Character>>> createQueries(int num);
+    protected abstract Collection<Query<I, Word<O>>> createQueries(int num);
 
     protected abstract Optional<Long> getCount(S sul);
 
@@ -50,7 +50,7 @@ public abstract class AbstractCounterSULTest<S extends SUL<Integer, Character>> 
     public void setUp() {
         this.statisticSUL = getStatisticSUL();
         this.asOracle = getSimulator(this.statisticSUL);
-        Statistics.getCollector().clear();
+        Statistics.getService().clear();
     }
 
     @Test
@@ -60,7 +60,7 @@ public abstract class AbstractCounterSULTest<S extends SUL<Integer, Character>> 
 
     @Test(dependsOnMethods = "testInitialState")
     public void testFirstQueryBatch() {
-        final Collection<Query<Integer, Word<Character>>> queries = createQueries(2);
+        final Collection<Query<I, Word<O>>> queries = createQueries(2);
         final long oldCount = getCount();
 
         asOracle.processQueries(queries);
@@ -70,7 +70,7 @@ public abstract class AbstractCounterSULTest<S extends SUL<Integer, Character>> 
 
     @Test(dependsOnMethods = "testFirstQueryBatch")
     public void testEmptyQueryBatch() {
-        final Collection<Query<Integer, Word<Character>>> queries = Collections.emptySet();
+        final Collection<Query<I, Word<O>>> queries = Collections.emptySet();
         final long oldCount = getCount();
 
         asOracle.processQueries(queries);
@@ -80,7 +80,7 @@ public abstract class AbstractCounterSULTest<S extends SUL<Integer, Character>> 
 
     @Test(dependsOnMethods = "testEmptyQueryBatch")
     public void testSecondQueryBatch() {
-        final Collection<Query<Integer, Word<Character>>> queries = createQueries(1);
+        final Collection<Query<I, Word<O>>> queries = createQueries(1);
         final long oldCount = getCount();
 
         asOracle.processQueries(queries);
@@ -90,11 +90,11 @@ public abstract class AbstractCounterSULTest<S extends SUL<Integer, Character>> 
 
     @Test(dependsOnMethods = "testSecondQueryBatch")
     public void testSharedForkCounter() {
-        final MealyMembershipOracle<Integer, Character> mqo1 = getSimulator(statisticSUL.fork());
-        final MealyMembershipOracle<Integer, Character> mqo2 = getSimulator(statisticSUL.fork());
-        final MealyMembershipOracle<Integer, Character> mqo3 = getSimulator(statisticSUL.fork());
+        final MealyMembershipOracle<I, O> mqo1 = getSimulator(statisticSUL.fork());
+        final MealyMembershipOracle<I, O> mqo2 = getSimulator(statisticSUL.fork());
+        final MealyMembershipOracle<I, O> mqo3 = getSimulator(statisticSUL.fork());
 
-        final Collection<Query<Integer, Word<Character>>> queries = createQueries(2);
+        final Collection<Query<I, Word<O>>> queries = createQueries(2);
         final long oldCount = getCount();
 
         mqo1.processQueries(queries);

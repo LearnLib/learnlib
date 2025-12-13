@@ -26,6 +26,7 @@ import de.learnlib.filter.statistic.sul.CounterTimedSUL;
 import de.learnlib.oracle.equivalence.mmlt.SimulatorEQOracle;
 import de.learnlib.oracle.membership.TimedSULOracle;
 import de.learnlib.statistic.Statistics;
+import de.learnlib.statistic.StatisticsKey;
 import de.learnlib.testsupport.example.mmlt.MMLTExamples;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.symbol.time.TimedInput;
@@ -79,6 +80,10 @@ import net.automatalib.word.Word;
 @SuppressWarnings("PMD.UseExplicitTypes") // allow vars in examples
 public final class Example1 {
 
+    public static final StatisticsKey KEY_MODEL = new StatisticsKey("Model");
+    public static final StatisticsKey KEY_LOCS = new StatisticsKey("original_locs", "Size of original hypothesis");
+    public static final StatisticsKey KEY_SYMS = new StatisticsKey("original_inputs", "Size of untimed alphabet");
+
     private Example1() {
         // prevent instantiation
     }
@@ -91,10 +96,10 @@ public final class Example1 {
 
         // We first create a statistics container.
         // This container will store various statistical data during learning:
-        var stats = Statistics.getCollector();
-        stats.addText("model", null, model.toString());
-        stats.setCounter("original_locs", "Locations in original", mmlt.getStates().size());
-        stats.setCounter("original_inputs", "Untimed alphabet size in original", alphabet.size());
+        var statistics = Statistics.getService();
+        statistics.setText(KEY_MODEL, model.toString());
+        statistics.setCounter(KEY_LOCS, mmlt.getStates().size());
+        statistics.setCounter(KEY_SYMS, alphabet.size());
 
         // ======================
         // Set up the pipeline:
@@ -102,14 +107,15 @@ public final class Example1 {
         var sul = new MMLTSimulatorSUL<>(mmlt);
 
         // We count all operations that are performed on the SUL with a stats-SUL:
-        var statsAfterCache = new CounterTimedSUL<>(sul);
+        var statsAfterCache = new CounterTimedSUL<>(sul, "post-cache");
 
         // We use a cache to avoid redundant operations:
         var cacheSUL = new TimedSULTreeCache<>(statsAfterCache, model.getParams());
         var toReducerSul = new TimeoutReducerSUL<>(cacheSUL, model.getParams().maxTimeoutWaitingTime());
+        var statsBeforeCache = new CounterTimedSUL<>(toReducerSul, "pre-cache");
 
         // We use a query oracle to answer queries from the learner:
-        var timeOracle = new TimedSULOracle<>(toReducerSul, model.getParams());
+        var timeOracle = new TimedSULOracle<>(statsBeforeCache, model.getParams());
 
         // In the basic set-up, we use a simulator oracle to answer equivalence queries.
         // This oracle has perfect knowledge of the reference automaton.
@@ -131,7 +137,7 @@ public final class Example1 {
                                                                       .create();
 
         // Start learning:
-        ExampleRunner.runExperiment(learner, eqOracle, mmlt.getSemantics().getInputAlphabet(), stats);
+        ExampleRunner.runExperiment(learner, eqOracle, mmlt.getSemantics().getInputAlphabet());
     }
 
 }

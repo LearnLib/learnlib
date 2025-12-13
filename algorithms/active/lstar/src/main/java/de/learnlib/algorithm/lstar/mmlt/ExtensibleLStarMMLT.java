@@ -42,7 +42,8 @@ import de.learnlib.oracle.TimedQueryOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.query.Query;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
+import de.learnlib.statistic.StatisticsKey;
+import de.learnlib.statistic.StatisticsService;
 import de.learnlib.time.MMLTModelParams;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import de.learnlib.util.mealy.MealyUtil;
@@ -75,8 +76,46 @@ public class ExtensibleLStarMMLT<I, O>
         implements OTLearner<MMLT<Integer, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExtensibleLStarMMLT.class);
-    private final StatisticsCollector stats;
+    private static final String STATISTICS_ID = "L*-MMLT";
 
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of refinements due to missing discriminators.
+     */
+    public static final StatisticsKey KEY_REF_DISCR =
+            new StatisticsKey("lrn-ref-discr", "Inaccuracies: missing discriminators", STATISTICS_ID);
+
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of refinements due to missing resets.
+     */
+    public static final StatisticsKey KEY_REF_RESET =
+            new StatisticsKey("lrn-ref-reset", "Inaccuracies: missing resets", STATISTICS_ID);
+
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of refinements due to missing one-shot timers.
+     */
+    public static final StatisticsKey KEY_REF_OS =
+            new StatisticsKey("lrn-ref-os", "Inaccuracies: missing one-shot timers", STATISTICS_ID);
+
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of refinements due to false ignores by the
+     * symbol filter.
+     */
+    public static final StatisticsKey KEY_REF_FI =
+            new StatisticsKey("lrn-ref-fi", "Inaccuracies: false ignores", STATISTICS_ID);
+
+    /**
+     * The {@link StatisticsKey} this class uses for counting the number of counterexample analysis runs.
+     */
+    public static final StatisticsKey KEY_CEX_NUM =
+            new StatisticsKey("lrn-cex-num", "Number of counterexample analyses", STATISTICS_ID);
+
+    /**
+     * The {@link StatisticsKey} this class uses for clocking the duration of the counterexample analysis runs.
+     */
+    public static final StatisticsKey KEY_CEX_DUR =
+            new StatisticsKey("lrn-cex-dur", "Duration of counterexample analyses", STATISTICS_ID);
+
+    private final StatisticsService statistics;
     private final ClosingStrategy<? super TimedInput<I>, ? super Word<TimedOutput<O>>> closingStrategy;
 
     private final TimedQueryOracle<I, O> timeOracle;
@@ -150,7 +189,7 @@ public class ExtensibleLStarMMLT<I, O>
         this.closingStrategy = closingStrategy;
         this.timeOracle = timeOracle;
         this.initialSuffixes = initialSuffixes;
-        this.stats = Statistics.getCollector();
+        this.statistics = Statistics.getService();
 
         // Prepare hyp data:
 
@@ -344,14 +383,14 @@ public class ExtensibleLStarMMLT<I, O>
         LOGGER.debug("Refining with inconsistency {}", outputIncons);
 
         // 3. Identify source of deviation:
-        stats.startOrResumeClock("clk_cex_analysis", "Total cex analysis time");
-        stats.increaseCounter("cnt_cex_analysis", "Cex analyses");
+        statistics.increaseCounter(KEY_CEX_NUM, this);
+        statistics.startOrResumeClock(KEY_CEX_DUR, this);
         CexAnalysisResult<I, O> analysisResult = this.cexAnalyzer.analyzeInconsistency(outputIncons, hypothesis);
-        stats.pauseClock("clk_cex_analysis");
+        statistics.pauseClock(KEY_CEX_DUR, this);
 
         // 4. Refine:
         if (analysisResult instanceof MissingDiscriminatorResult<I, O> locSplit) {
-            stats.increaseCounter("INACC_MISSING_DISC", "Inaccuracies: missing discriminators");
+            statistics.increaseCounter(KEY_REF_DISCR, this);
 
             // Add new discriminator as suffix:
             assert !hypData.getTable().getSuffixes().contains(locSplit.getDiscriminator());
@@ -361,13 +400,13 @@ public class ExtensibleLStarMMLT<I, O>
             // Close transitions:
             this.completeConsistentTable(unclosed); // no consistency check for RS
         } else if (analysisResult instanceof MissingResetResult<I, O> noReset) {
-            stats.increaseCounter("INACC_MISSING_RESETS", "Inaccuracies: missing resets");
+            statistics.increaseCounter(KEY_REF_RESET, this);
 
             // Add missing reset:
             Word<TimedInput<I>> resetTrans = hypothesis.getPrefix(noReset.getLocation()).append(noReset.getInput());
             this.hypData.getTransitionResetSet().add(resetTrans);
         } else if (analysisResult instanceof MissingOneShotResult<I, O> noAperiodic) {
-            stats.increaseCounter("INACC_MISSING_OS", "Inaccuracies: missing one-shot timers");
+            statistics.increaseCounter(KEY_REF_OS, this);
 
             // Identify corresponding sp row:
             Word<TimedInput<I>> locPrefix = hypothesis.getPrefix(noAperiodic.getLocation());
@@ -377,7 +416,7 @@ public class ExtensibleLStarMMLT<I, O>
 
             this.handleMissingTimeoutChange(spRow, noAperiodic.getTimeout());
         } else if (analysisResult instanceof FalseIgnoreResult<I, O> falseIgnore) {
-            stats.increaseCounter("INACC_MISSING_FI", "Inaccuracies: false ignores");
+            statistics.increaseCounter(KEY_REF_FI, this);
 
             // Identify corresponding sp row:
             Word<TimedInput<I>> locPrefix = hypothesis.getPrefix(falseIgnore.getLocation());
@@ -391,7 +430,6 @@ public class ExtensibleLStarMMLT<I, O>
             // Legalize symbol + close table:
             List<List<Row<TimedInput<I>>>> unclosed =
                     hypData.getTable().addOutgoingTransition(spRow, falseIgnore.getSymbol(), this.timeOracle);
-            stats.increaseCounter("Count_legalized", "Legalized symbols");
 
             this.completeConsistentTable(unclosed);
         } else {

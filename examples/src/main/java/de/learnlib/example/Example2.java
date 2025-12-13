@@ -122,7 +122,7 @@ public final class Example2 {
         System.out.println("-------------------------------------------------------");
 
         // learning statistics
-        System.out.println(Statistics.getCollector().printStats());
+        System.out.println(Statistics.getService().print());
 
         // model statistics
         System.out.println("States: " + result.size());

@@ -86,7 +86,7 @@ public class MMLTCacheTest
 
     @Override
     protected long getNumberOfPosedQueries() {
-        return Statistics.getCollector().getCount(CounterTimedSUL.KEY_RESETS).orElse(0L);
+        return Statistics.getService().getCount(CounterTimedSUL.KEY_QUERY).orElse(0L);
     }
 
     @Override

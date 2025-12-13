@@ -15,41 +15,31 @@
  */
 package de.learnlib.filter.statistic.container;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 /**
  * A counter that can be increased and set to a particular positive number.
  */
-class CounterStatistic extends AbstractStatistic {
+class CounterContainer implements StatisticContainer {
 
     private long count;
 
-    CounterStatistic(String id, @Nullable String description) {
-        this(id, description, 0);
+    CounterContainer() {
+        this.count = 0;
     }
 
-    CounterStatistic(String id, @Nullable String description, long count) {
-        super(id, description);
+    void setCount(long count) {
         this.count = count;
     }
 
-    public void setCount(long count) {
-        if (count < 0) {
-            throw new IllegalArgumentException();
-        }
-        this.count = count;
-    }
-
-    public void increase(long increment) {
+    void increase(long increment) {
         this.count += increment;
     }
 
-    public long getCount() {
+    long getCount() {
         return count;
     }
 
     @Override
-    public String renderValue() {
+    public String toString() {
         return Long.toString(count);
     }
 }

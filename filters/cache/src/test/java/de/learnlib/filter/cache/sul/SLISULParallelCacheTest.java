@@ -19,7 +19,6 @@ import de.learnlib.filter.cache.AbstractParallelCacheTest;
 import de.learnlib.filter.cache.CacheConfig;
 import de.learnlib.filter.cache.CacheCreator.SLISULCacheCreator;
 import de.learnlib.filter.cache.CacheTestUtils;
-import de.learnlib.filter.statistic.sul.CounterSUL;
 import de.learnlib.filter.statistic.sul.CounterStateLocalInputSUL;
 import de.learnlib.oracle.ParallelOracle;
 import de.learnlib.statistic.Statistics;
@@ -74,6 +73,6 @@ public class SLISULParallelCacheTest
 
     @Override
     protected long getNumberOfQueries() {
-        return Statistics.getCollector().getCount(CounterSUL.RESET_KEY).orElse(0L);
+        return Statistics.getService().getCount(CounterStateLocalInputSUL.KEY_QUERY).orElse(0L);
     }
 }

@@ -22,8 +22,8 @@ import de.learnlib.query.Query;
 import de.learnlib.sul.SUL;
 import net.automatalib.word.Word;
 
-public abstract class AbstractResetCounterSULTest<S extends SUL<Integer, Character>>
-        extends AbstractCounterSULTest<S> {
+public abstract class AbstractResetCounterSULTest<S extends SUL<I, O>, I, O>
+        extends AbstractCounterSULTest<S, I, O> {
 
     @Override
     protected int getCountIncreasePerQuery() {
@@ -31,7 +31,7 @@ public abstract class AbstractResetCounterSULTest<S extends SUL<Integer, Charact
     }
 
     @Override
-    protected Collection<Query<Integer, Word<Character>>> createQueries(int num) {
+    protected Collection<Query<I, Word<O>>> createQueries(int num) {
         return TestQueries.createNoopQueries(num);
     }
 }

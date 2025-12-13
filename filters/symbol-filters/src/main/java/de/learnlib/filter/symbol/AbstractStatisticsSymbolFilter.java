@@ -19,7 +19,8 @@ import de.learnlib.filter.FilterResponse;
 import de.learnlib.filter.RefutableSymbolFilter;
 import de.learnlib.filter.SymbolFilter;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.statistic.StatisticsCollector;
+import de.learnlib.statistic.StatisticsKey;
+import de.learnlib.statistic.StatisticsService;
 import net.automatalib.word.Word;
 
 /**
@@ -33,39 +34,42 @@ import net.automatalib.word.Word;
 public abstract class AbstractStatisticsSymbolFilter<U, V> extends AbstractTruthfulSymbolFilter<U, V>
         implements RefutableSymbolFilter<U, V> {
 
-    public static final String KEY_QUERIES = "sf-qry-cnt";
-    public static final String KEY_TRUE_POSITIVES = "sf-tp-cnt";
-    public static final String KEY_FALSE_POSITIVES = "sf-fp-cnt";
-    public static final String KEY_TRUE_NEGATIVES = "sf-tn-cnt";
-    public static final String KEY_FALSE_NEGATIVES = "sf-fn-cnt";
+    /**
+     * A {@link StatisticsKey} for counting the number of queries that this filter has processed.
+     */
+    public static final StatisticsKey KEY_QUERIES = new StatisticsKey("sf-qry-cnt", "Filter: number of queries");
+
+    /**
+     * A {@link StatisticsKey} for counting the number of correctly ignored transitions (true negatives).
+     */
+    public static final StatisticsKey KEY_TRUE_NEGATIVES = new StatisticsKey("sf-tn-cnt", "Filter: correct ignores");
+
+    /**
+     * A {@link StatisticsKey} for counting the number of falsely ignored transitions (false negatives).
+     */
+    public static final StatisticsKey KEY_FALSE_NEGATIVES = new StatisticsKey("sf-fn-cnt", "Filter: false ignores");
 
     private final SymbolFilter<U, V> delegate;
-    private final StatisticsCollector statisticsCollector;
+    private final StatisticsService statistics;
 
     public AbstractStatisticsSymbolFilter(SymbolFilter<U, V> delegate) {
         this.delegate = delegate;
-        this.statisticsCollector = Statistics.getCollector();
+        this.statistics = Statistics.getService();
     }
 
     @Override
     public FilterResponse query(Word<U> prefix, V symbol) {
-        statisticsCollector.increaseCounter(KEY_QUERIES, "Filter: queries");
+        statistics.increaseCounter(KEY_QUERIES, this);
 
         FilterResponse filterResponse = this.delegate.query(prefix, symbol);
         FilterResponse expectedResponse = this.isIgnorable(prefix, symbol);
 
         // Count false ignores, rejects + correct predictions:
-        if (filterResponse == FilterResponse.ACCEPT) {
-            if (filterResponse.equals(expectedResponse)) {
-                statisticsCollector.increaseCounter(KEY_TRUE_POSITIVES, "Filter: correct accepts");
-            } else {
-                statisticsCollector.increaseCounter(KEY_FALSE_POSITIVES, "Filter: false accepts");
-            }
-        } else {
+        if (filterResponse == FilterResponse.IGNORE) {
             if (filterResponse == expectedResponse) {
-                statisticsCollector.increaseCounter(KEY_TRUE_NEGATIVES, "Filter: correct ignores");
+                statistics.increaseCounter(KEY_TRUE_NEGATIVES, this);
             } else {
-                statisticsCollector.increaseCounter(KEY_FALSE_NEGATIVES, "Filter: false ignores");
+                statistics.increaseCounter(KEY_FALSE_NEGATIVES, this);
             }
         }
 

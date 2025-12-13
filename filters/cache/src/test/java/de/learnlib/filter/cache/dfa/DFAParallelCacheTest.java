@@ -75,6 +75,6 @@ public class DFAParallelCacheTest extends AbstractParallelCacheTest<DFA<?, Chara
 
     @Override
     protected long getNumberOfQueries() {
-        return Statistics.getCollector().getCount(DFACounterOracle.QUERY_KEY).orElse(0L);
+        return Statistics.getService().getCount(DFACounterOracle.KEY_QUERY).orElse(0L);
     }
 }
