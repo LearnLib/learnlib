@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.counterexample.LocalSuffixFinders;
@@ -214,8 +213,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
     }
 
     private void followNode(FringeRow<S, I, O> f, Node<S, I, O> n) {
-        if (n instanceof Leaf) { // TODO simplify when switching to newer java
-            final Leaf<S, I, O> l = (Leaf<S, I, O>) n;
+        if (n instanceof Leaf<S, I, O> l) {
             assert l.isUnsplit();
             f.leaf = l;
             return;
@@ -251,8 +249,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
 
     private Word<O> query(Row<S, I, O> r, Word<I> suf) {
         final Word<O> out = oracle.answerQuery(r.prefix.concat(suf));
-        if (r instanceof FringeRow) { // TODO simplify when switching to newer java
-            final FringeRow<S, I, O> f = (FringeRow<S, I, O>) r;
+        if (r instanceof FringeRow<S, I, O> f) {
             f.transOut = out.prefix(f.prefix.length()).lastSymbol();
         }
 
@@ -303,9 +300,8 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
      * and returns a list containing the observations for all suffixes.
      */
     private List<Integer> completeRowObservations(FringeRow<S, I, O> f, List<Integer> cellIds) {
-        // TODO simplify collector calls when switching to newer java
-        final List<Word<I>> sufsPresent = cellIds.stream().map(c -> this.cells.get(c).getFirst()).collect(Collectors.toList());
-        final List<Word<I>> sufsMissing = sufs.stream().filter(s -> !sufsPresent.contains(s)).collect(Collectors.toList());
+        final List<Word<I>> sufsPresent = cellIds.stream().map(c -> this.cells.get(c).getFirst()).toList();
+        final List<Word<I>> sufsMissing = sufs.stream().filter(s -> !sufsPresent.contains(s)).toList();
         final List<Integer> cellIdsFull = new ArrayList<>(cellIds); // important: copy elements!
         sufsMissing.forEach(s -> cellIdsFull.add(getUniqueCellIdx(s, query(f, s))));
         return cellIdsFull;
