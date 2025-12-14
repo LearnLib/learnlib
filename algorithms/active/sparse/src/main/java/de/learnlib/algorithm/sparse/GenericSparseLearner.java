@@ -111,7 +111,9 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
         cellToIdx = new HashMap<>();
         hyp = emptyMachine;
         stateToPrefix = new HashMap<>();
-        accSeq = p -> stateToPrefix.get(hyp.getState(p));
+        @SuppressWarnings("return") // our hypothesis is total and we directly store the access sequences
+        final Function<Word<I>, Word<I>> asTransformer = p -> stateToPrefix.get(hyp.getState(p));
+        accSeq = asTransformer;
         sufToVecs = new HashMap<>();
         sufToOutToIdx = new HashMap<>();
     }
@@ -166,17 +168,19 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
     }
 
     private void classifyFringePrefix(FringeRow<S, I, O> f) {
-        f.leaf.update(cRows);
-        if (f.leaf.isUnsplit()) {
+        final Leaf<S, I, O> leaf = f.leaf;
+        assert leaf != null;
+        leaf.update(cRows);
+        if (leaf.isUnsplit()) {
             return;
         }
 
-        final Separator<S, I, O> sep = f.leaf.sep;
+        final Separator<S, I, O> sep = leaf.sep;
         if (sep != null) {
             followNode(f, sep);
         } else {
-            f.leaf.sep = new Separator<>(pickSuffix(f.leaf.remRows), f.leaf.remRows, f.leaf.cellIds);
-            followNode(f, f.leaf.sep);
+            leaf.sep = new Separator<>(pickSuffix(leaf.remRows), leaf.remRows, leaf.cellIds);
+            followNode(f, leaf.sep);
         }
     }
 
@@ -188,7 +192,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
         for (Word<I> s : sufs) {
             int maxOccur = 0;
             int sumOccur = 0; // checksum
-            for (BitSet rows : sufToVecs.get(s)) {
+            for (BitSet rows : sufToVecs.getOrDefault(s, Collections.emptyList())) {
                 vec.or(remRows);
                 vec.and(rows);
                 final int occur = vec.cardinality();
@@ -323,9 +327,12 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
         final Word<I> u = accSeq.apply(cex.prefix(idxSym));
         final Word<I> ui = u.append(cex.getSymbol(idxSym));
         final FringeRow<S, I, O> f = prefToFringe.get(ui);
-        final int cRowIdx = moveToCore(f, f.leaf.cellIds);
-        assert f.leaf.cRow != null;
-        if (f.leaf.cRow.cellIds.containsAll(cRows.get(cRowIdx).cellIds)) {
+        assert f != null;
+        final Leaf<S, I, O> leaf = f.leaf;
+        assert leaf != null;
+        final int cRowIdx = moveToCore(f, leaf.cellIds);
+        assert leaf.cRow != null;
+        if (leaf.cRow.cellIds.containsAll(cRows.get(cRowIdx).cellIds)) {
             // only add new suffix if the row is not yet distinguished
             addSuffixToTable(cex.subWord(idxSuf));
         }

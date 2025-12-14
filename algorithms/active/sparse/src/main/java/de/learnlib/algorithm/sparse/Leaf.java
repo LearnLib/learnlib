@@ -32,14 +32,12 @@ class Leaf<S, I, O> extends Node<S, I, O> {
     /**
      * Core row associated with this leaf (null if split, see {@link Leaf}).
      */
-    @Nullable
-    CoreRow<S, I, O> cRow;
+    @Nullable CoreRow<S, I, O> cRow;
 
     /**
      * Separator cached by this leaf (see {@link Leaf}).
      */
-    @Nullable
-    Separator<S, I, O> sep;
+    @Nullable Separator<S, I, O> sep;
 
     private int lastNumCRows;
     private int lastNumSufs;

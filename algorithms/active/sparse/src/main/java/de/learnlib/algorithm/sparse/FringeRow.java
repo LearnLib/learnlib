@@ -16,6 +16,7 @@
 package de.learnlib.algorithm.sparse;
 
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Each fringe row represents some hypothesis transition outside the spanning tree defined by the core prefixes.
@@ -48,7 +49,7 @@ class FringeRow<S, I, O> extends Row<S, I, O> {
      * For compression, fringe rows do not store observations directly. Instead, they point to some leaf in a tree
      * encoding their classification history. This trick avoids redundantly storing identical observations.
      */
-    Leaf<S, I, O> leaf;
+    @Nullable Leaf<S, I, O> leaf;
 
     FringeRow(Word<I> prefix, S srcState, Leaf<S, I, O> leaf) {
         super(prefix);
