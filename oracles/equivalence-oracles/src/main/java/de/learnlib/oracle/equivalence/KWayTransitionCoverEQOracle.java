@@ -79,7 +79,8 @@ public class KWayTransitionCoverEQOracle<A extends DeterministicAutomaton<?, I, 
      * @param maxPathLen
      *         the maximum step size of {@link GenerationMethod#RANDOM randomly}-generated queries
      * @param maxNumberOfSteps
-     *         threshold for the number of steps after which no more new test words will be generated (<=0 = no limit)
+     *         threshold for the number of steps after which no more new test words will be generated (a value less than
+     *         zero means no limit)
      * @param k
      *         k value used for K-Way transitions, i.e the number of steps between the start and the end of a
      *         transition
