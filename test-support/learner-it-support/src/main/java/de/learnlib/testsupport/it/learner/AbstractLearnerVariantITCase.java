@@ -82,7 +82,7 @@ abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteRepresentation
                 Assert.fail("Learning took too many rounds (> " + maxRounds + ")");
             }
 
-            // this currently assumes as white-box equivalence oracle which does not pose any queries
+            // this currently assumes a white-box equivalence oracle which does not pose any queries
             // for situations where this is not the case, the EQ may be given a non-lockable MQ
             lockableOracle.unlock();
             boolean refined = learner.refineHypothesis(ceQuery);
