@@ -41,7 +41,7 @@ class HypothesisMealy<I, O> implements MealyMachine<DTLeaf<I, Word<O>>, I, Mealy
 
     @Override
     public O getTransitionOutput(MealyTransition<I, O> o) {
-        return dtree.getOutput(o.source, o.input).lastSymbol();
+        return dtree.getOutput(o.source, o.input);
     }
 
     @Override

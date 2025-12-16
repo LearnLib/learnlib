@@ -24,6 +24,7 @@ import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class TTTLambdaDFA<I> extends AbstractTTTLambda<DFA<?, I>, I, Boolean> implements DFALearner<I> {
 
@@ -48,7 +49,7 @@ public class TTTLambdaDFA<I> extends AbstractTTTLambda<DFA<?, I>, I, Boolean> im
     }
 
     @Override
-    protected DTLeaf<I, Boolean> getState(Word<I> prefix) {
+    protected @Nullable DTLeaf<I, Boolean> getState(Word<I> prefix) {
         return hypothesis.getState(prefix);
     }
 

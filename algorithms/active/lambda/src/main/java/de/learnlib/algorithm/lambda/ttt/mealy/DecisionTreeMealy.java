@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.learnlib.algorithm.lambda.ttt.dt.AbstractDecisionTree;
 import de.learnlib.algorithm.lambda.ttt.dt.Children;
@@ -31,7 +32,7 @@ import net.automatalib.word.Word;
 
 class DecisionTreeMealy<I, O> extends AbstractDecisionTree<I, Word<O>> {
 
-    private final Map<Word<I>, Word<O>> outputs;
+    private final Map<Word<I>, O> outputs;
 
     DecisionTreeMealy(MembershipOracle<I, Word<O>> mqOracle, Alphabet<I> sigma, STNode<I> stRoot) {
         super(sigma, mqOracle, stRoot);
@@ -45,11 +46,11 @@ class DecisionTreeMealy<I, O> extends AbstractDecisionTree<I, Word<O>> {
 
     @Override
     protected Word<O> query(PTNode<I, Word<O>> prefix, STNode<I> suffix) {
-        return mqOracle.answerQuery(prefix.word(), suffix.word()).suffix(suffix.word().length());
+        return mqOracle.answerQuery(prefix.word(), suffix.word());
     }
 
-    Word<O> getOutput(DTLeaf<I, Word<O>> leaf, I a) {
-        return lookupOrQuery(leaf.getShortPrefixes().get(0).word(), Word.fromLetter(a));
+    O getOutput(DTLeaf<I, Word<O>> leaf, I a) {
+        return lookupOrQuery(leaf.getShortPrefixes().get(0).word(), a);
     }
 
     @Override
@@ -59,13 +60,13 @@ class DecisionTreeMealy<I, O> extends AbstractDecisionTree<I, Word<O>> {
                 continue;
             }
             for (I a : alphabet) {
-                Word<O> refOut = null;
+                O refOut = null;
                 List<PTNode<I, Word<O>>> sp = new LinkedList<>(n.getShortPrefixes());
                 for (PTNode<I, Word<O>> u : sp) {
-                    Word<O> out = lookupOrQuery(u.word(), Word.fromLetter(a));
+                    O out = lookupOrQuery(u.word(), a);
                     if (refOut == null) {
                         refOut = out;
-                    } else if (!refOut.equals(out)) {
+                    } else if (!Objects.equals(refOut, out)) {
                         n.split(sp.get(0), u, a);
                         return true;
                     }
@@ -75,11 +76,11 @@ class DecisionTreeMealy<I, O> extends AbstractDecisionTree<I, Word<O>> {
         return super.makeConsistent();
     }
 
-    private Word<O> lookupOrQuery(Word<I> prefix, Word<I> suffix) {
-        Word<I> lookup = prefix.concat(suffix);
-        Word<O> out = this.outputs.get(lookup);
+    private O lookupOrQuery(Word<I> prefix, I step) {
+        Word<I> lookup = prefix.append(step);
+        O out = this.outputs.get(lookup);
         if (out == null) {
-            out = mqOracle.answerQuery(prefix, suffix).suffix(1);
+            out = mqOracle.answerQuery(prefix, Word.fromLetter(step)).lastSymbol();
             this.outputs.put(lookup, out);
         }
         return out;
