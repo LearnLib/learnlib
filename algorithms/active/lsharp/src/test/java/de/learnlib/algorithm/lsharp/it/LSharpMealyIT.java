@@ -23,8 +23,8 @@ import de.learnlib.algorithm.lsharp.Rule2;
 import de.learnlib.algorithm.lsharp.Rule3;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.MQ2AQWrapper;
-import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
+import de.learnlib.testsupport.it.AbstractMealyLearnerIT;
+import de.learnlib.testsupport.it.variant.LearnerVariantList.MealyLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;
 import org.testng.annotations.Test;
 

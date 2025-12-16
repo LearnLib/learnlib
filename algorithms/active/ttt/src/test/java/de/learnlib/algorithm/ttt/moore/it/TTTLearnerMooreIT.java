@@ -19,8 +19,8 @@ import de.learnlib.acex.AbstractNamedAcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.ttt.moore.TTTLearnerMooreBuilder;
 import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractMooreLearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreLearnerVariantList;
+import de.learnlib.testsupport.it.AbstractMooreLearnerIT;
+import de.learnlib.testsupport.it.variant.LearnerVariantList.MooreLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;
 import org.testng.annotations.Test;
 

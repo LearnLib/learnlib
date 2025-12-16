@@ -41,7 +41,12 @@ open module de.learnlib.testsupport.it {
     requires org.slf4j;
     requires org.testng;
 
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
+    requires static de.learnlib.tooling.annotation;
 
-    exports de.learnlib.testsupport.it.learner;
+    exports de.learnlib.testsupport.it;
+    exports de.learnlib.testsupport.it.testcase;
+    exports de.learnlib.testsupport.it.util;
+    exports de.learnlib.testsupport.it.variant;
 }

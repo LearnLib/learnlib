@@ -267,7 +267,6 @@ public class ExtensibleLStarMMLT<I, O>
      * @return the internal hypothesis
      */
     private MMLTHypothesis<I, O> getInternalHypothesisModel() {
-        this.updateOutputs();
         return constructHypothesis(this.hypData);
     }
 
@@ -325,6 +324,8 @@ public class ExtensibleLStarMMLT<I, O>
 
         // Ensure that closed:
         this.completeConsistentTable(initialUnclosed);
+        // Ensure that all outputs are fetched
+        this.updateOutputs();
     }
 
     @Override
@@ -371,7 +372,7 @@ public class ExtensibleLStarMMLT<I, O>
     }
 
     private boolean refineHypothesisSingle(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> ceQuery) {
-        // 1. Update hypothesis (may have changed since last refinement):
+        // 1. Current hypothesis:
         MMLTHypothesis<I, O> hypothesis = this.getInternalHypothesisModel();
 
         // 2. Transform to output inconsistency:
@@ -435,6 +436,9 @@ public class ExtensibleLStarMMLT<I, O>
         } else {
             throw new IllegalStateException("Unknown inconsistency type.");
         }
+
+        // Ensure that all outputs are fetched
+        this.updateOutputs();
 
         return true;
     }

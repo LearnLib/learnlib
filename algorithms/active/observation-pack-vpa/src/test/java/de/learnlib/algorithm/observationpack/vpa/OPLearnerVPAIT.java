@@ -18,8 +18,8 @@ package de.learnlib.algorithm.observationpack.vpa;
 import de.learnlib.acex.AbstractNamedAcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractOneSEVPALearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.OneSEVPALearnerVariantList;
+import de.learnlib.testsupport.it.AbstractOneSEVPALearnerIT;
+import de.learnlib.testsupport.it.variant.LearnerVariantList.OneSEVPALearnerVariantList;
 import net.automatalib.alphabet.VPAlphabet;
 import org.testng.annotations.Test;
 

@@ -21,8 +21,8 @@ import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
 import de.learnlib.algorithm.lstar.moore.ClassicLStarMooreBuilder;
 import de.learnlib.oracle.MembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractMooreSymLearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreSymLearnerVariantList;
+import de.learnlib.testsupport.it.AbstractMooreSymLearnerIT;
+import de.learnlib.testsupport.it.variant.LearnerVariantList.MooreSymLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;
 
 public class ClassicLStarMooreIT extends AbstractMooreSymLearnerIT {

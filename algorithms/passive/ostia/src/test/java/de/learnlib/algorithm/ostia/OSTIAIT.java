@@ -15,8 +15,8 @@
  */
 package de.learnlib.algorithm.ostia;
 
-import de.learnlib.testsupport.it.learner.AbstractSSTPassiveLearnerIT;
-import de.learnlib.testsupport.it.learner.PassiveLearnerVariantList;
+import de.learnlib.testsupport.it.AbstractSSTPassiveLearnerIT;
+import de.learnlib.testsupport.it.variant.PassiveLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.SubsequentialTransducer;
 import net.automatalib.word.Word;

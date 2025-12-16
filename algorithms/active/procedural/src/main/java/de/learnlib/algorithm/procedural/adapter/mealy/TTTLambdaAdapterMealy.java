@@ -18,6 +18,7 @@ package de.learnlib.algorithm.procedural.adapter.mealy;
 import java.util.List;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.algorithm.lambda.ttt.dt.DTLeaf;
 import de.learnlib.algorithm.lambda.ttt.mealy.TTTLambdaMealy;
 import de.learnlib.algorithm.lambda.ttt.pt.PTNode;
 import de.learnlib.oracle.MembershipOracle;
@@ -40,8 +41,10 @@ public class TTTLambdaAdapterMealy<I, O> extends TTTLambdaMealy<I, O> implements
 
     @Override
     public Word<I> transformAccessSequence(Word<I> word) {
-        final List<PTNode<I, Word<O>>> shortPrefixes = super.getState(word).getShortPrefixes();
+        DTLeaf<I, Word<O>> state = super.getState(word);
+        assert state != null;
 
+        final List<PTNode<I, Word<O>>> shortPrefixes = state.getShortPrefixes();
         assert shortPrefixes.size() == 1;
 
         return shortPrefixes.get(0).word();
