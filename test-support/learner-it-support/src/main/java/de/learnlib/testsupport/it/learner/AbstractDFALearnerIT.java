@@ -55,14 +55,34 @@ public abstract class AbstractDFALearnerIT {
 
         final Alphabet<I> alphabet = example.getAlphabet();
         final DFAMembershipOracle<I> simOracle = new DFASimulatorOracle<>(example.getReferenceAutomaton());
-        final DFALockableOracle<I> mqOracle = new DFALockableOracle<>(simOracle);
+        final DFALockableOracle<I> lockOracle = new DFALockableOracle<>(simOracle);
+        final DFAMembershipOracle<I> mqOracle;
+
+        if (requiresQueriesDuringHypothesisTraversal()) {
+            mqOracle = simOracle;
+        } else {
+            mqOracle = lockOracle;
+        }
+
         final DFALearnerVariantListImpl<I> variants = new DFALearnerVariantListImpl<>();
         addLearnerVariants(alphabet, example.getReferenceAutomaton().size(), mqOracle, variants);
 
         return LearnerITUtil.createExampleITCases(example,
                                                   variants,
-                                                  mqOracle,
+                                                  lockOracle,
                                                   new SimulatorEQOracle<>(example.getReferenceAutomaton()));
+    }
+
+    /**
+     * Returns whether the hypotheses require access to the membership oracle during traversal. This typically should
+     * not be the case as it disables the check for stable hypothesis constructions but certain approaches (e.g.,
+     * automated alphabet abstraction refinement) require this by design.
+     *
+     * @return {@code true} if the hypotheses require access to the membership oracle during traversal, {@code false}
+     * otherwise
+     */
+    protected boolean requiresQueriesDuringHypothesisTraversal() {
+        return false;
     }
 
     /**

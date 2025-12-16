@@ -57,12 +57,32 @@ public abstract class AbstractMooreLearnerIT {
         final Alphabet<I> alphabet = example.getAlphabet();
         final MooreMachine<?, I, ?, O> reference = example.getReferenceAutomaton();
         final MooreMembershipOracle<I, O> simOracle = new MooreSimulatorOracle<>(reference);
-        final MooreLockableOracle<I, O> mqOracle = new MooreLockableOracle<>(simOracle);
+        final MooreLockableOracle<I, O> lockOracle = new MooreLockableOracle<>(simOracle);
+        final MooreMembershipOracle<I, O> mqOracle;
+
+        if (requiresQueriesDuringHypothesisTraversal()) {
+            mqOracle = simOracle;
+        } else {
+            mqOracle = lockOracle;
+        }
+
         final MooreEquivalenceOracle<I, O> eqOracle = new MooreSimulatorEQOracle<>(reference);
         final MooreLearnerVariantListImpl<I, O> variants = new MooreLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, reference.size(), mqOracle, variants);
 
-        return LearnerITUtil.createExampleITCases(example, variants, mqOracle, eqOracle);
+        return LearnerITUtil.createExampleITCases(example, variants, lockOracle, eqOracle);
+    }
+
+    /**
+     * Returns whether the hypotheses require access to the membership oracle during traversal. This typically should
+     * not be the case as it disables the check for stable hypothesis constructions but certain approaches (e.g.,
+     * automated alphabet abstraction refinement) require this by design.
+     *
+     * @return {@code true} if the hypotheses require access to the membership oracle during traversal, {@code false}
+     * otherwise
+     */
+    protected boolean requiresQueriesDuringHypothesisTraversal() {
+        return false;
     }
 
     /**

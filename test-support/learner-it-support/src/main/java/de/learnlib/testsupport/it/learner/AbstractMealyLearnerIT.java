@@ -68,13 +68,21 @@ public abstract class AbstractMealyLearnerIT {
         final Alphabet<I> alphabet = example.getAlphabet();
         final MealyMachine<?, I, ?, O> reference = example.getReferenceAutomaton();
         final MealyMembershipOracle<I, O> simOracle = new MealySimulatorOracle<>(reference);
-        final MealyLockableOracle<I, O> mqOracle = new MealyLockableOracle<>(simOracle);
+        final MealyLockableOracle<I, O> lockOracle = new MealyLockableOracle<>(simOracle);
+        final MealyMembershipOracle<I, O> mqOracle;
+
+        if (requiresQueriesDuringHypothesisTraversal()) {
+            mqOracle = simOracle;
+        } else {
+            mqOracle = lockOracle;
+        }
+
         final MealyLearnerVariantListImpl<I, O> variants = new MealyLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, reference.size(), mqOracle, variants);
 
         return LearnerITUtil.createExampleITCases(example,
                                                   variants,
-                                                  mqOracle,
+                                                  lockOracle,
                                                   new MealySimulatorEQOracle<>(example.getReferenceAutomaton()));
     }
 
@@ -91,14 +99,34 @@ public abstract class AbstractMealyLearnerIT {
 
         final MealyMembershipOracle<I, O> simOracle =
                 new StateLocalInputSULOracle<>(new StateLocalInputMealySimulatorSUL<>(partialRef), undefinedOutput);
-        final MealyLockableOracle<I, O> mqOracle = new MealyLockableOracle<>(simOracle);
+        final MealyLockableOracle<I, O> lockOracle = new MealyLockableOracle<>(simOracle);
+        final MealyMembershipOracle<I, O> mqOracle;
+
+        if (requiresQueriesDuringHypothesisTraversal()) {
+            mqOracle = simOracle;
+        } else {
+            mqOracle = lockOracle;
+        }
+
         final MealyLearnerVariantListImpl<I, O> variants = new MealyLearnerVariantListImpl<>();
         addLearnerVariants(alphabet, reference.size(), mqOracle, variants);
 
         final MealyEquivalenceOracle<I, O> eqOracle =
                 new StateLocalInputMealySimulatorEQOracle<>(partialRef, alphabet, undefinedOutput);
 
-        return LearnerITUtil.createExampleITCases(example, variants, mqOracle, eqOracle);
+        return LearnerITUtil.createExampleITCases(example, variants, lockOracle, eqOracle);
+    }
+
+    /**
+     * Returns whether the hypotheses require access to the membership oracle during traversal. This typically should
+     * not be the case as it disables the check for stable hypothesis constructions but certain approaches (e.g.,
+     * automated alphabet abstraction refinement) require this by design.
+     *
+     * @return {@code true} if the hypotheses require access to the membership oracle during traversal, {@code false}
+     * otherwise
+     */
+    protected boolean requiresQueriesDuringHypothesisTraversal() {
+        return false;
     }
 
     /**

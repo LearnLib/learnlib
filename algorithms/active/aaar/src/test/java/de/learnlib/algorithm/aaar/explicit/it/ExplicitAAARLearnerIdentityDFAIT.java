@@ -31,6 +31,11 @@ import net.automatalib.common.util.Pair;
 public class ExplicitAAARLearnerIdentityDFAIT extends AbstractDFALearnerIT {
 
     @Override
+    protected boolean requiresQueriesDuringHypothesisTraversal() {
+        return true;
+    }
+
+    @Override
     protected <I> void addLearnerVariants(Alphabet<I> alphabet,
                                           int targetSize,
                                           DFAMembershipOracle<I> mqo,

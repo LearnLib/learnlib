@@ -32,6 +32,11 @@ import net.automatalib.word.Word;
 public class ExplicitAAARLearnerModuloMooreIT extends AbstractMooreLearnerIT {
 
     @Override
+    protected boolean requiresQueriesDuringHypothesisTraversal() {
+        return true;
+    }
+
+    @Override
     protected <I, O> void addLearnerVariants(Alphabet<I> alphabet,
                                              int targetSize,
                                              MooreMembershipOracle<I, O> mqo,

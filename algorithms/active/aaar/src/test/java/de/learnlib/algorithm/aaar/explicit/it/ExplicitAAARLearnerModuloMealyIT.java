@@ -32,6 +32,11 @@ import net.automatalib.word.Word;
 public class ExplicitAAARLearnerModuloMealyIT extends AbstractMealyLearnerIT {
 
     @Override
+    protected boolean requiresQueriesDuringHypothesisTraversal() {
+        return true;
+    }
+
+    @Override
     protected <I, O> void addLearnerVariants(Alphabet<I> alphabet,
                                              int targetSize,
                                              MealyMembershipOracle<I, O> mqo,
