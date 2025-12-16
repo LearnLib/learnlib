@@ -39,7 +39,7 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
         implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, FiniteRepresentation {
 
     private final MembershipOracle<I, D> ceqs;
-    private final Alphabet<I> alphabet;
+    protected final Alphabet<I> alphabet;
     protected final SuffixTrie<I> strie;
     protected final PrefixTree<I, D> ptree;
 
@@ -115,7 +115,7 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
         }
     }
 
-    private void makeConsistent() {
+    protected void makeConsistent() {
         while (dtree().makeConsistent()) {
             // do nothing ...
         }

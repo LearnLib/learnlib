@@ -20,6 +20,7 @@ import java.util.Collection;
 import de.learnlib.algorithm.lambda.ttt.dt.DTLeaf;
 import de.learnlib.algorithm.lambda.ttt.pt.PTNode;
 import de.learnlib.algorithm.lambda.ttt.pt.PrefixTree;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
@@ -62,5 +63,20 @@ class HypothesisMealy<I, O> implements MealyMachine<DTLeaf<I, Word<O>>, I, Mealy
     @Override
     public DTLeaf<I, Word<O>> getInitialState() {
         return ptree.root().state();
+    }
+
+    /**
+     * Makes sure that all transition outputs have been fetched, so that no more queries are being posed (e.g., after
+     * refinement) when the hypothesis is traversed.
+     *
+     * @param alphabet
+     *         the alphabet symbols for which outputs should be fetched
+     */
+    void fetchAllPendingOutputs(Alphabet<I> alphabet) {
+        for (DTLeaf<I, Word<O>> s : dtree.leaves()) {
+            for (I i : alphabet) {
+                dtree.getOutput(s, i);
+            }
+        }
     }
 }

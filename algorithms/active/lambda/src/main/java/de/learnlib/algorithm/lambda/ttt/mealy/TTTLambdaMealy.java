@@ -70,4 +70,10 @@ public class TTTLambdaMealy<I, O> extends AbstractTTTLambda<MealyMachine<?, I, ?
     public int size() {
         return hypothesis.size();
     }
+
+    @Override
+    protected void makeConsistent() {
+        super.makeConsistent();
+        hypothesis.fetchAllPendingOutputs(super.alphabet);
+    }
 }
