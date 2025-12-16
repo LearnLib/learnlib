@@ -38,8 +38,8 @@ import de.learnlib.algorithm.procedural.sba.manager.DefaultATManager;
 import de.learnlib.algorithm.procedural.sba.manager.OptimizingATManager;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractSBALearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.SBALearnerVariantList;
+import de.learnlib.testsupport.it.AbstractSBALearnerIT;
+import de.learnlib.testsupport.it.variant.LearnerVariantList.SBALearnerVariantList;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 

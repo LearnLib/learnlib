@@ -23,8 +23,8 @@ import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
 import de.learnlib.algorithm.lstar.moore.ExtensibleLStarMooreBuilder;
 import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractMooreLearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.MooreLearnerVariantList;
+import de.learnlib.testsupport.it.AbstractMooreLearnerIT;
+import de.learnlib.testsupport.it.variant.LearnerVariantList.MooreLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 

@@ -23,8 +23,8 @@ import de.learnlib.algorithm.aaar.explicit.ExplicitAAARLearnerDFA;
 import de.learnlib.algorithm.aaar.explicit.Incrementor;
 import de.learnlib.algorithm.aaar.explicit.ModuloInitialAbstraction;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
+import de.learnlib.testsupport.it.AbstractDFALearnerIT;
+import de.learnlib.testsupport.it.variant.LearnerVariantList.DFALearnerVariantList;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.common.util.Pair;
 

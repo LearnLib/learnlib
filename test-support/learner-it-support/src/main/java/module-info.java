@@ -45,5 +45,8 @@ open module de.learnlib.testsupport.it {
     requires static org.checkerframework.checker.qual;
     requires static de.learnlib.tooling.annotation;
 
-    exports de.learnlib.testsupport.it.learner;
+    exports de.learnlib.testsupport.it;
+    exports de.learnlib.testsupport.it.testcase;
+    exports de.learnlib.testsupport.it.util;
+    exports de.learnlib.testsupport.it.variant;
 }

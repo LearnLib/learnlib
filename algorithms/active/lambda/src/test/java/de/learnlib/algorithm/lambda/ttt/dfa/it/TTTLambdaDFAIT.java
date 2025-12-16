@@ -17,8 +17,8 @@ package de.learnlib.algorithm.lambda.ttt.dfa.it;
 
 import de.learnlib.algorithm.lambda.ttt.dfa.TTTLambdaDFA;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
+import de.learnlib.testsupport.it.AbstractDFALearnerIT;
+import de.learnlib.testsupport.it.variant.LearnerVariantList.DFALearnerVariantList;
 import net.automatalib.alphabet.Alphabet;
 import org.testng.annotations.Test;
 
