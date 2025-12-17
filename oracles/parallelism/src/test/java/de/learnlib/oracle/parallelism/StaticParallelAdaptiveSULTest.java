@@ -15,15 +15,15 @@
  */
 package de.learnlib.oracle.parallelism;
 
-import de.learnlib.oracle.parallelism.AbstractDynamicBatchProcessorBuilder.StaticOracleProvider;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
 
-public class StaticParallelOmegaSupplierTest extends AbstractStaticParallelOmegaOracleTest<TestSULOutput> {
+public class StaticParallelAdaptiveSULTest extends AbstractStaticParallelAdaptiveOracleTest<TestSULOutput> {
 
     @Override
-    protected StaticParallelOmegaOracleBuilder<?, Integer, TestSULOutput> getBuilder() {
-        TestMembershipOracle[] oracles = getOracles();
-        return ParallelOracleBuilders.newStaticParallelOmegaOracle(new StaticOracleProvider<>(oracles));
+    protected StaticParallelAdaptiveOracleBuilder<Integer, TestSULOutput> getBuilder() {
+        return ParallelOracleBuilders.newStaticParallelAdaptiveOracle(new TestSUL(new AtomicInteger(-1)));
     }
 
     @Override

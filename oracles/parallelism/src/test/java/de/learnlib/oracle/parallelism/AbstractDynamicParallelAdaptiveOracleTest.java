@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.ParallelAdaptiveOracle;
@@ -55,7 +53,7 @@ public abstract class AbstractDynamicParallelAdaptiveOracleTest<D> {
             oracle.processQueries(queries);
 
             for (AnswerOnceQuery<D> query : queries) {
-                Assert.assertEquals(query.counter.get(), 0);
+                Assert.assertEquals(query.counter, 0);
             }
         } finally {
             oracle.shutdown();
@@ -101,31 +99,20 @@ public abstract class AbstractDynamicParallelAdaptiveOracleTest<D> {
         }
     }
 
-    static final class AnswerOnceQuery<D> implements AdaptiveQuery<Void, D> {
+    abstract static class AbstractAdaptiveQuery<I, D> implements AdaptiveQuery<I, D> {
 
-        private final AtomicInteger counter;
-        private final List<D> outputs;
-        private final UUID id;
+        int counter;
+        final List<D> outputs;
 
-        AnswerOnceQuery(int count) {
-            this(count, null);
-        }
-
-        AnswerOnceQuery(int count, UUID id) {
-            this.counter = new AtomicInteger(count);
-            this.id = id;
+        AbstractAdaptiveQuery(int count) {
+            this.counter = count;
             this.outputs = Collections.synchronizedList(new ArrayList<>(count));
-        }
-
-        @Override
-        public Void getInput() {
-            return null;
         }
 
         @Override
         public Response processOutput(D out) {
             this.outputs.add(out);
-            final int i = counter.decrementAndGet();
+            final int i = --counter;
 
             if (i == 0) {
                 return Response.FINISHED;
@@ -139,9 +126,17 @@ public abstract class AbstractDynamicParallelAdaptiveOracleTest<D> {
         public List<D> getOutputs() {
             return outputs;
         }
+    }
 
-        public UUID getId() {
-            return id;
+    static final class AnswerOnceQuery<D> extends AbstractAdaptiveQuery<Void, D> {
+
+        AnswerOnceQuery(int count) {
+            super(count);
+        }
+
+        @Override
+        public Void getInput() {
+            return null;
         }
     }
 

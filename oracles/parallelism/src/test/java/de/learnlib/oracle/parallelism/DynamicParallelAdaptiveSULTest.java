@@ -15,19 +15,12 @@
  */
 package de.learnlib.oracle.parallelism;
 
-import de.learnlib.oracle.parallelism.AbstractDynamicBatchProcessorBuilder.StaticOracleProvider;
-import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
+import de.learnlib.oracle.parallelism.AbstractDynamicParallelOracleTest.NullSUL;
 
-public class StaticParallelOmegaSupplierTest extends AbstractStaticParallelOmegaOracleTest<TestSULOutput> {
-
-    @Override
-    protected StaticParallelOmegaOracleBuilder<?, Integer, TestSULOutput> getBuilder() {
-        TestMembershipOracle[] oracles = getOracles();
-        return ParallelOracleBuilders.newStaticParallelOmegaOracle(new StaticOracleProvider<>(oracles));
-    }
+public class DynamicParallelAdaptiveSULTest extends AbstractDynamicParallelAdaptiveOracleTest<Void> {
 
     @Override
-    protected TestSULOutput extractTestOutput(TestSULOutput output) {
-        return output;
+    protected DynamicParallelAdaptiveOracleBuilder<Void, Void> getBuilder() {
+        return ParallelOracleBuilders.newDynamicParallelAdaptiveOracle(new NullSUL());
     }
 }

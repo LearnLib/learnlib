@@ -16,17 +16,17 @@
 package de.learnlib.oracle.parallelism;
 
 import de.learnlib.oracle.parallelism.AbstractDynamicBatchProcessorBuilder.StaticOracleProvider;
-import de.learnlib.oracle.parallelism.AbstractStaticParallelAdaptiveOracleTest.TestOutput;
+import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
 
-public class StaticParallelAdaptiveSupplierTest extends AbstractStaticParallelAdaptiveOracleTest<TestOutput> {
+public class StaticParallelAdaptiveSupplierTest extends AbstractStaticParallelAdaptiveOracleTest<TestSULOutput> {
 
     @Override
-    protected StaticParallelAdaptiveOracleBuilder<Void, TestOutput> getBuilder() {
+    protected StaticParallelAdaptiveOracleBuilder<Integer, TestSULOutput> getBuilder() {
         return ParallelOracleBuilders.newStaticParallelAdaptiveOracle(new StaticOracleProvider<>(getOracles()));
     }
 
     @Override
-    protected TestOutput extractTestOutput(TestOutput output) {
+    protected TestSULOutput extractTestOutput(TestSULOutput output) {
         return output;
     }
 }

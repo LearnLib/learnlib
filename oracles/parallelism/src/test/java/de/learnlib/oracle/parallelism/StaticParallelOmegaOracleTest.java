@@ -18,27 +18,27 @@ package de.learnlib.oracle.parallelism;
 import java.util.Arrays;
 
 import de.learnlib.oracle.ParallelOmegaOracle;
-import de.learnlib.oracle.parallelism.AbstractStaticParallelOmegaOracleTest.TestOutput;
+import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class StaticParallelOmegaOracleTest extends AbstractStaticParallelOmegaOracleTest<TestOutput> {
+public class StaticParallelOmegaOracleTest extends AbstractStaticParallelOmegaOracleTest<TestSULOutput> {
 
     @Override
-    protected StaticParallelOmegaOracleBuilder<?, Integer, TestOutput> getBuilder() {
+    protected StaticParallelOmegaOracleBuilder<?, Integer, TestSULOutput> getBuilder() {
         TestMembershipOracle[] oracles = getOracles();
         return ParallelOracleBuilders.newStaticParallelOmegaOracle(oracles[0],
                                                                    Arrays.copyOfRange(oracles, 1, oracles.length));
     }
 
     @Override
-    protected TestOutput extractTestOutput(TestOutput output) {
+    protected TestSULOutput extractTestOutput(TestSULOutput output) {
         return output;
     }
 
     @Test
     public void testSingleMethods() {
-        final ParallelOmegaOracle<?, Integer, TestOutput> oracle = getBuilder().create();
+        final ParallelOmegaOracle<?, Integer, TestSULOutput> oracle = getBuilder().create();
 
         Assert.assertThrows(OmegaException.class, oracle::getMembershipOracle);
         Assert.assertThrows(OmegaException.class, () -> oracle.isSameState(null, null, null, null));
