@@ -192,7 +192,9 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
         for (Word<I> s : sufs) {
             int maxOccur = 0;
             int sumOccur = 0; // checksum
-            for (BitSet rows : sufToVecs.getOrDefault(s, Collections.emptyList())) {
+            final List<BitSet> rowVecs = sufToVecs.get(s);
+            assert rowVecs != null;
+            for (BitSet rows : rowVecs) {
                 vec.or(remRows);
                 vec.and(rows);
                 final int occur = vec.cardinality();
