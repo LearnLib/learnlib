@@ -146,6 +146,15 @@ limitations under the License.
             </roles>
         </contributor>
         <contributor>
+            <name>Wolffhardt Schwabe</name>
+            <email>schwabe@tu-berlin.de</email>
+            <organization>TU Berlin, Software and Embedded Systems Engineering</organization>
+            <organizationUrl>https://tu.berlin/sese/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
+        <contributor>
             <name>Leon Vitorovic</name>
             <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <email>leon.vitorovic@tu-dortmund.de</email>
@@ -352,6 +361,11 @@ limitations under the License.
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-procedural</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>learnlib-sparse</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

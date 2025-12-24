@@ -43,6 +43,7 @@ limitations under the License.
         <module>observation-pack</module>
         <module>observation-pack-vpa</module>
         <module>procedural</module>
+        <module>sparse</module>
         <module>ttt</module>
         <module>ttt-vpa</module>
     </modules>
