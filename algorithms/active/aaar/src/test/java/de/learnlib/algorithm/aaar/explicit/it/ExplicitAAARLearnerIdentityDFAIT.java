@@ -23,12 +23,17 @@ import de.learnlib.algorithm.aaar.explicit.ExplicitAAARLearnerDFA;
 import de.learnlib.algorithm.aaar.explicit.IdentityInitialAbstraction;
 import de.learnlib.algorithm.aaar.explicit.NoopIncrementor;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractDFALearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.DFALearnerVariantList;
+import de.learnlib.testsupport.it.AbstractDFALearnerIT;
+import de.learnlib.testsupport.it.variant.LearnerVariantList.DFALearnerVariantList;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.common.util.Pair;
 
 public class ExplicitAAARLearnerIdentityDFAIT extends AbstractDFALearnerIT {
+
+    @Override
+    protected boolean requiresQueriesDuringHypothesisTraversal() {
+        return true;
+    }
 
     @Override
     protected <I> void addLearnerVariants(Alphabet<I> alphabet,

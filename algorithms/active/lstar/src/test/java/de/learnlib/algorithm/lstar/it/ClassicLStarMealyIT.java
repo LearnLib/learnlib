@@ -21,8 +21,8 @@ import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
 import de.learnlib.algorithm.lstar.mealy.ClassicLStarMealyBuilder;
 import de.learnlib.oracle.MembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractMealySymLearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.MealySymLearnerVariantList;
+import de.learnlib.testsupport.it.AbstractMealySymLearnerIT;
+import de.learnlib.testsupport.it.variant.LearnerVariantList.MealySymLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;
 
 public class ClassicLStarMealyIT extends AbstractMealySymLearnerIT {

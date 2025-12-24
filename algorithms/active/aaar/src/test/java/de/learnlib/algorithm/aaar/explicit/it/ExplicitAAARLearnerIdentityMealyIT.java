@@ -23,13 +23,18 @@ import de.learnlib.algorithm.aaar.explicit.ExplicitAAARLearnerMealy;
 import de.learnlib.algorithm.aaar.explicit.IdentityInitialAbstraction;
 import de.learnlib.algorithm.aaar.explicit.NoopIncrementor;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.MealyLearnerVariantList;
+import de.learnlib.testsupport.it.AbstractMealyLearnerIT;
+import de.learnlib.testsupport.it.variant.LearnerVariantList.MealyLearnerVariantList;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 
 public class ExplicitAAARLearnerIdentityMealyIT extends AbstractMealyLearnerIT {
+
+    @Override
+    protected boolean requiresQueriesDuringHypothesisTraversal() {
+        return true;
+    }
 
     @Override
     protected <I, O> void addLearnerVariants(Alphabet<I> alphabet,

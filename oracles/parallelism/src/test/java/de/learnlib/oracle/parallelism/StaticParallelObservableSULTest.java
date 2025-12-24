@@ -30,7 +30,7 @@ public class StaticParallelObservableSULTest extends AbstractStaticParallelOmega
     }
 
     @Override
-    protected TestOutput extractTestOutput(Word<TestSULOutput> output) {
+    protected TestSULOutput extractTestOutput(Word<TestSULOutput> output) {
         Assert.assertFalse(output.isEmpty());
 
         final TestSULOutput lastSym = output.lastSymbol();
@@ -38,7 +38,7 @@ public class StaticParallelObservableSULTest extends AbstractStaticParallelOmega
         final int batchSeqId = lastSym.batchSeqId;
         final Word<Integer> word = lastSym.word;
 
-        return new TestOutput(oracleId, batchSeqId, word);
+        return new TestSULOutput(oracleId, batchSeqId, word);
     }
 
     @Override

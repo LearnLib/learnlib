@@ -34,12 +34,13 @@ import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
         implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, FiniteRepresentation {
 
     private final MembershipOracle<I, D> ceqs;
-    private final Alphabet<I> alphabet;
+    protected final Alphabet<I> alphabet;
     protected final SuffixTrie<I> strie;
     protected final PrefixTree<I, D> ptree;
 
@@ -53,7 +54,7 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
 
     protected abstract int maxSearchIndex(int ceLength);
 
-    protected abstract DTLeaf<I, D> getState(Word<I> prefix);
+    protected abstract @Nullable DTLeaf<I, D> getState(Word<I> prefix);
 
     protected abstract AbstractDecisionTree<I, D> dtree();
 
@@ -115,7 +116,7 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
         }
     }
 
-    private void makeConsistent() {
+    protected void makeConsistent() {
         while (dtree().makeConsistent()) {
             // do nothing ...
         }
@@ -174,6 +175,7 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
         int mid = (upper + lower) / 2;
         Word<I> sprime = ce.suffix(ce.length() - (mid + 1));
         DTLeaf<I, D> qnext = getState(ua.word());
+        assert qnext != null;
         for (PTNode<I, D> uprime : qnext.getShortPrefixes()) {
             witnesses.push(new DefaultQuery<>(uprime.word(), sprime));
         }

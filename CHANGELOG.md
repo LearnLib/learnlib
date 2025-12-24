@@ -18,10 +18,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Statistics collection has received a major rework. Previously, classes would implement the `StatisticCollector` interface and return a `StatisticData` object which 1) only allows for describing a very limited amount of data, and 2) requires you to keep track of all the objects that collect data. This approach has been *replaced* by a new `StatisticsService`. Instances of this service can be obtained similar to a logger via `Statistics.getService()` and require you to provide an implementation of this service on the classpath (a default one is provided by the `learnlib-statistics` module). The new service allows arbitrary components to collect various data which can be conveniently extracted based on the new `StatisticsKey`s used by the components. For more details on advanced scenarios (such as multi-threaded benchmarking), see the documentation of the respective classes. While this may require you to adjust the way you are collecting statistics, all functionality from beforehand should still be available.
   * `SimpleProfiler` has been replaced by the new clock-based statistics.
 * The `generateTestWords` method of `AbstractTestWordEQOracle` now needs to be public.
+* The classes of `de.learnlib.testsupport.it.learner` have been split into the packages `de.learnlib.testsupport.it{,testcase,util,variant}` in the same module (`de.learnlib.testsupport:learnlib-learner-it-support`).
 
 ### Fixed
 
 * The `de.learnlib.algorithm.adt` module now correctly `exports` the `de.learnlib.algorithm.adt.config.model.*` packages.
+* The `TTTLambdaMealy` learner now returns stable hypotheses that no longer issue queries during traversal. 
 
 
 ## [0.18.0] - 2025-02-06

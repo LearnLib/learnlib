@@ -37,8 +37,8 @@ import de.learnlib.algorithm.procedural.spa.manager.DefaultATRManager;
 import de.learnlib.algorithm.procedural.spa.manager.OptimizingATRManager;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractSPALearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList.SPALearnerVariantList;
+import de.learnlib.testsupport.it.AbstractSPALearnerIT;
+import de.learnlib.testsupport.it.variant.LearnerVariantList.SPALearnerVariantList;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 

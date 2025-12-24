@@ -16,18 +16,18 @@
 package de.learnlib.oracle.parallelism;
 
 import de.learnlib.oracle.parallelism.AbstractDynamicBatchProcessorBuilder.StaticOracleProvider;
-import de.learnlib.oracle.parallelism.AbstractStaticParallelOmegaOracleTest.TestOutput;
+import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
 
-public class StaticParallelOmegaSupplierTest extends AbstractStaticParallelOmegaOracleTest<TestOutput> {
+public class StaticParallelOmegaSupplierTest extends AbstractStaticParallelOmegaOracleTest<TestSULOutput> {
 
     @Override
-    protected StaticParallelOmegaOracleBuilder<?, Integer, TestOutput> getBuilder() {
+    protected StaticParallelOmegaOracleBuilder<?, Integer, TestSULOutput> getBuilder() {
         TestMembershipOracle[] oracles = getOracles();
         return ParallelOracleBuilders.newStaticParallelOmegaOracle(new StaticOracleProvider<>(oracles));
     }
 
     @Override
-    protected TestOutput extractTestOutput(TestOutput output) {
+    protected TestSULOutput extractTestOutput(TestSULOutput output) {
         return output;
     }
 }

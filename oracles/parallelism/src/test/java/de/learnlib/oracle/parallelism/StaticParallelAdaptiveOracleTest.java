@@ -17,19 +17,19 @@ package de.learnlib.oracle.parallelism;
 
 import java.util.Arrays;
 
-import de.learnlib.oracle.parallelism.AbstractStaticParallelAdaptiveOracleTest.TestOutput;
+import de.learnlib.oracle.parallelism.Utils.TestSULOutput;
 
-public class StaticParallelAdaptiveOracleTest extends AbstractStaticParallelAdaptiveOracleTest<TestOutput> {
+public class StaticParallelAdaptiveOracleTest extends AbstractStaticParallelAdaptiveOracleTest<TestSULOutput> {
 
     @Override
-    protected StaticParallelAdaptiveOracleBuilder<Void, TestOutput> getBuilder() {
+    protected StaticParallelAdaptiveOracleBuilder<Integer, TestSULOutput> getBuilder() {
         TestMembershipOracle[] oracles = getOracles();
         return ParallelOracleBuilders.newStaticParallelAdaptiveOracle(oracles[0],
                                                                       Arrays.copyOfRange(oracles, 1, oracles.length));
     }
 
     @Override
-    protected TestOutput extractTestOutput(TestOutput output) {
+    protected TestSULOutput extractTestOutput(TestSULOutput output) {
         return output;
     }
 }

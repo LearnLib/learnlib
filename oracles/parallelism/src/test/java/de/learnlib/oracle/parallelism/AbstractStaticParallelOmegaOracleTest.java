@@ -104,7 +104,7 @@ public abstract class AbstractStaticParallelOmegaOracleTest<D> {
 
     protected abstract StaticParallelOmegaOracleBuilder<?, Integer, D> getBuilder();
 
-    protected abstract TestOutput extractTestOutput(D output);
+    protected abstract TestSULOutput extractTestOutput(D output);
 
     protected TestMembershipOracle[] getOracles() {
         TestMembershipOracle[] oracles = new TestMembershipOracle[Utils.NUM_ORACLES];
@@ -142,7 +142,7 @@ public abstract class AbstractStaticParallelOmegaOracleTest<D> {
         Map<Integer, Integer> incorrectAnswers = new HashMap<>();
 
         for (OmegaQuery<Integer, D> qry : queries) {
-            TestOutput out = extractTestOutput(qry.getOutput());
+            TestSULOutput out = extractTestOutput(qry.getOutput());
             Assert.assertNotNull(out);
             int oracleId = out.oracleId;
             List<Integer> seqIdList = seqIds.get(oracleId);
@@ -156,7 +156,7 @@ public abstract class AbstractStaticParallelOmegaOracleTest<D> {
             int seqId = out.batchSeqId;
             seqIdList.add(seqId);
 
-            if (!qry.asDefaultQuery().getInput().equals(out.input)) {
+            if (!qry.asDefaultQuery().getInput().equals(out.word)) {
                 incorrectAnswers.put(oracleId, incorrectAnswers.get(oracleId) + 1);
             }
         }
@@ -180,20 +180,7 @@ public abstract class AbstractStaticParallelOmegaOracleTest<D> {
         return new Analysis(oracles, seqIds, incorrectAnswers, minBatchSize, maxBatchSize);
     }
 
-    static final class TestOutput {
-
-        public final int oracleId;
-        public final int batchSeqId;
-        public final Word<Integer> input;
-
-        TestOutput(int oracleId, int batchSeqId, Word<Integer> input) {
-            this.oracleId = oracleId;
-            this.batchSeqId = batchSeqId;
-            this.input = input;
-        }
-    }
-
-    static final class TestMembershipOracle implements OmegaMembershipOracle<Integer, Integer, TestOutput> {
+    static final class TestMembershipOracle implements OmegaMembershipOracle<Integer, Integer, TestSULOutput> {
 
         private final int oracleId;
 
@@ -202,16 +189,16 @@ public abstract class AbstractStaticParallelOmegaOracleTest<D> {
         }
 
         @Override
-        public void processQueries(Collection<? extends OmegaQuery<Integer, TestOutput>> queries) {
+        public void processQueries(Collection<? extends OmegaQuery<Integer, TestSULOutput>> queries) {
             int batchSeqId = 0;
-            for (OmegaQuery<Integer, TestOutput> qry : queries) {
-                qry.answer(new TestOutput(oracleId, batchSeqId++, qry.asDefaultQuery().getInput()),
+            for (OmegaQuery<Integer, TestSULOutput> qry : queries) {
+                qry.answer(new TestSULOutput(oracleId, batchSeqId++, qry.asDefaultQuery().getInput()),
                            qry.getPeriodicity());
             }
         }
 
         @Override
-        public MembershipOracle<Integer, TestOutput> getMembershipOracle() {
+        public MembershipOracle<Integer, TestSULOutput> getMembershipOracle() {
             throw new OmegaException();
         }
 
