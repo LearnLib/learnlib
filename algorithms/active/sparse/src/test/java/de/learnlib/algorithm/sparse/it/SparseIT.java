@@ -17,8 +17,8 @@ package de.learnlib.algorithm.sparse.it;
 
 import de.learnlib.algorithm.sparse.SparseLearner;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.testsupport.it.learner.AbstractMealyLearnerIT;
-import de.learnlib.testsupport.it.learner.LearnerVariantList;
+import de.learnlib.testsupport.it.AbstractMealyLearnerIT;
+import de.learnlib.testsupport.it.variant.LearnerVariantList;
 import net.automatalib.alphabet.Alphabet;
 
 public class SparseIT extends AbstractMealyLearnerIT {
