@@ -168,19 +168,19 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
     }
 
     private void classifyFringePrefix(FringeRow<S, I, O> f) {
-        final Leaf<S, I, O> leaf = f.leaf;
-        assert leaf != null;
-        leaf.update(cRows);
-        if (leaf.isUnsplit()) {
+        final Leaf<S, I, O> l = f.leaf;
+        assert l != null;
+        l.update(cRows);
+        if (l.isUnsplit()) {
             return;
         }
 
-        final Separator<S, I, O> sep = leaf.sep;
+        final Separator<S, I, O> sep = l.sep;
         if (sep != null) {
             followNode(f, sep);
         } else {
-            leaf.sep = new Separator<>(pickSuffix(leaf.remRows), leaf.remRows, leaf.cellIds);
-            followNode(f, leaf.sep);
+            l.sep = new Separator<>(pickSuffix(l.remRows), l.remRows, l.cellIds);
+            followNode(f, l.sep);
         }
     }
 
@@ -328,11 +328,11 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
         final Word<I> ui = u.append(cex.getSymbol(idxSym));
         final FringeRow<S, I, O> f = prefToFringe.get(ui);
         assert f != null;
-        final Leaf<S, I, O> leaf = f.leaf;
-        assert leaf != null;
-        final int cRowIdx = moveToCore(f, leaf.cellIds);
-        assert leaf.cRow != null;
-        if (leaf.cRow.cellIds.containsAll(cRows.get(cRowIdx).cellIds)) {
+        final Leaf<S, I, O> l = f.leaf;
+        assert l != null;
+        final int cRowIdx = moveToCore(f, l.cellIds);
+        assert l.cRow != null;
+        if (l.cRow.cellIds.containsAll(cRows.get(cRowIdx).cellIds)) {
             // only add new suffix if the row is not yet distinguished
             addSuffixToTable(cex.subWord(idxSuf));
         }
