@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2025 TU Dortmund University
+/* Copyright (C) 2013-2026 TU Dortmund University
  * This file is part of LearnLib <https://learnlib.de>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
