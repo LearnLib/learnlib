@@ -20,6 +20,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 
+import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.lambda.ttt.dt.AbstractDecisionTree;
 import de.learnlib.algorithm.lambda.ttt.dt.DTLeaf;
@@ -36,13 +37,15 @@ import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
-        implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, FiniteRepresentation {
+public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> implements LearningAlgorithm<M, I, D>,
+                                                                                       SupportsGrowingAlphabet<I>,
+                                                                                       Resumable<TTTLambdaState<I, D>>,
+                                                                                       FiniteRepresentation {
 
     private final MembershipOracle<I, D> ceqs;
     protected final Alphabet<I> alphabet;
-    protected final SuffixTrie<I> strie;
-    protected final PrefixTree<I, D> ptree;
+    protected SuffixTrie<I> strie;
+    protected PrefixTree<I, D> ptree;
 
     protected AbstractTTTLambda(Alphabet<I> alphabet, MembershipOracle<I, D> ceqs) {
         this.alphabet = alphabet;
@@ -182,5 +185,16 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
         witnesses.push(new DefaultQuery<>(ua.word(), sprime));
 
         ua.makeShortPrefix();
+    }
+
+    @Override
+    public TTTLambdaState<I, D> suspend() {
+        return new TTTLambdaState<>(strie, ptree, dtree());
+    }
+
+    @Override
+    public void resume(TTTLambdaState<I, D> state) {
+        this.strie = state.strie;
+        this.ptree = state.ptree;
     }
 }

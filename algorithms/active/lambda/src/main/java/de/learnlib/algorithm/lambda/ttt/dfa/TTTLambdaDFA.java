@@ -17,6 +17,7 @@ package de.learnlib.algorithm.lambda.ttt.dfa;
 
 import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.lambda.ttt.AbstractTTTLambda;
+import de.learnlib.algorithm.lambda.ttt.TTTLambdaState;
 import de.learnlib.algorithm.lambda.ttt.dt.AbstractDecisionTree;
 import de.learnlib.algorithm.lambda.ttt.dt.DTInnerNode;
 import de.learnlib.algorithm.lambda.ttt.dt.DTLeaf;
@@ -28,8 +29,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class TTTLambdaDFA<I> extends AbstractTTTLambda<DFA<?, I>, I, Boolean> implements DFALearner<I> {
 
-    private final HypothesisDFA<I> hypothesis;
-    private final DecisionTreeDFA<I> dtree;
+    private HypothesisDFA<I> hypothesis;
+    private DecisionTreeDFA<I> dtree;
 
     public TTTLambdaDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> mqo) {
         this(alphabet, mqo, mqo);
@@ -66,5 +67,16 @@ public class TTTLambdaDFA<I> extends AbstractTTTLambda<DFA<?, I>, I, Boolean> im
     @Override
     public int size() {
         return hypothesis.size();
+    }
+
+    @Override
+    public void resume(TTTLambdaState<I, Boolean> state) {
+        super.resume(state);
+        if (state.dtree instanceof DecisionTreeDFA<I> d) {
+            this.dtree = d;
+            this.hypothesis = new HypothesisDFA<>(ptree, dtree);
+        } else {
+            throw new IllegalArgumentException("provided state does not match expected structure");
+        }
     }
 }

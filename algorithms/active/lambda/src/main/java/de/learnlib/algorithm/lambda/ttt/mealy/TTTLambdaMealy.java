@@ -17,6 +17,7 @@ package de.learnlib.algorithm.lambda.ttt.mealy;
 
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.lambda.ttt.AbstractTTTLambda;
+import de.learnlib.algorithm.lambda.ttt.TTTLambdaState;
 import de.learnlib.algorithm.lambda.ttt.dt.AbstractDecisionTree;
 import de.learnlib.algorithm.lambda.ttt.dt.DTLeaf;
 import de.learnlib.oracle.MembershipOracle;
@@ -28,8 +29,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class TTTLambdaMealy<I, O> extends AbstractTTTLambda<MealyMachine<?, I, ?, O>, I, Word<O>>
         implements MealyLearner<I, O> {
 
-    private final HypothesisMealy<I, O> hypothesis;
-    private final DecisionTreeMealy<I, O> dtree;
+    private HypothesisMealy<I, O> hypothesis;
+    private DecisionTreeMealy<I, O> dtree;
 
     public TTTLambdaMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> mqo) {
         this(alphabet, mqo, mqo);
@@ -76,5 +77,16 @@ public class TTTLambdaMealy<I, O> extends AbstractTTTLambda<MealyMachine<?, I, ?
     protected void makeConsistent() {
         super.makeConsistent();
         hypothesis.fetchAllPendingOutputs(super.alphabet);
+    }
+
+    @Override
+    public void resume(TTTLambdaState<I, Word<O>> state) {
+        super.resume(state);
+        if (state.dtree instanceof DecisionTreeMealy<I, O> d) {
+            this.dtree = d;
+            this.hypothesis = new HypothesisMealy<>(ptree, dtree);
+        } else {
+            throw new IllegalArgumentException("provided state does not match expected structure");
+        }
     }
 }
