@@ -29,6 +29,7 @@ import java.util.Set;
 
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.logging.Category;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
@@ -37,11 +38,15 @@ import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements LearningAlgorithm<M, I, D>,
                                                                               SupportsGrowingAlphabet<I>,
                                                                               Resumable<LLambdaState<I, D>>,
                                                                               FiniteRepresentation {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLLambda.class);
 
     final Alphabet<I> alphabet;
     final MembershipOracle<I, D> mqs;
@@ -305,7 +310,7 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements Le
 
     @Override
     public LLambdaState<I, D> suspend() {
-        return new LLambdaState<>(shortPrefixes, rows, suffixes);
+        return new LLambdaState<>(alphabet, shortPrefixes, rows, suffixes);
     }
 
     @Override
@@ -313,6 +318,14 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements Le
         this.shortPrefixes.clear();
         this.rows.clear();
         this.suffixes.clear();
+
+        final Alphabet<I> oldAlphabet = state.getAlphabet();
+        if (!this.alphabet.equals(oldAlphabet)) {
+            LOGGER.warn(Category.DATASTRUCTURE,
+                        "The current alphabet '{}' differs from the resumed alphabet '{}'. Future behavior may be inconsistent",
+                        this.alphabet,
+                        oldAlphabet);
+        }
 
         this.shortPrefixes.addAll(state.getShortPrefixes());
         this.rows.putAll(state.getRows());

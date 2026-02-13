@@ -27,6 +27,7 @@ import de.learnlib.algorithm.lambda.ttt.dt.DTLeaf;
 import de.learnlib.algorithm.lambda.ttt.pt.PTNode;
 import de.learnlib.algorithm.lambda.ttt.pt.PrefixTree;
 import de.learnlib.algorithm.lambda.ttt.st.SuffixTrie;
+import de.learnlib.logging.Category;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
@@ -36,11 +37,15 @@ import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> implements LearningAlgorithm<M, I, D>,
                                                                                        SupportsGrowingAlphabet<I>,
                                                                                        Resumable<TTTLambdaState<I, D>>,
                                                                                        FiniteRepresentation {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTTTLambda.class);
 
     private final MembershipOracle<I, D> mqs;
     private final MembershipOracle<I, D> ceqs;
@@ -198,5 +203,13 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
     public void resume(TTTLambdaState<I, D> state) {
         this.strie = state.strie;
         this.ptree = state.ptree;
+
+        final Alphabet<I> oldAlphabet = state.dtree.getAlphabet();
+        if (!this.alphabet.equals(oldAlphabet)) {
+            LOGGER.warn(Category.DATASTRUCTURE,
+                        "The current alphabet '{}' differs from the resumed alphabet '{}'. Future behavior may be inconsistent",
+                        this.alphabet,
+                        oldAlphabet);
+        }
     }
 }
