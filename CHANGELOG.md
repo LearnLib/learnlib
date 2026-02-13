@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Added a new (L*-based) learning algorithm for *Mealy machines with local timers* (MMLTs), including support for parallel queries, caching, and conformance testing (thanks to [Paul Kogel](https://github.com/pdev55)).
 * Added the L<sup>s</sup> active learning algorithm for Mealy machines (thanks to [Wolffhardt Schwabe](https://github.com/stateMachinist)).
 * Added an `EarlyExitEQOracle` which for a given `AdaptiveMembershipOracle` and `TestWordGenerator` stops the evaluation of (potentially long) Mealy-based equivalence tests as soon as a mismatch with the hypothesis is detected, potentially improving the symbol performance of the given equivalence oracle.
+* Both lambda learners (`LLambda{DFA,Mealy}` and `TTTLambda{DFA,Mealy}`) now support the `Resumable` interface.
 
 ### Changed
 
