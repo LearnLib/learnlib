@@ -26,23 +26,19 @@ import net.automatalib.alphabet.Alphabet;
 public abstract class AbstractDecisionTree<I, D> {
 
     private final STNode<I> stRoot;
-    protected final MembershipOracle<I, D> mqOracle;
-    protected final Alphabet<I> alphabet;
+    private final Alphabet<I> alphabet;
 
     protected AbstractDTNode<I, D> root;
 
-    protected AbstractDecisionTree(Alphabet<I> alphabet, MembershipOracle<I, D> mqOracle, STNode<I> stRoot) {
-        this.mqOracle = mqOracle;
+    protected AbstractDecisionTree(Alphabet<I> alphabet, STNode<I> stRoot) {
         this.alphabet = alphabet;
         this.stRoot = stRoot;
     }
 
     protected abstract Children<I, D> newChildren();
 
-    protected abstract D query(PTNode<I, D> prefix, STNode<I> suffix);
-
-    public void sift(PTNode<I, D> prefix) {
-        root.sift(prefix);
+    public void sift(MembershipOracle<I, D> oracle, PTNode<I, D> prefix) {
+        root.sift(oracle, prefix);
     }
 
     public void setRoot(AbstractDTNode<I, D> newRoot) {
@@ -55,11 +51,11 @@ public abstract class AbstractDecisionTree<I, D> {
         return list;
     }
 
-    public boolean makeConsistent() {
+    public boolean makeConsistent(MembershipOracle<I, D> oracle) {
         List<DTLeaf<I, D>> leaves = new ArrayList<>();
         root.leaves(leaves);
         for (DTLeaf<I, D> n : leaves) {
-            if (n.refineIfPossible()) {
+            if (n.refineIfPossible(oracle)) {
                 return true;
             }
         }
@@ -70,7 +66,7 @@ public abstract class AbstractDecisionTree<I, D> {
         return root;
     }
 
-    Alphabet<I> getAlphabet() {
+    public Alphabet<I> getAlphabet() {
         return alphabet;
     }
 

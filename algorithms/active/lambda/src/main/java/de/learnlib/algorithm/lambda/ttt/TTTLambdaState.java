@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithm.lambda.ttt.pt;
+package de.learnlib.algorithm.lambda.ttt;
 
-import de.learnlib.algorithm.lambda.ttt.dt.DTLeaf;
-import de.learnlib.oracle.MembershipOracle;
-import net.automatalib.word.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import de.learnlib.algorithm.lambda.ttt.dt.AbstractDecisionTree;
+import de.learnlib.algorithm.lambda.ttt.pt.PrefixTree;
+import de.learnlib.algorithm.lambda.ttt.st.SuffixTrie;
 
-public interface PTNode<I, D> {
+public class TTTLambdaState<I, D> {
 
-    Word<I> word();
+    public final SuffixTrie<I> strie;
+    public final PrefixTree<I, D> ptree;
+    public final AbstractDecisionTree<I, D> dtree;
 
-    PTNode<I, D> append(I a);
-
-    void setState(DTLeaf<I, D> node);
-
-    DTLeaf<I, D> state();
-
-    @Nullable PTNode<I, D> succ(I a);
-
-    void makeShortPrefix(MembershipOracle<I, D> oracle);
+    public TTTLambdaState(SuffixTrie<I> strie, PrefixTree<I, D> ptree, AbstractDecisionTree<I, D> dtree) {
+        this.strie = strie;
+        this.ptree = ptree;
+        this.dtree = dtree;
+    }
 }

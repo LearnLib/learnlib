@@ -35,6 +35,7 @@ open module de.learnlib.algorithm.lambda {
     requires net.automatalib.api;
     requires net.automatalib.common.util;
     requires net.automatalib.core;
+    requires org.slf4j;
 
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;

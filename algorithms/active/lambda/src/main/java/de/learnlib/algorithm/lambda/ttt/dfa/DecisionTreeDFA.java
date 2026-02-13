@@ -20,15 +20,13 @@ import de.learnlib.algorithm.lambda.ttt.dt.AbstractDecisionTree;
 import de.learnlib.algorithm.lambda.ttt.dt.Children;
 import de.learnlib.algorithm.lambda.ttt.dt.DTInnerNode;
 import de.learnlib.algorithm.lambda.ttt.dt.DTLeaf;
-import de.learnlib.algorithm.lambda.ttt.pt.PTNode;
 import de.learnlib.algorithm.lambda.ttt.st.STNode;
-import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 
 class DecisionTreeDFA<I> extends AbstractDecisionTree<I, Boolean> {
 
-    DecisionTreeDFA(MembershipOracle<I, Boolean> mqOracle, Alphabet<I> sigma, STNode<I> stRoot) {
-        super(sigma, mqOracle, stRoot);
+    DecisionTreeDFA(Alphabet<I> sigma, STNode<I> stRoot) {
+        super(sigma, stRoot);
     }
 
     boolean isAccepting(DTLeaf<I, Boolean> s) {
@@ -39,11 +37,6 @@ class DecisionTreeDFA<I> extends AbstractDecisionTree<I, Boolean> {
     @Override
     protected Children<I, Boolean> newChildren() {
         return new ChildrenDFA<>();
-    }
-
-    @Override
-    protected Boolean query(PTNode<I, Boolean> prefix, STNode<I> suffix) {
-        return mqOracle.answerQuery(prefix.word(), suffix.word());
     }
 
     private DTInnerNode<I, Boolean> localRoot() {

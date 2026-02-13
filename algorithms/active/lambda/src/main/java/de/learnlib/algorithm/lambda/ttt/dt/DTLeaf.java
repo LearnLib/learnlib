@@ -23,6 +23,7 @@ import java.util.Map;
 
 import de.learnlib.algorithm.lambda.ttt.pt.PTNode;
 import de.learnlib.algorithm.lambda.ttt.st.STNode;
+import de.learnlib.oracle.MembershipOracle;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
@@ -46,7 +47,7 @@ public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
     }
 
     @Override
-    void sift(PTNode<I, D> prefix) {
+    void sift(MembershipOracle<I, D> oracle, PTNode<I, D> prefix) {
         prefix.setState(this);
         this.longPrefixes.add(prefix);
     }
@@ -56,17 +57,17 @@ public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
         list.add(this);
     }
 
-    public boolean refineIfPossible() {
+    public boolean refineIfPossible(MembershipOracle<I, D> oracle) {
         PTNode<I, D> ref = shortPrefixes.get(0);
         for (int i = 1; i < shortPrefixes.size(); i++) {
-            if (refineIfPossible(ref, shortPrefixes.get(i))) {
+            if (refineIfPossible(oracle, ref, shortPrefixes.get(i))) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean refineIfPossible(PTNode<I, D> u1, PTNode<I, D> u2) {
+    private boolean refineIfPossible(MembershipOracle<I, D> oracle, PTNode<I, D> u1, PTNode<I, D> u2) {
         I bestA = null;
         int vLength = 0;
         for (I a : tree.getAlphabet()) {
@@ -85,13 +86,13 @@ public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
             }
         }
         if (bestA != null) {
-            split(u1, u2, bestA);
+            split(oracle, u1, u2, bestA);
             return true;
         }
         return false;
     }
 
-    public void makeShortPrefix(PTNode<I, D> uNew) {
+    public void makeShortPrefix(MembershipOracle<I, D> oracle, PTNode<I, D> uNew) {
         assert !shortPrefixes.contains(uNew);
         assert longPrefixes.contains(uNew);
         longPrefixes.remove(uNew);
@@ -99,11 +100,11 @@ public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
 
         for (I a : tree.getAlphabet()) {
             PTNode<I, D> ua = uNew.append(a);
-            tree.root().sift(ua);
+            tree.root().sift(oracle, ua);
         }
     }
 
-    public void split(PTNode<I, D> u1, PTNode<I, D> u2, I a) {
+    public void split(MembershipOracle<I, D> oracle, PTNode<I, D> u1, PTNode<I, D> u2, I a) {
         PTNode<I, D> s1 = u1.succ(a);
         PTNode<I, D> s2 = u2.succ(a);
         assert s1 != null && s2 != null;
@@ -123,7 +124,7 @@ public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
 
         for (PTNode<I, D> uOther : shortPrefixes) {
             // FIXME: We could safe some queries here in the dfa case ...
-            D out = tree.query(uOther, av);
+            D out = oracle.answerQuery(uOther.word(), av.word());
             DTLeaf<I, D> leaf = newLeaves.get(out);
             if (leaf == null) {
                 leaf = new DTLeaf<>(newInner, tree, uOther);
@@ -145,7 +146,7 @@ public class DTLeaf<I, D> extends AbstractDTNode<I, D> {
         }
 
         for (PTNode<I, D> ua : longPrefixes) {
-            newInner.sift(ua);
+            newInner.sift(oracle, ua);
         }
 
     }

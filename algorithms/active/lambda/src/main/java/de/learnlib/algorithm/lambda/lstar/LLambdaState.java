@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.learnlib.Resumable;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 
 /**
@@ -32,14 +33,20 @@ import net.automatalib.word.Word;
  */
 public class LLambdaState<I, D> {
 
+    private final Alphabet<I> alphabet;
     private final Set<Word<I>> shortPrefixes;
     private final Map<Word<I>, List<D>> rows;
     private final List<Word<I>> suffixes;
 
-    LLambdaState(Set<Word<I>> shortPrefixes, Map<Word<I>, List<D>> rows, List<Word<I>> suffixes) {
+    LLambdaState(Alphabet<I> alphabet, Set<Word<I>> shortPrefixes, Map<Word<I>, List<D>> rows, List<Word<I>> suffixes) {
+        this.alphabet = alphabet;
         this.shortPrefixes = shortPrefixes;
         this.rows = rows;
         this.suffixes = suffixes;
+    }
+
+    Alphabet<I> getAlphabet() {
+        return alphabet;
     }
 
     Set<Word<I>> getShortPrefixes() {

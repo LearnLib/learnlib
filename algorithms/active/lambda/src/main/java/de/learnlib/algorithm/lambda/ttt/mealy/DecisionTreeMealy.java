@@ -34,8 +34,8 @@ class DecisionTreeMealy<I, O> extends AbstractDecisionTree<I, Word<O>> {
 
     private final Map<Word<I>, O> outputs;
 
-    DecisionTreeMealy(MembershipOracle<I, Word<O>> mqOracle, Alphabet<I> sigma, STNode<I> stRoot) {
-        super(sigma, mqOracle, stRoot);
+    DecisionTreeMealy(Alphabet<I> sigma, STNode<I> stRoot) {
+        super(sigma, stRoot);
         this.outputs = new HashMap<>();
     }
 
@@ -44,43 +44,38 @@ class DecisionTreeMealy<I, O> extends AbstractDecisionTree<I, Word<O>> {
         return new ChildrenMealy<>();
     }
 
-    @Override
-    protected Word<O> query(PTNode<I, Word<O>> prefix, STNode<I> suffix) {
-        return mqOracle.answerQuery(prefix.word(), suffix.word());
-    }
-
-    O getOutput(DTLeaf<I, Word<O>> leaf, I a) {
-        return lookupOrQuery(leaf.getShortPrefixes().get(0).word(), a);
+    O getOutput(MembershipOracle<I, Word<O>> oracle, DTLeaf<I, Word<O>> leaf, I a) {
+        return lookupOrQuery(oracle, leaf.getShortPrefixes().get(0).word(), a);
     }
 
     @Override
-    public boolean makeConsistent() {
+    public boolean makeConsistent(MembershipOracle<I, Word<O>> oracle) {
         for (DTLeaf<I, Word<O>> n : leaves()) {
             if (n.getShortPrefixes().size() < 2) {
                 continue;
             }
-            for (I a : alphabet) {
+            for (I a : getAlphabet()) {
                 O refOut = null;
                 List<PTNode<I, Word<O>>> sp = new LinkedList<>(n.getShortPrefixes());
                 for (PTNode<I, Word<O>> u : sp) {
-                    O out = lookupOrQuery(u.word(), a);
+                    O out = lookupOrQuery(oracle, u.word(), a);
                     if (refOut == null) {
                         refOut = out;
                     } else if (!Objects.equals(refOut, out)) {
-                        n.split(sp.get(0), u, a);
+                        n.split(oracle, sp.get(0), u, a);
                         return true;
                     }
                 }
             }
         }
-        return super.makeConsistent();
+        return super.makeConsistent(oracle);
     }
 
-    private O lookupOrQuery(Word<I> prefix, I step) {
+    private O lookupOrQuery(MembershipOracle<I, Word<O>> oracle, Word<I> prefix, I step) {
         Word<I> lookup = prefix.append(step);
         O out = this.outputs.get(lookup);
         if (out == null) {
-            out = mqOracle.answerQuery(prefix, Word.fromLetter(step)).lastSymbol();
+            out = oracle.answerQuery(prefix, Word.fromLetter(step)).lastSymbol();
             this.outputs.put(lookup, out);
         }
         return out;

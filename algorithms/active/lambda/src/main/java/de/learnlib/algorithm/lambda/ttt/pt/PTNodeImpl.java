@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.learnlib.algorithm.lambda.ttt.dt.DTLeaf;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -72,8 +73,8 @@ public class PTNodeImpl<I, D> implements PTNode<I, D> {
     }
 
     @Override
-    public void makeShortPrefix() {
-        this.state.makeShortPrefix(this);
+    public void makeShortPrefix(MembershipOracle<I, D> oracle) {
+        this.state.makeShortPrefix(oracle, this);
     }
 }
 

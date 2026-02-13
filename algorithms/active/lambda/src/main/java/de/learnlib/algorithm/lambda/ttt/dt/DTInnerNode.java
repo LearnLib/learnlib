@@ -19,6 +19,7 @@ import java.util.List;
 
 import de.learnlib.algorithm.lambda.ttt.pt.PTNode;
 import de.learnlib.algorithm.lambda.ttt.st.STNode;
+import de.learnlib.oracle.MembershipOracle;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DTInnerNode<I, D> extends AbstractDTNode<I, D> {
@@ -40,11 +41,11 @@ public class DTInnerNode<I, D> extends AbstractDTNode<I, D> {
     }
 
     @Override
-    void sift(PTNode<I, D> prefix) {
-        D out = tree.query(prefix, suffix);
+    void sift(MembershipOracle<I, D> oracle, PTNode<I, D> prefix) {
+        D out = oracle.answerQuery(prefix.word(), suffix.word());
         AbstractDTNode<I, D> succ = children.child(out);
         if (succ != null) {
-            succ.sift(prefix);
+            succ.sift(oracle, prefix);
         } else {
             DTLeaf<I, D> newLeaf = new DTLeaf<>(this, tree, prefix);
             children.addChild(out, newLeaf);
@@ -52,7 +53,7 @@ public class DTInnerNode<I, D> extends AbstractDTNode<I, D> {
 
             for (I a : tree.getAlphabet()) {
                 PTNode<I, D> ua = prefix.append(a);
-                tree.root().sift(ua);
+                tree.root().sift(oracle, ua);
             }
         }
     }

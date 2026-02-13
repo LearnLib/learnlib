@@ -20,12 +20,14 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 
+import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.lambda.ttt.dt.AbstractDecisionTree;
 import de.learnlib.algorithm.lambda.ttt.dt.DTLeaf;
 import de.learnlib.algorithm.lambda.ttt.pt.PTNode;
 import de.learnlib.algorithm.lambda.ttt.pt.PrefixTree;
 import de.learnlib.algorithm.lambda.ttt.st.SuffixTrie;
+import de.learnlib.logging.Category;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.MQUtil;
@@ -35,17 +37,25 @@ import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
-        implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, FiniteRepresentation {
+public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> implements LearningAlgorithm<M, I, D>,
+                                                                                       SupportsGrowingAlphabet<I>,
+                                                                                       Resumable<TTTLambdaState<I, D>>,
+                                                                                       FiniteRepresentation {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTTTLambda.class);
+
+    private final MembershipOracle<I, D> mqs;
     private final MembershipOracle<I, D> ceqs;
     protected final Alphabet<I> alphabet;
-    protected final SuffixTrie<I> strie;
-    protected final PrefixTree<I, D> ptree;
+    protected SuffixTrie<I> strie;
+    protected PrefixTree<I, D> ptree;
 
-    protected AbstractTTTLambda(Alphabet<I> alphabet, MembershipOracle<I, D> ceqs) {
+    protected AbstractTTTLambda(Alphabet<I> alphabet, MembershipOracle<I, D> mqs, MembershipOracle<I, D> ceqs) {
         this.alphabet = alphabet;
+        this.mqs = mqs;
         this.ceqs = ceqs;
 
         this.strie = new SuffixTrie<>();
@@ -61,8 +71,8 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
     @Override
     public void startLearning() {
         assert dtree() != null && getHypothesisModel() != null;
-        dtree().sift(ptree.root());
-        makeConsistent();
+        dtree().sift(mqs, ptree.root());
+        makeConsistent(mqs);
     }
 
     @Override
@@ -82,7 +92,7 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
 
             if (valid) {
                 analyzeCounterexample(witness, witnesses);
-                makeConsistent();
+                makeConsistent(mqs);
                 refined = true;
             } else {
                 witnesses.pop();
@@ -109,15 +119,15 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
                 assert u != null;
                 PTNode<I, D> ua = u.append(symbol);
                 assert ua != null;
-                dtree().sift(ua);
+                dtree().sift(mqs, ua);
             }
 
-            makeConsistent();
+            makeConsistent(mqs);
         }
     }
 
-    protected void makeConsistent() {
-        while (dtree().makeConsistent()) {
+    protected void makeConsistent(MembershipOracle<I, D> oracle) {
+        while (dtree().makeConsistent(oracle)) {
             // do nothing ...
         }
     }
@@ -181,6 +191,25 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D>
         }
         witnesses.push(new DefaultQuery<>(ua.word(), sprime));
 
-        ua.makeShortPrefix();
+        ua.makeShortPrefix(mqs);
+    }
+
+    @Override
+    public TTTLambdaState<I, D> suspend() {
+        return new TTTLambdaState<>(strie, ptree, dtree());
+    }
+
+    @Override
+    public void resume(TTTLambdaState<I, D> state) {
+        this.strie = state.strie;
+        this.ptree = state.ptree;
+
+        final Alphabet<I> oldAlphabet = state.dtree.getAlphabet();
+        if (!this.alphabet.equals(oldAlphabet)) {
+            LOGGER.warn(Category.DATASTRUCTURE,
+                        "The current alphabet '{}' differs from the resumed alphabet '{}'. Future behavior may be inconsistent",
+                        this.alphabet,
+                        oldAlphabet);
+        }
     }
 }
