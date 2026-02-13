@@ -16,10 +16,15 @@
 package de.learnlib.algorithm.lambda.ttt.mealy;
 
 import de.learnlib.algorithm.lambda.ttt.TTTLambdaState;
+import de.learnlib.algorithm.lambda.ttt.dfa.TTTLambdaDFA;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.SingleQueryOracle;
 import de.learnlib.testsupport.AbstractResumableLearnerMealyTest;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.word.Word;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class TTTLambdaMealyResumableTest
         extends AbstractResumableLearnerMealyTest<TTTLambdaMealy<Character, Character>, TTTLambdaState<Character, Word<Character>>> {
@@ -33,5 +38,21 @@ public class TTTLambdaMealyResumableTest
     @Override
     protected int getRounds() {
         return 2;
+    }
+
+    @Test
+    public void testIncorrectState() {
+        final Alphabet<Character> alphabet = Alphabets.fromArray();
+        final SingleQueryOracle<Character, Word<Character>> oracleMealy = (pre, suff) -> suff;
+        final SingleQueryOracle<Character, Boolean> oracleDFA = (pre, suff) -> false;
+        final var learnerMealy = new TTTLambdaMealy<>(alphabet, oracleMealy);
+        final var learnerDFA = new TTTLambdaDFA<>(alphabet, oracleDFA);
+
+        final TTTLambdaState<?, ?> origState = learnerDFA.suspend();
+        @SuppressWarnings("unchecked")
+        final TTTLambdaState<Character, Word<Character>> castState =
+                (TTTLambdaState<Character, Word<Character>>) origState;
+
+        Assert.assertThrows(IllegalArgumentException.class, () -> learnerMealy.resume(castState));
     }
 }
