@@ -20,16 +20,19 @@ import java.util.Collection;
 import de.learnlib.algorithm.lambda.ttt.dt.DTLeaf;
 import de.learnlib.algorithm.lambda.ttt.pt.PTNode;
 import de.learnlib.algorithm.lambda.ttt.pt.PrefixTree;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
 class HypothesisMealy<I, O> implements MealyMachine<DTLeaf<I, Word<O>>, I, MealyTransition<I, O>, O> {
 
+    private final MembershipOracle<I, Word<O>> oracle;
     private final PrefixTree<I, Word<O>> ptree;
     private final DecisionTreeMealy<I, O> dtree;
 
-    HypothesisMealy(PrefixTree<I, Word<O>> ptree, DecisionTreeMealy<I, O> dtree) {
+    HypothesisMealy(MembershipOracle<I, Word<O>> oracle, PrefixTree<I, Word<O>> ptree, DecisionTreeMealy<I, O> dtree) {
+        this.oracle = oracle;
         this.ptree = ptree;
         this.dtree = dtree;
     }
@@ -41,7 +44,7 @@ class HypothesisMealy<I, O> implements MealyMachine<DTLeaf<I, Word<O>>, I, Mealy
 
     @Override
     public O getTransitionOutput(MealyTransition<I, O> o) {
-        return dtree.getOutput(o.source, o.input);
+        return dtree.getOutput(oracle, o.source, o.input);
     }
 
     @Override
@@ -75,7 +78,7 @@ class HypothesisMealy<I, O> implements MealyMachine<DTLeaf<I, Word<O>>, I, Mealy
     void fetchAllPendingOutputs(Alphabet<I> alphabet) {
         for (DTLeaf<I, Word<O>> s : dtree.leaves()) {
             for (I i : alphabet) {
-                dtree.getOutput(s, i);
+                dtree.getOutput(oracle, s, i);
             }
         }
     }

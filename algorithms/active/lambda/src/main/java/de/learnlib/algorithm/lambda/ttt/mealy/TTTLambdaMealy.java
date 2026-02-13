@@ -29,6 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class TTTLambdaMealy<I, O> extends AbstractTTTLambda<MealyMachine<?, I, ?, O>, I, Word<O>>
         implements MealyLearner<I, O> {
 
+    private final MembershipOracle<I, Word<O>> mqs;
     private HypothesisMealy<I, O> hypothesis;
     private DecisionTreeMealy<I, O> dtree;
 
@@ -37,15 +38,16 @@ public class TTTLambdaMealy<I, O> extends AbstractTTTLambda<MealyMachine<?, I, ?
     }
 
     public TTTLambdaMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> mqs, MembershipOracle<I, Word<O>> ceqs) {
-        super(alphabet, ceqs);
-        dtree = new DecisionTreeMealy<>(mqs, alphabet, strie.root());
+        super(alphabet, mqs, ceqs);
+        dtree = new DecisionTreeMealy<>(alphabet, strie.root());
         DTLeaf<I, Word<O>> dtRoot = new DTLeaf<>(null, dtree, ptree.root());
         dtree.setRoot(dtRoot);
         ptree.root().setState(dtRoot);
         for (I a : alphabet) {
-            dtree.sift(ptree.root().append(a));
+            dtree.sift(mqs, ptree.root().append(a));
         }
-        hypothesis = new HypothesisMealy<>(ptree, dtree);
+        this.mqs = mqs;
+        hypothesis = new HypothesisMealy<>(mqs, ptree, dtree);
     }
 
     @Override
@@ -74,8 +76,8 @@ public class TTTLambdaMealy<I, O> extends AbstractTTTLambda<MealyMachine<?, I, ?
     }
 
     @Override
-    protected void makeConsistent() {
-        super.makeConsistent();
+    protected void makeConsistent(MembershipOracle<I, Word<O>> oracle) {
+        super.makeConsistent(oracle);
         hypothesis.fetchAllPendingOutputs(super.alphabet);
     }
 
@@ -84,7 +86,7 @@ public class TTTLambdaMealy<I, O> extends AbstractTTTLambda<MealyMachine<?, I, ?
         super.resume(state);
         if (state.dtree instanceof DecisionTreeMealy<I, O> d) {
             this.dtree = d;
-            this.hypothesis = new HypothesisMealy<>(ptree, dtree);
+            this.hypothesis = new HypothesisMealy<>(mqs, ptree, dtree);
         } else {
             throw new IllegalArgumentException("provided state does not match expected structure");
         }

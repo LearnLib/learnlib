@@ -16,6 +16,7 @@
 package de.learnlib.algorithm.lambda.ttt.pt;
 
 import de.learnlib.algorithm.lambda.ttt.dt.DTLeaf;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -31,5 +32,5 @@ public interface PTNode<I, D> {
 
     @Nullable PTNode<I, D> succ(I a);
 
-    void makeShortPrefix();
+    void makeShortPrefix(MembershipOracle<I, D> oracle);
 }

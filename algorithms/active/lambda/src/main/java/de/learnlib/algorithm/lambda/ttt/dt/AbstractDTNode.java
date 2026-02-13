@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.learnlib.algorithm.lambda.ttt.pt.PTNode;
+import de.learnlib.oracle.MembershipOracle;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractDTNode<I, D> {
@@ -44,7 +45,7 @@ public abstract class AbstractDTNode<I, D> {
         }
     }
 
-    abstract void sift(PTNode<I, D> prefix);
+    abstract void sift(MembershipOracle<I, D> oracle, PTNode<I, D> prefix);
 
     abstract void leaves(List<DTLeaf<I, D>> list);
 

@@ -37,8 +37,8 @@ public class TTTLambdaDFA<I> extends AbstractTTTLambda<DFA<?, I>, I, Boolean> im
     }
 
     public TTTLambdaDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> mqs, MembershipOracle<I, Boolean> ceqs) {
-        super(alphabet, ceqs);
-        dtree = new DecisionTreeDFA<>(mqs, alphabet, strie.root());
+        super(alphabet, mqs, ceqs);
+        dtree = new DecisionTreeDFA<>(alphabet, strie.root());
         DTInnerNode<I, Boolean> dtRoot = new DTInnerNode<>(null, dtree, new ChildrenDFA<>(), strie.root());
         dtree.setRoot(dtRoot);
         hypothesis = new HypothesisDFA<>(ptree, dtree);

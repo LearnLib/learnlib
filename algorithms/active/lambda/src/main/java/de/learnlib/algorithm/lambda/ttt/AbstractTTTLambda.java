@@ -42,13 +42,15 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
                                                                                        Resumable<TTTLambdaState<I, D>>,
                                                                                        FiniteRepresentation {
 
+    private final MembershipOracle<I, D> mqs;
     private final MembershipOracle<I, D> ceqs;
     protected final Alphabet<I> alphabet;
     protected SuffixTrie<I> strie;
     protected PrefixTree<I, D> ptree;
 
-    protected AbstractTTTLambda(Alphabet<I> alphabet, MembershipOracle<I, D> ceqs) {
+    protected AbstractTTTLambda(Alphabet<I> alphabet, MembershipOracle<I, D> mqs, MembershipOracle<I, D> ceqs) {
         this.alphabet = alphabet;
+        this.mqs = mqs;
         this.ceqs = ceqs;
 
         this.strie = new SuffixTrie<>();
@@ -64,8 +66,8 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
     @Override
     public void startLearning() {
         assert dtree() != null && getHypothesisModel() != null;
-        dtree().sift(ptree.root());
-        makeConsistent();
+        dtree().sift(mqs, ptree.root());
+        makeConsistent(mqs);
     }
 
     @Override
@@ -85,7 +87,7 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
 
             if (valid) {
                 analyzeCounterexample(witness, witnesses);
-                makeConsistent();
+                makeConsistent(mqs);
                 refined = true;
             } else {
                 witnesses.pop();
@@ -112,15 +114,15 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
                 assert u != null;
                 PTNode<I, D> ua = u.append(symbol);
                 assert ua != null;
-                dtree().sift(ua);
+                dtree().sift(mqs, ua);
             }
 
-            makeConsistent();
+            makeConsistent(mqs);
         }
     }
 
-    protected void makeConsistent() {
-        while (dtree().makeConsistent()) {
+    protected void makeConsistent(MembershipOracle<I, D> oracle) {
+        while (dtree().makeConsistent(oracle)) {
             // do nothing ...
         }
     }
@@ -184,7 +186,7 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
         }
         witnesses.push(new DefaultQuery<>(ua.word(), sprime));
 
-        ua.makeShortPrefix();
+        ua.makeShortPrefix(mqs);
     }
 
     @Override
