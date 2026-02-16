@@ -15,13 +15,10 @@
  */
 package de.learnlib.algorithm.procedural.adapter.dfa;
 
-import java.util.List;
-
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.lambda.lstar.LLambdaDFA;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 /**
  * Adapter for using {@link LLambdaDFA} as a procedural learner.
@@ -33,15 +30,5 @@ public class LLambdaAdapterDFA<I> extends LLambdaDFA<I> implements AccessSequenc
 
     public LLambdaAdapterDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
         super(alphabet, oracle);
-    }
-
-    @Override
-    public Word<I> transformAccessSequence(Word<I> word) {
-        final List<Boolean> row = super.rowForState(word);
-        final List<Word<I>> shortPrefixes = super.getShortPrefixes(row);
-
-        assert shortPrefixes.size() == 1;
-
-        return shortPrefixes.get(0);
     }
 }

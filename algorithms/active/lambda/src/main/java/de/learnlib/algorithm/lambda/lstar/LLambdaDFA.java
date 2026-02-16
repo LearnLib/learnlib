@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
+import de.learnlib.datastructure.observationtable.OTLearner.OTLearnerDFA;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
@@ -28,7 +28,7 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
 
-public class LLambdaDFA<I> extends AbstractLLambda<DFA<?, I>, I, Boolean> implements DFALearner<I> {
+public class LLambdaDFA<I> extends AbstractLLambda<DFA<?, I>, I, Boolean> implements OTLearnerDFA<I> {
 
     private CompactDFA<I> hypothesis;
     private MutableMapping<Integer, List<Boolean>> hypStateMap;
@@ -98,6 +98,16 @@ public class LLambdaDFA<I> extends AbstractLLambda<DFA<?, I>, I, Boolean> implem
     @Override
     public DFA<?, I> getHypothesisModel() {
         return hypothesis;
+    }
+
+    @Override
+    public Word<I> transformAccessSequence(Word<I> word) {
+        final List<Boolean> row = rowForState(word);
+        final List<Word<I>> shortPrefixes = super.getShortPrefixes(row);
+
+        assert shortPrefixes.size() == 1;
+
+        return shortPrefixes.get(0);
     }
 
     @Override

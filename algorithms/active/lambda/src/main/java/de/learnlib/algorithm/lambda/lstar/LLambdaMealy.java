@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
+import de.learnlib.datastructure.observationtable.OTLearner.OTLearnerMealy;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -30,7 +30,7 @@ import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
 
 public class LLambdaMealy<I, O> extends AbstractLLambda<MealyMachine<?, I, ?, O>, I, Word<O>>
-        implements MealyLearner<I, O> {
+        implements OTLearnerMealy<I, O> {
 
     private CompactMealy<I, O> hypothesis;
     private MutableMapping<Integer, List<Word<O>>> hypStateMap;
@@ -109,6 +109,16 @@ public class LLambdaMealy<I, O> extends AbstractLLambda<MealyMachine<?, I, ?, O>
                 this.hypothesis.setTransition(state, a, dst, o);
             }
         }
+    }
+
+    @Override
+    public Word<I> transformAccessSequence(Word<I> word) {
+        final List<Word<O>> row = rowForState(word);
+        final List<Word<I>> shortPrefixes = super.getShortPrefixes(row);
+
+        assert shortPrefixes.size() == 1;
+
+        return shortPrefixes.get(0);
     }
 
     @Override

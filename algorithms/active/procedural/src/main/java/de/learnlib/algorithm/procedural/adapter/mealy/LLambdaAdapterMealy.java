@@ -15,8 +15,6 @@
  */
 package de.learnlib.algorithm.procedural.adapter.mealy;
 
-import java.util.List;
-
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.lambda.lstar.LLambdaMealy;
 import de.learnlib.oracle.MembershipOracle;
@@ -35,15 +33,5 @@ public class LLambdaAdapterMealy<I, O> extends LLambdaMealy<I, O> implements Acc
 
     public LLambdaAdapterMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
         super(alphabet, oracle);
-    }
-
-    @Override
-    public Word<I> transformAccessSequence(Word<I> word) {
-        final List<Word<O>> row = super.rowForState(word);
-        final List<Word<I>> shortPrefixes = super.getShortPrefixes(row);
-
-        assert shortPrefixes.size() == 1;
-
-        return shortPrefixes.get(0);
     }
 }

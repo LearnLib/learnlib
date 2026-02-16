@@ -19,16 +19,18 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.Resumable;
-import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.datastructure.observationtable.OTLearner;
+import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
@@ -41,7 +43,8 @@ import net.automatalib.word.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements LearningAlgorithm<M, I, D>,
+abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements OTLearner<M, I, D>,
+                                                                              AccessSequenceTransformer<I>,
                                                                               SupportsGrowingAlphabet<I>,
                                                                               Resumable<LLambdaState<I, D>>,
                                                                               FiniteRepresentation {
@@ -66,7 +69,7 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements Le
 
         this.suffixes = new ArrayList<>(initialSuffixes);
         this.shortPrefixes = new HashSet<>();
-        this.rows = new HashMap<>();
+        this.rows = new LinkedHashMap<>();
     }
 
     abstract int maxSearchIndex(int ceLength);
@@ -306,6 +309,11 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements Le
 
             learnLoop();
         }
+    }
+
+    @Override
+    public ObservationTable<I, D> getObservationTable() {
+        return new OTView<>(alphabet, shortPrefixes, rows, suffixes, this);
     }
 
     @Override

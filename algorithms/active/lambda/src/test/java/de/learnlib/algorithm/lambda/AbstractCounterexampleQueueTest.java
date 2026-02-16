@@ -36,7 +36,7 @@ import org.testng.annotations.Test;
  */
 public abstract class AbstractCounterexampleQueueTest {
 
-    private static final CompactDFA<Character> DFA;
+    public static final CompactDFA<Character> DFA;
 
     static {
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'b');

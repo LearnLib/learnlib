@@ -73,7 +73,7 @@ public final class RowImpl<I> implements Row<I> {
 
     @Override
     public RowImpl<I> getSuccessor(int inputIdx) {
-        return successors.get(inputIdx);
+        return successors == null ? null : successors.get(inputIdx);
     }
 
     /**
