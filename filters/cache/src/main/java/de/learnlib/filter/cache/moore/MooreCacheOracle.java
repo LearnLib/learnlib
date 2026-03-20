@@ -206,16 +206,16 @@ public class MooreCacheOracle<I, O>
             return;
         }
 
-        int answLen = answer.length();
+        int ansLen = answer.length();
         int i = 0;
-        while (i < answLen) {
+        while (i < ansLen) {
             O sym = answer.getSymbol(i++);
             if (errorSyms.get(sym) != null) {
                 break;
             }
         }
 
-        if (i == answLen) {
+        if (i == ansLen) {
             incMoore.insert(word, answer);
         } else {
             incMoore.insert(word.prefix(i - 1), answer.prefix(i));

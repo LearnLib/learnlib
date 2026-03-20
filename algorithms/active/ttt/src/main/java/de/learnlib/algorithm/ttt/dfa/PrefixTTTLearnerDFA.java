@@ -106,20 +106,20 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
         return minLength;
     }
 
-    protected static class ExtDTNode<I> extends TTTDTNodeDFA<I> {
+    private static class ExtDTNode<I> extends TTTDTNodeDFA<I> {
 
         private ExtDTNode<I> prevUnlabeled, nextUnlabeled;
         private int tempPrefix = -1;
 
-        public ExtDTNode() {
+        ExtDTNode() {
             // default constructor
         }
 
-        public ExtDTNode(ExtDTNode<I> parent, Boolean parentOut) {
+        ExtDTNode(ExtDTNode<I> parent, Boolean parentOut) {
             super(parent, parentOut);
         }
 
-        public void removeFromUnlabeledList() {
+        void removeFromUnlabeledList() {
             prevUnlabeled.nextUnlabeled = nextUnlabeled;
             if (nextUnlabeled != null) {
                 nextUnlabeled.prevUnlabeled = prevUnlabeled;
@@ -131,11 +131,7 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             return new ExtDTNode<>(this, outcome);
         }
 
-        public boolean hasUnlabeled() {
-            return nextUnlabeled != null;
-        }
-
-        public void addUnlabeled(ExtDTNode<I> node) {
+        void addUnlabeled(ExtDTNode<I> node) {
             node.nextUnlabeled = nextUnlabeled;
             if (nextUnlabeled != null) {
                 nextUnlabeled.prevUnlabeled = node;
@@ -144,11 +140,11 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             this.nextUnlabeled = node;
         }
 
-        public Iterable<ExtDTNode<I>> unlabeled() {
+        Iterable<ExtDTNode<I>> unlabeled() {
             return this::unlabeledIterator;
         }
 
-        public Iterator<ExtDTNode<I>> unlabeledIterator() {
+        Iterator<ExtDTNode<I>> unlabeledIterator() {
             return new UnlabeledIterator<>(this);
         }
 
@@ -186,7 +182,7 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             update(ceWord.length());
         }
 
-        public void update(int len) {
+        void update(int len) {
             TTTStateDFA<I> curr = (TTTStateDFA<I>) hypothesis.getInitialState();
             assert curr != null;
             hypNodes.set(0, (ExtDTNode<I>) curr.getDTLeaf());
@@ -239,11 +235,11 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
             return siftNode == hypNode;
         }
 
-        public ExtDTNode<I> getLCA(int index) {
+        ExtDTNode<I> getLCA(int index) {
             return (ExtDTNode<I>) dtree.leastCommonAncestor(hypNodes.get(index), siftNodes.get(index));
         }
 
-        public ExtDTNode<I> getHypNode(int index) {
+        ExtDTNode<I> getHypNode(int index) {
             return hypNodes.get(index);
         }
 

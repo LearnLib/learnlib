@@ -341,7 +341,7 @@ public abstract class AbstractTTTLearner<A, I, D>
         Set<TTTState<I, D>> states = Collections.singleton(start);
         int i = 1;
         for (I sym : word) {
-            Set<TTTState<I, D>> nextStates = getNondetSuccessors(states, sym);
+            Set<TTTState<I, D>> nextStates = getNonDetSuccessors(states, sym);
             if (nextStates.size() == 1) {
                 lastSingleton = nextStates.iterator().next();
                 lastSingletonIndex = i;
@@ -363,7 +363,7 @@ public abstract class AbstractTTTLearner<A, I, D>
         return curr;
     }
 
-    protected Set<TTTState<I, D>> getNondetSuccessors(Collection<? extends TTTState<I, D>> states, I sym) {
+    protected Set<TTTState<I, D>> getNonDetSuccessors(Collection<? extends TTTState<I, D>> states, I sym) {
         Set<TTTState<I, D>> result = new HashSet<>();
         int symIdx = alphabet.getSymbolIndex(sym);
         for (TTTState<I, D> state : states) {
@@ -1049,8 +1049,8 @@ public abstract class AbstractTTTLearner<A, I, D>
      */
     private static final class GlobalSplitter<I, D> {
 
-        public final Splitter<I, D> localSplitter;
-        public final AbstractBaseDTNode<I, D> blockRoot;
+        private final Splitter<I, D> localSplitter;
+        private final AbstractBaseDTNode<I, D> blockRoot;
 
         GlobalSplitter(AbstractBaseDTNode<I, D> blockRoot, Splitter<I, D> localSplitter) {
             this.blockRoot = blockRoot;
@@ -1068,8 +1068,8 @@ public abstract class AbstractTTTLearner<A, I, D>
      */
     private static final class ExtractRecord<I, D> {
 
-        public final AbstractBaseDTNode<I, D> original;
-        public final AbstractBaseDTNode<I, D> extracted;
+        private final AbstractBaseDTNode<I, D> original;
+        private final AbstractBaseDTNode<I, D> extracted;
 
         ExtractRecord(AbstractBaseDTNode<I, D> original, AbstractBaseDTNode<I, D> extracted) {
             this.original = original;

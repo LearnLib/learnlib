@@ -354,23 +354,23 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
             // prevent instantiation
         }
 
-        public static Rule2 rule2() {
+        static Rule2 rule2() {
             return Rule2.ADS;
         }
 
-        public static Rule3 rule3() {
+        static Rule3 rule3() {
             return Rule3.ADS;
         }
 
-        public static <I> @Nullable Word<I> sinkState() {
+        static <I> @Nullable Word<I> sinkState() {
             return null;
         }
 
-        public static <O> @Nullable O sinkOutput() {
+        static <O> @Nullable O sinkOutput() {
             return null;
         }
 
-        public static Random random() {
+        static Random random() {
             return new Random();
         }
     }

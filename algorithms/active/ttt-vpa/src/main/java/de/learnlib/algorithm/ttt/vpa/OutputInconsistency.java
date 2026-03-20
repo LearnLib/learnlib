@@ -20,11 +20,11 @@ import de.learnlib.algorithm.observationpack.vpa.hypothesis.HypLoc;
 
 final class OutputInconsistency<I> {
 
-    public final HypLoc<I> location;
+    final HypLoc<I> location;
 
-    public final ContextPair<I> discriminator;
+    final ContextPair<I> discriminator;
 
-    public final boolean expectedOut;
+    final boolean expectedOut;
 
     OutputInconsistency(HypLoc<I> location, ContextPair<I> discriminator, boolean expectedOut) {
         this.location = location;
@@ -32,7 +32,7 @@ final class OutputInconsistency<I> {
         this.expectedOut = expectedOut;
     }
 
-    public int totalLength() {
+    int totalLength() {
         return location.getAccessSequence().length() + discriminator.getLength();
     }
 }

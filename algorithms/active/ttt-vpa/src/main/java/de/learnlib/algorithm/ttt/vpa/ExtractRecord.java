@@ -26,9 +26,9 @@ import de.learnlib.algorithm.observationpack.vpa.hypothesis.DTNode;
  */
 final class ExtractRecord<I> {
 
-    public final DTNode<I> original;
+    final DTNode<I> original;
 
-    public final DTNode<I> extracted;
+    final DTNode<I> extracted;
 
     ExtractRecord(DTNode<I> original, DTNode<I> extracted) {
         this.original = original;

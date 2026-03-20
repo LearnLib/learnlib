@@ -18,7 +18,6 @@ package de.learnlib.filter.symbol;
 import java.util.Random;
 
 import de.learnlib.filter.FilterResponse;
-import de.learnlib.filter.SymbolFilter;
 import net.automatalib.word.Word;
 
 /**
@@ -29,7 +28,7 @@ import net.automatalib.word.Word;
  * @param <V>
  *         input symbol type of the transition label
  */
-public abstract class AbstractRandomSymbolFilter<U, V> extends AbstractTruthfulSymbolFilter<U, V> implements SymbolFilter<U, V> {
+public abstract class AbstractRandomSymbolFilter<U, V> extends AbstractTruthfulSymbolFilter<U, V> {
 
     private final double inaccurateProb;
     private final Random random;

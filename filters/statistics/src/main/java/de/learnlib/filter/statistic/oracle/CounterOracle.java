@@ -104,7 +104,7 @@ public class CounterOracle<I, D> implements MembershipOracle<I, D> {
      * @param delegate
      *         the oracle to delegate calls to
      * @param id
-     *         the id used for specialising the statistics keys
+     *         the id used for specializing the statistics keys
      */
     public CounterOracle(MembershipOracle<I, D> delegate, @Nullable String id) {
         this.delegate = delegate;

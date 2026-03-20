@@ -52,7 +52,7 @@ public class CounterObservableSUL<S, I, O> extends CounterSUL<I, O> implements O
      * @param delegate
      *         the SUL to delegate calls to
      * @param id
-     *         the id used for specialising the statistics keys
+     *         the id used for specializing the statistics keys
      */
     public CounterObservableSUL(ObservableSUL<S, I, O> delegate, @Nullable String id) {
         this(delegate, id, Statistics.getService());

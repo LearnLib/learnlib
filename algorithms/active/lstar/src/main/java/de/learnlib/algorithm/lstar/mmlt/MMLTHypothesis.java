@@ -40,10 +40,10 @@ public class MMLTHypothesis<I, O> extends CompactMMLT<I, O> {
 
     MMLTHypothesis(Alphabet<I> alphabet,
                    int sizeHint,
-                   O silentOuput,
+                   O silentOutput,
                    SymbolCombiner<O> outputCombiner,
                    Map<Integer, Word<TimedInput<I>>> prefixMap) {
-        super(alphabet, sizeHint, silentOuput, outputCombiner);
+        super(alphabet, sizeHint, silentOutput, outputCombiner);
         this.prefixMap = prefixMap;
     }
 

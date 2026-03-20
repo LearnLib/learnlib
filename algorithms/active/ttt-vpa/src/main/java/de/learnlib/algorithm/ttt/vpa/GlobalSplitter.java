@@ -26,9 +26,9 @@ import de.learnlib.algorithm.observationpack.vpa.hypothesis.DTNode;
  */
 final class GlobalSplitter<I> {
 
-    public final Splitter<I> localSplitter;
+    final Splitter<I> localSplitter;
 
-    public final DTNode<I> blockRoot;
+    final DTNode<I> blockRoot;
 
     GlobalSplitter(DTNode<I> blockRoot, Splitter<I> localSplitter) {
         this.blockRoot = blockRoot;

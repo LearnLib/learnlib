@@ -99,7 +99,7 @@ public class RefinementCounterLearner<M, I, D> implements LearningAlgorithm<M, I
      * @param delegate
      *         the learning algorithm to delegate calls to
      * @param id
-     *         the id used for specialising the statistics keys
+     *         the id used for specializing the statistics keys
      */
     public RefinementCounterLearner(LearningAlgorithm<M, I, D> delegate, @Nullable String id) {
         this.delegate = delegate;

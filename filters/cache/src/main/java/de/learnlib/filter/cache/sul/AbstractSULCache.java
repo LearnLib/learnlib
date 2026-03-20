@@ -86,7 +86,7 @@ abstract class AbstractSULCache<I, O, C extends SULCacheState<I, O>>
         this.impl.resume(state);
     }
 
-    public int size() {
+    int size() {
         return impl.incMealy.asGraph().size();
     }
 
@@ -221,7 +221,7 @@ abstract class AbstractSULCache<I, O, C extends SULCacheState<I, O>>
         }
     }
 
-    public static class SULCacheState<I, O> {
+    static class SULCacheState<I, O> {
 
         final IncrementalMealyBuilder<I, O> builder;
 

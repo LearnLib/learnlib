@@ -847,24 +847,24 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
             // prevent instantiation
         }
 
-        public static LeafSplitter leafSplitter() {
+        static LeafSplitter leafSplitter() {
             return LeafSplitters.DEFAULT_SPLITTER;
         }
 
-        public static ADTExtender adtExtender() {
+        static ADTExtender adtExtender() {
             return ADTExtenders.EXTEND_BEST_EFFORT;
         }
 
-        public static SubtreeReplacer subtreeReplacer() {
+        static SubtreeReplacer subtreeReplacer() {
             return SubtreeReplacers.LEVELED_BEST_EFFORT;
         }
 
-        public static boolean useObservationTree() {
+        static boolean useObservationTree() {
             return true;
         }
 
         @SuppressWarnings("unchecked")
-        public static <I, D> LocalSuffixFinder<I, D> suffixFinder() {
+        static <I, D> LocalSuffixFinder<I, D> suffixFinder() {
             return (LocalSuffixFinder<I, D>) LocalSuffixFinders.RIVEST_SCHAPIRE;
         }
     }

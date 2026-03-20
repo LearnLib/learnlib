@@ -107,7 +107,7 @@ public interface AutomatonOracle<A extends DeterministicAutomaton<?, I, ?>, I, D
     DefaultQuery<I, D> processInput(A hypothesis, Word<I> input);
 
     /**
-     * Adds words to a datastructure. The key part of the implementation is that undefined inputs will be skipped.
+     * Adds words to a data structure. The key part of the implementation is that undefined inputs will be skipped.
      *
      * @param hypothesis
      *         the automaton to add words for.

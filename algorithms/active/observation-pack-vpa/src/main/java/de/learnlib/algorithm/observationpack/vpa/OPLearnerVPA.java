@@ -125,6 +125,8 @@ public class OPLearnerVPA<I> extends AbstractVPALearner<I> {
         return true;
     }
 
+    // the class should only be visible to children but they need to be able to access the getters without extending
+    @SuppressWarnings("PMD.PublicMemberInNonPublicType")
     protected class PrefixTransformAcex extends AbstractBaseCounterexample<Boolean> {
 
         private final Word<I> suffix;

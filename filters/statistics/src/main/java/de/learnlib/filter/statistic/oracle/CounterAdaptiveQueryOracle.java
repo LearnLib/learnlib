@@ -75,7 +75,7 @@ public class CounterAdaptiveQueryOracle<I, O> implements AdaptiveMembershipOracl
      * @param delegate
      *         the oracle to delegate calls to
      * @param id
-     *         the id used for specialising the statistics keys
+     *         the id used for specializing the statistics keys
      */
     public CounterAdaptiveQueryOracle(AdaptiveMembershipOracle<I, O> delegate, @Nullable String id) {
         this.delegate = delegate;

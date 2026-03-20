@@ -20,12 +20,10 @@ import java.util.Iterator;
 import de.learnlib.datastructure.discriminationtree.iterators.DiscriminationTreeIterators;
 import de.learnlib.datastructure.discriminationtree.model.AbstractTemporaryIntrusiveDTNode;
 import de.learnlib.datastructure.list.IntrusiveList;
-import de.learnlib.datastructure.list.IntrusiveListEntry;
 import net.automatalib.word.Word;
 
 public abstract class AbstractBaseDTNode<I, D>
-        extends AbstractTemporaryIntrusiveDTNode<Word<I>, D, TTTState<I, D>, IntrusiveList<TTTTransition<I, D>>, AbstractBaseDTNode<I, D>>
-        implements IntrusiveListEntry<AbstractBaseDTNode<I, D>> {
+        extends AbstractTemporaryIntrusiveDTNode<Word<I>, D, TTTState<I, D>, IntrusiveList<TTTTransition<I, D>>, AbstractBaseDTNode<I, D>> {
 
     private final IntrusiveList<TTTTransition<I, D>> incoming = new IntrusiveList<>();
 

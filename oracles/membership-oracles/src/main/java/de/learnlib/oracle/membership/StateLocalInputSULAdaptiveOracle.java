@@ -35,8 +35,7 @@ import de.learnlib.sul.StateLocalInputSUL;
  *
  * @see SULAdaptiveOracle
  */
-public class StateLocalInputSULAdaptiveOracle<I, O> extends SULAdaptiveOracle<I, O>
-        implements AdaptiveMembershipOracle<I, O> {
+public class StateLocalInputSULAdaptiveOracle<I, O> extends SULAdaptiveOracle<I, O> {
 
     private final StateLocalInputSUL<I, O> sul;
     private final O undefinedOutput;

@@ -72,7 +72,7 @@ public abstract class AbstractDFAPassiveLearnerIT {
     }
 
     /**
-     * Utility method, that may be overriden by subclasses.
+     * Utility method, that may be overridden by subclasses.
      *
      * @param alphabet
      *         the alphabet of the target system

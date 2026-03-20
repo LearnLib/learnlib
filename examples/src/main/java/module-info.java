@@ -52,10 +52,6 @@ open module de.learnlib.example {
     requires net.automatalib.visualization.dot;
     requires org.apache.fury.core;
 
-    // required by Fury
-    requires jdk.unsupported;
-    requires java.sql;
-
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
 

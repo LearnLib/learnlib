@@ -21,7 +21,6 @@ import java.util.Map;
 import de.learnlib.datastructure.discriminationtree.iterators.DiscriminationTreeIterators;
 import de.learnlib.datastructure.discriminationtree.model.AbstractTemporaryIntrusiveDTNode;
 import de.learnlib.datastructure.discriminationtree.model.BooleanMap;
-import de.learnlib.datastructure.list.IntrusiveListEntry;
 
 /**
  * Specific discrimination tree node implementation.
@@ -30,8 +29,7 @@ import de.learnlib.datastructure.list.IntrusiveListEntry;
  *         input symbol type
  */
 public class DTNode<I>
-        extends AbstractTemporaryIntrusiveDTNode<ContextPair<I>, Boolean, HypLoc<I>, TransList<I>, DTNode<I>>
-        implements IntrusiveListEntry<DTNode<I>> {
+        extends AbstractTemporaryIntrusiveDTNode<ContextPair<I>, Boolean, HypLoc<I>, TransList<I>, DTNode<I>> {
 
     private final TransList<I> nonTreeIncoming = new TransList<>();
 

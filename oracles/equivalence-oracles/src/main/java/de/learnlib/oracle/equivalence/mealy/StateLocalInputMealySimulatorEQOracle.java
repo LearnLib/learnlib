@@ -15,14 +15,12 @@
  */
 package de.learnlib.oracle.equivalence.mealy;
 
-import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
 import de.learnlib.oracle.equivalence.MealySimulatorEQOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.util.automaton.transducer.MealyMachines;
 
-public class StateLocalInputMealySimulatorEQOracle<I, O> extends MealySimulatorEQOracle<I, O>
-        implements MealyEquivalenceOracle<I, O> {
+public class StateLocalInputMealySimulatorEQOracle<I, O> extends MealySimulatorEQOracle<I, O> {
 
     public StateLocalInputMealySimulatorEQOracle(MealyMachine<?, I, ?, O> reference,
                                                  Alphabet<I> alphabet,

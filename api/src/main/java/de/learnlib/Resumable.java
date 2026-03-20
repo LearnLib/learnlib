@@ -38,7 +38,7 @@ public interface Resumable<T> {
     T suspend();
 
     /**
-     * Resume the datastructure from a previously suspended point in time.
+     * Resume the data structure from a previously suspended point in time.
      *
      * @param state
      *         The learner state.

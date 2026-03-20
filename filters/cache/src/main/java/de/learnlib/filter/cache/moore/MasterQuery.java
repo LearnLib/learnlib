@@ -58,11 +58,11 @@ final class MasterQuery<I, O> extends AbstractQuery<I, Word<O>> {
         this.slaves = null;
     }
 
-    public Word<O> getAnswer() {
+    Word<O> getAnswer() {
         return answer;
     }
 
-    public boolean isAnswered() {
+    boolean isAnswered() {
         return answer != null;
     }
 
@@ -111,7 +111,7 @@ final class MasterQuery<I, O> extends AbstractQuery<I, Word<O>> {
         return toStringWithAnswer(answer);
     }
 
-    public void addSlave(Query<I, Word<O>> slave) {
+    void addSlave(Query<I, Word<O>> slave) {
         if (slaves == null) {
             answerSlave(slave);
         } else {

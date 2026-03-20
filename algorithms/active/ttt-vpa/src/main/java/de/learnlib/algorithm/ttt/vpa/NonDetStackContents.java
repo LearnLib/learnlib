@@ -21,48 +21,48 @@ import java.util.Set;
 import net.automatalib.automaton.vpa.StackContents;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class NondetStackContents {
+final class NonDetStackContents {
 
     private final Set<Integer> syms;
 
-    private final NondetStackContents rest;
+    private final NonDetStackContents rest;
 
-    private final boolean isTrueNondet;
+    private final boolean isTrueNonDet;
 
-    NondetStackContents(Set<Integer> syms, NondetStackContents rest) {
+    NonDetStackContents(Set<Integer> syms, NonDetStackContents rest) {
         this.syms = syms;
         this.rest = rest;
-        this.isTrueNondet = rest != null && rest.isTrueNondet || syms.size() > 1;
+        this.isTrueNonDet = rest != null && rest.isTrueNonDet || syms.size() > 1;
     }
 
-    public static NondetStackContents push(Set<Integer> syms, NondetStackContents rest) {
-        return new NondetStackContents(syms, rest);
+    static NonDetStackContents push(Set<Integer> syms, NonDetStackContents rest) {
+        return new NonDetStackContents(syms, rest);
     }
 
-    public static @Nullable NondetStackContents fromDet(@Nullable StackContents sc) {
+    static @Nullable NonDetStackContents fromDet(@Nullable StackContents sc) {
         if (sc == null) {
             return null;
         }
         return push(Collections.singleton(sc.peek()), fromDet(sc.pop()));
     }
 
-    public static @Nullable StackContents toDet(@Nullable NondetStackContents nsc) {
+    static @Nullable StackContents toDet(@Nullable NonDetStackContents nsc) {
         if (nsc == null) {
             return null;
         }
         return StackContents.push(nsc.syms.iterator().next(), toDet(nsc.pop()));
     }
 
-    public Set<Integer> peek() {
+    Set<Integer> peek() {
         return syms;
     }
 
-    public NondetStackContents pop() {
+    NonDetStackContents pop() {
         return rest;
     }
 
-    public boolean isTrueNondet() {
-        return this.isTrueNondet;
+    boolean isTrueNonDet() {
+        return this.isTrueNonDet;
     }
 
 }

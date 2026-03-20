@@ -378,16 +378,16 @@ public class KearnsVaziraniMealy<I, O>
             // prevent instantiation
         }
 
-        public static boolean repeatedCounterexampleEvaluation() {
+        static boolean repeatedCounterexampleEvaluation() {
             return true;
         }
 
-        public static AcexAnalyzer counterexampleAnalyzer() {
+        static AcexAnalyzer counterexampleAnalyzer() {
             return AcexAnalyzers.LINEAR_FWD;
         }
     }
 
-    protected class KVAbstractCounterexample extends AbstractBaseCounterexample<Boolean> {
+    private class KVAbstractCounterexample extends AbstractBaseCounterexample<Boolean> {
 
         private final Word<I> ceWord;
         private final MembershipOracle<I, Word<O>> oracle;
@@ -395,7 +395,7 @@ public class KearnsVaziraniMealy<I, O>
         private final LCAInfo<Word<O>, @Nullable AbstractWordBasedDTNode<I, Word<O>, StateInfo<I, Word<O>>>>[] lcas;
 
         @SuppressWarnings("unchecked")
-        public KVAbstractCounterexample(Word<I> ceWord, Word<O> output, MembershipOracle<I, Word<O>> oracle) {
+        KVAbstractCounterexample(Word<I> ceWord, Word<O> output, MembershipOracle<I, Word<O>> oracle) {
             super(ceWord.length() + 1);
             this.ceWord = ceWord;
             this.oracle = oracle;
@@ -418,11 +418,11 @@ public class KearnsVaziraniMealy<I, O>
             super.setEffect(m, false);
         }
 
-        public StateInfo<I, Word<O>> getStateInfo(int idx) {
+        StateInfo<I, Word<O>> getStateInfo(int idx) {
             return states[idx];
         }
 
-        public LCAInfo<Word<O>, @Nullable AbstractWordBasedDTNode<I, Word<O>, StateInfo<I, Word<O>>>> getLCA(int idx) {
+        LCAInfo<Word<O>, @Nullable AbstractWordBasedDTNode<I, Word<O>, StateInfo<I, Word<O>>>> getLCA(int idx) {
             return lcas[idx];
         }
 

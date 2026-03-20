@@ -75,7 +75,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
                     int stackSym = hypothesis.encodeStackSym(loc, sym);
                     stackSyms.add(stackSym);
                 }
-                NondetStackContents nsc = NondetStackContents.push(stackSyms, curr.getStack());
+                NonDetStackContents nsc = NonDetStackContents.push(stackSyms, curr.getStack());
                 curr = new NonDetState<>(Collections.singleton(hypothesis.getInitialLocation()), nsc);
             } else if (alphabet.isReturnSymbol(sym)) {
                 Set<HypLoc<I>> succs = new HashSet<>();

@@ -89,15 +89,15 @@ public class OPLearnerDFA<I> extends AbstractOPLearner<DFA<?, I>, I, Boolean, Bo
             // prevent instantiation
         }
 
-        public static boolean epsilonRoot() {
+        static boolean epsilonRoot() {
             return true;
         }
 
-        public static <I, O> LocalSuffixFinder<? super I, ? super O> suffixFinder() {
+        static <I, O> LocalSuffixFinder<? super I, ? super O> suffixFinder() {
             return LocalSuffixFinders.RIVEST_SCHAPIRE;
         }
 
-        public static boolean repeatedCounterexampleEvaluation() {
+        static boolean repeatedCounterexampleEvaluation() {
             return true;
         }
     }

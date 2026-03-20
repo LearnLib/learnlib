@@ -47,7 +47,7 @@ public class ForkTest {
 
         Mockito.verify(spy, Mockito.only()).fork();
 
-        // check independency
+        // check independence
         spy.pre();
         spy.step(Input.WATER);
         spy.step(Input.POD);
@@ -86,7 +86,7 @@ public class ForkTest {
 
         Mockito.verify(spy, Mockito.only()).fork();
 
-        // check independency
+        // check independence
         spy.pre();
         spy.step(input);
 
@@ -121,7 +121,7 @@ public class ForkTest {
 
         Mockito.verify(spy, Mockito.only()).fork();
 
-        // check independency
+        // check independence
         spy.pre();
         spy.step(Input.WATER);
         spy.step(Input.POD);
@@ -156,7 +156,7 @@ public class ForkTest {
 
         Mockito.verify(spy, Mockito.only()).fork();
 
-        // check independency
+        // check independence
         spy.pre();
         spy.step(Input.WATER);
         spy.step(Input.POD);

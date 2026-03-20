@@ -18,7 +18,6 @@ package de.learnlib.algorithm.procedural.adapter.dfa;
 import java.util.Objects;
 
 import de.learnlib.AccessSequenceTransformer;
-import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.rivestschapire.RivestSchapireDFA;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.oracle.MembershipOracle;
@@ -32,8 +31,7 @@ import net.automatalib.word.Word;
  * @param <I>
  *         input symbol type
  */
-public class RivestSchapireAdapterDFA<I> extends RivestSchapireDFA<I>
-        implements AccessSequenceTransformer<I>, DFALearner<I> {
+public class RivestSchapireAdapterDFA<I> extends RivestSchapireDFA<I> implements AccessSequenceTransformer<I> {
 
     public RivestSchapireAdapterDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
         super(alphabet, oracle);

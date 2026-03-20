@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithm.procedural.adapter.mealy;
 
-import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.lambda.lstar.LLambdaMealy;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
@@ -29,7 +28,7 @@ import net.automatalib.word.Word;
  * @param <O>
  *         output symbol type
  */
-public class LLambdaAdapterMealy<I, O> extends LLambdaMealy<I, O> implements AccessSequenceTransformer<I> {
+public class LLambdaAdapterMealy<I, O> extends LLambdaMealy<I, O> {
 
     public LLambdaAdapterMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
         super(alphabet, oracle);

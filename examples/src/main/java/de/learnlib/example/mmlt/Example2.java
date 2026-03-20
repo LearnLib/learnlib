@@ -124,9 +124,9 @@ public final class Example2 {
         // your SUL likely has no MMLT semantics.
         // In this case, you can try to learn a partial model by excluding TimeStepSymbol
         // from the input alphabet for the counterexample search:
-        // In your learn-loop (see ExampleUtil), replace
-        // tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
-        // with: tester.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet().stream().filter(s -> !(s instanceof TimeStepSymbol<String>)).toList());
+        // In your learn-loop (see Experiment), replace
+        // equivalenceAlgorithm.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet());
+        // with: equivalenceAlgorithm.findCounterExample(hyp, hyp.getSemantics().getInputAlphabet().stream().filter(s -> !(s instanceof TimeStepSymbol<String>)).toList());
     }
 
 }

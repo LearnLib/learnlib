@@ -215,7 +215,7 @@ public final class ReuseTree<S, I, O> implements Graph<ReuseNode<S, I, O>, Reuse
      * Clears the whole tree which means the root will be reinitialized by a new {@link ReuseNode} and all existing
      * system states will be disposed. All invariant input symbols as well as all failure output symbols will remain.
      * <p>
-     * The {@link SystemStateHandler} will <b>not</b> be informed about any disposings.
+     * The {@link SystemStateHandler} will <b>not</b> be informed about any disposals.
      */
     public void clearTree() {
         this.lock.writeLock().lock();

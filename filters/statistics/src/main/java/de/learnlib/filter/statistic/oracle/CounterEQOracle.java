@@ -74,7 +74,7 @@ public class CounterEQOracle<A, I, D> implements EquivalenceOracle<A, I, D> {
      * @param delegate
      *         the oracle to delegate calls to
      * @param id
-     *         the id used for specialising the statistics keys
+     *         the id used for specializing the statistics keys
      */
     public CounterEQOracle(EquivalenceOracle<A, I, D> delegate, @Nullable String id) {
         this.delegate = delegate;

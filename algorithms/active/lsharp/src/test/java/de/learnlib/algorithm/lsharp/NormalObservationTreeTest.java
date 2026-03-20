@@ -74,7 +74,7 @@ public class NormalObservationTreeTest {
     }
 
     @Test
-    public void xferSeqMantained() throws IOException, FormatException {
+    public void xferSeqMaintained() throws IOException, FormatException {
         InputModelData<String, CompactMealy<String, String>> model = readMealy("/BitVise.dot");
         CompactMealy<String, String> fsm = model.model;
         Alphabet<String> alphabet = model.alphabet;
@@ -110,7 +110,7 @@ public class NormalObservationTreeTest {
     }
 
     @Test
-    public void accessSeqMantained() throws IOException, FormatException {
+    public void accessSeqMaintained() throws IOException, FormatException {
         InputModelData<String, CompactMealy<String, String>> model = readMealy("/BitVise.dot");
         CompactMealy<String, String> fsm = model.model;
         Alphabet<String> alphabet = model.alphabet;

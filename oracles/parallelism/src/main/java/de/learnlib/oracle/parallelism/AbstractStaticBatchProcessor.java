@@ -79,7 +79,7 @@ public abstract class AbstractStaticBatchProcessor<Q, P extends BatchProcessor<Q
         }
 
         // Calculate the number of full and non-full batches. The difference in size
-        // will never exceed one (cf. pidgeonhole principle)
+        // will never exceed one (cf. pigeonhole principle)
         int fullBatchSize = (num - 1) / numBatches + 1;
         int nonFullBatches = fullBatchSize * numBatches - num;
 

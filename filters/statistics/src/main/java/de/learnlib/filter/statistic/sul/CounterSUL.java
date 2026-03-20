@@ -70,7 +70,7 @@ public class CounterSUL<I, O> implements SUL<I, O> {
      * @param delegate
      *         the SUL to delegate calls to
      * @param id
-     *         the id used for specialising the statistics keys
+     *         the id used for specializing the statistics keys
      */
     public CounterSUL(SUL<I, O> delegate, @Nullable String id) {
         this(delegate, id, Statistics.getService());

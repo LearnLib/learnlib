@@ -363,16 +363,16 @@ public class KearnsVaziraniDFA<I>
             // prevent instantiation
         }
 
-        public static boolean repeatedCounterexampleEvaluation() {
+        static boolean repeatedCounterexampleEvaluation() {
             return true;
         }
 
-        public static AcexAnalyzer counterexampleAnalyzer() {
+        static AcexAnalyzer counterexampleAnalyzer() {
             return AcexAnalyzers.LINEAR_FWD;
         }
     }
 
-    protected class KVAbstractCounterexample extends AbstractBaseCounterexample<Boolean> {
+    private class KVAbstractCounterexample extends AbstractBaseCounterexample<Boolean> {
 
         private final Word<I> ceWord;
         private final MembershipOracle<I, Boolean> oracle;
@@ -380,7 +380,7 @@ public class KearnsVaziraniDFA<I>
         private final LCAInfo<Boolean, AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>>>[] lcas;
 
         @SuppressWarnings("unchecked")
-        public KVAbstractCounterexample(Word<I> ceWord, boolean output, MembershipOracle<I, Boolean> oracle) {
+        KVAbstractCounterexample(Word<I> ceWord, boolean output, MembershipOracle<I, Boolean> oracle) {
             super(ceWord.length() + 1);
             this.ceWord = ceWord;
             this.oracle = oracle;
@@ -401,11 +401,11 @@ public class KearnsVaziraniDFA<I>
             lcas[m] = new LCAInfo<>(discriminationTree.getRoot(), !output, output);
         }
 
-        public StateInfo<I, Boolean> getStateInfo(int idx) {
+        StateInfo<I, Boolean> getStateInfo(int idx) {
             return states[idx];
         }
 
-        public LCAInfo<Boolean, AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>>> getLCA(int idx) {
+        LCAInfo<Boolean, AbstractWordBasedDTNode<I, Boolean, StateInfo<I, Boolean>>> getLCA(int idx) {
             return lcas[idx];
         }
 

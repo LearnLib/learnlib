@@ -205,6 +205,8 @@ public abstract class AbstractAutomatonLStar<A, I, D, S, T, SP, TP, AI extends M
         }
     }
 
+    // the class should only be visible to children but they need to be able to access the getters without extending
+    @SuppressWarnings("PMD.PublicMemberInNonPublicType")
     protected static final class StateInfo<S, I> {
 
         private final Row<I> row;

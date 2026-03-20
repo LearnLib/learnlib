@@ -500,9 +500,9 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
 
     static final class FoldRecord<S extends AbstractBlueFringePTAState<S, ?, ?>> {
 
-        public final S r;
-        public S q;
-        public int i = -1;
+        final S r;
+        S q;
+        int i = -1;
 
         FoldRecord(S q, S r) {
             this.q = q;

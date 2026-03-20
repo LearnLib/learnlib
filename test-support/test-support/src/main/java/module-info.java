@@ -42,8 +42,5 @@ open module de.learnlib.testsupport {
     requires org.mockito;
     requires org.testng;
 
-    // annotations are 'provided'-scoped and do not need to be loaded at runtime
-    requires static org.checkerframework.checker.qual;
-
     exports de.learnlib.testsupport;
 }

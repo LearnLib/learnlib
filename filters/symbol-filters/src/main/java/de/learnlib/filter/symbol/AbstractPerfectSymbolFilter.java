@@ -16,7 +16,6 @@
 package de.learnlib.filter.symbol;
 
 import de.learnlib.filter.FilterResponse;
-import de.learnlib.filter.SymbolFilter;
 import net.automatalib.word.Word;
 
 /**
@@ -27,8 +26,7 @@ import net.automatalib.word.Word;
  * @param <V>
  *         input symbol type of the transition label
  */
-public abstract class AbstractPerfectSymbolFilter<U, V> extends AbstractTruthfulSymbolFilter<U, V>
-        implements SymbolFilter<U, V> {
+public abstract class AbstractPerfectSymbolFilter<U, V> extends AbstractTruthfulSymbolFilter<U, V> {
 
     @Override
     public FilterResponse query(Word<U> prefix, V symbol) {

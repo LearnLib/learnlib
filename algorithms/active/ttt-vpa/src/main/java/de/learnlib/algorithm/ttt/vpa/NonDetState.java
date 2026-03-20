@@ -22,33 +22,33 @@ import net.automatalib.automaton.vpa.State;
 
 final class NonDetState<L> {
 
-    private final NondetStackContents stack;
+    private final NonDetStackContents stack;
     private final Set<L> locations;
 
-    NonDetState(Set<L> locations, NondetStackContents stack) {
+    NonDetState(Set<L> locations, NonDetStackContents stack) {
         this.locations = locations;
         this.stack = stack;
     }
 
-    public static <L> NonDetState<L> fromDet(State<L> state) {
+    static <L> NonDetState<L> fromDet(State<L> state) {
         return new NonDetState<>(Collections.singleton(state.getLocation()),
-                                 NondetStackContents.fromDet(state.getStackContents()));
+                                 NonDetStackContents.fromDet(state.getStackContents()));
     }
 
-    public State<L> determinize() {
+    State<L> determinize() {
         assert !isNonDet();
-        return new State<>(locations.iterator().next(), NondetStackContents.toDet(stack));
+        return new State<>(locations.iterator().next(), NonDetStackContents.toDet(stack));
     }
 
-    public boolean isNonDet() {
-        return stack != null && stack.isTrueNondet() || locations.size() > 1;
+    boolean isNonDet() {
+        return stack != null && stack.isTrueNonDet() || locations.size() > 1;
     }
 
-    public NondetStackContents getStack() {
+    NonDetStackContents getStack() {
         return stack;
     }
 
-    public Set<L> getLocations() {
+    Set<L> getLocations() {
         return locations;
     }
 

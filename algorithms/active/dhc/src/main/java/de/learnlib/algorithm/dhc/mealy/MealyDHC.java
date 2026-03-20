@@ -301,11 +301,11 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
             // prevent instantiation
         }
 
-        public static <I, O> GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder() {
+        static <I, O> GlobalSuffixFinder<? super I, ? super Word<O>> suffixFinder() {
             return GlobalSuffixFinders.RIVEST_SCHAPIRE;
         }
 
-        public static <I> Collection<Word<I>> initialSplitters() {
+        static <I> Collection<Word<I>> initialSplitters() {
             return Collections.emptyList();
         }
     }

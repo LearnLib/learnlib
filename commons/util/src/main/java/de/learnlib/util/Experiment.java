@@ -123,7 +123,7 @@ public class Experiment<A extends FiniteRepresentation> {
             this.statistics = Statistics.getService();
         }
 
-        public A run() {
+        A run() {
             rounds++;
             statistics.increaseCounter(KEY_ROUNDS, Experiment.this);
             LOGGER.info(Category.PHASE, "Starting round {}", rounds);

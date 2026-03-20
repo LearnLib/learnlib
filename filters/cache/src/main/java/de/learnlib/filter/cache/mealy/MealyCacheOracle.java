@@ -205,16 +205,16 @@ public class MealyCacheOracle<I, O>
             return;
         }
 
-        int answLen = answer.length();
+        int ansLen = answer.length();
         int i = 0;
-        while (i < answLen) {
+        while (i < ansLen) {
             O sym = answer.getSymbol(i++);
             if (errorSyms.get(sym) != null) {
                 break;
             }
         }
 
-        if (i == answLen) {
+        if (i == ansLen) {
             incMealy.insert(word, answer);
         } else {
             incMealy.insert(word.prefix(i), answer.prefix(i));

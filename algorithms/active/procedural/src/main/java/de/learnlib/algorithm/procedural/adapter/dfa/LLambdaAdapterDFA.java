@@ -15,7 +15,6 @@
  */
 package de.learnlib.algorithm.procedural.adapter.dfa;
 
-import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.lambda.lstar.LLambdaDFA;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
@@ -26,7 +25,7 @@ import net.automatalib.alphabet.Alphabet;
  * @param <I>
  *         input symbol type
  */
-public class LLambdaAdapterDFA<I> extends LLambdaDFA<I> implements AccessSequenceTransformer<I> {
+public class LLambdaAdapterDFA<I> extends LLambdaDFA<I> {
 
     public LLambdaAdapterDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
         super(alphabet, oracle);
