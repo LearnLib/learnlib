@@ -47,30 +47,6 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-datastructures</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-kearns-vazirani</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-lambda</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-lstar</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-observation-pack</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-ttt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-util</artifactId>
         </dependency>
 
@@ -100,6 +76,31 @@ limitations under the License.
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-dhc</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-kearns-vazirani</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-lambda</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-lstar</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-observation-pack</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-ttt</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -24,10 +24,13 @@ public class TTTLambdaState<I, D> {
     public final SuffixTrie<I> strie;
     public final PrefixTree<I, D> ptree;
     public final AbstractDecisionTree<I, D> dtree;
+    public final boolean started;
 
-    public TTTLambdaState(SuffixTrie<I> strie, PrefixTree<I, D> ptree, AbstractDecisionTree<I, D> dtree) {
+    public TTTLambdaState(SuffixTrie<I> strie, PrefixTree<I, D> ptree, AbstractDecisionTree<I, D> dtree,
+                          boolean started) {
         this.strie = strie;
         this.ptree = ptree;
         this.dtree = dtree;
+        this.started = started;
     }
 }

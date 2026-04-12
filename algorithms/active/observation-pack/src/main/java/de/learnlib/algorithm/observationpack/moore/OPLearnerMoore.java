@@ -41,6 +41,30 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class OPLearnerMoore<I, O> extends AbstractOPLearner<MooreMachine<?, I, ?, O>, I, Word<O>, O, Void>
         implements MooreLearner<I, O> {
 
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the input alphabet
+     * @param oracle
+     *         the membership oracle
+     */
+    public OPLearnerMoore(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
+        this(alphabet, oracle, BuilderDefaults.suffixFinder(), BuilderDefaults.repeatedCounterexampleEvaluation());
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the input alphabet
+     * @param oracle
+     *         the membership oracle
+     * @param suffixFinder
+     *         method to use for analyzing counterexamples
+     * @param repeatedCounterexampleEvaluation
+     *         a flag whether counterexamples should be analyzed exhaustively
+     */
     @GenerateBuilder(defaults = AbstractOPLearner.BuilderDefaults.class)
     public OPLearnerMoore(Alphabet<I> alphabet,
                           MembershipOracle<I, Word<O>> oracle,

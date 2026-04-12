@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.GlobalSuffixLearner;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.datastructure.observationtable.GenericObservationTable;
@@ -50,8 +51,10 @@ import net.automatalib.word.Word;
  * @param <D>
  *         output domain type
  */
-public abstract class AbstractLStar<A, I, D>
-        implements OTLearner<A, I, D>, GlobalSuffixLearner<A, I, D>, SupportsGrowingAlphabet<I> {
+public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>,
+                                                        GlobalSuffixLearner<A, I, D>,
+                                                        AccessSequenceTransformer<I>,
+                                                        SupportsGrowingAlphabet<I> {
 
     protected final Alphabet<I> alphabet;
     protected final MembershipOracle<I, D> oracle;
@@ -233,5 +236,10 @@ public abstract class AbstractLStar<A, I, D>
 
         final List<List<Row<I>>> unclosed = this.table.addAlphabetSymbol(symbol, oracle);
         completeConsistentTable(unclosed, true);
+    }
+
+    @Override
+    public Word<I> transformAccessSequence(Word<I> word) {
+        return this.table.transformAccessSequence(word);
     }
 }

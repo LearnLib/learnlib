@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithm.procedural.adapter.mealy;
+package de.learnlib.algorithm.lambda.lstar.mealy;
+
+import java.util.Collection;
 
 import de.learnlib.algorithm.lambda.lstar.LLambdaMealy;
-import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.testsupport.AbstractLearnerASTMealyTest;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 
-/**
- * Adapter for using {@link LLambdaMealy} as a procedural learner.
- *
- * @param <I>
- *         input symbol type
- * @param <O>
- *         output symbol type
- */
-public class LLambdaAdapterMealy<I, O> extends LLambdaMealy<I, O> {
+public class LLambdaMealyASTTest extends AbstractLearnerASTMealyTest<LLambdaMealy<Character, Character>> {
 
-    public LLambdaAdapterMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
-        super(alphabet, oracle);
+    @Override
+    protected LLambdaMealy<Character, Character> getLearner(MealyMembershipOracle<Character, Character> oracle,
+                                                            Alphabet<Character> alphabet) {
+        return new LLambdaMealy<>(alphabet, oracle);
+    }
+
+    @Override
+    protected Collection<Word<Character>> getTrueRepresentatives() {
+        return learner.getObservationTable().getShortPrefixes();
     }
 }

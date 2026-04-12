@@ -29,6 +29,7 @@ import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.adt.adt.ADT;
@@ -70,6 +71,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The main learning algorithm.
+ * <p>
+ * <b>Implementation note:</b> this learner uses the {@link AccessSequenceTransformer} interface to provide access to
+ * the representatives of the states of the current hypothesis model.
  *
  * @param <I>
  *         input symbol type
@@ -78,6 +82,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                                          PartialTransitionAnalyzer<ADTState<I, O>, I>,
+                                         AccessSequenceTransformer<I>,
                                          SupportsGrowingAlphabet<I>,
                                          Resumable<ADTLearnerState<ADTState<I, O>, I, O>> {
 
@@ -148,6 +153,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Word<O>> ce) {
+        requireLearningProcessStarted();
 
         if (!MQUtil.isCounterexample(ce, this.hypothesis)) {
             return false;
@@ -407,6 +413,15 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         final ADTTransition<I, O> transition = this.hypothesis.getTransition(state, input);
         assert transition != null;
         return !transition.needsSifting();
+    }
+
+    @Override
+    public Word<I> transformAccessSequence(Word<I> word) {
+        requireLearningProcessStarted();
+
+        final ADTState<I, O> state = this.hypothesis.getState(word);
+        assert state != null;
+        return state.getAccessSequence();
     }
 
     @Override
@@ -835,6 +850,12 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         }
 
         return result;
+    }
+
+    private void requireLearningProcessStarted() {
+        if (hypothesis.getStates().isEmpty()) {
+            throw new IllegalStateException("Learning process has not been started");
+        }
     }
 
     public ADT<ADTState<I, O>, I, O> getADT() {

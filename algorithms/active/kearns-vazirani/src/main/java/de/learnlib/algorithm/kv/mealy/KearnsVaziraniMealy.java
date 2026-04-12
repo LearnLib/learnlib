@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.Resumable;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
@@ -49,14 +50,19 @@ import org.slf4j.LoggerFactory;
 
 /**
  * An adaption of the Kearns/Vazirani algorithm for Mealy machines.
+ * <p>
+ * <b>Implementation note:</b> this learner uses the {@link AccessSequenceTransformer} interface to provide access to
+ * the representatives of the states of the current hypothesis model.
  *
  * @param <I>
  *         input symbol type
  * @param <O>
  *         output symbol type
  */
-public class KearnsVaziraniMealy<I, O>
-        implements MealyLearner<I, O>, SupportsGrowingAlphabet<I>, Resumable<KearnsVaziraniMealyState<I, O>> {
+public class KearnsVaziraniMealy<I, O> implements MealyLearner<I, O>,
+                                                  AccessSequenceTransformer<I>,
+                                                  SupportsGrowingAlphabet<I>,
+                                                  Resumable<KearnsVaziraniMealyState<I, O>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KearnsVaziraniMealy.class);
 
@@ -68,6 +74,33 @@ public class KearnsVaziraniMealy<I, O>
     protected List<StateInfo<I, Word<O>>> stateInfos = new ArrayList<>();
     private CompactMealy<I, O> hypothesis;
 
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the learning alphabet
+     * @param oracle
+     *         the membership oracle
+     */
+    public KearnsVaziraniMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
+        this(alphabet,
+             oracle,
+             BuilderDefaults.repeatedCounterexampleEvaluation(),
+             BuilderDefaults.counterexampleAnalyzer());
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the learning alphabet
+     * @param oracle
+     *         the membership oracle
+     * @param repeatedCounterexampleEvaluation
+     *         a flag whether counterexamples should be analyzed exhaustively
+     * @param counterexampleAnalyzer
+     *         the counterexample analyzer
+     */
     @GenerateBuilder(defaults = BuilderDefaults.class)
     public KearnsVaziraniMealy(Alphabet<I> alphabet,
                                MembershipOracle<I, Word<O>> oracle,
@@ -88,9 +121,8 @@ public class KearnsVaziraniMealy<I, O>
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
-        if (hypothesis.size() == 0) {
-            throw new IllegalStateException("Not initialized");
-        }
+        requireLearningProcessStarted();
+
         Word<I> input = ceQuery.getInput();
         Word<O> output = ceQuery.getOutput();
         if (!refineHypothesisSingle(input, output)) {
@@ -106,9 +138,8 @@ public class KearnsVaziraniMealy<I, O>
 
     @Override
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
-        if (hypothesis.size() == 0) {
-            throw new IllegalStateException("Not started");
-        }
+        requireLearningProcessStarted();
+
         return hypothesis;
     }
 
@@ -310,6 +341,22 @@ public class KearnsVaziraniMealy<I, O>
         }
 
         return result;
+    }
+
+    private void requireLearningProcessStarted() {
+        if (hypothesis.size() == 0) {
+            throw new IllegalStateException("Learning process has not been started");
+        }
+    }
+
+    @Override
+    public Word<I> transformAccessSequence(Word<I> word) {
+        requireLearningProcessStarted();
+
+        final Integer state = hypothesis.getState(word);
+        assert state != null;
+        final StateInfo<I, Word<O>> stateInfo = stateInfos.get(state);
+        return stateInfo.accessSequence;
     }
 
     @Override

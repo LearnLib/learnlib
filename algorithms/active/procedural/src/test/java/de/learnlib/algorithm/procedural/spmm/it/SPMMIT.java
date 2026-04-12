@@ -23,18 +23,18 @@ import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.LearnerConstructor;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.dhc.mealy.MealyDHC;
+import de.learnlib.algorithm.kv.mealy.KearnsVaziraniMealy;
+import de.learnlib.algorithm.lambda.lstar.LLambdaMealy;
+import de.learnlib.algorithm.lambda.ttt.mealy.TTTLambdaMealy;
+import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
+import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealy;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
-import de.learnlib.algorithm.procedural.adapter.mealy.KearnsVaziraniAdapterMealy;
-import de.learnlib.algorithm.procedural.adapter.mealy.LLambdaAdapterMealy;
-import de.learnlib.algorithm.procedural.adapter.mealy.LStarBaseAdapterMealy;
-import de.learnlib.algorithm.procedural.adapter.mealy.ObservationPackAdapterMealy;
-import de.learnlib.algorithm.procedural.adapter.mealy.RivestSchapireAdapterMealy;
-import de.learnlib.algorithm.procedural.adapter.mealy.TTTAdapterMealy;
-import de.learnlib.algorithm.procedural.adapter.mealy.TTTLambdaAdapterMealy;
 import de.learnlib.algorithm.procedural.spmm.ATManager;
 import de.learnlib.algorithm.procedural.spmm.SPMMLearner;
 import de.learnlib.algorithm.procedural.spmm.manager.DefaultATManager;
 import de.learnlib.algorithm.procedural.spmm.manager.OptimizingATManager;
+import de.learnlib.algorithm.rivestschapire.RivestSchapireMealy;
+import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealy;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.testsupport.it.AbstractSPMMLearnerIT;
@@ -53,14 +53,14 @@ public class SPMMIT extends AbstractSPMMLearnerIT {
 
         final Builder<I, O> builder = new Builder<>(alphabet, errorOutput, mqOracle, variants);
 
-        builder.addLearnerVariant(KearnsVaziraniAdapterMealy::new);
-        builder.addLearnerVariant(LStarBaseAdapterMealy::new);
+        builder.addLearnerVariant(KearnsVaziraniMealy::new);
+        builder.addLearnerVariant(ExtensibleLStarMealy::new);
         builder.addLearnerVariant(MealyDHC::new);
-        builder.addLearnerVariant(ObservationPackAdapterMealy::new);
-        builder.addLearnerVariant(LLambdaAdapterMealy::new);
-        builder.addLearnerVariant(TTTLambdaAdapterMealy::new);
-        builder.addLearnerVariant(RivestSchapireAdapterMealy::new);
-        builder.addLearnerVariant(TTTAdapterMealy::new);
+        builder.addLearnerVariant(OPLearnerMealy::new);
+        builder.addLearnerVariant(LLambdaMealy::new);
+        builder.addLearnerVariant(TTTLambdaMealy::new);
+        builder.addLearnerVariant(RivestSchapireMealy::new);
+        builder.addLearnerVariant(TTTLearnerMealy::new);
     }
 
     private static class Builder<I, O> {

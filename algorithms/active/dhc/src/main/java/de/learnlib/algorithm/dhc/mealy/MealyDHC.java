@@ -48,6 +48,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The DHC learner.
+ * <p>
+ * <b>Implementation note:</b> this learner uses the {@link AccessSequenceTransformer} interface to provide access
+ * to the representatives of the states of the current hypothesis model.
  *
  * @param <I>
  *         input symbol type
@@ -291,7 +294,8 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     @Override
     public Word<I> transformAccessSequence(Word<I> word) {
         checkInternalState();
-        Integer state = hypothesis.getSuccessor(hypothesis.getInitialState(), word);
+        Integer state = hypothesis.getState(word);
+        assert state != null;
         return assembleAccessSequence(accessSequences.get(state));
     }
 

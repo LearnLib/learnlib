@@ -12,7 +12,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Added the L<sup>s</sup> active learning algorithm for Mealy machines (thanks to [Wolffhardt Schwabe](https://github.com/stateMachinist)).
 * Added an `EarlyExitEQOracle` which for a given `AdaptiveMembershipOracle` and `TestWordGenerator` stops the evaluation of (potentially long) Mealy-based equivalence tests as soon as a mismatch with the hypothesis is detected, potentially improving the symbol performance of the given equivalence oracle.
 * Both lambda learners (`LLambda{DFA,Mealy}` and `TTTLambda{DFA,Mealy}`) now support the `Resumable` interface.
-* The `LLambda{DFA,Mealy}` learners now implement the `OTLearner` interface to export their internal knowledge via an `ObservationTable`. 
+* The `LLambda{DFA,Mealy}` learners now implement the `OTLearner` interface to export their internal knowledge via an `ObservationTable`.
+* Most regular learner no implement `AccessSequenceTransformer` as a means to extract representatives of hypothesis states.
 
 ### Changed
 
@@ -21,6 +22,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * `SimpleProfiler` has been replaced by the new clock-based statistics.
 * The `generateTestWords` method of `AbstractTestWordEQOracle` now needs to be public.
 * The classes of `de.learnlib.testsupport.it.learner` have been split into the packages `de.learnlib.testsupport.it{,testcase,util,variant}` in the same module (`de.learnlib.testsupport:learnlib-learner-it-support`).
+
+### Removed
+
+* All *adapters* from the `learnlib-procedural` learner have been removed to due main learners implementing `AccessSequenceTransformer` now. Use the constructors of the main learners instead.
 
 ### Fixed
 

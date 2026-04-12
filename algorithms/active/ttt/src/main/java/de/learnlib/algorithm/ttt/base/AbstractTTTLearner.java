@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.Resumable;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
@@ -51,6 +52,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The TTT learning algorithm for generic automata.
+ * <p>
+ * <b>Implementation note:</b> this learner uses the {@link AccessSequenceTransformer} interface to provide access to
+ * the representatives of the states of the current hypothesis model.
  *
  * @param <A>
  *         hypothesis automaton type
@@ -59,8 +63,10 @@ import org.slf4j.LoggerFactory;
  * @param <D>
  *         output domain type
  */
-public abstract class AbstractTTTLearner<A, I, D>
-        implements LearningAlgorithm<A, I, D>, SupportsGrowingAlphabet<I>, Resumable<TTTLearnerState<I, D>> {
+public abstract class AbstractTTTLearner<A, I, D> implements LearningAlgorithm<A, I, D>,
+                                                             AccessSequenceTransformer<I>,
+                                                             SupportsGrowingAlphabet<I>,
+                                                             Resumable<TTTLearnerState<I, D>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTTTLearner.class);
 
@@ -170,6 +176,8 @@ public abstract class AbstractTTTLearner<A, I, D>
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, D> ceQuery) {
+        requireLearningProcessStarted();
+
         if (!refineHypothesisSingle(ceQuery)) {
             return false;
         }
@@ -779,6 +787,7 @@ public abstract class AbstractTTTLearner<A, I, D>
     protected abstract D computeHypothesisOutput(TTTState<I, D> state, Word<I> suffix);
 
     public AbstractTTTHypothesis<?, I, D, ?> getHypothesisDS() {
+        requireLearningProcessStarted();
         return hypothesis;
     }
 
@@ -937,6 +946,21 @@ public abstract class AbstractTTTLearner<A, I, D>
      */
     public BaseTTTDiscriminationTree<I, D> getDiscriminationTree() {
         return dtree;
+    }
+
+    protected void requireLearningProcessStarted() {
+        if (hypothesis.getStates().isEmpty()) {
+            throw new IllegalStateException("Learning process has not been started");
+        }
+    }
+
+    @Override
+    public Word<I> transformAccessSequence(Word<I> word) {
+        requireLearningProcessStarted();
+        final TTTState<I, D> s = hypothesis.getState(word);
+        // we should only query defined paths
+        assert s != null;
+        return s.getAccessSequence();
     }
 
     @Override

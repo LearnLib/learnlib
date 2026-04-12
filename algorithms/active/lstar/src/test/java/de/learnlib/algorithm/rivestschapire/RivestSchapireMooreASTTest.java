@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithm.procedural.adapter.dfa;
+package de.learnlib.algorithm.rivestschapire;
 
-import de.learnlib.algorithm.lambda.lstar.LLambdaDFA;
-import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.algorithm.util.AbstractMooreASTTest;
+import de.learnlib.oracle.MembershipOracle.MooreMembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 
-/**
- * Adapter for using {@link LLambdaDFA} as a procedural learner.
- *
- * @param <I>
- *         input symbol type
- */
-public class LLambdaAdapterDFA<I> extends LLambdaDFA<I> {
+public class RivestSchapireMooreASTTest extends AbstractMooreASTTest {
 
-    public LLambdaAdapterDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
-        super(alphabet, oracle);
+    @Override
+    protected RivestSchapireMoore<Character, Character> getLearner(MooreMembershipOracle<Character, Character> oracle,
+                                                                   Alphabet<Character> alphabet) {
+        return new RivestSchapireMoore<>(alphabet, oracle);
     }
+
 }

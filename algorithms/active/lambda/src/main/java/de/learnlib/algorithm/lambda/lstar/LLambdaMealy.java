@@ -55,6 +55,7 @@ public class LLambdaMealy<I, O> extends AbstractLLambda<MealyMachine<?, I, ?, O>
 
     @Override
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return hypothesis;
     }
 
@@ -113,6 +114,8 @@ public class LLambdaMealy<I, O> extends AbstractLLambda<MealyMachine<?, I, ?, O>
 
     @Override
     public Word<I> transformAccessSequence(Word<I> word) {
+        requireLearningProcessStarted();
+
         final List<Word<O>> row = rowForState(word);
         final List<Word<I>> shortPrefixes = super.getShortPrefixes(row);
 

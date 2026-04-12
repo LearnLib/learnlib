@@ -88,6 +88,8 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements OT
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, D> counterexample) {
+        requireLearningProcessStarted();
+
         final Deque<DefaultQuery<I, D>> witnesses = new ArrayDeque<>();
         witnesses.add(counterexample);
         boolean refined = false;
@@ -290,6 +292,12 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements OT
             Word<I> newPrefix = shortPrefix.append(a);
             List<D> rowData = initRow(newPrefix);
             rows.put(newPrefix, rowData);
+        }
+    }
+
+    protected void requireLearningProcessStarted() {
+        if (rows.isEmpty()) {
+            throw new IllegalStateException("Learning process has not been started");
         }
     }
 

@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.Resumable;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
@@ -48,12 +49,17 @@ import org.slf4j.LoggerFactory;
 /**
  * The Kearns/Vazirani algorithm for learning DFA, as described in the book "An Introduction to Computational Learning
  * Theory" by Michael Kearns and Umesh Vazirani.
+ * <p>
+ * <b>Implementation note:</b> this learner uses the {@link AccessSequenceTransformer} interface to provide access to
+ * the representatives of the states of the current hypothesis model.
  *
  * @param <I>
  *         input symbol type
  */
-public class KearnsVaziraniDFA<I>
-        implements DFALearner<I>, SupportsGrowingAlphabet<I>, Resumable<KearnsVaziraniDFAState<I>> {
+public class KearnsVaziraniDFA<I> implements DFALearner<I>,
+                                             AccessSequenceTransformer<I>,
+                                             SupportsGrowingAlphabet<I>,
+                                             Resumable<KearnsVaziraniDFAState<I>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KearnsVaziraniDFA.class);
 
@@ -64,6 +70,21 @@ public class KearnsVaziraniDFA<I>
     private BinaryDTree<I, StateInfo<I, Boolean>> discriminationTree;
     protected List<StateInfo<I, Boolean>> stateInfos = new ArrayList<>();
     private CompactDFA<I> hypothesis;
+
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the learning alphabet
+     * @param oracle
+     *         the membership oracle
+     */
+    public KearnsVaziraniDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
+        this(alphabet,
+             oracle,
+             BuilderDefaults.repeatedCounterexampleEvaluation(),
+             BuilderDefaults.counterexampleAnalyzer());
+    }
 
     /**
      * Constructor.
@@ -97,9 +118,7 @@ public class KearnsVaziraniDFA<I>
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Boolean> ceQuery) {
-        if (hypothesis.size() == 0) {
-            throw new IllegalStateException("Not initialized");
-        }
+        requireLearningProcessStarted();
         Word<I> input = ceQuery.getInput();
         boolean output = ceQuery.getOutput();
         if (!refineHypothesisSingle(input, output)) {
@@ -115,9 +134,7 @@ public class KearnsVaziraniDFA<I>
 
     @Override
     public DFA<?, I> getHypothesisModel() {
-        if (hypothesis.size() == 0) {
-            throw new IllegalStateException("Not started");
-        }
+        requireLearningProcessStarted();
         return hypothesis;
     }
 
@@ -296,6 +313,22 @@ public class KearnsVaziraniDFA<I>
         }
 
         return result;
+    }
+
+    private void requireLearningProcessStarted() {
+        if (hypothesis.size() == 0) {
+            throw new IllegalStateException("Learning process has not been started");
+        }
+    }
+
+    @Override
+    public Word<I> transformAccessSequence(Word<I> word) {
+        requireLearningProcessStarted();
+
+        final Integer state = hypothesis.getState(word);
+        assert state != null;
+        final StateInfo<I, Boolean> stateInfo = stateInfos.get(state);
+        return stateInfo.accessSequence;
     }
 
     @Override

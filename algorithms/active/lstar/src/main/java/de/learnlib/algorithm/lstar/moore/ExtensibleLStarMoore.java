@@ -15,9 +15,9 @@
  */
 package de.learnlib.algorithm.lstar.moore;
 
-import java.util.Collections;
 import java.util.List;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.lstar.AbstractExtensibleAutomatonLStar;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandler;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategy;
@@ -34,6 +34,9 @@ import net.automatalib.word.Word;
 
 /**
  * A {@link MooreMachine}-based specialization of the extensible L* learner.
+ * <p>
+ * <b>Implementation note:</b> this learner uses the {@link AccessSequenceTransformer} interface to provide access to
+ * the representatives of the states of the current hypothesis model.
  *
  * @param <I>
  *         input symbol type
@@ -44,14 +47,60 @@ public class ExtensibleLStarMoore<I, O>
         extends AbstractExtensibleAutomatonLStar<MooreMachine<?, I, ?, O>, I, Word<O>, Integer, Integer, O, Void, CompactMoore<I, O>>
         implements OTLearnerMoore<I, O> {
 
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the learning alphabet
+     * @param oracle
+     *         the Moore oracle
+     */
+    public ExtensibleLStarMoore(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
+        this(alphabet,
+             oracle,
+             BuilderDefaults.initialSuffixes(),
+             BuilderDefaults.cexHandler(),
+             BuilderDefaults.closingStrategy());
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the learning alphabet
+     * @param oracle
+     *         the Moore oracle
+     * @param initialSuffixes
+     *         the list of initial suffixes used in the observation table
+     * @param cexHandler
+     *         the strategy for handling counterexamples
+     * @param closingStrategy
+     *         the strategy for closing open rows of the observation table
+     */
     public ExtensibleLStarMoore(Alphabet<I> alphabet,
                                 MembershipOracle<I, Word<O>> oracle,
                                 List<Word<I>> initialSuffixes,
                                 ObservationTableCEXHandler<? super I, ? super Word<O>> cexHandler,
                                 ClosingStrategy<? super I, ? super Word<O>> closingStrategy) {
-        this(alphabet, oracle, Collections.singletonList(Word.epsilon()), initialSuffixes, cexHandler, closingStrategy);
+        this(alphabet, oracle, BuilderDefaults.initialPrefixes(), initialSuffixes, cexHandler, closingStrategy);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the learning alphabet
+     * @param oracle
+     *         the Moore oracle
+     * @param initialPrefixes
+     *         the list of initial prefixes used in the observation table
+     * @param initialSuffixes
+     *         the list of initial suffixes used in the observation table
+     * @param cexHandler
+     *         the strategy for handling counterexamples
+     * @param closingStrategy
+     *         the strategy for closing open rows of the observation table
+     */
     @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
     public ExtensibleLStarMoore(Alphabet<I> alphabet,
                                 MembershipOracle<I, Word<O>> oracle,

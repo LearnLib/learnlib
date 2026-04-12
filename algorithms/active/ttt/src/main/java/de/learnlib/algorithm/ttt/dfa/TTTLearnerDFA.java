@@ -40,6 +40,10 @@ import net.automatalib.word.Word;
  */
 public class TTTLearnerDFA<I> extends AbstractTTTLearner<DFA<?, I>, I, Boolean> implements DFALearner<I> {
 
+    public TTTLearnerDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
+        this(alphabet, oracle, AbstractTTTLearner.BuilderDefaults.analyzer());
+    }
+
     @GenerateBuilder(defaults = AbstractTTTLearner.BuilderDefaults.class)
     public TTTLearnerDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle, AcexAnalyzer analyzer) {
         this(alphabet, oracle, analyzer, TTTDTNodeDFA::new);
@@ -101,6 +105,7 @@ public class TTTLearnerDFA<I> extends AbstractTTTLearner<DFA<?, I>, I, Boolean> 
     @Override
     @SuppressWarnings("unchecked")
     public TTTHypothesisDFA<I> getHypothesisDS() {
+        requireLearningProcessStarted();
         return (TTTHypothesisDFA<I>) hypothesis;
     }
 

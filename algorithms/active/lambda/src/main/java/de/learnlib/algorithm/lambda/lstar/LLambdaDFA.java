@@ -97,11 +97,14 @@ public class LLambdaDFA<I> extends AbstractLLambda<DFA<?, I>, I, Boolean> implem
 
     @Override
     public DFA<?, I> getHypothesisModel() {
+        requireLearningProcessStarted();
         return hypothesis;
     }
 
     @Override
     public Word<I> transformAccessSequence(Word<I> word) {
+        requireLearningProcessStarted();
+
         final List<Boolean> row = rowForState(word);
         final List<Word<I>> shortPrefixes = super.getShortPrefixes(row);
 

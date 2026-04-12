@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.observationpack.hypothesis.HState;
@@ -39,8 +40,28 @@ import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Base implementation of the "Observation Pack" learning algorithm.
+ * <p>
+ * <b>Implementation note:</b> this learner uses the {@link AccessSequenceTransformer} interface to provide access to
+ * the representatives of the states of the current hypothesis model.
+ *
+ * @param <M>
+ *         model type
+ * @param <I>
+ *         input symbol type
+ * @param <D>
+ *         output domain type
+ * @param <SP>
+ *         state property type
+ * @param <TP>
+ *         transition property type
+ */
 public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, TP>
-        implements LearningAlgorithm<M, I, D>, SupportsGrowingAlphabet<I>, Resumable<OPLearnerState<I, D, SP, TP>> {
+        implements LearningAlgorithm<M, I, D>,
+                   AccessSequenceTransformer<I>,
+                   SupportsGrowingAlphabet<I>,
+                   Resumable<OPLearnerState<I, D, SP, TP>> {
 
     private final Alphabet<I> alphabet;
     private final MembershipOracle<I, D> oracle;
@@ -81,6 +102,8 @@ public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, 
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, D> ceQuery) {
+        requireLearningProcessStarted();
+
         if (!refineHypothesisSingle(ceQuery)) {
             return false;
         }
@@ -225,7 +248,20 @@ public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, 
     }
 
     public OPLearnerHypothesis<I, D, SP, TP> getHypothesisDS() {
+        requireLearningProcessStarted();
         return hypothesis;
+    }
+
+    private void requireLearningProcessStarted() {
+        if (hypothesis.getStates().isEmpty()) {
+            throw new IllegalStateException("Learning process has not been started");
+        }
+    }
+
+    @Override
+    public Word<I> transformAccessSequence(Word<I> word) {
+        requireLearningProcessStarted();
+        return hypothesis.transformAccessSequence(word);
     }
 
     @Override

@@ -496,6 +496,10 @@ public final class GenericObservationTable<I, D> implements MutableObservationTa
 
     @Override
     public Word<I> transformAccessSequence(Word<I> word) {
+        if (!isInitialized()) {
+            throw new IllegalStateException("Observation table has not been initialized");
+        }
+
         Row<I> current = shortPrefixRows.get(0);
         assert current != null;
 

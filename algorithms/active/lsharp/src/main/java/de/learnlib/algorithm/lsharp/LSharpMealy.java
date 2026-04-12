@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.query.DefaultQuery;
@@ -42,13 +43,16 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <a href="https://gitlab.science.ru.nl/sws/lsharp/-/tree/8526fc3a88fa18b0c408d867385bcc9a29a302a1">original
  * implementation</a> of the authors. However, it does not support all features (such as compressed ADSs or some of the
  * more intricate equivalence checks on observation trees).
+ * <p>
+ * <b>Implementation note:</b> this learner uses the {@link AccessSequenceTransformer} interface to provide access to
+ * the representatives of the states of the current hypothesis model.
  *
  * @param <I>
  *         input symbol type
  * @param <O>
  *         output symbol type
  */
-public class LSharpMealy<I, O> implements MealyLearner<I, O> {
+public class LSharpMealy<I, O> implements MealyLearner<I, O>, AccessSequenceTransformer<I> {
 
     private final LSOracle<I, O> oqOracle;
     private final Alphabet<I> inputAlphabet;
@@ -56,6 +60,16 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
     private final Map<Word<I>, List<Word<I>>> frontierToBasisMap;
     private final Map<Word<I>, Integer> basisMap;
     private final ArrayStorage<Word<I>> accessMap;
+
+    public LSharpMealy(Alphabet<I> alphabet, AdaptiveMembershipOracle<I, O> oracle) {
+        this(alphabet,
+             oracle,
+             BuilderDefaults.rule2(),
+             BuilderDefaults.rule3(),
+             BuilderDefaults.sinkState(),
+             BuilderDefaults.sinkOutput(),
+             BuilderDefaults.random());
+    }
 
     @GenerateBuilder(defaults = BuilderDefaults.class)
     public LSharpMealy(Alphabet<I> alphabet,
@@ -330,6 +344,10 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
         return new DefaultQuery<>(wit, os);
     }
 
+    ArrayStorage<Word<I>> getAccessMap() {
+        return new ArrayStorage<>(accessMap);
+    }
+
     @Override
     public void startLearning() {
         this.initObsTree(null);
@@ -338,6 +356,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
+        requireLearningProcessStarted();
         boolean result = processCex(ceQuery, constructHypothesis());
         buildHypothesis();
         return result;
@@ -345,7 +364,23 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O> {
 
     @Override
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return constructHypothesis();
+    }
+
+    @Override
+    public Word<I> transformAccessSequence(Word<I> word) {
+        requireLearningProcessStarted();
+        final CompactMealy<I, O> hyp = constructHypothesis();
+        final Integer bs = hyp.getState(word);
+        assert bs != null;
+        return accessMap.get(bs);
+    }
+
+    private void requireLearningProcessStarted() {
+        if (basisMap.isEmpty()) {
+            throw new IllegalStateException("Learning process has not been started");
+        }
     }
 
     static final class BuilderDefaults {

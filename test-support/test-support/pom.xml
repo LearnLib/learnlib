@@ -46,6 +46,10 @@
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
         </dependency>
         <dependency>
@@ -68,6 +72,12 @@
             <artifactId>testng</artifactId>
             <scope>compile</scope>
             <!-- Override! -->
+        </dependency>
+
+        <!-- build -->
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
         </dependency>
     </dependencies>
 </project>

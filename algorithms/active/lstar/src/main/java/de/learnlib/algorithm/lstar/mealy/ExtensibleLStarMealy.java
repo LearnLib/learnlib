@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
 import de.learnlib.algorithm.lstar.AbstractExtensibleAutomatonLStar;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandler;
@@ -38,6 +39,9 @@ import net.automatalib.word.Word;
 
 /**
  * A {@link MealyMachine}-based specialization of the extensible L* learner.
+ * <p>
+ * <b>Implementation note:</b> this learner uses the {@link AccessSequenceTransformer} interface to provide access to
+ * the representatives of the states of the current hypothesis model.
  *
  * @param <I>
  *         input symbol type
@@ -50,14 +54,60 @@ public class ExtensibleLStarMealy<I, O>
 
     private final List<O> outputTable = new ArrayList<>();
 
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the learning alphabet
+     * @param oracle
+     *         the Mealy oracle
+     */
+    public ExtensibleLStarMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
+        this(alphabet,
+             oracle,
+             BuilderDefaults.initialSuffixes(),
+             BuilderDefaults.cexHandler(),
+             BuilderDefaults.closingStrategy());
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the learning alphabet
+     * @param oracle
+     *         the Mealy oracle
+     * @param initialSuffixes
+     *         the list of initial suffixes used in the observation table
+     * @param cexHandler
+     *         the strategy for handling counterexamples
+     * @param closingStrategy
+     *         the strategy for closing open rows of the observation table
+     */
     public ExtensibleLStarMealy(Alphabet<I> alphabet,
                                 MembershipOracle<I, Word<O>> oracle,
                                 List<Word<I>> initialSuffixes,
                                 ObservationTableCEXHandler<? super I, ? super Word<O>> cexHandler,
                                 ClosingStrategy<? super I, ? super Word<O>> closingStrategy) {
-        this(alphabet, oracle, Collections.singletonList(Word.epsilon()), initialSuffixes, cexHandler, closingStrategy);
+        this(alphabet, oracle, BuilderDefaults.initialPrefixes(), initialSuffixes, cexHandler, closingStrategy);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the learning alphabet
+     * @param oracle
+     *         the Mealy oracle
+     * @param initialPrefixes
+     *         the list of initial prefixes used in the observation table
+     * @param initialSuffixes
+     *         the list of initial suffixes used in the observation table
+     * @param cexHandler
+     *         the strategy for handling counterexamples
+     * @param closingStrategy
+     *         the strategy for closing open rows of the observation table
+     */
     @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
     public ExtensibleLStarMealy(Alphabet<I> alphabet,
                                 MembershipOracle<I, Word<O>> oracle,

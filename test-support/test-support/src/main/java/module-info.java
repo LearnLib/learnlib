@@ -36,11 +36,15 @@ open module de.learnlib.testsupport {
     requires de.learnlib.oracle.membership;
     requires de.learnlib.testsupport.example;
     requires net.automatalib.api;
+    requires net.automatalib.common.util;
     requires net.automatalib.core;
     requires net.automatalib.util;
     requires org.apache.fury.core;
     requires org.mockito;
     requires org.testng;
+
+    // annotations are 'provided'-scoped and do not need to be loaded at runtime
+    requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.testsupport;
 }

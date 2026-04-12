@@ -15,9 +15,9 @@
  */
 package de.learnlib.algorithm.lstar.dfa;
 
-import java.util.Collections;
 import java.util.List;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.GlobalSuffixLearner.GlobalSuffixLearnerDFA;
 import de.learnlib.algorithm.lstar.AbstractExtensibleAutomatonLStar;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandler;
@@ -36,6 +36,9 @@ import net.automatalib.word.Word;
 /**
  * An implementation of Angluin's L* algorithm for learning DFAs, as described in the paper "Learning Regular Sets from
  * Queries and Counterexamples".
+ * <p>
+ * <b>Implementation note:</b> this learner uses the {@link AccessSequenceTransformer} interface to provide access to
+ * the representatives of the states of the current hypothesis model.
  *
  * @param <I>
  *         input symbol type
@@ -43,6 +46,22 @@ import net.automatalib.word.Word;
 public class ExtensibleLStarDFA<I>
         extends AbstractExtensibleAutomatonLStar<DFA<?, I>, I, Boolean, Integer, Integer, Boolean, Void, CompactDFA<I>>
         implements OTLearnerDFA<I>, GlobalSuffixLearnerDFA<I> {
+
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the learning alphabet
+     * @param oracle
+     *         the DFA oracle
+     */
+    public ExtensibleLStarDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
+        this(alphabet,
+             oracle,
+             BuilderDefaults.initialSuffixes(),
+             BuilderDefaults.cexHandler(),
+             BuilderDefaults.closingStrategy());
+    }
 
     /**
      * Constructor.
@@ -63,9 +82,25 @@ public class ExtensibleLStarDFA<I>
                               List<Word<I>> initialSuffixes,
                               ObservationTableCEXHandler<? super I, ? super Boolean> cexHandler,
                               ClosingStrategy<? super I, ? super Boolean> closingStrategy) {
-        this(alphabet, oracle, Collections.singletonList(Word.epsilon()), initialSuffixes, cexHandler, closingStrategy);
+        this(alphabet, oracle, BuilderDefaults.initialPrefixes(), initialSuffixes, cexHandler, closingStrategy);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the learning alphabet
+     * @param oracle
+     *         the DFA oracle
+     * @param initialPrefixes
+     *         the list of initial prefixes used in the observation table
+     * @param initialSuffixes
+     *         the list of initial suffixes used in the observation table
+     * @param cexHandler
+     *         the strategy for handling counterexamples
+     * @param closingStrategy
+     *         the strategy for closing open rows of the observation table
+     */
     @GenerateBuilder(defaults = AbstractExtensibleAutomatonLStar.BuilderDefaults.class)
     public ExtensibleLStarDFA(Alphabet<I> alphabet,
                               MembershipOracle<I, Boolean> oracle,

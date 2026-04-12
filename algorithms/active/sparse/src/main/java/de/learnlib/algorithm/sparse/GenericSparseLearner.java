@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
@@ -36,7 +37,7 @@ import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 
-class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
+class GenericSparseLearner<S, I, O> implements MealyLearner<I, O>, AccessSequenceTransformer<I> {
 
     private final Alphabet<I> alphabet;
     private final MealyMembershipOracle<I, O> oracle;
@@ -139,6 +140,8 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Word<O>> q) {
+        requireLearningProcessStarted();
+
         final DefaultQuery<I, Word<O>> qs = MealyUtil.shortenCounterExample(hyp, q);
         if (qs == null) {
             return false;
@@ -151,6 +154,12 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
         assert hyp.size() == cRows.size();
         refineHypothesis(q); // recursively exhaust counterexample
         return true;
+    }
+
+    @Override
+    public Word<I> transformAccessSequence(Word<I> word) {
+        requireLearningProcessStarted();
+        return accSeq.apply(word);
     }
 
     private void updateHypothesis() {
@@ -372,5 +381,15 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O> {
         }
 
         vecs.get(idx).set(c.idx);
+    }
+
+    private void requireLearningProcessStarted() {
+        if (hyp.getStates().isEmpty()) {
+            throw new IllegalStateException("Learning process has not been started");
+        }
+    }
+
+    List<CoreRow<S, I, O>> getCRows() {
+        return cRows;
     }
 }

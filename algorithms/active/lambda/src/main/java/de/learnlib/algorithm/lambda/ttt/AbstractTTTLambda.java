@@ -20,6 +20,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 
+import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.lambda.ttt.dt.AbstractDecisionTree;
@@ -41,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> implements LearningAlgorithm<M, I, D>,
+                                                                                       AccessSequenceTransformer<I>,
                                                                                        SupportsGrowingAlphabet<I>,
                                                                                        Resumable<TTTLambdaState<I, D>>,
                                                                                        FiniteRepresentation {
@@ -52,6 +54,7 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
     protected final Alphabet<I> alphabet;
     protected SuffixTrie<I> strie;
     protected PrefixTree<I, D> ptree;
+    private boolean started;
 
     protected AbstractTTTLambda(Alphabet<I> alphabet, MembershipOracle<I, D> mqs, MembershipOracle<I, D> ceqs) {
         this.alphabet = alphabet;
@@ -60,6 +63,8 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
 
         this.strie = new SuffixTrie<>();
         this.ptree = new PrefixTree<>();
+
+        this.started = false;
     }
 
     protected abstract int maxSearchIndex(int ceLength);
@@ -70,13 +75,15 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
 
     @Override
     public void startLearning() {
-        assert dtree() != null && getHypothesisModel() != null;
         dtree().sift(mqs, ptree.root());
         makeConsistent(mqs);
+        started = true;
     }
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, D> counterexample) {
+        requireLearningProcessStarted();
+
         final Deque<DefaultQuery<I, D>> witnesses = new ArrayDeque<>();
         witnesses.add(counterexample);
         boolean refined = false;
@@ -124,6 +131,19 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
 
             makeConsistent(mqs);
         }
+    }
+
+    @Override
+    public Word<I> transformAccessSequence(Word<I> word) {
+        requireLearningProcessStarted();
+
+        DTLeaf<I, D> state = getState(word);
+        assert state != null;
+        List<PTNode<I, D>> shortPrefixes = state.getShortPrefixes();
+
+        assert shortPrefixes.size() == 1;
+
+        return shortPrefixes.get(0).word();
     }
 
     protected void makeConsistent(MembershipOracle<I, D> oracle) {
@@ -194,15 +214,22 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
         ua.makeShortPrefix(mqs);
     }
 
+    private void requireLearningProcessStarted() {
+        if (!started) {
+            throw new IllegalStateException("Learning process has not been started");
+        }
+    }
+
     @Override
     public TTTLambdaState<I, D> suspend() {
-        return new TTTLambdaState<>(strie, ptree, dtree());
+        return new TTTLambdaState<>(strie, ptree, dtree(), started);
     }
 
     @Override
     public void resume(TTTLambdaState<I, D> state) {
         this.strie = state.strie;
         this.ptree = state.ptree;
+        this.started = state.started;
 
         final Alphabet<I> oldAlphabet = state.dtree.getAlphabet();
         if (!this.alphabet.equals(oldAlphabet)) {

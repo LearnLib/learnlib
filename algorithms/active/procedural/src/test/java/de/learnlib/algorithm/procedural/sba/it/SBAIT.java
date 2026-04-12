@@ -24,18 +24,19 @@ import de.learnlib.acex.AbstractNamedAcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.LearnerConstructor;
 import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
+import de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFA;
+import de.learnlib.algorithm.lambda.lstar.LLambdaDFA;
+import de.learnlib.algorithm.lambda.ttt.dfa.TTTLambdaDFA;
+import de.learnlib.algorithm.lstar.dfa.ClassicLStarDFA;
+import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFA;
 import de.learnlib.algorithm.procedural.SymbolWrapper;
-import de.learnlib.algorithm.procedural.adapter.dfa.KearnsVaziraniAdapterDFA;
-import de.learnlib.algorithm.procedural.adapter.dfa.LLambdaAdapterDFA;
-import de.learnlib.algorithm.procedural.adapter.dfa.LStarBaseAdapterDFA;
-import de.learnlib.algorithm.procedural.adapter.dfa.ObservationPackAdapterDFA;
-import de.learnlib.algorithm.procedural.adapter.dfa.RivestSchapireAdapterDFA;
-import de.learnlib.algorithm.procedural.adapter.dfa.TTTAdapterDFA;
-import de.learnlib.algorithm.procedural.adapter.dfa.TTTLambdaAdapterDFA;
 import de.learnlib.algorithm.procedural.sba.ATManager;
 import de.learnlib.algorithm.procedural.sba.SBALearner;
 import de.learnlib.algorithm.procedural.sba.manager.DefaultATManager;
 import de.learnlib.algorithm.procedural.sba.manager.OptimizingATManager;
+import de.learnlib.algorithm.rivestschapire.RivestSchapireDFA;
+import de.learnlib.algorithm.ttt.dfa.PrefixTTTLearnerDFA;
+import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.testsupport.it.AbstractSBALearnerIT;
@@ -52,13 +53,14 @@ public class SBAIT extends AbstractSBALearnerIT {
 
         final Builder<I> builder = new Builder<>(alphabet, mqOracle, variants);
 
-        builder.addLearnerVariant(KearnsVaziraniAdapterDFA::new);
-        builder.addLearnerVariant(LStarBaseAdapterDFA::new);
-        builder.addLearnerVariant(ObservationPackAdapterDFA::new);
-        builder.addLearnerVariant(LLambdaAdapterDFA::new);
-        builder.addLearnerVariant(TTTLambdaAdapterDFA::new);
-        builder.addLearnerVariant(RivestSchapireAdapterDFA::new);
-        builder.addLearnerVariant(TTTAdapterDFA::new);
+        builder.addLearnerVariant(KearnsVaziraniDFA::new);
+        builder.addLearnerVariant(ClassicLStarDFA::new);
+        builder.addLearnerVariant(OPLearnerDFA::new);
+        builder.addLearnerVariant(LLambdaDFA::new);
+        builder.addLearnerVariant(TTTLambdaDFA::new);
+        builder.addLearnerVariant(RivestSchapireDFA::new);
+        builder.addLearnerVariant(TTTLearnerDFA::new);
+        builder.addLearnerVariant(PrefixTTTLearnerDFA::new);
     }
 
     private static class Builder<I> {

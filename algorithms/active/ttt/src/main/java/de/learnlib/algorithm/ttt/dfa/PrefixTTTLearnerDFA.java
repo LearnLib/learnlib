@@ -32,6 +32,10 @@ public class PrefixTTTLearnerDFA<I> extends TTTLearnerDFA<I> {
 
     private final ExtDTNode<I> unlabeledList = new ExtDTNode<>();
 
+    public PrefixTTTLearnerDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
+        this(alphabet, oracle, BuilderDefaults.analyzer());
+    }
+
     public PrefixTTTLearnerDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle, AcexAnalyzer analyzer) {
         super(alphabet, oracle, analyzer, ExtDTNode::new);
     }

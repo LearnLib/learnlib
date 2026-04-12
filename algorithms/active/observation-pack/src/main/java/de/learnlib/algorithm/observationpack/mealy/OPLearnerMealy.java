@@ -48,6 +48,18 @@ public class OPLearnerMealy<I, O> extends AbstractOPLearner<MealyMachine<?, I, ?
      *         the input alphabet
      * @param oracle
      *         the membership oracle
+     */
+    public OPLearnerMealy(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
+        this(alphabet, oracle, BuilderDefaults.suffixFinder(), BuilderDefaults.repeatedCounterexampleEvaluation());
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the input alphabet
+     * @param oracle
+     *         the membership oracle
      * @param suffixFinder
      *         method to use for analyzing counterexamples
      * @param repeatedCounterexampleEvaluation

@@ -46,6 +46,22 @@ public class OPLearnerDFA<I> extends AbstractOPLearner<DFA<?, I>, I, Boolean, Bo
      *         the input alphabet
      * @param oracle
      *         the membership oracle
+     */
+    public OPLearnerDFA(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
+        this(alphabet,
+             oracle,
+             BuilderDefaults.suffixFinder(),
+             BuilderDefaults.repeatedCounterexampleEvaluation(),
+             BuilderDefaults.epsilonRoot());
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param alphabet
+     *         the input alphabet
+     * @param oracle
+     *         the membership oracle
      * @param suffixFinder
      *         method to use for analyzing counterexamples
      * @param repeatedCounterexampleEvaluation
