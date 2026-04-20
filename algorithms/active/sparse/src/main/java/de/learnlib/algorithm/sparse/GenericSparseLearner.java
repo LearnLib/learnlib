@@ -28,19 +28,21 @@ import java.util.function.Function;
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.counterexample.LocalSuffixFinders;
-import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 
-class GenericSparseLearner<S, I, O> implements MealyLearner<I, O>, AccessSequenceTransformer<I> {
+class GenericSparseLearner<M extends MutableMealyMachine<S, I, ?, O> & SupportsGrowingAlphabet<I>, S, I, O>
+        implements MealyLearner<I, O>, AccessSequenceTransformer<I>, SupportsGrowingAlphabet<I> {
 
     private final Alphabet<I> alphabet;
-    private final MealyMembershipOracle<I, O> oracle;
+    private final MembershipOracle<I, Word<O>> oracle;
 
     /**
      * Suffixes.
@@ -76,7 +78,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O>, AccessSequenc
     /**
      * Hypothesis.
      */
-    private final MutableMealyMachine<S, I, ?, O> hyp;
+    private final M hyp;
 
     /**
      * Maps each state to its core row prefix.
@@ -99,9 +101,9 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O>, AccessSequenc
     private final Map<Word<I>, Map<Word<O>, Integer>> sufToOutToIdx;
 
     protected GenericSparseLearner(Alphabet<I> alphabet,
-                                   MealyMembershipOracle<I, O> oracle,
+                                   MembershipOracle<I, Word<O>> oracle,
                                    List<Word<I>> initialSuffixes,
-                                   MutableMealyMachine<S, I, ?, O> emptyMachine) {
+                                   M emptyMachine) {
         this.alphabet = alphabet;
         this.oracle = oracle;
         sufs = new ArrayDeque<>(initialSuffixes);
@@ -131,7 +133,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O>, AccessSequenc
         cRows.add(c);
         sufs.forEach(s -> addSuffixToCoreRow(c, s));
         stateToPrefix.put(init, c.prefix);
-        extendFringe(c, init, new Leaf<>(c, 1, sufs.size(), Collections.emptyList()));
+        extendFringe(c, new Leaf<>(c, 1, sufs.size(), Collections.emptyList()));
         fRows.forEach(f -> query(f, Word.epsilon())); // query transition outputs
         // initially, transition outputs must be queried manually,
         // for later transitions, they derive from suffix queries
@@ -160,6 +162,26 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O>, AccessSequenc
     public Word<I> transformAccessSequence(Word<I> word) {
         requireLearningProcessStarted();
         return accSeq.apply(word);
+    }
+
+    @Override
+    public void addAlphabetSymbol(I i) {
+        if (!this.alphabet.containsSymbol(i)) {
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(i);
+        }
+
+        this.hyp.addAlphabetSymbol(i);
+
+        final Leaf<S, I, O> l = new Leaf<>();
+        for (CoreRow<S, I, O> c : cRows) {
+            addFringeRow(c, i, l);
+        }
+
+        // If the suffixes are empty, we have not started the learning process yet.
+        // In this case, treat the symbol as if it was part of the initial alphabet.
+        if (!this.hyp.getStates().isEmpty()) {
+            updateHypothesis();
+        }
     }
 
     private void updateHypothesis() {
@@ -303,7 +325,7 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O>, AccessSequenc
         }
 
         cRows.add(c);
-        extendFringe(c, state, new Leaf<>());
+        extendFringe(c, new Leaf<>());
         assert c.cellIds.size() == sufs.size();
         assert c == cRows.get(c.idx);
         return c.idx;
@@ -321,14 +343,20 @@ class GenericSparseLearner<S, I, O> implements MealyLearner<I, O>, AccessSequenc
         return cellIdsFull;
     }
 
-    private void extendFringe(CoreRow<S, I, O> c, S state, Leaf<S, I, O> leaf) {
+    /**
+     * Add missing fringe rows for new transitions.
+     */
+    private void extendFringe(CoreRow<S, I, O> c, Leaf<S, I, O> l) {
         for (I i : alphabet) {
-            // add missing fringe rows for new transitions
-            final Word<I> prefix = c.prefix.append(i);
-            final FringeRow<S, I, O> fRow = new FringeRow<>(prefix, state, leaf);
-            prefToFringe.put(prefix, fRow);
-            fRows.push(fRow); // prioritize new rows during classification
+            addFringeRow(c, i, l);
         }
+    }
+
+    private void addFringeRow(CoreRow<S, I, O> c, I i, Leaf<S, I, O> l) {
+        final Word<I> prefix = c.prefix.append(i);
+        final FringeRow<S, I, O> f = new FringeRow<>(prefix, c.state, l);
+        prefToFringe.put(prefix, f);
+        fRows.push(f); // prioritize new rows during classification
     }
 
     private void identifyNewState(DefaultQuery<I, Word<O>> q) {
