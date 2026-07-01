@@ -166,22 +166,25 @@ class GenericSparseLearner<M extends MutableMealyMachine<S, I, ?, O> & SupportsG
 
     @Override
     public void addAlphabetSymbol(I i) {
-        if (!this.alphabet.containsSymbol(i)) {
-            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(i);
+        alphabet.asGrowingAlphabetOrThrowException().addSymbol(i);
+        hyp.addAlphabetSymbol(i);
+        if (cRows.isEmpty()) {
+            return; // learning has not started yet
         }
 
-        this.hyp.addAlphabetSymbol(i);
-
-        final Leaf<S, I, O> l = new Leaf<>();
-        for (CoreRow<S, I, O> c : cRows) {
-            addFringeRow(c, i, l);
+        // add new fringe rows
+        if (cRows.size() == 1) {
+            // there is only a single state yet
+            final Leaf<S, I, O> l = fRows.getFirst().leaf;
+            assert l != null;
+            final FringeRow<S, I, O> f = addFringeRow(cRows.get(0), i, l);
+            query(f, Word.epsilon()); // for the first state, transition outputs must be queried manually
+        } else {
+            final Leaf<S, I, O> l = new Leaf<>(); // fringe rows that spawn together should share the same leaf
+            cRows.forEach(c -> addFringeRow(c, i, l));
         }
 
-        // If the suffixes are empty, we have not started the learning process yet.
-        // In this case, treat the symbol as if it was part of the initial alphabet.
-        if (!this.hyp.getStates().isEmpty()) {
-            updateHypothesis();
-        }
+        updateHypothesis();
     }
 
     private void updateHypothesis() {
@@ -344,7 +347,7 @@ class GenericSparseLearner<M extends MutableMealyMachine<S, I, ?, O> & SupportsG
     }
 
     /**
-     * Add missing fringe rows for new transitions.
+     * Add fringe rows for the transitions from a new core prefix.
      */
     private void extendFringe(CoreRow<S, I, O> c, Leaf<S, I, O> l) {
         for (I i : alphabet) {
@@ -352,11 +355,15 @@ class GenericSparseLearner<M extends MutableMealyMachine<S, I, ?, O> & SupportsG
         }
     }
 
-    private void addFringeRow(CoreRow<S, I, O> c, I i, Leaf<S, I, O> l) {
+    /**
+     * Creates a new fringe row and returns it after integrating it into the internal data structures.
+     */
+    private FringeRow<S, I, O> addFringeRow(CoreRow<S, I, O> c, I i, Leaf<S, I, O> l) {
         final Word<I> prefix = c.prefix.append(i);
         final FringeRow<S, I, O> f = new FringeRow<>(prefix, c.state, l);
         prefToFringe.put(prefix, f);
         fRows.push(f); // prioritize new rows during classification
+        return f;
     }
 
     private void identifyNewState(DefaultQuery<I, Word<O>> q) {
