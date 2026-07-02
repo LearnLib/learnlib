@@ -34,6 +34,7 @@ import de.learnlib.algorithm.procedural.spmm.SPMMLearner;
 import de.learnlib.algorithm.procedural.spmm.manager.DefaultATManager;
 import de.learnlib.algorithm.procedural.spmm.manager.OptimizingATManager;
 import de.learnlib.algorithm.rivestschapire.RivestSchapireMealy;
+import de.learnlib.algorithm.sparse.SparseLearner;
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealy;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
@@ -61,6 +62,7 @@ public class SPMMIT extends AbstractSPMMLearnerIT {
         builder.addLearnerVariant(TTTLambdaMealy::new);
         builder.addLearnerVariant(RivestSchapireMealy::new);
         builder.addLearnerVariant(TTTLearnerMealy::new);
+        builder.addLearnerVariant(SparseLearner::new);
     }
 
     private static class Builder<I, O> {

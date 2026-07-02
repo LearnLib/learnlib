@@ -18,7 +18,7 @@ package de.learnlib.algorithm.sparse;
 import java.util.Collections;
 import java.util.List;
 
-import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.word.Word;
@@ -28,13 +28,13 @@ import net.automatalib.word.Word;
  * <a href="https://doi.org/10.1007/978-3-032-05792-1_10">Learning Mealy Machines with Sparse Observation Tables</a>
  * by Wolffhardt Schwabe, Paul Kogel, and Sabine Glesner.
  */
-public class SparseLearner<I, O> extends GenericSparseLearner<Integer, I, O> {
+public class SparseLearner<I, O> extends GenericSparseLearner<CompactMealy<I, O>, Integer, I, O> {
 
-    public SparseLearner(Alphabet<I> alphabet, MealyMembershipOracle<I, O> oracle) {
+    public SparseLearner(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
         this(alphabet, oracle, Collections.emptyList());
     }
 
-    public SparseLearner(Alphabet<I> alphabet, MealyMembershipOracle<I, O> oracle, List<Word<I>> initialSuffixes) {
+    public SparseLearner(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle, List<Word<I>> initialSuffixes) {
         super(alphabet, oracle, initialSuffixes, new CompactMealy<>(alphabet));
     }
 }
