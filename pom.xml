@@ -276,7 +276,7 @@ limitations under the License.
         <extra-enforcer-rules.version>1.10.0</extra-enforcer-rules.version>
         <fury.version>0.9.0</fury.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
-        <logback.version>1.5.25</logback.version>
+        <logback.version>1.5.33</logback.version>
         <metainf-services.version>1.11</metainf-services.version>
         <mockito.version>5.20.0</mockito.version>
         <pmd.version>7.22.0</pmd.version>
