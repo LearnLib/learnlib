@@ -88,6 +88,7 @@ public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, 
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         HState<I, D, SP, TP> init = hypothesis.createInitialState();
         AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>> initDt = dtree.sift(init.getAccessSequence());
         if (initDt.getData() != null) {
@@ -252,10 +253,20 @@ public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, 
         return hypothesis;
     }
 
-    private void requireLearningProcessStarted() {
-        if (hypothesis.getStates().isEmpty()) {
+    protected void requireLearningProcessStarted() {
+        if (!hasLearningProcessStarted()) {
             throw new IllegalStateException("Learning process has not been started");
         }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return !hypothesis.getStates().isEmpty();
     }
 
     @Override

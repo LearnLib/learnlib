@@ -103,6 +103,7 @@ public class ClassicLStarMealy<I, O>
 
     @Override
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return internalHyp;
     }
 

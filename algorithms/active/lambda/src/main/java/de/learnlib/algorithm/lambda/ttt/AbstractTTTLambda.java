@@ -75,6 +75,7 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         dtree().sift(mqs, ptree.root());
         makeConsistent(mqs);
         started = true;
@@ -214,10 +215,20 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
         ua.makeShortPrefix(mqs);
     }
 
-    private void requireLearningProcessStarted() {
-        if (!started) {
+    protected void requireLearningProcessStarted() {
+        if (!hasLearningProcessStarted()) {
             throw new IllegalStateException("Learning process has not been started");
         }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return started;
     }
 
     @Override

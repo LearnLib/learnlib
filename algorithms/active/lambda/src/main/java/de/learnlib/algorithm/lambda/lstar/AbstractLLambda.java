@@ -82,6 +82,7 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements OT
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         initTable();
         learnLoop();
     }
@@ -296,9 +297,19 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements OT
     }
 
     protected void requireLearningProcessStarted() {
-        if (rows.isEmpty()) {
+        if (!hasLearningProcessStarted()) {
             throw new IllegalStateException("Learning process has not been started");
         }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return !rows.isEmpty();
     }
 
     @Override

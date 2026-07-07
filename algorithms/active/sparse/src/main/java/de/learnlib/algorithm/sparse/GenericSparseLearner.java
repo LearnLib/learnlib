@@ -123,11 +123,13 @@ class GenericSparseLearner<M extends MutableMealyMachine<S, I, ?, O> & SupportsG
 
     @Override
     public MealyMachine<S, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return hyp;
     }
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         final S init = hyp.addInitialState();
         final CoreRow<S, I, O> c = new CoreRow<>(Word.epsilon(), init, 0);
         cRows.add(c);
@@ -419,9 +421,19 @@ class GenericSparseLearner<M extends MutableMealyMachine<S, I, ?, O> & SupportsG
     }
 
     private void requireLearningProcessStarted() {
-        if (hyp.getStates().isEmpty()) {
+        if (!hasLearningProcessStarted()) {
             throw new IllegalStateException("Learning process has not been started");
         }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return !hyp.getStates().isEmpty();
     }
 
     List<CoreRow<S, I, O>> getCRows() {

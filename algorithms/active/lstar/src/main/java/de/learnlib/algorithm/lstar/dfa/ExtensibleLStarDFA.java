@@ -119,6 +119,7 @@ public class ExtensibleLStarDFA<I>
 
     @Override
     public DFA<?, I> getHypothesisModel() {
+        requireLearningProcessStarted();
         return internalHyp;
     }
 

@@ -350,6 +350,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O>, AccessSequenceTran
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         this.initObsTree(null);
         buildHypothesis();
     }
@@ -378,9 +379,19 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O>, AccessSequenceTran
     }
 
     private void requireLearningProcessStarted() {
-        if (basisMap.isEmpty()) {
+        if (!hasLearningProcessStarted()) {
             throw new IllegalStateException("Learning process has not been started");
         }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return !basisMap.isEmpty();
     }
 
     static final class BuilderDefaults {

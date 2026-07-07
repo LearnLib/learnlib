@@ -113,6 +113,7 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I>,
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         initialize();
     }
 
@@ -316,9 +317,19 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I>,
     }
 
     private void requireLearningProcessStarted() {
-        if (hypothesis.size() == 0) {
+        if (!hasLearningProcessStarted()) {
             throw new IllegalStateException("Learning process has not been started");
         }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return this.hypothesis.size() != 0;
     }
 
     @Override

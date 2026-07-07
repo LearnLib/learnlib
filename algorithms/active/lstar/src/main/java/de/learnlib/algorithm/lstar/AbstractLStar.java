@@ -76,6 +76,7 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>,
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         List<Word<I>> prefixes = initialPrefixes();
         List<Word<I>> suffixes = initialSuffixes();
         List<List<Row<I>>> initialUnclosed = table.initialize(prefixes, suffixes, oracle);
@@ -85,6 +86,7 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>,
 
     @Override
     public final boolean refineHypothesis(DefaultQuery<I, D> ceQuery) {
+        requireLearningProcessStarted();
         if (!MQUtil.isCounterexample(ceQuery, hypothesisOutput())) {
             return false;
         }
@@ -241,5 +243,17 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>,
     @Override
     public Word<I> transformAccessSequence(Word<I> word) {
         return this.table.transformAccessSequence(word);
+    }
+
+    protected void requireLearningProcessStarted() {
+        if (!this.table.isInitialized()) {
+            throw new IllegalStateException("Learning process has not been started");
+        }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (this.table.isInitialized()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
     }
 }

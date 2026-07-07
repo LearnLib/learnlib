@@ -162,9 +162,7 @@ public abstract class AbstractTTTLearner<A, I, D> implements LearningAlgorithm<A
 
     @Override
     public void startLearning() {
-        if (hypothesis.isInitialized()) {
-            throw new IllegalStateException();
-        }
+        requireLearningProcessNotStarted();
 
         TTTState<I, D> init = hypothesis.initialize();
         AbstractBaseDTNode<I, D> initNode = dtree.sift(init.getAccessSequence(), false);
@@ -949,9 +947,19 @@ public abstract class AbstractTTTLearner<A, I, D> implements LearningAlgorithm<A
     }
 
     protected void requireLearningProcessStarted() {
-        if (hypothesis.getStates().isEmpty()) {
+        if (!hasLearningProcessStarted()) {
             throw new IllegalStateException("Learning process has not been started");
         }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return hypothesis.isInitialized();
     }
 
     @Override

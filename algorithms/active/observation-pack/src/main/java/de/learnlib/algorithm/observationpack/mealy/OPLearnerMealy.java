@@ -75,6 +75,7 @@ public class OPLearnerMealy<I, O> extends AbstractOPLearner<MealyMachine<?, I, ?
 
     @Override
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return new HypothesisWrapperMealy<>(getHypothesisDS());
     }
 

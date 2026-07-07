@@ -91,6 +91,7 @@ public class OPLearnerMoore<I, O> extends AbstractOPLearner<MooreMachine<?, I, ?
 
     @Override
     public MooreMachine<?, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return new HypothesisWrapperMoore<>(getHypothesisDS());
     }
 }

@@ -65,7 +65,7 @@ public class TTTLearnerDFA<I> extends AbstractTTTLearner<DFA<?, I>, I, Boolean> 
     @Override
     @SuppressWarnings("unchecked")
     public DFA<?, I> getHypothesisModel() {
-        return (TTTHypothesisDFA<I>) hypothesis;
+        return (TTTHypothesisDFA<I>) getHypothesisDS();
     }
 
     @Override
@@ -100,13 +100,6 @@ public class TTTLearnerDFA<I> extends AbstractTTTLearner<DFA<?, I>, I, Boolean> 
     protected Boolean computeHypothesisOutput(TTTState<I, Boolean> state, Word<I> suffix) {
         TTTState<I, Boolean> endState = getAnySuccessor(state, suffix);
         return ((TTTStateDFA<I>) endState).accepting;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public TTTHypothesisDFA<I> getHypothesisDS() {
-        requireLearningProcessStarted();
-        return (TTTHypothesisDFA<I>) hypothesis;
     }
 
     @Override

@@ -138,6 +138,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
 
         final ADTState<I, O> initialState = this.hypothesis.addInitialState();
         initialState.setAccessSequence(Word.epsilon());
@@ -315,6 +316,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
     @Override
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return this.hypothesis;
     }
 
@@ -853,9 +855,19 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     }
 
     private void requireLearningProcessStarted() {
-        if (hypothesis.getStates().isEmpty()) {
+        if (!hasLearningProcessStarted()) {
             throw new IllegalStateException("Learning process has not been started");
         }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return !hypothesis.getStates().isEmpty();
     }
 
     public ADT<ADTState<I, O>, I, O> getADT() {

@@ -120,15 +120,25 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
     @Override
     public boolean addGlobalSuffixes(Collection<? extends Word<I>> newGlobalSuffixes) {
-        checkInternalState();
+        requireLearningProcessStarted();
 
         return addSuffixesUnchecked(newGlobalSuffixes);
     }
 
-    private void checkInternalState() {
-        if (hypothesis == null) {
-            throw new IllegalStateException("No hypothesis learned yet");
+    private void requireLearningProcessStarted() {
+        if (!hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has not been started");
         }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return hypothesis != null;
     }
 
     protected boolean addSuffixesUnchecked(Collection<? extends Word<I>> newSuffixes) {
@@ -136,13 +146,18 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
         splitters.addAll(newSuffixes);
 
-        startLearning();
+        startLearningInternal();
 
         return hypothesis.size() != oldSize;
     }
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
+        startLearningInternal();
+    }
+
+    private void startLearningInternal() {
         // initialize structure to store state output signatures
         Map<List<Word<O>>, Integer> signatures = new HashMap<>();
 
@@ -233,7 +248,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Word<O>> ceQuery) {
-        checkInternalState();
+        requireLearningProcessStarted();
 
         if (hypothesis.computeSuffixOutput(ceQuery.getPrefix(), ceQuery.getSuffix()).equals(ceQuery.getOutput())) {
             return false;
@@ -246,7 +261,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
     @Override
     public CompactMealy<I, O> getHypothesisModel() {
-        checkInternalState();
+        requireLearningProcessStarted();
         return hypothesis;
     }
 
@@ -275,7 +290,9 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
             this.splitters = newSplitters;
 
-            this.startLearning();
+            if (hasLearningProcessStarted()) {
+                this.startLearningInternal();
+            }
         }
     }
 
@@ -293,7 +310,7 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
 
     @Override
     public Word<I> transformAccessSequence(Word<I> word) {
-        checkInternalState();
+        requireLearningProcessStarted();
         Integer state = hypothesis.getState(word);
         assert state != null;
         return assembleAccessSequence(accessSequences.get(state));

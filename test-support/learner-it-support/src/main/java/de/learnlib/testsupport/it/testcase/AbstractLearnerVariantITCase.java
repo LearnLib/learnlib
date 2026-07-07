@@ -27,6 +27,7 @@ import de.learnlib.testsupport.it.util.LockableOracle;
 import de.learnlib.testsupport.it.variant.LearnerVariant;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
+import net.automatalib.word.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -70,9 +71,20 @@ public abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteReprese
 
         long start = System.nanoTime();
 
+        Assert.assertThrows("Learner should not return a hypothesis before learning has started",
+                            IllegalStateException.class,
+                            learner::getHypothesisModel);
+        Assert.assertThrows("Learner should not refine hypothesis before learning has started",
+                            IllegalStateException.class,
+                            () -> learner.refineHypothesis(new DefaultQuery<>(Word.epsilon())));
+
         lockableOracle.unlock();
         learner.startLearning();
         lockableOracle.lock();
+
+        Assert.assertThrows("Learner should not be started twice after in succession",
+                            IllegalStateException.class,
+                            learner::startLearning);
 
         int roundCounter = 0;
         DefaultQuery<I, D> ceQuery;
@@ -106,6 +118,10 @@ public abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteReprese
             Assert.assertFalse(learner.refineHypothesis(oldCe),
                                "Learner should not report a hypothesis update on outdated counterexample");
         }
+
+        Assert.assertThrows("Learner should not be started after having finished",
+                            IllegalStateException.class,
+                            learner::startLearning);
 
         long duration = (System.nanoTime() - start) / NANOS_PER_MILLISECOND;
         LOGGER.info(Category.EVENT,

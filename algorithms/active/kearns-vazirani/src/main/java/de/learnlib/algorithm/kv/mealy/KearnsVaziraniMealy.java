@@ -116,6 +116,7 @@ public class KearnsVaziraniMealy<I, O> implements MealyLearner<I, O>,
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         initialize();
     }
 
@@ -344,9 +345,19 @@ public class KearnsVaziraniMealy<I, O> implements MealyLearner<I, O>,
     }
 
     private void requireLearningProcessStarted() {
-        if (hypothesis.size() == 0) {
+        if (!hasLearningProcessStarted()) {
             throw new IllegalStateException("Learning process has not been started");
         }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return this.hypothesis.size() != 0;
     }
 
     @Override
