@@ -21,6 +21,7 @@ import java.util.List;
 import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
+import de.learnlib.algorithm.dhc.mealy.MealyDHC;
 import de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFA;
 import de.learnlib.algorithm.kv.mealy.KearnsVaziraniMealy;
 import de.learnlib.algorithm.lambda.ttt.dfa.TTTLambdaDFA;
@@ -69,6 +70,7 @@ public final class AAARTestUtil {
         final ComboConstructor<ExtensibleLStarMealy<I, O>, I, Word<O>> lstar = ExtensibleLStarMealy::new;
         final ComboConstructor<RivestSchapireMealy<I, O>, I, Word<O>> rs = RivestSchapireMealy::new;
         final ComboConstructor<KearnsVaziraniMealy<I, O>, I, Word<O>> kv = KearnsVaziraniMealy::new;
+        final ComboConstructor<MealyDHC<I, O>, I, Word<O>> dhc = MealyDHC::new;
         final ComboConstructor<OPLearnerMealy<I, O>, I, Word<O>> op = OPLearnerMealy::new;
         final ComboConstructor<SparseLearner<I, O>, I, Word<O>> sparse = SparseLearner::new;
         final ComboConstructor<TTTLearnerMealy<I, O>, I, Word<O>> ttt = TTTLearnerMealy::new;
@@ -77,6 +79,7 @@ public final class AAARTestUtil {
         return Arrays.asList(Pair.of("L*", lstar),
                              Pair.of("RS", rs),
                              Pair.of("KV", kv),
+                             Pair.of("DHC", dhc),
                              Pair.of("OP", op),
                              Pair.of("Sparse", sparse),
                              Pair.of("TTT", ttt),
