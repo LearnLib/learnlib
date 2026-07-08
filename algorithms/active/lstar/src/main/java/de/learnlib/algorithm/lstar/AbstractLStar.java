@@ -251,5 +251,4 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>,
     public Word<I> transformAccessSequence(Word<I> word) {
         return this.table.transformAccessSequence(word);
     }
-
 }
