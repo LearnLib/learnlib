@@ -257,6 +257,7 @@ public class ExtensibleLStarMMLT<I, O>
 
     @Override
     public MMLT<Integer, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return getInternalHypothesisModel();
     }
 
@@ -319,6 +320,7 @@ public class ExtensibleLStarMMLT<I, O>
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         List<List<Row<TimedInput<I>>>> initialUnclosed =
                 this.hypData.getTable().initialize(Collections.emptyList(), this.initialSuffixes, timeOracle);
 
@@ -330,6 +332,7 @@ public class ExtensibleLStarMMLT<I, O>
 
     @Override
     public boolean refineHypothesis(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> ceQuery) {
+        requireLearningProcessStarted();
         if (!refineHypothesisSingle(ceQuery)) {
             return false; // no valid CEX
         }
@@ -623,6 +626,22 @@ public class ExtensibleLStarMMLT<I, O>
         }
 
         return hypothesis;
+    }
+
+    private void requireLearningProcessStarted() {
+        if (!hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has not been started");
+        }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return hypData.getTable().isInitialized();
     }
 
     private static final class OutputQuery<I, O> extends Query<TimedInput<I>, Word<TimedOutput<O>>> {

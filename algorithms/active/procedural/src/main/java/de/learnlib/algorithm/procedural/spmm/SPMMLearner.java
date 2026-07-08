@@ -73,6 +73,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
     private final Map<I, L> learners;
     private I initialCallSymbol;
     private O initialOutputSymbol;
+    private boolean learningStarted;
 
     private final Map<I, SymbolWrapper<I>> mapping;
 
@@ -99,6 +100,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
         this.atManager = atManager;
 
         this.learners = new HashMap<>(HashUtil.capacity(this.alphabet.getNumCalls()));
+        this.learningStarted = false;
         this.mapping = new HashMap<>(HashUtil.capacity(this.alphabet.size()));
 
         for (I i : this.alphabet.getInternalAlphabet()) {
@@ -112,11 +114,14 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
+        this.learningStarted = true;
         // do nothing, as we have to wait for evidence that the potential main procedure actually terminates
     }
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Word<O>> defaultQuery) {
+        requireLearningProcessStarted();
 
         if (!MQUtil.isCounterexample(defaultQuery, getHypothesisModel())) {
             return false;
@@ -168,6 +173,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
 
     @Override
     public SPMM<?, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
 
         if (this.learners.isEmpty()) {
             return new EmptySPMM<>(this.alphabet, errorOutput);
@@ -367,5 +373,21 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
         }
 
         throw new IllegalArgumentException("Non-counterexamples shouldn't be scanned for a mis-match");
+    }
+
+    private void requireLearningProcessStarted() {
+        if (!hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has not been started");
+        }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return this.learningStarted;
     }
 }

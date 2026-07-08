@@ -71,6 +71,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
     private final Map<I, L> subLearners;
     private final Set<I> activeAlphabet;
     private I initialCallSymbol;
+    private boolean learningStarted;
 
     public SPALearner(ProceduralInputAlphabet<I> alphabet,
                       MembershipOracle<I, Boolean> oracle,
@@ -96,15 +97,19 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         this.subLearners = new HashMap<>(HashUtil.capacity(this.alphabet.getNumCalls()));
         this.activeAlphabet = new HashSet<>(HashUtil.capacity(alphabet.getNumCalls() + alphabet.getNumInternals()));
         this.activeAlphabet.addAll(alphabet.getInternalAlphabet());
+        this.learningStarted = false;
     }
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
+        this.learningStarted = true;
         // do nothing, as we have to wait for evidence that the potential main procedure actually terminates
     }
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Boolean> defaultQuery) {
+        requireLearningProcessStarted();
 
         if (!MQUtil.isCounterexample(defaultQuery, getHypothesisModel())) {
             return false;
@@ -160,6 +165,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
 
     @Override
     public SPA<?, I> getHypothesisModel() {
+        requireLearningProcessStarted();
 
         if (this.subLearners.isEmpty()) {
             return new EmptySPA<>(this.alphabet);
@@ -291,6 +297,22 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         }
 
         return refinement;
+    }
+
+    private void requireLearningProcessStarted() {
+        if (!hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has not been started");
+        }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return this.learningStarted;
     }
 
     private final class Acex extends AbstractBaseCounterexample<Boolean> {

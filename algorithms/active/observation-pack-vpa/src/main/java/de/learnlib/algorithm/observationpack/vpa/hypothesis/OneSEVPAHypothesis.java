@@ -81,6 +81,10 @@ public class OneSEVPAHypothesis<I> extends AbstractSEVPA<HypLoc<I>, I> implement
         return loc;
     }
 
+    public boolean isInitialized() {
+        return this.initLoc != null;
+    }
+
     @Override
     public HypLoc<I> getInternalSuccessor(HypLoc<I> loc, I intSym) {
         return loc.getInternalTransition(alphabet.getInternalSymbolIndex(intSym)).getTargetLocation();

@@ -62,6 +62,7 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         HypLoc<I> initLoc = hypothesis.initialize();
         DTNode<I> leaf = dtree.sift(initLoc.getAccessSequence());
         link(leaf, initLoc);
@@ -72,6 +73,7 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Boolean> ceQuery) {
+        requireLearningProcessStarted();
         if (hypothesis.computeSuffixOutput(ceQuery.getPrefix(), ceQuery.getSuffix()).equals(ceQuery.getOutput())) {
             return false;
         }
@@ -87,6 +89,7 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
 
     @Override
     public OneSEVPA<?, I> getHypothesisModel() {
+        requireLearningProcessStarted();
         return hypothesis;
     }
 
@@ -260,6 +263,22 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
 
     protected HypLoc<I> createLocation(AbstractHypTrans<I> trans) {
         return hypothesis.createLocation(false, trans);
+    }
+
+    private void requireLearningProcessStarted() {
+        if (!hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has not been started");
+        }
+    }
+
+    private void requireLearningProcessNotStarted() {
+        if (hasLearningProcessStarted()) {
+            throw new IllegalStateException("Learning process has already been started");
+        }
+    }
+
+    private boolean hasLearningProcessStarted() {
+        return hypothesis.isInitialized();
     }
 
     public static final class BuilderDefaults {
