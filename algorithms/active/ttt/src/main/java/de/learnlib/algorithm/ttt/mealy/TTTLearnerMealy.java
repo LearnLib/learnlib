@@ -66,7 +66,7 @@ public class TTTLearnerMealy<I, O> extends AbstractTTTLearner<MealyMachine<?, I,
     @Override
     @SuppressWarnings("unchecked")
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
-        return (TTTHypothesisMealy<I, O>) hypothesis;
+        return (TTTHypothesisMealy<I, O>) getHypothesisDS();
     }
 
     @Override

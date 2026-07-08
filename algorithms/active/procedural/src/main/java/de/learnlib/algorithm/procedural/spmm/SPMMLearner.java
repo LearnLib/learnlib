@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.algorithm.LearnerConstructor;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
@@ -62,7 +63,7 @@ import net.automatalib.word.WordBuilder;
  *         sub-learner type
  */
 public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>>
-        implements LearningAlgorithm<SPMM<?, I, ?, O>, I, Word<O>> {
+        implements LearningAlgorithm<SPMM<?, I, ?, O>, I, Word<O>>, LearnerStateTracker {
 
     private final ProceduralInputAlphabet<I> alphabet;
     private final O errorOutput;
@@ -73,6 +74,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
     private final Map<I, L> learners;
     private I initialCallSymbol;
     private O initialOutputSymbol;
+    private boolean learningStarted;
 
     private final Map<I, SymbolWrapper<I>> mapping;
 
@@ -99,6 +101,7 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
         this.atManager = atManager;
 
         this.learners = new HashMap<>(HashUtil.capacity(this.alphabet.getNumCalls()));
+        this.learningStarted = false;
         this.mapping = new HashMap<>(HashUtil.capacity(this.alphabet.size()));
 
         for (I i : this.alphabet.getInternalAlphabet()) {
@@ -112,11 +115,14 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
+        this.learningStarted = true;
         // do nothing, as we have to wait for evidence that the potential main procedure actually terminates
     }
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Word<O>> defaultQuery) {
+        requireLearningProcessStarted();
 
         if (!MQUtil.isCounterexample(defaultQuery, getHypothesisModel())) {
             return false;
@@ -167,7 +173,13 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
     }
 
     @Override
+    public boolean hasLearningProcessStarted() {
+        return this.learningStarted;
+    }
+
+    @Override
     public SPMM<?, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
 
         if (this.learners.isEmpty()) {
             return new EmptySPMM<>(this.alphabet, errorOutput);

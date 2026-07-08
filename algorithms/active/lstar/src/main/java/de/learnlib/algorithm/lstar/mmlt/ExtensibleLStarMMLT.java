@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
@@ -73,7 +74,7 @@ import org.slf4j.LoggerFactory;
  *         output symbol type
  */
 public class ExtensibleLStarMMLT<I, O>
-        implements OTLearner<MMLT<Integer, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>> {
+        implements OTLearner<MMLT<Integer, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>>, LearnerStateTracker {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExtensibleLStarMMLT.class);
     private static final String STATISTICS_ID = "L*-MMLT";
@@ -257,6 +258,7 @@ public class ExtensibleLStarMMLT<I, O>
 
     @Override
     public MMLT<Integer, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return getInternalHypothesisModel();
     }
 
@@ -319,6 +321,7 @@ public class ExtensibleLStarMMLT<I, O>
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         List<List<Row<TimedInput<I>>>> initialUnclosed =
                 this.hypData.getTable().initialize(Collections.emptyList(), this.initialSuffixes, timeOracle);
 
@@ -330,6 +333,7 @@ public class ExtensibleLStarMMLT<I, O>
 
     @Override
     public boolean refineHypothesis(DefaultQuery<TimedInput<I>, Word<TimedOutput<O>>> ceQuery) {
+        requireLearningProcessStarted();
         if (!refineHypothesisSingle(ceQuery)) {
             return false; // no valid CEX
         }
@@ -485,6 +489,11 @@ public class ExtensibleLStarMMLT<I, O>
     @Override
     public ObservationTable<TimedInput<I>, Word<TimedOutput<O>>> getObservationTable() {
         return this.hypData.getTable();
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return hypData.getTable().isInitialized();
     }
 
     /**

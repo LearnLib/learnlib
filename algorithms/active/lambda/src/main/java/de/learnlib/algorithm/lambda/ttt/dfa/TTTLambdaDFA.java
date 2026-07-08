@@ -56,6 +56,7 @@ public class TTTLambdaDFA<I> extends AbstractTTTLambda<DFA<?, I>, I, Boolean> im
 
     @Override
     public DFA<?, I> getHypothesisModel() {
+        requireLearningProcessStarted();
         return hypothesis;
     }
 

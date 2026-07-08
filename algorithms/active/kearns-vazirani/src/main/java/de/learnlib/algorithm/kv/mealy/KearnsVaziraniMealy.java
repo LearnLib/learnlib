@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.Resumable;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
@@ -62,7 +63,8 @@ import org.slf4j.LoggerFactory;
 public class KearnsVaziraniMealy<I, O> implements MealyLearner<I, O>,
                                                   AccessSequenceTransformer<I>,
                                                   SupportsGrowingAlphabet<I>,
-                                                  Resumable<KearnsVaziraniMealyState<I, O>> {
+                                                  Resumable<KearnsVaziraniMealyState<I, O>>,
+                                                  LearnerStateTracker {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KearnsVaziraniMealy.class);
 
@@ -116,6 +118,7 @@ public class KearnsVaziraniMealy<I, O> implements MealyLearner<I, O>,
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         initialize();
     }
 
@@ -141,6 +144,11 @@ public class KearnsVaziraniMealy<I, O> implements MealyLearner<I, O>,
         requireLearningProcessStarted();
 
         return hypothesis;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return this.hypothesis.size() != 0;
     }
 
     public MultiDTree<I, Word<O>, StateInfo<I, Word<O>>> getDiscriminationTree() {
@@ -341,12 +349,6 @@ public class KearnsVaziraniMealy<I, O> implements MealyLearner<I, O>,
         }
 
         return result;
-    }
-
-    private void requireLearningProcessStarted() {
-        if (hypothesis.size() == 0) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
     }
 
     @Override

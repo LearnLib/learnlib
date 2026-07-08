@@ -80,6 +80,7 @@ public class OPLearnerDFA<I> extends AbstractOPLearner<DFA<?, I>, I, Boolean, Bo
 
     @Override
     public DFA<?, I> getHypothesisModel() {
+        requireLearningProcessStarted();
         return new HypothesisWrapperDFA<>(getHypothesisDS());
     }
 

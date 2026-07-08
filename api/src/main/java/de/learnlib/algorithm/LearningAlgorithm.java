@@ -39,21 +39,25 @@ import net.automatalib.word.Word;
 public interface LearningAlgorithm<M, I, D> {
 
     /**
-     * Starts the model inference process, creating an initial hypothesis in the provided model object. Please note that
-     * it should be illegal to invoke this method twice.
+     * Starts the model inference process, creating an initial hypothesis in the provided model object.
+     *
+     * @throws IllegalStateException
+     *         if this method is invoked twice.
      */
     void startLearning();
 
     /**
      * Triggers a refinement of the model by providing a counterexample. A counterexample is a query which exposes
-     * different behavior of the real SUL compared to the hypothesis. Please note that invoking this method before an
-     * initial invocation of {@link #startLearning()} should be illegal.
+     * different behavior of the real SUL compared to the hypothesis.
      *
      * @param ceQuery
      *         the query which exposes diverging behavior, as posed to the real SUL (i.e. with the SULs output).
      *
      * @return {@code true} if the counterexample triggered a refinement of the hypothesis, {@code false} otherwise
      * (i.e., it was no counterexample).
+     *
+     * @throws IllegalStateException
+     *         if this method is invoked before an initial invocation of {@link #startLearning()}.
      */
     boolean refineHypothesis(DefaultQuery<I, D> ceQuery);
 
@@ -64,11 +68,11 @@ public interface LearningAlgorithm<M, I, D> {
      * code (i.e., M generally should refer to an immutable interface), and its validity is retained only until the next
      * invocation of {@link #refineHypothesis(DefaultQuery)}. If older hypotheses have to be maintained, a copy of the
      * returned model must be made.
-     * <p>
-     * Please note that it should be illegal to invoke this method before an initial invocation of {@link
-     * #startLearning()}.
      *
      * @return the current hypothesis model.
+     *
+     * @throws IllegalStateException
+     *         if this method is invoked before an initial invocation of {@link #startLearning()}.
      */
     M getHypothesisModel();
 

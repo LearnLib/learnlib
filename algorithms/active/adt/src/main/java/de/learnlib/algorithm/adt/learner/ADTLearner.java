@@ -30,6 +30,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.adt.adt.ADT;
@@ -84,7 +85,8 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                                          PartialTransitionAnalyzer<ADTState<I, O>, I>,
                                          AccessSequenceTransformer<I>,
                                          SupportsGrowingAlphabet<I>,
-                                         Resumable<ADTLearnerState<ADTState<I, O>, I, O>> {
+                                         Resumable<ADTLearnerState<ADTState<I, O>, I, O>>,
+                                         LearnerStateTracker {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ADTLearner.class);
 
@@ -138,6 +140,7 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
 
         final ADTState<I, O> initialState = this.hypothesis.addInitialState();
         initialState.setAccessSequence(Word.epsilon());
@@ -315,7 +318,13 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
 
     @Override
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return this.hypothesis;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return !hypothesis.getStates().isEmpty();
     }
 
     /**
@@ -850,12 +859,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         }
 
         return result;
-    }
-
-    private void requireLearningProcessStarted() {
-        if (hypothesis.getStates().isEmpty()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
     }
 
     public ADT<ADTState<I, O>, I, O> getADT() {

@@ -126,6 +126,7 @@ public class ExtensibleLStarMealy<I, O>
 
     @Override
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return internalHyp;
     }
 

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.algorithm.LearningAlgorithm.NFALearner;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
@@ -36,7 +37,7 @@ import net.automatalib.word.Word;
  * @param <I>
  *         input symbol type
  */
-public class NLStarLearner<I> implements NFALearner<I> {
+public class NLStarLearner<I> implements NFALearner<I>, LearnerStateTracker {
 
     private final Alphabet<I> alphabet;
     private final ObservationTable<I> table;
@@ -59,9 +60,7 @@ public class NLStarLearner<I> implements NFALearner<I> {
 
     @Override
     public void startLearning() {
-        if (hypothesis != null) {
-            throw new IllegalStateException();
-        }
+        requireLearningProcessNotStarted();
 
         List<List<Row<I>>> unclosed = table.initialize();
         completeConsistentTable(unclosed);
@@ -117,9 +116,7 @@ public class NLStarLearner<I> implements NFALearner<I> {
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Boolean> ceQuery) {
-        if (hypothesis == null) {
-            throw new IllegalStateException();
-        }
+        requireLearningProcessStarted();
 
         boolean refined = false;
         while (MQUtil.isCounterexample(ceQuery, hypothesis)) {
@@ -185,10 +182,13 @@ public class NLStarLearner<I> implements NFALearner<I> {
 
     @Override
     public NFA<?, I> getHypothesisModel() {
-        if (hypothesis == null) {
-            throw new IllegalStateException();
-        }
+        requireLearningProcessStarted();
         return hypothesis;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return hypothesis != null;
     }
 
     public ObservationTable<I> getObservationTable() {

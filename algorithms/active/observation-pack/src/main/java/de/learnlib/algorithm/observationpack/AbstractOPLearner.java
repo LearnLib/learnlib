@@ -21,6 +21,7 @@ import java.util.Deque;
 import java.util.List;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.observationpack.hypothesis.HState;
@@ -61,7 +62,8 @@ public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, 
         implements LearningAlgorithm<M, I, D>,
                    AccessSequenceTransformer<I>,
                    SupportsGrowingAlphabet<I>,
-                   Resumable<OPLearnerState<I, D, SP, TP>> {
+                   Resumable<OPLearnerState<I, D, SP, TP>>,
+                   LearnerStateTracker {
 
     private final Alphabet<I> alphabet;
     private final MembershipOracle<I, D> oracle;
@@ -88,6 +90,7 @@ public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, 
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         HState<I, D, SP, TP> init = hypothesis.createInitialState();
         AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>> initDt = dtree.sift(init.getAccessSequence());
         if (initDt.getData() != null) {
@@ -252,10 +255,9 @@ public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, 
         return hypothesis;
     }
 
-    private void requireLearningProcessStarted() {
-        if (hypothesis.getStates().isEmpty()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return !hypothesis.getStates().isEmpty();
     }
 
     @Override

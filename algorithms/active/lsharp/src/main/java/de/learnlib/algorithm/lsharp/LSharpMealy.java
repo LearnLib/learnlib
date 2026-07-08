@@ -25,6 +25,7 @@ import java.util.Random;
 import java.util.Set;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.query.DefaultQuery;
@@ -52,7 +53,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <O>
  *         output symbol type
  */
-public class LSharpMealy<I, O> implements MealyLearner<I, O>, AccessSequenceTransformer<I> {
+public class LSharpMealy<I, O> implements MealyLearner<I, O>, AccessSequenceTransformer<I>, LearnerStateTracker {
 
     private final LSOracle<I, O> oqOracle;
     private final Alphabet<I> inputAlphabet;
@@ -350,6 +351,7 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O>, AccessSequenceTran
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         this.initObsTree(null);
         buildHypothesis();
     }
@@ -369,18 +371,17 @@ public class LSharpMealy<I, O> implements MealyLearner<I, O>, AccessSequenceTran
     }
 
     @Override
+    public boolean hasLearningProcessStarted() {
+        return !basisMap.isEmpty();
+    }
+
+    @Override
     public Word<I> transformAccessSequence(Word<I> word) {
         requireLearningProcessStarted();
         final CompactMealy<I, O> hyp = constructHypothesis();
         final Integer bs = hyp.getState(word);
         assert bs != null;
         return accessMap.get(bs);
-    }
-
-    private void requireLearningProcessStarted() {
-        if (basisMap.isEmpty()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
     }
 
     static final class BuilderDefaults {

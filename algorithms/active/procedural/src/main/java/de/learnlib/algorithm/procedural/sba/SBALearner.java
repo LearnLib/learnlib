@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
@@ -63,7 +64,7 @@ import net.automatalib.word.WordBuilder;
  *         sub-learner type
  */
 public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>>
-        implements LearningAlgorithm<SBA<?, I>, I, Boolean> {
+        implements LearningAlgorithm<SBA<?, I>, I, Boolean>, LearnerStateTracker {
 
     private final ProceduralInputAlphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> oracle;
@@ -73,6 +74,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
 
     private final Map<I, L> learners;
     private I initialCallSymbol;
+    boolean learningStarted;
 
     private final Map<I, SymbolWrapper<I>> mapping;
 
@@ -98,6 +100,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
         this.atManager = atManager;
 
         this.learners = new HashMap<>(HashUtil.capacity(this.alphabet.getNumCalls()));
+        this.learningStarted = false;
         this.mapping = new HashMap<>(HashUtil.capacity(this.alphabet.size()));
 
         for (I i : this.alphabet.getInternalAlphabet()) {
@@ -111,11 +114,14 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
+        this.learningStarted = true;
         // do nothing, as we have to wait for evidence that the potential main procedure actually terminates
     }
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Boolean> defaultQuery) {
+        requireLearningProcessStarted();
 
         if (!MQUtil.isCounterexample(defaultQuery, getHypothesisModel())) {
             return false;
@@ -166,6 +172,7 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
 
     @Override
     public SBA<?, I> getHypothesisModel() {
+        requireLearningProcessStarted();
 
         if (this.learners.isEmpty()) {
             return new EmptySBA<>(this.alphabet);
@@ -202,6 +209,11 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
                 new StackSBA<>(mappedAlphabet, this.mapping.get(initialCallSymbol), mappedProcedures);
 
         return new MappingSBA<>(alphabet, mapping, delegate);
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return this.learningStarted;
     }
 
     private boolean extractUsefulInformationFromCounterExample(DefaultQuery<I, Boolean> defaultQuery) {

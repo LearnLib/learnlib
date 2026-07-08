@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
@@ -60,7 +61,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *         sub-learner type
  */
 public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> & AccessSequenceTransformer<I>>
-        implements LearningAlgorithm<SPA<?, I>, I, Boolean> {
+        implements LearningAlgorithm<SPA<?, I>, I, Boolean>, LearnerStateTracker {
 
     private final ProceduralInputAlphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> oracle;
@@ -71,6 +72,7 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
     private final Map<I, L> subLearners;
     private final Set<I> activeAlphabet;
     private I initialCallSymbol;
+    private boolean learningStarted;
 
     public SPALearner(ProceduralInputAlphabet<I> alphabet,
                       MembershipOracle<I, Boolean> oracle,
@@ -96,15 +98,19 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         this.subLearners = new HashMap<>(HashUtil.capacity(this.alphabet.getNumCalls()));
         this.activeAlphabet = new HashSet<>(HashUtil.capacity(alphabet.getNumCalls() + alphabet.getNumInternals()));
         this.activeAlphabet.addAll(alphabet.getInternalAlphabet());
+        this.learningStarted = false;
     }
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
+        this.learningStarted = true;
         // do nothing, as we have to wait for evidence that the potential main procedure actually terminates
     }
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Boolean> defaultQuery) {
+        requireLearningProcessStarted();
 
         if (!MQUtil.isCounterexample(defaultQuery, getHypothesisModel())) {
             return false;
@@ -160,12 +166,18 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
 
     @Override
     public SPA<?, I> getHypothesisModel() {
+        requireLearningProcessStarted();
 
         if (this.subLearners.isEmpty()) {
             return new EmptySPA<>(this.alphabet);
         }
 
         return new StackSPA<>(alphabet, initialCallSymbol, getSubModels());
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return this.learningStarted;
     }
 
     private boolean extractUsefulInformationFromCounterExample(DefaultQuery<I, Boolean> defaultQuery) {

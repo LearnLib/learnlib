@@ -119,6 +119,7 @@ public class ExtensibleLStarMoore<I, O>
 
     @Override
     public MooreMachine<?, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return internalHyp;
     }
 

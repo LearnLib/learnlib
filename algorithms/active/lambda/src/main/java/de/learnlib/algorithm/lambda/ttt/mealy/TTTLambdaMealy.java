@@ -62,6 +62,7 @@ public class TTTLambdaMealy<I, O> extends AbstractTTTLambda<MealyMachine<?, I, ?
 
     @Override
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return hypothesis;
     }
 

@@ -307,7 +307,7 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
                                               List<Word<TimedInput<I>>> initialSuffixes,
                                               TimedQueryOracle<I, O> oracle) {
 
-        assert this.shortPrefixRowMap.isEmpty() && this.longPrefixRowMap.isEmpty() && initialShortPrefixes.isEmpty();
+        assert !isInitialized() && initialShortPrefixes.isEmpty();
 
         // Add initial suffixes:
         for (Word<TimedInput<I>> suffix : initialSuffixes) {
@@ -323,6 +323,10 @@ class MMLTObservationTable<I, O> implements ObservationTable<TimedInput<I>, Word
 
         // 2. Identify unclosed transitions:
         return this.findUnclosedTransitions();
+    }
+
+    boolean isInitialized() {
+        return !(this.shortPrefixRowMap.isEmpty() && this.longPrefixRowMap.isEmpty());
     }
 
     private void queryAllSuffixes(Collection<RowImpl<TimedInput<I>>> rows, TimedQueryOracle<I, O> timedOracle) {

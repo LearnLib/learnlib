@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.LearningAlgorithm;
@@ -40,7 +41,8 @@ import net.automatalib.common.smartcollection.ElementReference;
 import net.automatalib.common.smartcollection.UnorderedCollection;
 import net.automatalib.word.Word;
 
-public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVPA<?, I>, I, Boolean> {
+public abstract class AbstractVPALearner<I>
+        implements LearningAlgorithm<OneSEVPA<?, I>, I, Boolean>, LearnerStateTracker {
 
     protected final VPAlphabet<I> alphabet;
 
@@ -62,6 +64,7 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         HypLoc<I> initLoc = hypothesis.initialize();
         DTNode<I> leaf = dtree.sift(initLoc.getAccessSequence());
         link(leaf, initLoc);
@@ -72,6 +75,7 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
 
     @Override
     public boolean refineHypothesis(DefaultQuery<I, Boolean> ceQuery) {
+        requireLearningProcessStarted();
         if (hypothesis.computeSuffixOutput(ceQuery.getPrefix(), ceQuery.getSuffix()).equals(ceQuery.getOutput())) {
             return false;
         }
@@ -87,7 +91,13 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
 
     @Override
     public OneSEVPA<?, I> getHypothesisModel() {
+        requireLearningProcessStarted();
         return hypothesis;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return hypothesis.isInitialized();
     }
 
     public DTree<I> getDiscriminationTree() {

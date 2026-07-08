@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.Resumable;
 import de.learnlib.datastructure.observationtable.OTLearner;
 import de.learnlib.datastructure.observationtable.ObservationTable;
@@ -47,7 +48,8 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements OT
                                                                               AccessSequenceTransformer<I>,
                                                                               SupportsGrowingAlphabet<I>,
                                                                               Resumable<LLambdaState<I, D>>,
-                                                                              FiniteRepresentation {
+                                                                              FiniteRepresentation,
+                                                                              LearnerStateTracker {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLLambda.class);
 
@@ -82,6 +84,7 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements OT
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         initTable();
         learnLoop();
     }
@@ -114,6 +117,11 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements OT
 
         assert size() == shortPrefixes.size();
         return refined;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return !rows.isEmpty();
     }
 
     private void initTable() {
@@ -292,12 +300,6 @@ abstract class AbstractLLambda<M extends SuffixOutput<I, D>, I, D> implements OT
             Word<I> newPrefix = shortPrefix.append(a);
             List<D> rowData = initRow(newPrefix);
             rows.put(newPrefix, rowData);
-        }
-    }
-
-    protected void requireLearningProcessStarted() {
-        if (rows.isEmpty()) {
-            throw new IllegalStateException("Learning process has not been started");
         }
     }
 

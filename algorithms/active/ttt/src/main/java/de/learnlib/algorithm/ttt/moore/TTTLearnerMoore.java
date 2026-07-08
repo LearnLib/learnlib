@@ -140,7 +140,7 @@ public class TTTLearnerMoore<I, O> extends AbstractTTTLearner<MooreMachine<?, I,
     @Override
     @SuppressWarnings("unchecked") // parent class uses the same instance that we pass in the constructor
     public TTTHypothesisMoore<I, O> getHypothesisModel() {
-        return (TTTHypothesisMoore<I, O>) hypothesis;
+        return (TTTHypothesisMoore<I, O>) getHypothesisDS();
     }
 
 }

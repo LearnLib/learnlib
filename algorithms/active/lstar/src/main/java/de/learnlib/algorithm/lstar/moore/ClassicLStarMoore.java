@@ -59,6 +59,7 @@ public class ClassicLStarMoore<I, O>
 
     @Override
     public MooreMachine<?, I, Integer, O> getHypothesisModel() {
+        requireLearningProcessStarted();
         return internalHyp;
     }
 

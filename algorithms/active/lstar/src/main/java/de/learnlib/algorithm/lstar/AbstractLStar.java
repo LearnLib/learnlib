@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.algorithm.GlobalSuffixLearner;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.datastructure.observationtable.GenericObservationTable;
@@ -54,7 +55,8 @@ import net.automatalib.word.Word;
 public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>,
                                                         GlobalSuffixLearner<A, I, D>,
                                                         AccessSequenceTransformer<I>,
-                                                        SupportsGrowingAlphabet<I> {
+                                                        SupportsGrowingAlphabet<I>,
+                                                        LearnerStateTracker {
 
     protected final Alphabet<I> alphabet;
     protected final MembershipOracle<I, D> oracle;
@@ -76,6 +78,7 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>,
 
     @Override
     public void startLearning() {
+        requireLearningProcessNotStarted();
         List<Word<I>> prefixes = initialPrefixes();
         List<Word<I>> suffixes = initialSuffixes();
         List<List<Row<I>>> initialUnclosed = table.initialize(prefixes, suffixes, oracle);
@@ -85,6 +88,7 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>,
 
     @Override
     public final boolean refineHypothesis(DefaultQuery<I, D> ceQuery) {
+        requireLearningProcessStarted();
         if (!MQUtil.isCounterexample(ceQuery, hypothesisOutput())) {
             return false;
         }
@@ -225,6 +229,11 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>,
     @Override
     public ObservationTable<I, D> getObservationTable() {
         return table;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return this.table.isInitialized();
     }
 
     @Override
