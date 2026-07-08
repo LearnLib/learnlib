@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.LearningAlgorithm;
@@ -40,7 +41,8 @@ import net.automatalib.common.smartcollection.ElementReference;
 import net.automatalib.common.smartcollection.UnorderedCollection;
 import net.automatalib.word.Word;
 
-public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVPA<?, I>, I, Boolean> {
+public abstract class AbstractVPALearner<I>
+        implements LearningAlgorithm<OneSEVPA<?, I>, I, Boolean>, LearnerStateTracker {
 
     protected final VPAlphabet<I> alphabet;
 
@@ -91,6 +93,11 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
     public OneSEVPA<?, I> getHypothesisModel() {
         requireLearningProcessStarted();
         return hypothesis;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return hypothesis.isInitialized();
     }
 
     public DTree<I> getDiscriminationTree() {
@@ -263,22 +270,6 @@ public abstract class AbstractVPALearner<I> implements LearningAlgorithm<OneSEVP
 
     protected HypLoc<I> createLocation(AbstractHypTrans<I> trans) {
         return hypothesis.createLocation(false, trans);
-    }
-
-    private void requireLearningProcessStarted() {
-        if (!hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
-    }
-
-    private void requireLearningProcessNotStarted() {
-        if (hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has already been started");
-        }
-    }
-
-    private boolean hasLearningProcessStarted() {
-        return hypothesis.isInitialized();
     }
 
     public static final class BuilderDefaults {

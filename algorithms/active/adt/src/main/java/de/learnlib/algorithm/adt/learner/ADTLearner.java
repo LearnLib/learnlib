@@ -30,6 +30,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.adt.adt.ADT;
@@ -84,7 +85,8 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
                                          PartialTransitionAnalyzer<ADTState<I, O>, I>,
                                          AccessSequenceTransformer<I>,
                                          SupportsGrowingAlphabet<I>,
-                                         Resumable<ADTLearnerState<ADTState<I, O>, I, O>> {
+                                         Resumable<ADTLearnerState<ADTState<I, O>, I, O>>,
+                                         LearnerStateTracker {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ADTLearner.class);
 
@@ -318,6 +320,11 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     public MealyMachine<?, I, ?, O> getHypothesisModel() {
         requireLearningProcessStarted();
         return this.hypothesis;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return !hypothesis.getStates().isEmpty();
     }
 
     /**
@@ -852,22 +859,6 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
         }
 
         return result;
-    }
-
-    private void requireLearningProcessStarted() {
-        if (!hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
-    }
-
-    private void requireLearningProcessNotStarted() {
-        if (hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has already been started");
-        }
-    }
-
-    private boolean hasLearningProcessStarted() {
-        return !hypothesis.getStates().isEmpty();
     }
 
     public ADT<ADTState<I, O>, I, O> getADT() {

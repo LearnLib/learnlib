@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.counterexample.LocalSuffixFinders;
 import de.learnlib.oracle.MembershipOracle;
@@ -39,7 +40,7 @@ import net.automatalib.common.util.Pair;
 import net.automatalib.word.Word;
 
 class GenericSparseLearner<M extends MutableMealyMachine<S, I, ?, O> & SupportsGrowingAlphabet<I>, S, I, O>
-        implements MealyLearner<I, O>, AccessSequenceTransformer<I>, SupportsGrowingAlphabet<I> {
+        implements MealyLearner<I, O>, AccessSequenceTransformer<I>, SupportsGrowingAlphabet<I>, LearnerStateTracker {
 
     private final Alphabet<I> alphabet;
     private final MembershipOracle<I, Word<O>> oracle;
@@ -158,6 +159,11 @@ class GenericSparseLearner<M extends MutableMealyMachine<S, I, ?, O> & SupportsG
         assert hyp.size() == cRows.size();
         refineHypothesis(q); // recursively exhaust counterexample
         return true;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return !hyp.getStates().isEmpty();
     }
 
     @Override
@@ -418,22 +424,6 @@ class GenericSparseLearner<M extends MutableMealyMachine<S, I, ?, O> & SupportsG
         }
 
         vecs.get(idx).set(c.idx);
-    }
-
-    private void requireLearningProcessStarted() {
-        if (!hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
-    }
-
-    private void requireLearningProcessNotStarted() {
-        if (hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has already been started");
-        }
-    }
-
-    private boolean hasLearningProcessStarted() {
-        return !hyp.getStates().isEmpty();
     }
 
     List<CoreRow<S, I, O>> getCRows() {

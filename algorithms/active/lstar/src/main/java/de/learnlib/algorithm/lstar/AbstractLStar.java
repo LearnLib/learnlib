@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.algorithm.GlobalSuffixLearner;
 import de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers;
 import de.learnlib.datastructure.observationtable.GenericObservationTable;
@@ -54,7 +55,8 @@ import net.automatalib.word.Word;
 public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>,
                                                         GlobalSuffixLearner<A, I, D>,
                                                         AccessSequenceTransformer<I>,
-                                                        SupportsGrowingAlphabet<I> {
+                                                        SupportsGrowingAlphabet<I>,
+                                                        LearnerStateTracker {
 
     protected final Alphabet<I> alphabet;
     protected final MembershipOracle<I, D> oracle;
@@ -230,6 +232,11 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>,
     }
 
     @Override
+    public boolean hasLearningProcessStarted() {
+        return this.table.isInitialized();
+    }
+
+    @Override
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
@@ -245,15 +252,4 @@ public abstract class AbstractLStar<A, I, D> implements OTLearner<A, I, D>,
         return this.table.transformAccessSequence(word);
     }
 
-    protected void requireLearningProcessStarted() {
-        if (!this.table.isInitialized()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
-    }
-
-    private void requireLearningProcessNotStarted() {
-        if (this.table.isInitialized()) {
-            throw new IllegalStateException("Learning process has already been started");
-        }
-    }
 }

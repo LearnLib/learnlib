@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.lambda.ttt.dt.AbstractDecisionTree;
@@ -45,7 +46,8 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
                                                                                        AccessSequenceTransformer<I>,
                                                                                        SupportsGrowingAlphabet<I>,
                                                                                        Resumable<TTTLambdaState<I, D>>,
-                                                                                       FiniteRepresentation {
+                                                                                       FiniteRepresentation,
+                                                                                       LearnerStateTracker {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTTTLambda.class);
 
@@ -109,6 +111,11 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
 
         assert size() == dtree().leaves().size();
         return refined;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return started;
     }
 
     @Override
@@ -213,22 +220,6 @@ public abstract class AbstractTTTLambda<M extends SuffixOutput<I, D>, I, D> impl
         witnesses.push(new DefaultQuery<>(ua.word(), sprime));
 
         ua.makeShortPrefix(mqs);
-    }
-
-    protected void requireLearningProcessStarted() {
-        if (!hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
-    }
-
-    private void requireLearningProcessNotStarted() {
-        if (hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has already been started");
-        }
-    }
-
-    private boolean hasLearningProcessStarted() {
-        return started;
     }
 
     @Override

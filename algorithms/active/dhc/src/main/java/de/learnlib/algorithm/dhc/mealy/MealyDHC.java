@@ -28,6 +28,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.GlobalSuffixLearner.GlobalSuffixLearnerMealy;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
@@ -61,7 +62,8 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
                                        AccessSequenceTransformer<I>,
                                        GlobalSuffixLearnerMealy<I, O>,
                                        SupportsGrowingAlphabet<I>,
-                                       Resumable<MealyDHCState<I, O>> {
+                                       Resumable<MealyDHCState<I, O>>,
+                                       LearnerStateTracker {
 
     private final MembershipOracle<I, Word<O>> oracle;
     private final Alphabet<I> alphabet;
@@ -123,22 +125,6 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
         requireLearningProcessStarted();
 
         return addSuffixesUnchecked(newGlobalSuffixes);
-    }
-
-    private void requireLearningProcessStarted() {
-        if (!hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
-    }
-
-    private void requireLearningProcessNotStarted() {
-        if (hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has already been started");
-        }
-    }
-
-    private boolean hasLearningProcessStarted() {
-        return hypothesis != null;
     }
 
     protected boolean addSuffixesUnchecked(Collection<? extends Word<I>> newSuffixes) {
@@ -263,6 +249,11 @@ public class MealyDHC<I, O> implements MealyLearner<I, O>,
     public CompactMealy<I, O> getHypothesisModel() {
         requireLearningProcessStarted();
         return hypothesis;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return hypothesis != null;
     }
 
     @Override

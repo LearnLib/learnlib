@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.algorithm.LearnerConstructor;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
@@ -62,7 +63,7 @@ import net.automatalib.word.WordBuilder;
  *         sub-learner type
  */
 public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>>
-        implements LearningAlgorithm<SPMM<?, I, ?, O>, I, Word<O>> {
+        implements LearningAlgorithm<SPMM<?, I, ?, O>, I, Word<O>>, LearnerStateTracker {
 
     private final ProceduralInputAlphabet<I> alphabet;
     private final O errorOutput;
@@ -169,6 +170,11 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
         assert localRefinement;
 
         return true;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return this.learningStarted;
     }
 
     @Override
@@ -373,21 +379,5 @@ public class SPMMLearner<I, O, L extends MealyLearner<SymbolWrapper<I>, O> & Sup
         }
 
         throw new IllegalArgumentException("Non-counterexamples shouldn't be scanned for a mis-match");
-    }
-
-    private void requireLearningProcessStarted() {
-        if (!hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
-    }
-
-    private void requireLearningProcessNotStarted() {
-        if (hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has already been started");
-        }
-    }
-
-    private boolean hasLearningProcessStarted() {
-        return this.learningStarted;
     }
 }

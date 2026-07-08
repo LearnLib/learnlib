@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
@@ -63,7 +64,7 @@ import net.automatalib.word.WordBuilder;
  *         sub-learner type
  */
 public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrowingAlphabet<SymbolWrapper<I>> & AccessSequenceTransformer<SymbolWrapper<I>>>
-        implements LearningAlgorithm<SBA<?, I>, I, Boolean> {
+        implements LearningAlgorithm<SBA<?, I>, I, Boolean>, LearnerStateTracker {
 
     private final ProceduralInputAlphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> oracle;
@@ -210,6 +211,11 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
         return new MappingSBA<>(alphabet, mapping, delegate);
     }
 
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return this.learningStarted;
+    }
+
     private boolean extractUsefulInformationFromCounterExample(DefaultQuery<I, Boolean> defaultQuery) {
 
         if (!defaultQuery.getOutput()) {
@@ -345,22 +351,6 @@ public class SBALearner<I, L extends DFALearner<SymbolWrapper<I>> & SupportsGrow
         }
 
         return true;
-    }
-
-    private void requireLearningProcessStarted() {
-        if (!hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
-    }
-
-    private void requireLearningProcessNotStarted() {
-        if (hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has already been started");
-        }
-    }
-
-    private boolean hasLearningProcessStarted() {
-        return this.learningStarted;
     }
 
     private static class Acex<I> extends AbstractBaseCounterexample<Boolean> {

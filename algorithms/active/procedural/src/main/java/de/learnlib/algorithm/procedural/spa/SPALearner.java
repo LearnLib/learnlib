@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
@@ -60,7 +61,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *         sub-learner type
  */
 public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> & AccessSequenceTransformer<I>>
-        implements LearningAlgorithm<SPA<?, I>, I, Boolean> {
+        implements LearningAlgorithm<SPA<?, I>, I, Boolean>, LearnerStateTracker {
 
     private final ProceduralInputAlphabet<I> alphabet;
     private final MembershipOracle<I, Boolean> oracle;
@@ -172,6 +173,11 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         }
 
         return new StackSPA<>(alphabet, initialCallSymbol, getSubModels());
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return this.learningStarted;
     }
 
     private boolean extractUsefulInformationFromCounterExample(DefaultQuery<I, Boolean> defaultQuery) {
@@ -297,22 +303,6 @@ public class SPALearner<I, L extends DFALearner<I> & SupportsGrowingAlphabet<I> 
         }
 
         return refinement;
-    }
-
-    private void requireLearningProcessStarted() {
-        if (!hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
-    }
-
-    private void requireLearningProcessNotStarted() {
-        if (hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has already been started");
-        }
-    }
-
-    private boolean hasLearningProcessStarted() {
-        return this.learningStarted;
     }
 
     private final class Acex extends AbstractBaseCounterexample<Boolean> {

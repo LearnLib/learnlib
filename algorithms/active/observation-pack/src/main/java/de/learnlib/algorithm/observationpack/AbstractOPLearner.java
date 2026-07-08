@@ -21,6 +21,7 @@ import java.util.Deque;
 import java.util.List;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.observationpack.hypothesis.HState;
@@ -61,7 +62,8 @@ public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, 
         implements LearningAlgorithm<M, I, D>,
                    AccessSequenceTransformer<I>,
                    SupportsGrowingAlphabet<I>,
-                   Resumable<OPLearnerState<I, D, SP, TP>> {
+                   Resumable<OPLearnerState<I, D, SP, TP>>,
+                   LearnerStateTracker {
 
     private final Alphabet<I> alphabet;
     private final MembershipOracle<I, D> oracle;
@@ -253,19 +255,8 @@ public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, 
         return hypothesis;
     }
 
-    protected void requireLearningProcessStarted() {
-        if (!hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
-    }
-
-    private void requireLearningProcessNotStarted() {
-        if (hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has already been started");
-        }
-    }
-
-    private boolean hasLearningProcessStarted() {
+    @Override
+    public boolean hasLearningProcessStarted() {
         return !hypothesis.getStates().isEmpty();
     }
 

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.lstar.closing.ClosingStrategies;
@@ -73,7 +74,7 @@ import org.slf4j.LoggerFactory;
  *         output symbol type
  */
 public class ExtensibleLStarMMLT<I, O>
-        implements OTLearner<MMLT<Integer, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>> {
+        implements OTLearner<MMLT<Integer, I, ?, O>, TimedInput<I>, Word<TimedOutput<O>>>, LearnerStateTracker {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExtensibleLStarMMLT.class);
     private static final String STATISTICS_ID = "L*-MMLT";
@@ -490,6 +491,11 @@ public class ExtensibleLStarMMLT<I, O>
         return this.hypData.getTable();
     }
 
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return hypData.getTable().isInitialized();
+    }
+
     /**
      * Iteratively checks for unclosedness and inconsistencies in the table, and fixes any occurrences thereof. This
      * process is repeated until the observation table is both closed and consistent.
@@ -626,22 +632,6 @@ public class ExtensibleLStarMMLT<I, O>
         }
 
         return hypothesis;
-    }
-
-    private void requireLearningProcessStarted() {
-        if (!hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
-    }
-
-    private void requireLearningProcessNotStarted() {
-        if (hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has already been started");
-        }
-    }
-
-    private boolean hasLearningProcessStarted() {
-        return hypData.getTable().isInitialized();
     }
 
     private static final class OutputQuery<I, O> extends Query<TimedInput<I>, Word<TimedOutput<O>>> {

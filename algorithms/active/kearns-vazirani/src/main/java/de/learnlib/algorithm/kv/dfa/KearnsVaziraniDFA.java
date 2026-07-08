@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.Resumable;
 import de.learnlib.acex.AbstractBaseCounterexample;
 import de.learnlib.acex.AcexAnalyzer;
@@ -59,7 +60,8 @@ import org.slf4j.LoggerFactory;
 public class KearnsVaziraniDFA<I> implements DFALearner<I>,
                                              AccessSequenceTransformer<I>,
                                              SupportsGrowingAlphabet<I>,
-                                             Resumable<KearnsVaziraniDFAState<I>> {
+                                             Resumable<KearnsVaziraniDFAState<I>>,
+                                             LearnerStateTracker {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KearnsVaziraniDFA.class);
 
@@ -137,6 +139,11 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I>,
     public DFA<?, I> getHypothesisModel() {
         requireLearningProcessStarted();
         return hypothesis;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return this.hypothesis.size() != 0;
     }
 
     public BinaryDTree<I, StateInfo<I, Boolean>> getDiscriminationTree() {
@@ -314,22 +321,6 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I>,
         }
 
         return result;
-    }
-
-    private void requireLearningProcessStarted() {
-        if (!hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
-    }
-
-    private void requireLearningProcessNotStarted() {
-        if (hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has already been started");
-        }
-    }
-
-    private boolean hasLearningProcessStarted() {
-        return this.hypothesis.size() != 0;
     }
 
     @Override

@@ -29,6 +29,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import de.learnlib.AccessSequenceTransformer;
+import de.learnlib.LearnerStateTracker;
 import de.learnlib.Resumable;
 import de.learnlib.acex.AcexAnalyzer;
 import de.learnlib.acex.AcexAnalyzers;
@@ -66,7 +67,8 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractTTTLearner<A, I, D> implements LearningAlgorithm<A, I, D>,
                                                              AccessSequenceTransformer<I>,
                                                              SupportsGrowingAlphabet<I>,
-                                                             Resumable<TTTLearnerState<I, D>> {
+                                                             Resumable<TTTLearnerState<I, D>>,
+                                                             LearnerStateTracker {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTTTLearner.class);
 
@@ -185,6 +187,11 @@ public abstract class AbstractTTTLearner<A, I, D> implements LearningAlgorithm<A
         }
 
         return true;
+    }
+
+    @Override
+    public boolean hasLearningProcessStarted() {
+        return hypothesis.isInitialized();
     }
 
     /**
@@ -944,22 +951,6 @@ public abstract class AbstractTTTLearner<A, I, D> implements LearningAlgorithm<A
      */
     public BaseTTTDiscriminationTree<I, D> getDiscriminationTree() {
         return dtree;
-    }
-
-    protected void requireLearningProcessStarted() {
-        if (!hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has not been started");
-        }
-    }
-
-    private void requireLearningProcessNotStarted() {
-        if (hasLearningProcessStarted()) {
-            throw new IllegalStateException("Learning process has already been started");
-        }
-    }
-
-    private boolean hasLearningProcessStarted() {
-        return hypothesis.isInitialized();
     }
 
     @Override
