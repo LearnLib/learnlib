@@ -56,12 +56,16 @@ open module de.learnlib.example {
 
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
+    requires reactor.core;
+    requires org.reactivestreams;
+    requires io.reactivex.rxjava3;
 
     exports de.learnlib.example;
     exports de.learnlib.example.aaar;
     exports de.learnlib.example.bbc;
     exports de.learnlib.example.parallelism;
     exports de.learnlib.example.passive;
+    exports de.learnlib.example.reactive;
     exports de.learnlib.example.resumable;
     exports de.learnlib.example.sli;
 }
