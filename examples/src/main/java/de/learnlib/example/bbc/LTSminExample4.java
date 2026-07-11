@@ -36,8 +36,8 @@ import de.learnlib.oracle.equivalence.DFAWpMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.DFASimulatorOmegaOracle;
 import de.learnlib.oracle.property.DFAFinitePropertyOracle;
 import de.learnlib.oracle.property.DFALassoPropertyOracle;
+import de.learnlib.oracle.property.DFALoggingPropertyOracle;
 import de.learnlib.oracle.property.DFAPropertyOracleChain;
-import de.learnlib.oracle.property.LoggingPropertyOracle.DFALoggingPropertyOracle;
 import de.learnlib.testsupport.example.LearningExample.DFALearningExample;
 import de.learnlib.testsupport.example.dfa.ExampleTinyDFA;
 import de.learnlib.util.Experiment.DFAExperiment;
@@ -54,17 +54,17 @@ import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest;
 /**
  * Runs a black-box checking experiment for a DFA.
  * <p>
- * This example is similar to {@link Example1}, except that is also uses a monitor to disprove properties for the
+ * This example is similar to {@link LTSminExample1}, except that is also uses a monitor to disprove properties for the
  * learned DFA.
  */
-public final class Example4 {
+public final class LTSminExample4 {
 
     /**
      * A function that transforms edges in an FSM source to actual input for a DFA.
      */
     public static final Function<String, Character> EDGE_PARSER = s -> s.charAt(0);
 
-    private Example4() {}
+    private LTSminExample4() {}
 
     public static void main(String[] args) {
 

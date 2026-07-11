@@ -28,7 +28,13 @@ import javax.swing.SwingUtilities;
 import com.github.caciocavallosilano.cacio.ctc.junit.CacioExtension;
 import de.learnlib.example.aaar.AlternatingBitExampleExplicit;
 import de.learnlib.example.aaar.AlternatingBitExampleGeneric;
+import de.learnlib.example.bbc.LTSminExample1;
+import de.learnlib.example.bbc.LTSminExample2;
+import de.learnlib.example.bbc.LTSminExample3;
+import de.learnlib.example.bbc.LTSminExample4;
+import de.learnlib.example.bbc.M3CSBAExample;
 import de.learnlib.statistic.Statistics;
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
 import org.mockito.MockedStatic;
@@ -91,27 +97,32 @@ public class ExamplesTest {
     }
 
     @Test
-    public void testBBCExample1() {
+    public void testBBCLTSminExample1() {
         requireLTSminAvailability(3, 0, 0);
-        de.learnlib.example.bbc.Example1.main(new String[0]);
+        LTSminExample1.main(new String[0]);
     }
 
     @Test
-    public void testBBCExample2() {
+    public void testBBCLTSminExample2() {
         requireLTSminAvailability(3, 0, 0);
-        de.learnlib.example.bbc.Example2.main(new String[0]);
+        LTSminExample2.main(new String[0]);
     }
 
     @Test
-    public void testBBCExample3() {
+    public void testBBCLTSminExample3() {
         requireLTSminAvailability(3, 0, 0);
-        de.learnlib.example.bbc.Example3.main(new String[0]);
+        LTSminExample3.main(new String[0]);
     }
 
     @Test
-    public void testBBCExample4() {
+    public void testBBCLTSminExample4() {
         requireLTSminAvailability(3, 1, 0);
-        de.learnlib.example.bbc.Example4.main(new String[0]);
+        LTSminExample4.main(new String[0]);
+    }
+
+    @Test
+    public void testBBCM3CSBAExample() throws FormatException {
+        M3CSBAExample.main(new String[0]);
     }
 
     @Test

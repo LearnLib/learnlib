@@ -97,6 +97,10 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-procedural</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.learnlib</groupId>
             <artifactId>learnlib-property-oracles</artifactId>
         </dependency>
         <dependency>
@@ -132,6 +136,12 @@ limitations under the License.
         </dependency>
 
         <dependency>
+            <groupId>info.scce</groupId>
+            <artifactId>addlib-cudd</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
@@ -150,6 +160,10 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-modelchecking-ltsmin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-modelchecking-m3c</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>

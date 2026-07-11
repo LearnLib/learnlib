@@ -32,29 +32,32 @@ import de.learnlib.oracle.equivalence.MealyCExFirstOracle;
 import de.learnlib.oracle.equivalence.MealyEQOracleChain;
 import de.learnlib.oracle.equivalence.MealyWpMethodEQOracle;
 import de.learnlib.oracle.membership.SimulatorOmegaOracle.MealySimulatorOmegaOracle;
-import de.learnlib.oracle.property.LoggingPropertyOracle.MealyLoggingPropertyOracle;
 import de.learnlib.oracle.property.MealyLassoPropertyOracle;
+import de.learnlib.oracle.property.MealyLoggingPropertyOracle;
 import de.learnlib.testsupport.example.LearningExample.MealyLearningExample;
 import de.learnlib.testsupport.example.mealy.ExampleTinyMealy;
 import de.learnlib.util.Experiment.MealyExperiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLAlternatingBuilder;
+import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLIOBuilder;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest;
 
 /**
- * Run a black-box checking experiment with a Mealy machine and alternating edge semantics.
+ * Run a black-box checking experiment with Mealy machines and straightforward edge semantics.
  * <p>
- * The main difference with {@link Example2} is how the LTL formula is written.
+ * The main difference with {@link LTSminExample3} is how the LTL formula is written.
  *
- * @see Example2
+ * @see LTSminExample3
  */
-public final class Example3 {
+public final class LTSminExample2 {
 
+    /**
+     * A function that transforms edges in an FSM source to actual input, and output in the Mealy machine.
+     */
     public static final Function<String, Character> EDGE_PARSER = s -> s.charAt(0);
 
-    private Example3() { }
+    private LTSminExample2() { }
 
     public static void main(String[] args) {
 
@@ -77,9 +80,9 @@ public final class Example3 {
 
         // create a model checker
         MealyModelCheckerLasso<Character, Character, String> modelChecker =
-                new LTSminLTLAlternatingBuilder<Character, Character>().withString2Input(EDGE_PARSER)
-                                                                       .withString2Output(EDGE_PARSER)
-                                                                       .create();
+                new LTSminLTLIOBuilder<Character, Character>().withString2Input(EDGE_PARSER)
+                                                              .withString2Output(EDGE_PARSER)
+                                                              .create();
 
         // create an emptiness oracle, that is used to disprove properties
         MealyLassoEmptinessOracle<Character, Character> emptinessOracle =
@@ -90,7 +93,7 @@ public final class Example3 {
 
         // create an LTL property oracle, that also logs stuff
         MealyPropertyOracle<Character, Character, String> ltl =
-                new MealyLoggingPropertyOracle<>(new MealyLassoPropertyOracle<>("X X X letter==\"2\"",
+                new MealyLoggingPropertyOracle<>(new MealyLassoPropertyOracle<>("X output==\"2\"",
                                                                                 inclusionOracle,
                                                                                 emptinessOracle,
                                                                                 modelChecker));
@@ -107,7 +110,7 @@ public final class Example3 {
         experiment.run();
 
         // get the final result
-        MealyMachine<?, Character, ?, Character> result = experiment.getFinalHypothesis();
+        MealyMachine<?, Character, ?, ?> result = experiment.getFinalHypothesis();
 
         // check we have the correct result
         assert DeterministicEquivalenceTest.findSeparatingWord(mealy, result, sigma) == null;

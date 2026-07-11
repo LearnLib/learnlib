@@ -76,6 +76,8 @@ limitations under the License.
                             <exclude>de/learnlib/oracle/equivalence/Moore*.class</exclude>
                             <exclude>de/learnlib/oracle/equivalence/MMLT*.class</exclude>
                             <exclude>de/learnlib/oracle/membership/*SimulatorOracle.class</exclude>
+                            <exclude>de/learnlib/oracle/property/DFA*Oracle.class</exclude>
+                            <exclude>de/learnlib/oracle/property/Mealy*Oracle.class</exclude>
                             <exclude>de/learnlib/oracle/property/DFA*Chain.class</exclude>
                             <exclude>de/learnlib/oracle/property/Mealy*Chain.class</exclude>
                         </excludes>

@@ -19,7 +19,13 @@ import java.util.Collection;
 
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.PropertyOracle;
+import de.learnlib.oracle.PropertyOracle.DFAPropertyOracle;
+import de.learnlib.oracle.PropertyOracle.MealyPropertyOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
+import de.learnlib.tooling.annotation.refinement.Generic;
+import de.learnlib.tooling.annotation.refinement.Interface;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -39,6 +45,30 @@ import org.slf4j.LoggerFactory;
  * @param <P> the property type
  * @param <D> the output type
  */
+@GenerateRefinement(name = "DFALoggingPropertyOracle",
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "P", desc = "property type")},
+                    parentGenerics = {@Generic("I"),
+                                      @Generic(clazz = DFA.class, generics = {"?", "I"}),
+                                      @Generic("P"),
+                                      @Generic(clazz = Boolean.class)},
+                    typeMappings = @Mapping(from = PropertyOracle.class,
+                                            to = DFAPropertyOracle.class,
+                                            generics = {@Generic("I"), @Generic("P")}),
+                    interfaces = @Interface(clazz = DFAPropertyOracle.class, generics = {@Generic("I"), @Generic("P")}))
+@GenerateRefinement(name = "MealyLoggingPropertyOracle",
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type"),
+                                @Generic(value = "P", desc = "property type")},
+                    parentGenerics = {@Generic("I"),
+                                      @Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("P"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    typeMappings = @Mapping(from = PropertyOracle.class,
+                                            to = MealyPropertyOracle.class,
+                                            generics = {@Generic("I"), @Generic("O"), @Generic("P")}),
+                    interfaces = @Interface(clazz = MealyPropertyOracle.class,
+                                            generics = {@Generic("I"), @Generic("O"), @Generic("P")}))
 public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements PropertyOracle<I, A, P, D> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingPropertyOracle.class);
@@ -82,7 +112,7 @@ public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements P
         final DefaultQuery<I, D> result = propertyOracle.disprove(hypothesis, inputs);
         if (result != null) {
             LOGGER.info(Category.EVENT, "Property violated: '{}'", this);
-            LOGGER.info(Category.QUERY, "Counter example for property: {}", getCounterExample());
+            LOGGER.info(Category.QUERY, "Counter example for property: {}", result);
         }
 
         return result;
@@ -108,20 +138,4 @@ public class LoggingPropertyOracle<I, A extends Output<I, D>, P, D> implements P
         return String.valueOf(propertyOracle.getProperty());
     }
 
-    public static class DFALoggingPropertyOracle<I, P> extends LoggingPropertyOracle<I, DFA<?, I>, P, Boolean>
-            implements DFAPropertyOracle<I, P> {
-
-        public DFALoggingPropertyOracle(DFAPropertyOracle<I, P> property) {
-            super(property);
-        }
-    }
-
-    public static class MealyLoggingPropertyOracle<I, O, P>
-            extends LoggingPropertyOracle<I, MealyMachine<?, I, ?, O>, P, Word<O>>
-            implements MealyPropertyOracle<I, O, P> {
-
-        public MealyLoggingPropertyOracle(MealyPropertyOracle<I, O, P> property) {
-            super(property);
-        }
-    }
 }

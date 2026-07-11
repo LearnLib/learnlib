@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import de.learnlib.oracle.PropertyOracle;
 import de.learnlib.oracle.PropertyOracle.DFAPropertyOracle;
@@ -75,32 +76,54 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                                             generics = {@Generic("I"), @Generic("O"), @Generic("P")}),
                     interfaces = @Interface(clazz = MealyPropertyOracle.class,
                                             generics = {@Generic("I"), @Generic("O"), @Generic("P")}))
-public class PropertyOracleChain<I, A extends Output<I, D>, @Nullable P, D> implements PropertyOracle<I, A, P, D> {
+public class PropertyOracleChain<I, A extends Output<I, D>, P, D> implements PropertyOracle<I, A, P, D> {
 
+    private final List<PropertyOracle<I, ? super A, P, D>> oracles;
     private final P property;
 
     private @Nullable DefaultQuery<I, D> counterExample;
 
-    private final List<PropertyOracle<I, ? super A, P, D>> oracles;
-
     @SafeVarargs
     public PropertyOracleChain(PropertyOracle<I, ? super A, P, D>... oracles) {
-        this(Arrays.asList(oracles));
+        this(validateOracles(oracles));
     }
 
     public PropertyOracleChain(Collection<? extends PropertyOracle<I, ? super A, P, D>> oracles) {
-        this.oracles = new ArrayList<>(oracles);
-        if (this.oracles.isEmpty()) {
-            property = null;
-        } else {
-            property = this.oracles.get(0).getProperty();
+        this(validateOracles(oracles));
+    }
+
+    // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
+    private PropertyOracleChain(List<PropertyOracle<I, ? super A, P, D>> oracles) {
+        this.oracles = oracles;
+        this.property = oracles.get(0).getProperty();
+    }
+
+    private static <I, A extends Output<I, D>, P, D> List<PropertyOracle<I, ? super A, P, D>> validateOracles(
+            PropertyOracle<I, ? super A, P, D>... oracles) {
+        return validateOracles(Arrays.asList(oracles));
+    }
+
+    private static <I, A extends Output<I, D>, P, D> List<PropertyOracle<I, ? super A, P, D>> validateOracles(Collection<? extends PropertyOracle<I, ? super A, P, D>> oracles) {
+        if (oracles.isEmpty()) {
+            throw new IllegalArgumentException("Cannot create oracle chain from empty oracle list");
         }
+
+        final List<PropertyOracle<I, ? super A, P, D>> result = new ArrayList<>(oracles);
+        final P property = result.get(0).getProperty();
+
+        for (int i = 1; i < result.size(); i++) {
+            if (!Objects.equals(property, result.get(i).getProperty())) {
+                throw new IllegalArgumentException("Cannot create oracle chain with different properties");
+            }
+        }
+
+        return result;
     }
 
     @Override
     public @Nullable DefaultQuery<I, D> doFindCounterExample(A hypothesis, Collection<? extends I> inputs) {
         for (PropertyOracle<I, ? super A, P, D> oracle : oracles) {
-            DefaultQuery<I, D> ceQry = oracle.findCounterExample(hypothesis, inputs);
+            DefaultQuery<I, D> ceQry = oracle.doFindCounterExample(hypothesis, inputs);
             if (ceQry != null) {
                 return ceQry;
             }

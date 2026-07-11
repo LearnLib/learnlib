@@ -27,6 +27,7 @@ open module de.learnlib.example {
     requires de.learnlib.api;
     requires de.learnlib.algorithm.aaar;
     requires de.learnlib.algorithm.lstar;
+    requires de.learnlib.algorithm.procedural;
     requires de.learnlib.algorithm.rpni;
     requires de.learnlib.common.counterexample;
     requires de.learnlib.common.util;
@@ -47,6 +48,7 @@ open module de.learnlib.example {
     requires net.automatalib.common.util;
     requires net.automatalib.core;
     requires net.automatalib.modelchecker.ltsmin;
+    requires net.automatalib.modelchecker.m3c;
     requires net.automatalib.util;
     requires net.automatalib.serialization.dot;
     requires net.automatalib.visualization.dot;
