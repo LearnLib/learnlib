@@ -166,6 +166,16 @@ public class ExamplesTest {
     }
 
     @Test
+    public void testReactiveReactorExample() {
+        de.learnlib.example.reactive.ReactorExample.main(new String[0]);
+    }
+
+    @Test
+    public void testReactiveRXJavaExample() {
+        de.learnlib.example.reactive.RXJavaExample.main(new String[0]);
+    }
+
+    @Test
     public void testResumableExample() {
         de.learnlib.example.resumable.ResumableExample.main(new String[0]);
     }
