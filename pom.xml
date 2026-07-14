@@ -290,6 +290,7 @@ limitations under the License.
         <!-- Javadoc links -->
         <automatalib.apidocs>https://learnlib.github.io/automatalib/maven-site/${automatalib.version}/apidocs/</automatalib.apidocs>
         <checkerframework.apidocs>https://checkerframework.org/releases/${checkerframework.version}/api/</checkerframework.apidocs>
+        <metainf-services.apidocs>https://javadoc.io/doc/org.kohsuke.metainf-services/metainf-services/${metainf-services.version}</metainf-services.apidocs>
     </properties>
 
     <!--
@@ -859,12 +860,13 @@ limitations under the License.
                     <version>${javadoc-plugin.version}</version>
                     <configuration>
                         <quiet>true</quiet>
-                        <detectLinks>true</detectLinks>
-                        <linksource>false</linksource>
                         <links>
                             <!-- TODO -->
                             <!-- JDK 17+ seems to fail on missing (SNAPSHOT) docs. reactivate before release -->
                             <!--link>${automatalib.apidocs}</link-->
+                            <link>${checkerframework.apidocs}</link>
+                            <!-- tends to be blocked in GitHub actions -->
+                            <!--link>${metainf-services.apidocs}</link-->
                         </links>
                     </configuration>
                 </plugin>
