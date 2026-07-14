@@ -44,6 +44,8 @@ open module de.learnlib.example {
     requires de.learnlib.oracle.parallelism;
     requires de.learnlib.oracle.property;
     requires de.learnlib.testsupport.example;
+    requires io.reactivex.rxjava3;
+    requires io.smallrye.mutiny;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
     requires net.automatalib.core;
@@ -53,6 +55,8 @@ open module de.learnlib.example {
     requires net.automatalib.serialization.dot;
     requires net.automatalib.visualization.dot;
     requires org.apache.fury.core;
+    requires org.reactivestreams;
+    requires reactor.core;
 
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
     requires static org.checkerframework.checker.qual;
@@ -62,6 +66,7 @@ open module de.learnlib.example {
     exports de.learnlib.example.bbc;
     exports de.learnlib.example.parallelism;
     exports de.learnlib.example.passive;
+    exports de.learnlib.example.reactive;
     exports de.learnlib.example.resumable;
     exports de.learnlib.example.sli;
 }
