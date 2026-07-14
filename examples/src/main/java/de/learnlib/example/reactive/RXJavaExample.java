@@ -17,19 +17,14 @@ package de.learnlib.example.reactive;
 
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.Executors;
 
-import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealy;
 import de.learnlib.driver.simulator.MealySimulatorSUL;
-import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.KWayStateCoverEQOracleBuilder;
 import de.learnlib.oracle.equivalence.RandomWMethodEQOracle;
 import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
 import de.learnlib.query.DefaultQuery;
 import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.functions.Action;
-import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -45,6 +40,7 @@ public final class RXJavaExample {
 
     private static final int SEED = 42;
     private static final int SIZE = 10;
+    private static final int BATCH_SIZE = 10;
     private static final int NUM_INPUTS = 4;
     private static final int RND_LENGTH = 4;
     private static final int LIMIT = 1000;
@@ -61,9 +57,11 @@ public final class RXJavaExample {
         // setup membership oracle
         var mealy = RandomAutomata.randomMealy(new Random(SEED), SIZE, inputs, outputs);
         var sul = new MealySimulatorSUL<>(mealy);
-        // IMPORTANT: make sure to use parallel-aware oracle (with thread local instances)
-        // because it will be called from different threads in the reactive environment
-        var mqo = ParallelOracleBuilders.newDynamicParallelOracle(sul).create();
+        // note that we can still use a parallel oracle to answer query batches in parallel
+        var mqo = ParallelOracleBuilders.newStaticParallelOracle(sul)
+                                        .withNumInstances(BATCH_SIZE)
+                                        .withMinBatchSize(1)
+                                        .create();
 
         // setup equivalence oracles
         var eqo = new RandomWMethodEQOracle<>(mqo, SIZE / 2, RND_LENGTH);
@@ -73,86 +71,59 @@ public final class RXJavaExample {
 
         // setup learner
         var learner = new TTTLearnerMealy<>(inputs, mqo);
-        var tracker = new ProgressTracker<>(learner, mqo);
-
-        // setup scheduler
-        // IMPORTANT: set interruptibleWorker to false in order to allow graceful oracle/SUL shutdown
-        var pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        var scheduler = Schedulers.from(pool, false, true);
 
         // learning loop
         learner.startLearning();
         var hyp = learner.getHypothesisModel();
 
-        while (!tracker.hasFinished()) {
+        while (true) {
             // since we only access the hypothesis in read-only fashion it is fine to share the reference across threads
             final var finalHyp = hyp;
-            Flowable // create a publisher from first quivalence oracle
-                     .fromStream(eqo.generateTestWords(finalHyp, inputs))
-                     // limit to 1000 elements
-                     .take(LIMIT)
-                     // merge with elements from second equivalence oracle
-                     .mergeWith(Flowable.fromStream(eqo2.generateTestWords(finalHyp, inputs)))
-                     // process items in parallel
-                     .parallel()
-                     // run on our non-interruptible scheduler
-                     .runOn(scheduler)
-                     // filter for counterexamples
-                     .filter(w -> !Objects.equals(mqo.answerQuery(w), finalHyp.computeOutput(w)))
-                     // process them sequentially
-                     .sequential()
-                     // the first counterexample suffices for refinement
-                     .firstElement()
-                     // use a blocking subscribe to ensure that all pipelines are cleared for the next iteration
-                     // alternatively, use blockingGet like in the ReactorExample
-                     .blockingSubscribe(tracker, System.out::println, tracker);
+            var ce = Flowable // create a (cold) publisher from first quivalence oracle
+                              .defer(() -> Flowable.fromStream(eqo.generateTestWords(finalHyp, inputs)))
+                              // sample on own thread
+                              .subscribeOn(Schedulers.computation())
+                              // limit to 1000 elements
+                              .take(LIMIT)
+                              // merge with elements from second equivalence oracle, also sampled in its own thread
+                              .mergeWith(Flowable.defer(() -> Flowable.fromStream(eqo2.generateTestWords(finalHyp,
+                                                                                                         inputs)))
+                                                 .subscribeOn(Schedulers.computation()))
+                              // map to queries ...
+                              .map(DefaultQuery<Integer, Word<Character>>::new)
+                              // ... create batches ...
+                              .buffer(BATCH_SIZE)
+                              // ... and process in bulk
+                              // NOTE: this happens synchronously to allow the oracle/SUL to gracefully shutdown
+                              // There exist ways to create schedulers that do not interrupt running threads
+                              // (Schedulers#from) but I still experienced the occasional race condition ...
+                              // However, the oracle can still answer the batch in parallel itself
+                              .doOnNext(mqo::processQueries)
+                              // flat to individual queries
+                              .flatMapIterable(l -> l)
+                              // filter for counterexamples
+                              .filter(q -> !Objects.equals(q.getOutput(),
+                                                           finalHyp.computeSuffixOutput(q.getPrefix(), q.getSuffix())))
+                              // the first counterexample suffices for refinement
+                              .firstElement()
+                              // use a blocking operation to ensure that all pipelines are cleared for the next iteration
+                              .blockingGet();
+
+            if (ce != null) {
+                learner.refineHypothesis(ce);
+                hyp = learner.getHypothesisModel();
+            } else {
+                break;
+            }
         }
 
         // cleanup
-        pool.shutdown();
         mqo.shutdown();
-        scheduler.shutdown();
 
         // process results
         hyp = learner.getHypothesisModel();
 
         System.out.println("Final hypothesis size " + hyp.size());
         System.out.println("Is equivalent? " + Automata.testEquivalence(mealy, hyp, inputs));
-    }
-
-    private static final class ProgressTracker<I, D> implements Consumer<Word<I>>, Action {
-
-        private boolean finished;
-        private final LearningAlgorithm<?, I, D> learner;
-        private final MembershipOracle<I, D> oracle;
-
-        private ProgressTracker(LearningAlgorithm<?, I, D> learner, MembershipOracle<I, D> oracle) {
-            this.learner = learner;
-            this.oracle = oracle;
-        }
-
-        /**
-         * The onSuccess handler. Upon receiving a counterexample, refine the hypothesis.
-         *
-         * @param w
-         *         the counterexample
-         */
-        @Override
-        public void accept(Word<I> w) {
-            learner.refineHypothesis(new DefaultQuery<>(w, oracle.answerQuery(w)));
-        }
-
-        /**
-         * The onComplete handler. When all items have been processed without finding a counterexample, terminate the
-         * learning loop.
-         */
-        @Override
-        public void run() {
-            this.finished = true;
-        }
-
-        private boolean hasFinished() {
-            return finished;
-        }
     }
 }

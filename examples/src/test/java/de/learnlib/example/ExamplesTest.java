@@ -176,6 +176,11 @@ public class ExamplesTest {
     }
 
     @Test
+    public void testReactiveMutinyExample() {
+        de.learnlib.example.reactive.MutinyExample.main(new String[0]);
+    }
+
+    @Test
     public void testResumableExample() {
         de.learnlib.example.resumable.ResumableExample.main(new String[0]);
     }

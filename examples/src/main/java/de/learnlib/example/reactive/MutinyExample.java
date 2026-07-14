@@ -36,7 +36,7 @@ import net.automatalib.word.Word;
  * An example of constructing a learn-loop using reactive streams (from SmallRye) to compute counterexamples.
  */
 @SuppressWarnings({"PMD.SystemPrintln", "PMD.UseExplicitTypes"}) // allow println and vars in examples
-public final class SmallRyeExample {
+public final class MutinyExample {
 
     private static final int SEED = 42;
     private static final int SIZE = 10;
@@ -44,7 +44,7 @@ public final class SmallRyeExample {
     private static final int RND_LENGTH = 4;
     private static final int LIMIT = 1000;
 
-    private SmallRyeExample() {
+    private MutinyExample() {
         // prevent instantiation
     }
 
@@ -69,8 +69,10 @@ public final class SmallRyeExample {
         // setup learner
         var learner = new TTTLearnerMealy<>(inputs, mqo);
 
-        // setup thread pool
-        var pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        // setup thread pools
+        var pool = Executors.newFixedThreadPool(1);
+        var pool2 = Executors.newFixedThreadPool(1);
+        var pool3 = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
         // learning loop
         learner.startLearning();
@@ -80,19 +82,23 @@ public final class SmallRyeExample {
             // since we only access the hypothesis in read-only fashion it is fine to share the reference across threads
             final var finalHyp = hyp;
             var m1 = Multi.createFrom()
-                          // create a publisher from first quivalence oracle
-                          .items(eqo.generateTestWords(finalHyp, inputs))
+                          // create a (cold) publisher from first quivalence oracle
+                          .items(() -> eqo.generateTestWords(finalHyp, inputs))
+                          // sample on own thread
+                          .runSubscriptionOn(pool)
                           // limit to 1000 elements
                           .select().first(LIMIT);
             var m2 = Multi.createFrom()
-                          // create a publisher from second quivalence oracle
-                          .items(eqo2.generateTestWords(finalHyp, inputs));
+                          // create a (cold) publisher from second quivalence oracle
+                          .items(() -> eqo2.generateTestWords(finalHyp, inputs))
+                          // sample on own thread
+                          .runSubscriptionOn(pool2);
 
             var ce = Multi.createBy()
                           // merge elements from both oracles in interleaving fashion
                           .merging().streams(m1, m2)
                           // run processing in parallel
-                          .runSubscriptionOn(pool)
+                          .runSubscriptionOn(pool3)
                           // filter for counterexamples
                           .filter(w -> !Objects.equals(mqo.answerQuery(w), finalHyp.computeOutput(w)))
                           // toUni implicitly fetches the first element
@@ -111,6 +117,8 @@ public final class SmallRyeExample {
         // cleanup
         mqo.shutdown();
         pool.shutdown();
+        pool2.shutdown();
+        pool3.shutdown();
 
         // process results
         hyp = learner.getHypothesisModel();

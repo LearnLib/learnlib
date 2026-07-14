@@ -279,6 +279,7 @@ limitations under the License.
         <logback.version>1.5.35</logback.version>
         <metainf-services.version>1.11</metainf-services.version>
         <mockito.version>5.20.0</mockito.version>
+        <mutiny.version>3.3.0</mutiny.version>
         <pmd.version>7.22.0</pmd.version>
         <reactive-streams.version>1.0.4</reactive-streams.version>
         <reactor.version>3.8.6</reactor.version>
@@ -681,6 +682,11 @@ limitations under the License.
                 <groupId>io.reactivex.rxjava3</groupId>
                 <artifactId>rxjava</artifactId>
                 <version>${rxjava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.smallrye.reactive</groupId>
+                <artifactId>mutiny</artifactId>
+                <version>${mutiny.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.reactivestreams</groupId>
