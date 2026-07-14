@@ -63,7 +63,7 @@ import net.automatalib.word.Word;
  * When you apply MMLT-learning in practice, you usually want to implement your own symbol filter that exploits specific
  * domain knowledge.
  */
-@SuppressWarnings({"checkstyle:magicnumber", "PMD.UseExplicitTypes"}) // allow magic numbers and vars in examples
+@SuppressWarnings("PMD.UseExplicitTypes") // allow vars in examples
 public final class Example3 {
 
     private static final int BOUND = 100;
