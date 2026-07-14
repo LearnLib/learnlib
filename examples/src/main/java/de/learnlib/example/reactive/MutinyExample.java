@@ -35,7 +35,9 @@ import net.automatalib.word.Word;
 /**
  * An example of constructing a learn-loop using reactive streams (from SmallRye) to compute counterexamples.
  */
-@SuppressWarnings({"PMD.SystemPrintln", "PMD.UseExplicitTypes"}) // allow println and vars in examples
+// allow println and vars in examples
+// ExecutorService does not implement AutoClosable on Java 17
+@SuppressWarnings({"PMD.SystemPrintln", "PMD.UseExplicitTypes", "PMD.CloseResource"})
 public final class MutinyExample {
 
     private static final int SEED = 42;
