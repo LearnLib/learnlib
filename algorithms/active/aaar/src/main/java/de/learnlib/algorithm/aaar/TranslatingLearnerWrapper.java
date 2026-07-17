@@ -19,6 +19,20 @@ import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 
+/**
+ * Wraps an {@link AbstractAAARLearner} in a learner that returns
+ * {@link AbstractAAARLearner#getTranslatingHypothesisModel()} for {@link #getHypothesisModel()} so that it can be
+ * embedded into learning processes that directly operate on concrete counterexamples.
+ *
+ * @param <L>
+ *         learner type
+ * @param <CM>
+ *         concrete model type
+ * @param <CI>
+ *         concrete input symbol type
+ * @param <D>
+ *         output domain type
+ */
 public class TranslatingLearnerWrapper<L extends LearningAlgorithm<CM, CI, D> & SupportsGrowingAlphabet<CI>, CM, CI, D>
         implements LearningAlgorithm<CM, CI, D> {
 
