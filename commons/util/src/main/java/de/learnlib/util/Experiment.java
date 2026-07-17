@@ -15,6 +15,8 @@
  */
 package de.learnlib.util;
 
+import java.util.Collection;
+
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.EquivalenceOracle;
@@ -22,7 +24,6 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatisticsKey;
 import de.learnlib.statistic.StatisticsService;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -69,7 +70,7 @@ public class Experiment<A extends FiniteRepresentation> {
 
     public <I, D> Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
                              EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
-                             Alphabet<I> inputs) {
+                             Collection<? extends I> inputs) {
         this.impl = new ExperimentImpl<>(learningAlgorithm, equivalenceAlgorithm, inputs);
     }
 
@@ -110,13 +111,13 @@ public class Experiment<A extends FiniteRepresentation> {
 
         private final LearningAlgorithm<? extends A, I, D> learningAlgorithm;
         private final EquivalenceOracle<? super A, I, D> equivalenceAlgorithm;
-        private final Alphabet<I> inputs;
+        private final Collection<? extends I> inputs;
         private final StatisticsService statistics;
         private int rounds;
 
         ExperimentImpl(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
                        EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
-                       Alphabet<I> inputs) {
+                       Collection<? extends I> inputs) {
             this.learningAlgorithm = learningAlgorithm;
             this.equivalenceAlgorithm = equivalenceAlgorithm;
             this.inputs = inputs;
@@ -168,7 +169,7 @@ public class Experiment<A extends FiniteRepresentation> {
 
         public DFAExperiment(LearningAlgorithm<? extends DFA<?, I>, I, Boolean> learningAlgorithm,
                              EquivalenceOracle<? super DFA<?, I>, I, Boolean> equivalenceAlgorithm,
-                             Alphabet<I> inputs) {
+                             Collection<? extends I> inputs) {
             super(learningAlgorithm, equivalenceAlgorithm, inputs);
         }
 
@@ -178,7 +179,7 @@ public class Experiment<A extends FiniteRepresentation> {
 
         public MealyExperiment(LearningAlgorithm<? extends MealyMachine<?, I, ?, O>, I, Word<O>> learningAlgorithm,
                                EquivalenceOracle<? super MealyMachine<?, I, ?, O>, I, Word<O>> equivalenceAlgorithm,
-                               Alphabet<I> inputs) {
+                               Collection<? extends I> inputs) {
             super(learningAlgorithm, equivalenceAlgorithm, inputs);
         }
 
@@ -188,7 +189,7 @@ public class Experiment<A extends FiniteRepresentation> {
 
         public MooreExperiment(LearningAlgorithm<? extends MooreMachine<?, I, ?, O>, I, Word<O>> learningAlgorithm,
                                EquivalenceOracle<? super MooreMachine<?, I, ?, O>, I, Word<O>> equivalenceAlgorithm,
-                               Alphabet<I> inputs) {
+                               Collection<? extends I> inputs) {
             super(learningAlgorithm, equivalenceAlgorithm, inputs);
         }
 
