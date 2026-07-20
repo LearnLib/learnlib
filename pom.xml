@@ -256,6 +256,7 @@ limitations under the License.
         <jacoco-plugin.version>0.8.15</jacoco-plugin.version>
         <jar-plugin.version>3.5.0</jar-plugin.version>
         <javadoc-plugin.version>3.12.0</javadoc-plugin.version>
+        <jlink-plugin.version>3.3.0</jlink-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <pmd-plugin.version>3.28.0</pmd-plugin.version>
         <release-plugin.version>3.3.1</release-plugin.version>
@@ -280,6 +281,7 @@ limitations under the License.
         <metainf-services.version>1.11</metainf-services.version>
         <mockito.version>5.22.0</mockito.version>
         <mutiny.version>3.3.0</mutiny.version>
+        <picocli.version>4.7.7</picocli.version>
         <pmd.version>7.26.0</pmd.version>
         <reactive-streams.version>1.0.4</reactive-streams.version>
         <reactor.version>3.8.6</reactor.version>
@@ -627,7 +629,7 @@ limitations under the License.
                 <scope>test</scope>
             </dependency>
 
-            <!-- Checker Annotations (@Nullable, @Nonnull, ...) -->
+            <!-- Annotations (@Nullable, @Nonnull, ...) -->
             <dependency>
                 <groupId>org.checkerframework</groupId>
                 <artifactId>checker-qual</artifactId>
@@ -643,18 +645,20 @@ limitations under the License.
             </dependency>
 
             <dependency>
-                <groupId>org.apache.fury</groupId>
-                <artifactId>fury-core</artifactId>
-                <version>${fury.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.kohsuke.metainf-services</groupId>
                 <artifactId>metainf-services</artifactId>
                 <version>${metainf-services.version}</version>
                 <scope>provided</scope>
             </dependency>
 
+            <!-- Serialization -->
+            <dependency>
+                <groupId>org.apache.fury</groupId>
+                <artifactId>fury-core</artifactId>
+                <version>${fury.version}</version>
+            </dependency>
+
+            <!-- Logging -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -695,6 +699,12 @@ limitations under the License.
                 <version>${reactive-streams.version}</version>
             </dependency>
 
+            <!-- CLI interface -->
+            <dependency>
+                <groupId>info.picocli</groupId>
+                <artifactId>picocli</artifactId>
+                <version>${picocli.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -945,6 +955,11 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>${jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jlink-plugin</artifactId>
+                    <version>${jlink-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -1297,6 +1312,19 @@ limitations under the License.
             </activation>
             <modules>
                 <module>examples</module>
+            </modules>
+        </profile>
+        <profile>
+            <!-- define module in a profile so that we can disable it during a release -->
+            <id>cli</id>
+            <activation>
+                <!-- see https://stackoverflow.com/a/7481347 -->
+                <property>
+                    <name>!learnlib.release</name>
+                </property>
+            </activation>
+            <modules>
+                <module>cli</module>
             </modules>
         </profile>
     </profiles>

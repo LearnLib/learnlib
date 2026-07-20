@@ -98,12 +98,19 @@ public class StdInOutputOracle<I, D> implements SingleQueryOracle<I, D> {
 
     private D answerStatelessQuery(Word<I> prefix, Word<I> suffix) {
         final StringJoiner sj = new StringJoiner(System.lineSeparator());
+        final String input;
+
+        // prevent sending "ε" to the process
+        if (prefix.isEmpty() && suffix.isEmpty()) {
+            input = "";
+        } else {
+            input = prefix.concat(suffix).toString();
+        }
 
         try {
-            ProcessUtil.invokeProcess(commandLine,
-                                      new StringReader(prefix.concat(suffix).toString()),
-                                      sj::add,
-                                      LOGGER::warn);
+            logInvocation(commandLine, input);
+            ProcessUtil.invokeProcess(commandLine, new StringReader(input), sj::add, LOGGER::warn);
+            logResult(sj);
             return outputTransformer.apply(sj.toString(), prefix.length());
         } catch (IOException | InterruptedException e) {
             throw new IllegalStateException(e);
@@ -115,19 +122,32 @@ public class StdInOutputOracle<I, D> implements SingleQueryOracle<I, D> {
         final StringJoiner sj = new StringJoiner(System.lineSeparator());
 
         try {
+            logInvocation(commandLine, reset);
             ProcessUtil.invokeProcess(commandLine, new StringReader(reset), LOGGER::debug, LOGGER::warn);
 
             for (I p : prefix) {
+                logInvocation(commandLine, p);
                 ProcessUtil.invokeProcess(commandLine, new StringReader(Objects.toString(p)), sj::add, LOGGER::warn);
+                logResult(sj);
             }
 
             for (I s : suffix) {
+                logInvocation(commandLine, s);
                 ProcessUtil.invokeProcess(commandLine, new StringReader(Objects.toString(s)), sj::add, LOGGER::warn);
+                logResult(sj);
             }
 
             return outputTransformer.apply(sj.toString(), prefix.length());
         } catch (IOException | InterruptedException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private static void logInvocation(List<String> command, Object payload) {
+        LOGGER.debug("Invoking '{}' with payload '{}'", command, payload);
+    }
+
+    private static void logResult(StringJoiner sj) {
+        LOGGER.debug("Received output '{}'", sj);
     }
 }

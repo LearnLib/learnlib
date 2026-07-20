@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * ({@code reset != null}) communication.
  * <p>
  * In a stateless communication, all symbols of a query are passed to the program at once and invocations should be
- * treated independently from each other. In a stateful communication, the program is executed multiple times with a
+ * treated independently of each other. In a stateful communication, the program is executed multiple times with a
  * single query symbol each, preceded by a single invocation with only the {@code reset} symbol.
  *
  * @param <I>
@@ -111,7 +111,9 @@ public class CLIOutputOracle<I, D> implements SingleQueryOracle<I, D> {
         final StringJoiner sj = new StringJoiner(System.lineSeparator());
 
         try {
+            logInvocation(args);
             ProcessUtil.invokeProcess(args, sj::add, LOGGER::warn);
+            logResult(sj);
             return outputTransformer.apply(sj.toString(), prefix.length());
         } catch (IOException | InterruptedException e) {
             throw new IllegalStateException(e);
@@ -123,19 +125,34 @@ public class CLIOutputOracle<I, D> implements SingleQueryOracle<I, D> {
         final StringJoiner sj = new StringJoiner(System.lineSeparator());
 
         try {
-            ProcessUtil.invokeProcess(CLIOracle.toCommand(commandLine, reset), LOGGER::debug, LOGGER::warn);
+            final String[] resetCommand = CLIOracle.toCommand(commandLine, reset);
+            logInvocation(resetCommand);
+            ProcessUtil.invokeProcess(resetCommand, LOGGER::debug, LOGGER::warn);
 
             for (I p : prefix) {
-                ProcessUtil.invokeProcess(CLIOracle.toCommand(commandLine, p), sj::add, LOGGER::warn);
+                String[] command = CLIOracle.toCommand(commandLine, p);
+                logInvocation(command);
+                ProcessUtil.invokeProcess(command, sj::add, LOGGER::warn);
             }
 
             for (I s : suffix) {
-                ProcessUtil.invokeProcess(CLIOracle.toCommand(commandLine, s), sj::add, LOGGER::warn);
+                String[] command = CLIOracle.toCommand(commandLine, s);
+                logInvocation(command);
+                ProcessUtil.invokeProcess(command, sj::add, LOGGER::warn);
             }
 
+            logResult(sj);
             return outputTransformer.apply(sj.toString(), prefix.length());
         } catch (IOException | InterruptedException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private static void logInvocation(String[] command) {
+        LOGGER.debug("Invoking '{}'", (Object) command);
+    }
+
+    private static void logResult(StringJoiner sj) {
+        LOGGER.debug("Received output '{}'", sj);
     }
 }

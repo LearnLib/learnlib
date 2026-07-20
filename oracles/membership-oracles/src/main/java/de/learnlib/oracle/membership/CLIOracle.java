@@ -97,7 +97,10 @@ public class CLIOracle<I> implements SingleQueryOracle<I, Boolean> {
         }
 
         try {
-            return ProcessUtil.invokeProcess(args, LOGGER::debug, LOGGER::warn) == 0;
+            logInvocation(args);
+            final int exitCpde = ProcessUtil.invokeProcess(args, LOGGER::debug, LOGGER::warn);
+            logResult(exitCpde);
+            return exitCpde == 0;
         } catch (IOException | InterruptedException e) {
             LOGGER.warn("Error while invoking process", e);
             return false;
@@ -107,14 +110,23 @@ public class CLIOracle<I> implements SingleQueryOracle<I, Boolean> {
     @RequiresNonNull("this.reset")
     private boolean answerStatefulQuery(Word<I> prefix, Word<I> suffix) {
         try {
-            int returnCode = ProcessUtil.invokeProcess(toCommand(commandLine, reset), LOGGER::debug, LOGGER::warn);
+            final String[] resetCommand = toCommand(commandLine, reset);
+            logInvocation(resetCommand);
+            int returnCode = ProcessUtil.invokeProcess(resetCommand, LOGGER::debug, LOGGER::warn);
+            logResult(returnCode);
 
             for (I p : prefix) {
-                returnCode = ProcessUtil.invokeProcess(toCommand(commandLine, p), LOGGER::debug, LOGGER::warn);
+                final String[] command = toCommand(commandLine, p);
+                logInvocation(command);
+                returnCode = ProcessUtil.invokeProcess(command, LOGGER::debug, LOGGER::warn);
+                logResult(returnCode);
             }
 
             for (I s : suffix) {
-                returnCode = ProcessUtil.invokeProcess(toCommand(commandLine, s), LOGGER::debug, LOGGER::warn);
+                final String[] command = toCommand(commandLine, s);
+                logInvocation(command);
+                returnCode = ProcessUtil.invokeProcess(command, LOGGER::debug, LOGGER::warn);
+                logResult(returnCode);
             }
 
             return returnCode == 0;
@@ -132,5 +144,13 @@ public class CLIOracle<I> implements SingleQueryOracle<I, Boolean> {
         result[args.size()] = Objects.toString(arg);
 
         return result;
+    }
+
+    private static void logInvocation(String[] command) {
+        LOGGER.debug("Invoking '{}'", (Object) command);
+    }
+
+    private static void logResult(int exitCpde) {
+        LOGGER.debug("Exit code '{}'", exitCpde);
     }
 }

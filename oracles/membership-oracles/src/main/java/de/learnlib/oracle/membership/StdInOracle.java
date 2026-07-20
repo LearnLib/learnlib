@@ -84,11 +84,22 @@ public class StdInOracle<I> implements SingleQueryOracle<I, Boolean> {
     }
 
     private boolean answerStatelessQuery(Word<I> prefix, Word<I> suffix) {
+
+        final String input;
+
+        // prevent sending "ε" to the process
+        if (prefix.isEmpty() && suffix.isEmpty()) {
+            input = "";
+        } else {
+            input = prefix.concat(suffix).toString();
+        }
+
         try {
-            return ProcessUtil.invokeProcess(commandLine,
-                                             new StringReader(prefix.concat(suffix).toString()),
-                                             LOGGER::debug,
-                                             LOGGER::warn) == 0;
+            logInvocation(commandLine, input);
+            final int exitCode =
+                    ProcessUtil.invokeProcess(commandLine, new StringReader(input), LOGGER::debug, LOGGER::warn);
+            logResult(exitCode);
+            return exitCode == 0;
         } catch (IOException | InterruptedException e) {
             LOGGER.warn("Error while invoking process", e);
             return false;
@@ -98,21 +109,27 @@ public class StdInOracle<I> implements SingleQueryOracle<I, Boolean> {
     @RequiresNonNull("this.reset")
     private boolean answerStatefulQuery(Word<I> prefix, Word<I> suffix) {
         try {
+            logInvocation(commandLine, reset);
             int returnCode =
                     ProcessUtil.invokeProcess(commandLine, new StringReader(reset), LOGGER::debug, LOGGER::warn);
+            logResult(returnCode);
 
             for (I p : prefix) {
+                logInvocation(commandLine, p);
                 returnCode = ProcessUtil.invokeProcess(commandLine,
                                                        new StringReader(Objects.toString(p)),
                                                        LOGGER::debug,
                                                        LOGGER::warn);
+                logResult(returnCode);
             }
 
             for (I s : suffix) {
+                logInvocation(commandLine, s);
                 returnCode = ProcessUtil.invokeProcess(commandLine,
                                                        new StringReader(Objects.toString(s)),
                                                        LOGGER::debug,
                                                        LOGGER::warn);
+                logResult(returnCode);
             }
 
             return returnCode == 0;
@@ -120,5 +137,13 @@ public class StdInOracle<I> implements SingleQueryOracle<I, Boolean> {
             LOGGER.warn("Error while invoking process", e);
             return false;
         }
+    }
+
+    private static void logInvocation(List<String> command, Object payload) {
+        LOGGER.debug("Invoking '{}' with payload '{}'", command, payload);
+    }
+
+    private static void logResult(int exitCpde) {
+        LOGGER.debug("Exit code '{}'", exitCpde);
     }
 }
