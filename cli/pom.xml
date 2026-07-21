@@ -177,6 +177,14 @@ limitations under the License.
                 <filtering>true</filtering>
             </resource>
         </resources>
+        <extensions>
+            <!-- used for normalized OS classifiers when building cli artifacts  -->
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>${os-plugin.version}</version>
+            </extension>
+        </extensions>
         <plugins>
             <plugin><!-- Do not deploy binaries -->
                 <groupId>org.apache.maven.plugins</groupId>
@@ -207,7 +215,8 @@ limitations under the License.
                                     <noHeaderFiles>true</noHeaderFiles>
                                     <noManPages>true</noManPages>
                                     <stripDebug>true</stripDebug>
-                                    <zipDirPrefix>learnlib-cli-${project.version}</zipDirPrefix>
+                                    <zipDirPrefix>${project.artifactId}-${project.version}</zipDirPrefix>
+                                    <finalName>${project.artifactId}-${project.version}-${os.detected.classifier}</finalName>
                                     <launcher>learnlib=de.learnlib.cli/de.learnlib.cli.Application</launcher>
                                 </configuration>
                             </execution>
