@@ -36,6 +36,7 @@ import net.automatalib.serialization.dot.DOTSerializationProvider;
 import net.automatalib.serialization.learnlibv2.LearnLibV2Serialization;
 import net.automatalib.serialization.mata.writer.MataNFAWriter;
 import net.automatalib.serialization.saf.SAFWriters;
+import net.automatalib.serialization.taf.writer.TAFWriters;
 import net.automatalib.ts.simple.SimpleTS;
 
 @FunctionalInterface
@@ -64,8 +65,7 @@ public interface SerializerFactory<M extends SimpleTS<?, String>>
             case LEARNLIBV2 -> LearnLibV2Serialization.getInstance();
             case MATA -> new MataNFAWriter<>();
             case SAF -> SAFWriters.dfa();
-            // case TAF -> TAFWriters.dfa();
-            default -> throw new UnsupportedCombinationException(options);
+            case TAF -> TAFWriters.dfa();
         };
     }
 
@@ -73,7 +73,7 @@ public interface SerializerFactory<M extends SimpleTS<?, String>>
         return switch (options.format) {
             case DOT -> dotAutomatonWriter();
             case SAF -> SAFWriters.mealy(DataOutput::writeUTF);
-            // case TAF -> TAFWriters.mealy();
+            case TAF -> TAFWriters.mealy();
             default -> throw new UnsupportedCombinationException(options);
         };
     }

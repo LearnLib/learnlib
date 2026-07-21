@@ -37,12 +37,13 @@ open module de.learnlib.cli {
     requires net.automatalib.api;
     requires net.automatalib.common.util;
     requires net.automatalib.core;
-    requires net.automatalib.serialization.dot;
-    requires net.automatalib.serialization.saf;
-    requires net.automatalib.serialization.mata;
     requires net.automatalib.serialization.aut;
     requires net.automatalib.serialization.ba;
+    requires net.automatalib.serialization.dot;
     requires net.automatalib.serialization.learnlibv2;
+    requires net.automatalib.serialization.mata;
+    requires net.automatalib.serialization.saf;
+    requires net.automatalib.serialization.taf;
     requires net.automatalib.util;
 
     requires ch.qos.logback.classic;
