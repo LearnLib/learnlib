@@ -33,7 +33,7 @@ import picocli.CommandLine.Mixin;
          descriptionHeading = "%nDescription:%n%n",
          parameterListHeading = "%nParameters:%n",
          optionListHeading = "%nOptions:%n",
-         description = "Stores the current contents of the index in a new commit along with a log message from the user describing the changes.")
+         description = "Runs an active automata learning process by invoking the provided SUL to answer membership queries. You may use the documentation available at https://learnlib.de/learnlib/maven-site/ to obtain additional information on certain components of LearnLib.")
 public class Application implements Runnable {
 
     public static final String PROPERTIES = "application";
