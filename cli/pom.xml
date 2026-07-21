@@ -177,14 +177,6 @@ limitations under the License.
                 <filtering>true</filtering>
             </resource>
         </resources>
-        <extensions>
-            <!-- used for normalized OS classifiers when building cli artifacts  -->
-            <extension>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>os-maven-plugin</artifactId>
-                <version>${os-plugin.version}</version>
-            </extension>
-        </extensions>
         <plugins>
             <plugin><!-- Do not deploy binaries -->
                 <groupId>org.apache.maven.plugins</groupId>
@@ -194,6 +186,14 @@ limitations under the License.
                 </configuration>
             </plugin>
         </plugins>
+        <extensions>
+            <!-- used for normalized OS classifiers when building cli artifacts  -->
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>${os-plugin.version}</version>
+            </extension>
+        </extensions>
     </build>
 
     <profiles>
