@@ -227,7 +227,7 @@ limitations under the License.
 
     <profiles>
         <profile>
-            <id>jlink</id>
+            <id>integration-tests</id>
             <build>
                 <plugins>
                     <plugin>
