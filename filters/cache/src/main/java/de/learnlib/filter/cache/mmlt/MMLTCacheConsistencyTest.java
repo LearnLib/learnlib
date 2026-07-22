@@ -200,7 +200,7 @@ public class MMLTCacheConsistencyTest<I, O> implements MMLTEquivalenceOracle<I, 
                     allInputsConsidered ? convertedQuery : this.reduceToAllowedInputs(allowedInputs, convertedQuery);
 
             // Finally, query hypothesis using the converted query:
-            Word<TimedOutput<O>> hypOutput = hypothesis.getSemantics().computeOutput(reducedQuery.getInput());
+            Word<TimedOutput<O>> hypOutput = hypothesis.computeOutput(reducedQuery.getInput());
 
             if (!hypOutput.equals(reducedQuery.getOutput())) {
                 // Hyp gives different output than cache (= SUL):

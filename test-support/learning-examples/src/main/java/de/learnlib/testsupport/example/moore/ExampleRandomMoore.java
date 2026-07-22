@@ -28,12 +28,12 @@ public class ExampleRandomMoore<I, O> extends DefaultMooreLearningExample<I, O> 
 
     @SafeVarargs
     public ExampleRandomMoore(Random random, Alphabet<I> alphabet, int size, O... outputs) {
-        super(RandomAutomata.randomDeterministic(random,
-                                                 size,
-                                                 alphabet,
-                                                 Arrays.asList(outputs),
-                                                 Collections.emptyList(),
-                                                 new CompactMoore<>(alphabet)));
+        super(RandomAutomata.randomRegularDeterministic(random,
+                                                        size,
+                                                        alphabet,
+                                                        Arrays.asList(outputs),
+                                                        Collections.emptyList(),
+                                                        new CompactMoore<>(alphabet)));
     }
 
     @SafeVarargs

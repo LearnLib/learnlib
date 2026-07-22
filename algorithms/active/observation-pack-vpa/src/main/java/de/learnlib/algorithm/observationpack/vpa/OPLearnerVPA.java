@@ -32,8 +32,10 @@ import net.automatalib.automaton.vpa.SEVPA;
 import net.automatalib.automaton.vpa.StackContents;
 import net.automatalib.automaton.vpa.State;
 import net.automatalib.common.util.collection.IterableUtil;
+import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -53,7 +55,7 @@ public class OPLearnerVPA<I> extends AbstractVPALearner<I> {
     }
 
     protected State<HypLoc<I>> getDefinitiveSuccessor(State<HypLoc<I>> baseState, Word<I> suffix) {
-        return hypothesis.getSuccessor(baseState, suffix);
+        return hypothesis.getSemantics().getSuccessor(baseState, suffix);
     }
 
     protected Word<I> transformAccessSequence(State<HypLoc<I>> state) {
@@ -61,7 +63,9 @@ public class OPLearnerVPA<I> extends AbstractVPALearner<I> {
     }
 
     protected Word<I> transformAccessSequence(@Nullable StackContents contents) {
-        return transformAccessSequence(contents, hypothesis.getInitialLocation());
+        @SuppressWarnings("nullness") // this method is only called after requireLearningProcessStarted has been called
+        final @NonNull HypLoc<I> init = hypothesis.getInitialState();
+        return transformAccessSequence(contents, init);
     }
 
     protected Word<I> transformAccessSequence(@Nullable StackContents contents, HypLoc<I> loc) {
@@ -88,7 +92,9 @@ public class OPLearnerVPA<I> extends AbstractVPALearner<I> {
     @Override
     protected boolean refineHypothesisSingle(DefaultQuery<I, Boolean> ceQuery) {
         Word<I> ceWord = ceQuery.getInput();
-        boolean hypOut = hypothesis.computeOutput(ceWord);
+        DeterministicAcceptorTS<State<HypLoc<I>>, I> semantics = hypothesis.getSemantics();
+
+        boolean hypOut = semantics.computeOutput(ceWord);
         if (hypOut == ceQuery.getOutput()) {
             return false;
         }
@@ -102,9 +108,9 @@ public class OPLearnerVPA<I> extends AbstractVPALearner<I> {
         I act = ceWord.getSymbol(breakpoint);
         Word<I> suffix = ceWord.subWord(breakpoint + 1);
 
-        State<HypLoc<I>> state = hypothesis.getState(prefix);
+        State<HypLoc<I>> state = semantics.getState(prefix);
         assert state != null;
-        State<HypLoc<I>> succState = hypothesis.getSuccessor(state, act);
+        State<HypLoc<I>> succState = semantics.getSuccessor(state, act);
         assert succState != null;
 
         ContextPair<I> context = new ContextPair<>(transformAccessSequence(succState.getStackContents()), suffix);
@@ -136,7 +142,7 @@ public class OPLearnerVPA<I> extends AbstractVPALearner<I> {
         public PrefixTransformAcex(Word<I> word, ContextPair<I> context) {
             super(context.getSuffix().length() + 1);
             this.suffix = context.getSuffix();
-            this.baseState = hypothesis.getState(IterableUtil.concat(context.getPrefix(), word));
+            this.baseState = hypothesis.getSemantics().getState(IterableUtil.concat(context.getPrefix(), word));
         }
 
         public State<HypLoc<I>> getBaseState() {

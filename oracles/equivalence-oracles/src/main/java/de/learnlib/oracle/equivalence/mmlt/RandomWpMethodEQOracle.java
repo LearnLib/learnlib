@@ -95,7 +95,7 @@ public class RandomWpMethodEQOracle<I, O> implements MMLTEquivalenceOracle<I, O>
                     this.generateTestword(prefixList, globalSuffixes, hypothesis, hypSemModel, listAlphabet);
 
             Word<TimedOutput<O>> sulAnswer = timeOracle.answerQuery(testword);
-            Word<TimedOutput<O>> hypAnswer = hypothesis.getSemantics().computeOutput(testword);
+            Word<TimedOutput<O>> hypAnswer = hypothesis.computeOutput(testword);
 
             // Found inconsistency if outputs do no match:
             if (!sulAnswer.equals(hypAnswer)) {

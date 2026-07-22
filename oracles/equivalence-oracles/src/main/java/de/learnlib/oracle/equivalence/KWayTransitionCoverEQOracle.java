@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
-import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.automaton.DeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.conformance.KWayTransitionCoverTestsIterator;
@@ -53,7 +53,7 @@ import net.automatalib.word.Word;
  *
  * @see KWayTransitionCoverTestsIterator
  */
-public class KWayTransitionCoverEQOracle<A extends DeterministicAutomaton<?, I, ?> & Output<I, D>, I, D>
+public class KWayTransitionCoverEQOracle<A extends RegularAutomaton<?, I, ?> & Output<I, D>, I, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 
     private final Random random;
@@ -91,8 +91,8 @@ public class KWayTransitionCoverEQOracle<A extends DeterministicAutomaton<?, I, 
      * @param batchSize
      *         size of the batches sent to the membership oracle
      *
-     * @see KWayTransitionCoverTestsIterator#KWayTransitionCoverTestsIterator(DeterministicAutomaton, Collection,
-     * Random, int, int, int, int, int, OptimizationMetric, GenerationMethod)
+     * @see KWayTransitionCoverTestsIterator#KWayTransitionCoverTestsIterator(RegularAutomaton, Collection, Random, int,
+     * int, int, int, int, OptimizationMetric, GenerationMethod)
      */
     @GenerateBuilder(defaults = BuilderDefaults.class)
     public KWayTransitionCoverEQOracle(MembershipOracle<I, D> oracle,
@@ -118,7 +118,7 @@ public class KWayTransitionCoverEQOracle<A extends DeterministicAutomaton<?, I, 
 
     @Override
     public Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
-        final DeterministicAutomaton<?, I, ?> casted = hypothesis;
+        final RegularAutomaton<?, I, ?> casted = hypothesis;
         return doGenerateTestWords(casted,
                                    inputs,
                                    this.random,
@@ -131,16 +131,16 @@ public class KWayTransitionCoverEQOracle<A extends DeterministicAutomaton<?, I, 
                                    this.generationMethod);
     }
 
-    private static <A extends DeterministicAutomaton<S, I, ?>, S, I> Stream<Word<I>> doGenerateTestWords(A hypothesis,
-                                                                                                         Collection<? extends I> inputs,
-                                                                                                         Random random,
-                                                                                                         int randomWalkLen,
-                                                                                                         int numGeneratePaths,
-                                                                                                         int maxPathLen,
-                                                                                                         int maxNumberOfSteps,
-                                                                                                         int k,
-                                                                                                         OptimizationMetric optimizationMetric,
-                                                                                                         GenerationMethod generationMethod) {
+    private static <A extends RegularAutomaton<S, I, ?>, S, I> Stream<Word<I>> doGenerateTestWords(A hypothesis,
+                                                                                                   Collection<? extends I> inputs,
+                                                                                                   Random random,
+                                                                                                   int randomWalkLen,
+                                                                                                   int numGeneratePaths,
+                                                                                                   int maxPathLen,
+                                                                                                   int maxNumberOfSteps,
+                                                                                                   int k,
+                                                                                                   OptimizationMetric optimizationMetric,
+                                                                                                   GenerationMethod generationMethod) {
         return IteratorUtil.stream(new KWayTransitionCoverTestsIterator<>(hypothesis,
                                                                           inputs,
                                                                           random,

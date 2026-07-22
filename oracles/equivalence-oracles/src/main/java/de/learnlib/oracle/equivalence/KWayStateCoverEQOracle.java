@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
-import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.automaton.DeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.conformance.KWayStateCoverTestsIterator;
@@ -51,7 +51,7 @@ import net.automatalib.word.Word;
  *
  * @see KWayStateCoverTestsIterator
  */
-public class KWayStateCoverEQOracle<A extends DeterministicAutomaton<?, I, ?> & Output<I, D>, I, D>
+public class KWayStateCoverEQOracle<A extends RegularAutomaton<?, I, ?> & Output<I, D>, I, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 
     private final Random random;
@@ -75,8 +75,8 @@ public class KWayStateCoverEQOracle<A extends DeterministicAutomaton<?, I, ?> & 
      * @param batchSize
      *         size of the batches sent to the membership oracle
      *
-     * @see KWayStateCoverTestsIterator#KWayStateCoverTestsIterator(DeterministicAutomaton, Collection, Random, int,
-     * int, CombinationMethod)
+     * @see KWayStateCoverTestsIterator#KWayStateCoverTestsIterator(RegularAutomaton, Collection, Random, int, int,
+     * CombinationMethod)
      */
     @GenerateBuilder(defaults = BuilderDefaults.class)
     public KWayStateCoverEQOracle(MembershipOracle<I, D> oracle,
@@ -94,16 +94,16 @@ public class KWayStateCoverEQOracle<A extends DeterministicAutomaton<?, I, ?> & 
 
     @Override
     public Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
-        final DeterministicAutomaton<?, I, ?> casted = hypothesis;
+        final RegularAutomaton<?, I, ?> casted = hypothesis;
         return doGenerateTestWords(casted, inputs, this.random, this.randomWalkLen, this.k, this.combinationMethod);
     }
 
-    private static <A extends DeterministicAutomaton<S, I, ?>, S, I> Stream<Word<I>> doGenerateTestWords(A hypothesis,
-                                                                                                         Collection<? extends I> inputs,
-                                                                                                         Random random,
-                                                                                                         int randomWalkLen,
-                                                                                                         int k,
-                                                                                                         CombinationMethod combinationMethod) {
+    private static <A extends RegularAutomaton<S, I, ?>, S, I> Stream<Word<I>> doGenerateTestWords(A hypothesis,
+                                                                                                   Collection<? extends I> inputs,
+                                                                                                   Random random,
+                                                                                                   int randomWalkLen,
+                                                                                                   int k,
+                                                                                                   CombinationMethod combinationMethod) {
         return IteratorUtil.stream(new KWayStateCoverTestsIterator<>(hypothesis,
                                                                      inputs,
                                                                      random,

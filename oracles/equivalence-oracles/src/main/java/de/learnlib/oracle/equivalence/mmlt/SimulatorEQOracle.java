@@ -48,7 +48,7 @@ public class SimulatorEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
         final Word<TimedInput<I>> separatingWord = MMLTs.findSeparatingWord(refModel, hypothesis, inputs);
 
         if (separatingWord != null) {
-            final Word<TimedOutput<O>> sulOutput = refModel.getSemantics().computeOutput(separatingWord);
+            final Word<TimedOutput<O>> sulOutput = refModel.computeOutput(separatingWord);
             return new DefaultQuery<>(separatingWord, sulOutput);
         } else {
             return null;

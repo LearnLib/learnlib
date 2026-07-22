@@ -51,7 +51,7 @@ import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.automaton.DeterministicAutomaton.FullIntAbstraction;
+import net.automatalib.automaton.abstraction.DeterministicAbstractions.FullIntAbstraction;
 import net.automatalib.automaton.mmlt.MMLT;
 import net.automatalib.automaton.mmlt.TimerInfo;
 import net.automatalib.common.util.HashUtil;
@@ -365,7 +365,7 @@ public class ExtensibleLStarMMLT<I, O>
 
         // 2. Calculate shortened hypothesis output:
         Word<TimedOutput<O>> shortHypOutput =
-                hypothesis.getSemantics().computeSuffixOutput(shortQuery.getPrefix(), shortQuery.getSuffix());
+                hypothesis.computeSuffixOutput(shortQuery.getPrefix(), shortQuery.getSuffix());
 
         assert !shortHypOutput.equals(shortQuery.getOutput()) : "Deviation lost after shortening.";
 

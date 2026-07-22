@@ -49,7 +49,7 @@ import de.learnlib.testsupport.it.variant.PassiveLearnerVariant;
 import de.learnlib.testsupport.it.variant.PassiveLearnerVariantListImpl;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalAutomaton;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.concept.SuffixOutput;
@@ -98,7 +98,7 @@ public final class LearnerITUtil {
      *
      * @return the list of test cases, one for each example
      */
-    public static <I, D, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>> List<UniversalDeterministicLearnerITCase<I, D, A>> createExampleITCases(
+    public static <I, D, A extends RegularAutomaton<?, I, ?, ?, ?> & Output<I, D>> List<UniversalDeterministicLearnerITCase<I, D, A>> createExampleITCases(
             UniversalDeterministicLearningExample<I, ? extends A> example,
             LearnerVariantListImpl<A, I, D> variants,
             LockableOracle<I, D> lockableOracle,

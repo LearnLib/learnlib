@@ -27,6 +27,7 @@ import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.util.automaton.Automata;
@@ -39,7 +40,7 @@ import org.testng.annotations.Test;
  * Simple (abstract super) test class that checks the basic workflow of a learning algorithm that implements {@link
  * SupportsGrowingAlphabet}.
  */
-public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlphabet<I> & LearningAlgorithm<M, I, D>, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, OR, I, D> {
+public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlphabet<I> & LearningAlgorithm<M, I, D>, M extends RegularAutomaton<?, I, ?, ?, ?> & Output<I, D>, OR, I, D> {
 
     protected static final int RANDOM_SEED = 42;
     protected static final int DEFAULT_AUTOMATON_SIZE = 15;
@@ -85,9 +86,9 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
     }
 
     /**
-     * In case of passing a growing alphabet, the learners may use the existing {@link
-     * GrowingAlphabet#addSymbol(Object)} functionality. Due to references, this may alter their
-     * behavior. Check it!
+     * In case of passing a growing alphabet, the learners may use the existing
+     * {@link GrowingAlphabet#addSymbol(Object)} functionality. Due to references, this may alter their behavior. Check
+     * it!
      */
     @Test
     public void testGrowingAlphabet() {

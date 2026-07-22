@@ -31,12 +31,12 @@ public class ExampleRandomSST<I, O> extends DefaultSSTLearningExample<I, O> {
                             int size,
                             Collection<Word<O>> stateProperties,
                             Collection<Word<O>> transitionProperties) {
-        super(RandomAutomata.randomDeterministic(random,
-                                                 size,
-                                                 alphabet,
-                                                 stateProperties,
-                                                 transitionProperties,
-                                                 new CompactSST<>(alphabet)));
+        super(RandomAutomata.randomRegularDeterministic(random,
+                                                        size,
+                                                        alphabet,
+                                                        stateProperties,
+                                                        transitionProperties,
+                                                        new CompactSST<>(alphabet)));
     }
 
     public static <I, O> ExampleRandomSST<I, O> createExample(Random random,

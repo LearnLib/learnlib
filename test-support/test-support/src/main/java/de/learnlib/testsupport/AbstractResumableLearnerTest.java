@@ -19,7 +19,7 @@ import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;
@@ -43,7 +43,7 @@ import org.testng.annotations.Test;
  * @param <T>
  *         state type
  */
-public abstract class AbstractResumableLearnerTest<L extends Resumable<T> & LearningAlgorithm<M, I, D>, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, OR, I, D, T> {
+public abstract class AbstractResumableLearnerTest<L extends Resumable<T> & LearningAlgorithm<M, I, D>, M extends RegularAutomaton<?, I, ?, ?, ?> & Output<I, D>, OR, I, D, T> {
 
     protected static final int RANDOM_SEED = 42;
 

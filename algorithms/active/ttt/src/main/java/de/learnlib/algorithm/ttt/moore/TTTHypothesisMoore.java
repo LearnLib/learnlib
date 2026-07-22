@@ -18,8 +18,7 @@ package de.learnlib.algorithm.ttt.moore;
 import de.learnlib.algorithm.ttt.base.AbstractTTTHypothesis;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.UniversalDeterministicAutomaton.FullIntAbstraction;
+import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.FullIntAbstraction;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.word.Word;
 
@@ -64,7 +63,7 @@ public class TTTHypothesisMoore<I, O>
     }
 
     @Override
-    public UniversalDeterministicAutomaton.FullIntAbstraction<TTTStateMoore<I, O>, O, Void> fullIntAbstraction(Alphabet<I> alphabet) {
+    public FullIntAbstraction<TTTStateMoore<I, O>, O, Void> fullIntAbstraction(Alphabet<I> alphabet) {
         if (alphabet.equals(getInputAlphabet())) {
             return this;
         }

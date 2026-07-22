@@ -25,6 +25,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.automaton.FiniteAlphabetAutomaton;
+import net.automatalib.automaton.abstraction.DeterministicAbstractions.FullIntAbstraction;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.graph.Graph;
@@ -47,7 +48,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public abstract class AbstractTTTHypothesis<S extends TTTState<I, D>, I, D, T>
         implements DeterministicAutomaton<S, I, T>,
                    FiniteAlphabetAutomaton<S, I, T>,
-                   DeterministicAutomaton.FullIntAbstraction<T>,
+                   FullIntAbstraction<T>,
                    StateIDs<S>,
                    SupportsGrowingAlphabet<I> {
 
@@ -169,7 +170,7 @@ public abstract class AbstractTTTHypothesis<S extends TTTState<I, D>, I, D, T>
     }
 
     @Override
-    public DeterministicAutomaton.FullIntAbstraction<T> fullIntAbstraction(Alphabet<I> alphabet) {
+    public FullIntAbstraction<T> fullIntAbstraction(Alphabet<I> alphabet) {
         if (alphabet == this.alphabet) {
             return this;
         }

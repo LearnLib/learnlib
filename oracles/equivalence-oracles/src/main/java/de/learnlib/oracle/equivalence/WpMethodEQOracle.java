@@ -30,6 +30,7 @@ import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
 import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -80,7 +81,7 @@ import net.automatalib.word.Word;
                                             generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MooreEquivalenceOracle.class,
                                             generics = {@Generic("I"), @Generic("O")}))
-public class WpMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
+public class WpMethodEQOracle<A extends RegularAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 
     private final int lookahead;

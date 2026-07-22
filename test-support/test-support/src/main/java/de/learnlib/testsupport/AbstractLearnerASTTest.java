@@ -23,7 +23,7 @@ import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.util.automaton.Automata;
@@ -50,7 +50,7 @@ import org.testng.annotations.Test;
  * @param <D>
  *         output domain type
  */
-public abstract class AbstractLearnerASTTest<L extends AccessSequenceTransformer<I> & LearningAlgorithm<M, I, D>, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>, OR, I, D> {
+public abstract class AbstractLearnerASTTest<L extends AccessSequenceTransformer<I> & LearningAlgorithm<M, I, D>, M extends RegularAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>, OR, I, D> {
 
     protected static final int RANDOM_SEED = 42;
 
@@ -109,12 +109,13 @@ public abstract class AbstractLearnerASTTest<L extends AccessSequenceTransformer
             ce = Automata.findSeparatingWord(sul, hyp, inputAlphabet);
         }
 
-        checkStateMapping((UniversalDeterministicAutomaton<?, I, ?, ?, ?>) hyp);
+        checkStateMapping((RegularAutomaton<?, I, ?, ?, ?>) hyp);
     }
 
-    private <S> void checkStateMapping(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hyp) {
+    private <S> void checkStateMapping(RegularAutomaton<S, I, ?, ?, ?> hyp) {
 
-        final Mapping<S, @Nullable Word<I>> mapping = Covers.cover(hyp, inputAlphabet, hyp.getInitialState(), t -> {}, s -> {});
+        final Mapping<S, @Nullable Word<I>> mapping =
+                Covers.cover(hyp, inputAlphabet, hyp.getInitialState(), t -> {}, s -> {});
 
         // check that transformed sequences reach the same state
         for (S s : hyp) {

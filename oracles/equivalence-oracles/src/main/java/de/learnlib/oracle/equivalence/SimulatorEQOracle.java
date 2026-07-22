@@ -27,6 +27,7 @@ import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
 import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -66,7 +67,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
                                             generics = {@Generic("?"), @Generic("I"), @Generic("?"), @Generic("O")}),
                     interfaces = @Interface(clazz = MooreEquivalenceOracle.class,
                                             generics = {@Generic("I"), @Generic("O")}))
-public class SimulatorEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
+public class SimulatorEQOracle<A extends RegularAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         implements EquivalenceOracle<A, I, D> {
 
     private final A reference;

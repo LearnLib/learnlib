@@ -81,7 +81,7 @@ public class MMLTCacheTest
     @Override
     protected Word<TimedOutput<String>> computeOutput(MMLT<?, String, ?, String> model,
                                                       Word<TimedInput<String>> input) {
-        return model.getSemantics().computeOutput(input);
+        return model.computeOutput(input);
     }
 
     @Override

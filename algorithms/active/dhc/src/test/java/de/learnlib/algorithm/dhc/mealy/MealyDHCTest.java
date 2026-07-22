@@ -155,12 +155,12 @@ public class MealyDHCTest {
 
         List<String> outputs = Arrays.asList("o1", "o2", "o3");
 
-        CompactMealy<Character, String> fm = RandomAutomata.randomDeterministic(new Random(1337),
-                                                                                100,
-                                                                                inputs,
-                                                                                Collections.emptyList(),
-                                                                                outputs,
-                                                                                new CompactMealy<>(inputs));
+        CompactMealy<Character, String> fm = RandomAutomata.randomRegularDeterministic(new Random(1337),
+                                                                                       100,
+                                                                                       inputs,
+                                                                                       Collections.emptyList(),
+                                                                                       outputs,
+                                                                                       new CompactMealy<>(inputs));
 
         MealySimulatorOracle<Character, String> simoracle = new MealySimulatorOracle<>(fm);
         MealySimulatorEQOracle<Character, String> eqoracle = new MealySimulatorEQOracle<>(fm);

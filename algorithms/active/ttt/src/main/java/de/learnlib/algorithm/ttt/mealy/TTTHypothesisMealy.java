@@ -19,8 +19,7 @@ import de.learnlib.algorithm.ttt.base.AbstractTTTHypothesis;
 import de.learnlib.algorithm.ttt.base.TTTState;
 import de.learnlib.algorithm.ttt.base.TTTTransition;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.UniversalDeterministicAutomaton.FullIntAbstraction;
+import net.automatalib.automaton.abstraction.UniversalDeterministicAbstractions.FullIntAbstraction;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
@@ -49,7 +48,7 @@ public class TTTHypothesisMealy<I, O>
     }
 
     @Override
-    public UniversalDeterministicAutomaton.FullIntAbstraction<TTTTransitionMealy<I, O>, Void, O> fullIntAbstraction(
+    public FullIntAbstraction<TTTTransitionMealy<I, O>, Void, O> fullIntAbstraction(
             Alphabet<I> alphabet) {
         if (alphabet.equals(getInputAlphabet())) {
             return this;

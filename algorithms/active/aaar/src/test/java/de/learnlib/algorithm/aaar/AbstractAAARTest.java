@@ -25,7 +25,7 @@ import de.learnlib.oracle.membership.SimulatorOracle;
 import de.learnlib.testsupport.example.LearningExample;
 import de.learnlib.util.Experiment;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.Automata;
@@ -34,7 +34,7 @@ import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public abstract class AbstractAAARTest<L extends AbstractAAARLearner<?, A, A, I, I, D>, I, D, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>> {
+public abstract class AbstractAAARTest<L extends AbstractAAARLearner<?, A, A, I, I, D>, I, D, A extends RegularAutomaton<?, I, ?, ?, ?> & SuffixOutput<I, D>> {
 
     private final Alphabet<I> alphabet;
     private final A automaton;

@@ -73,6 +73,11 @@ limitations under the License.
                     <Method name="resiftAffectedTransitions"/>
                 </Or>
             </And>
+            <And>
+                <!-- method is only called with initialized hypothesis -->
+                <Class name="de.learnlib.algorithm.observationpack.vpa.OPLearnerVPA"/>
+                <Method name="transformAccessSequence"/>
+            </And>
         </Or>
     </Match>
 </FindBugsFilter>

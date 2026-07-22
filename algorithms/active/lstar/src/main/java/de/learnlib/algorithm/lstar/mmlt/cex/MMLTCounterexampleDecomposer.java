@@ -119,7 +119,7 @@ class MMLTCounterexampleDecomposer<I, O> {
 
         Word<TimedInput<I>> statePrefix = hypothesis.getPrefix(decomposition.state());
         Word<TimedOutput<O>> hypOutput =
-                hypothesis.getSemantics().computeSuffixOutput(statePrefix, Word.fromLetter(decomposition.input()));
+                hypothesis.computeSuffixOutput(statePrefix, Word.fromLetter(decomposition.input()));
         Word<TimedOutput<O>> sulOutput = timeOracle.answerQuery(statePrefix, Word.fromLetter(decomposition.input()));
 
         if (decomposition.isForIncorrectOutput()) {

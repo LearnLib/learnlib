@@ -172,7 +172,7 @@ public class ResetSearchEQOracle<I, O> implements MMLTEquivalenceOracle<I, O> {
             // Check if counterexample:
             Word<TimedInput<I>> testWord = wbTestWord.toWord();
 
-            Word<TimedOutput<O>> hypOutput = hypothesis.getSemantics().computeOutput(testWord);
+            Word<TimedOutput<O>> hypOutput = hypothesis.computeOutput(testWord);
             Word<TimedOutput<O>> sulOutput = timeOracle.answerQuery(testWord);
             if (!hypOutput.equals(sulOutput)) {
                 return new DefaultQuery<>(testWord, sulOutput);

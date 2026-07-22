@@ -91,17 +91,17 @@ public class OneSEVPAHypothesis<I> extends AbstractSEVPA<HypLoc<I>, I> implement
     }
 
     @Override
-    public HypLoc<I> getLocation(int id) {
+    public HypLoc<I> getState(int id) {
         return locations.get(id);
     }
 
     @Override
-    public int getLocationId(HypLoc<I> loc) {
+    public int getStateId(HypLoc<I> loc) {
         return loc.getIndex();
     }
 
     @Override
-    public List<HypLoc<I>> getLocations() {
+    public List<HypLoc<I>> getStates() {
         return locations;
     }
 
@@ -111,12 +111,12 @@ public class OneSEVPAHypothesis<I> extends AbstractSEVPA<HypLoc<I>, I> implement
     }
 
     @Override
-    public boolean isAcceptingLocation(HypLoc<I> loc) {
+    public Boolean getStateProperty(HypLoc<I> loc) {
         return loc.isAccepting();
     }
 
     @Override
-    public HypLoc<I> getInitialLocation() {
+    public HypLoc<I> getInitialState() {
         return initLoc;
     }
 

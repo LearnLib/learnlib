@@ -55,9 +55,9 @@ public class RandomWpMethodEQOracleTest {
         var cex = eqo.findCounterExample(hyp, alphabet);
 
         Assert.assertNotNull(cex);
-        Assert.assertEquals(cex.getOutput(), mmlt.getSemantics().computeSuffixOutput(cex.getPrefix(), cex.getSuffix()));
-        Assert.assertNotEquals(mmlt.getSemantics().computeSuffixOutput(cex.getPrefix(), cex.getSuffix()),
-                               hyp.getSemantics().computeSuffixOutput(cex.getPrefix(), cex.getSuffix()));
+        Assert.assertEquals(cex.getOutput(), mmlt.computeSuffixOutput(cex.getPrefix(), cex.getSuffix()));
+        Assert.assertNotEquals(mmlt.computeSuffixOutput(cex.getPrefix(), cex.getSuffix()),
+                               hyp.computeSuffixOutput(cex.getPrefix(), cex.getSuffix()));
     }
 
     private static CompactMMLT<String, String> buildMMLT() {

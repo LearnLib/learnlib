@@ -125,7 +125,7 @@ public abstract class AbstractVPALearner<I>
         for (int i = 0; i < alphabet.getNumCalls(); i++) {
             I callSym = alphabet.getCallSymbol(i);
             int myStackSym = hypothesis.encodeStackSym(loc, i);
-            for (HypLoc<I> stackLoc : hypothesis.getLocations()) {
+            for (HypLoc<I> stackLoc : hypothesis.getStates()) {
                 stackLoc.updateStackAlphabetSize(hypothesis.getNumStackSymbols());
                 int stackSym = hypothesis.encodeStackSym(stackLoc, i);
                 for (int j = 0; j < alphabet.getNumReturns(); j++) {

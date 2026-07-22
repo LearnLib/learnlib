@@ -146,7 +146,7 @@ public class OSTIATest {
         final Collection<Word<String>> stateProps = words.subList(0, midpoint);
         final Collection<Word<String>> transProps = words.subList(midpoint, words.size());
 
-        RandomAutomata.randomDeterministic(random, size, INPUTS, stateProps, transProps, sst);
+        RandomAutomata.randomRegularDeterministic(random, size, INPUTS, stateProps, transProps, sst);
         final SubsequentialTransducer<?, Character, ?, String> osst =
                 SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS));
         Assert.assertTrue(SubsequentialTransducers.isOnwardSST(osst, INPUTS));

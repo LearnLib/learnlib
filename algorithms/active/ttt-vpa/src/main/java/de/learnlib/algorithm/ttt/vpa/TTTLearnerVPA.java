@@ -44,6 +44,7 @@ import net.automatalib.automaton.vpa.SEVPA;
 import net.automatalib.automaton.vpa.StackContents;
 import net.automatalib.automaton.vpa.State;
 import net.automatalib.common.util.collection.CollectionUtil;
+import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -76,7 +77,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
                     stackSyms.add(stackSym);
                 }
                 NonDetStackContents nsc = NonDetStackContents.push(stackSyms, curr.getStack());
-                curr = new NonDetState<>(Collections.singleton(hypothesis.getInitialLocation()), nsc);
+                curr = new NonDetState<>(Collections.singleton(hypothesis.getInitialState()), nsc);
             } else if (alphabet.isReturnSymbol(sym)) {
                 Set<HypLoc<I>> succs = new HashSet<>();
                 for (HypLoc<I> loc : curr.getLocations()) {
@@ -112,7 +113,8 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
         if (lastDet < suffix.length()) {
             determinize(lastDetState.determinize(), suffix.subWord(lastDet));
         }
-        return hypothesis.getSuccessor(baseState, suffix);
+        DeterministicAcceptorTS<State<HypLoc<I>>, I> semantics = hypothesis.getSemantics();
+        return semantics.getSuccessor(baseState, suffix);
     }
 
     @Override
@@ -125,7 +127,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
             return false;
         }
 
-        OutputInconsistency<I> outIncons = new OutputInconsistency<>(hypothesis.getInitialLocation(),
+        OutputInconsistency<I> outIncons = new OutputInconsistency<>(hypothesis.getInitialState(),
                                                                      new ContextPair<>(Word.epsilon(), ceWord),
                                                                      ceQuery.getOutput());
 
@@ -142,11 +144,12 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
     }
 
     protected boolean computeHypothesisOutput(Word<I> word) {
-        State<HypLoc<I>> curr = hypothesis.getInitialState();
+        DeterministicAcceptorTS<State<HypLoc<I>>, I> semantics = hypothesis.getSemantics();
+        State<HypLoc<I>> curr = semantics.getInitialState();
         for (I sym : word) {
             curr = getAnySuccessor(curr, sym);
         }
-        return hypothesis.isAccepting(curr);
+        return semantics.isAccepting(curr);
     }
 
     private void splitState(OutputInconsistency<I> outIncons) {
@@ -158,9 +161,10 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
         I act = acexSuffix.getSymbol(breakpoint);
         Word<I> suffix = acexSuffix.subWord(breakpoint + 1);
 
-        State<HypLoc<I>> state = hypothesis.getSuccessor(acex.getBaseState(), prefix);
+        DeterministicAcceptorTS<State<HypLoc<I>>, I> semantics = hypothesis.getSemantics();
+        State<HypLoc<I>> state = semantics.getSuccessor(acex.getBaseState(), prefix);
         assert state != null;
-        State<HypLoc<I>> succState = hypothesis.getSuccessor(state, act);
+        State<HypLoc<I>> succState = semantics.getSuccessor(state, act);
         assert succState != null;
 
         ContextPair<I> context = new ContextPair<>(transformAccessSequence(succState.getStackContents()), suffix);
@@ -195,7 +199,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
     private @Nullable OutputInconsistency<I> findOutputInconsistency() {
         OutputInconsistency<I> best = null;
 
-        for (HypLoc<I> loc : hypothesis.getLocations()) {
+        for (HypLoc<I> loc : hypothesis.getStates()) {
             int locAsLen = loc.getAccessSequence().length();
             DTNode<I> node = loc.getLeaf();
             while (!node.isRoot()) {
@@ -231,7 +235,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
             }
             case CALL: {
                 int stackSym = hypothesis.encodeStackSym(state.getLocation(), sym);
-                yield new State<>(hypothesis.getInitialLocation(), StackContents.push(stackSym, stackContents));
+                yield new State<>(hypothesis.getInitialState(), StackContents.push(stackSym, stackContents));
             }
             case RETURN: {
                 assert stackContents != null;
@@ -343,7 +347,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
             }
             for (I retSym : alphabet.getReturnAlphabet()) {
                 for (I callSym : alphabet.getCallAlphabet()) {
-                    for (HypLoc<I> stackLoc : hypothesis.getLocations()) {
+                    for (HypLoc<I> stackLoc : hypothesis.getStates()) {
                         AbstractHypTrans<I> trans = hypothesis.getReturnTransition(loc, retSym, stackLoc, callSym);
                         DTNode<I> currLca = lcas[i];
                         assert trans.getTargetNode() != null;
@@ -385,7 +389,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
         }
         for (I retSym : alphabet.getReturnAlphabet()) {
             for (I callSym : alphabet.getCallAlphabet()) {
-                for (HypLoc<I> stackLoc : hypothesis.getLocations()) {
+                for (HypLoc<I> stackLoc : hypothesis.getStates()) {
                     DTNode<I> currLca = lcas[i];
                     assert currLca != null;
                     if (!currLca.isLeaf() && !currLca.isTemp()) {
@@ -618,6 +622,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
     }
 
     protected void determinize(State<HypLoc<I>> state, Word<I> suffix) {
+        DeterministicAcceptorTS<State<HypLoc<I>>, I> semantics = hypothesis.getSemantics();
         State<HypLoc<I>> curr = state;
         for (I sym : suffix) {
             if (!alphabet.isCallSymbol(sym)) {
@@ -627,7 +632,7 @@ public class TTTLearnerVPA<I> extends OPLearnerVPA<I> {
                     updateDTTargets(Collections.singletonList(trans), true);
                 }
             }
-            curr = hypothesis.getSuccessor(curr, sym);
+            curr = semantics.getSuccessor(curr, sym);
         }
     }
 

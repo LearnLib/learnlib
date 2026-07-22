@@ -32,7 +32,7 @@ import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
 import de.learnlib.tooling.annotation.refinement.Generic;
 import de.learnlib.tooling.annotation.refinement.Interface;
 import de.learnlib.tooling.annotation.refinement.Mapping;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -95,7 +95,7 @@ import net.automatalib.word.WordBuilder;
                                             generics = {@Generic("I"), @Generic("O")}),
                     interfaces = @Interface(clazz = MooreEquivalenceOracle.class,
                                             generics = {@Generic("I"), @Generic("O")}))
-public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
+public class RandomWMethodEQOracle<A extends RegularAutomaton<?, I, ?, ?, ?> & Output<I, D>, I, D>
         extends AbstractTestWordEQOracle<A, I, D> {
 
     private final int minimalSize;
@@ -187,14 +187,14 @@ public class RandomWMethodEQOracle<A extends UniversalDeterministicAutomaton<?, 
     @Override
     public Stream<Word<I>> generateTestWords(A hypothesis, Collection<? extends I> inputs) {
         // explicitly assign type to (redundant) variable, otherwise javac complains
-        UniversalDeterministicAutomaton<?, I, ?, ?, ?> aut = hypothesis;
+        RegularAutomaton<?, I, ?, ?, ?> aut = hypothesis;
         return doGenerateTestWords(aut, inputs);
     }
 
     /*
      * Delegate target, used to bind the state-parameter of the automaton
      */
-    private <S> Stream<Word<I>> doGenerateTestWords(UniversalDeterministicAutomaton<S, I, ?, ?, ?> hypothesis,
+    private <S> Stream<Word<I>> doGenerateTestWords(RegularAutomaton<S, I, ?, ?, ?> hypothesis,
                                                     Collection<? extends I> inputs) {
         // Note that we want to use ArrayLists because we want constant time random access
         // We will sample from this for a prefix
