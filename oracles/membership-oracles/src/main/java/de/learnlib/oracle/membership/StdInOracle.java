@@ -18,9 +18,11 @@ package de.learnlib.oracle.membership;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
-import java.util.Objects;
+import java.util.StringJoiner;
 
 import de.learnlib.oracle.SingleQueryOracle;
+import net.automatalib.common.setting.AutomataLibProperty;
+import net.automatalib.common.setting.AutomataLibSettings;
 import net.automatalib.common.util.process.ProcessUtil;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -33,10 +35,9 @@ import org.slf4j.LoggerFactory;
  * is determined based on the program's return code where {@code 0} indicates success and any other value indicates
  * failure.
  * <p>
- * Queries are passed to the program's stdin stream (via the queries' {@link Word#toString()} method. You may adjust
- * formatting via the available properties in AutomataLib's settings). Depending on whether a {@code reset} symbol has
- * been specified, this oracle assumes either a stateless ({@code reset == null}) or stateful ({@code reset != null})
- * communication.
+ * Queries are passed to the program's stdin stream (via the queries' {@link Word#toString()} method. Depending on
+ * whether a {@code reset} symbol has been specified, this oracle assumes either a stateless ({@code reset == null}) or
+ * stateful ({@code reset != null}) communication.
  * <p>
  * In a stateless communication, all symbols of a query are passed to the program at once and invocations should be
  * treated independently from each other. In a stateful communication, the program is executed multiple times with a
@@ -49,6 +50,8 @@ import org.slf4j.LoggerFactory;
 public class StdInOracle<I> implements SingleQueryOracle<I, Boolean> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdInOracle.class);
+    private static final String DELIM =
+            AutomataLibSettings.getInstance().getProperty(AutomataLibProperty.WORD_SYMBOL_SEPARATOR, " ");
 
     private final List<String> commandLine;
     private final @Nullable String reset;
@@ -84,20 +87,22 @@ public class StdInOracle<I> implements SingleQueryOracle<I, Boolean> {
     }
 
     private boolean answerStatelessQuery(Word<I> prefix, Word<I> suffix) {
+        final StringJoiner sj = new StringJoiner(DELIM);
 
-        final String input;
+        for (I p : prefix) {
+            sj.add(String.valueOf(p));
+        }
 
-        // prevent sending "ε" to the process
-        if (prefix.isEmpty() && suffix.isEmpty()) {
-            input = "";
-        } else {
-            input = prefix.concat(suffix).toString();
+        for (I s : suffix) {
+            sj.add(String.valueOf(s));
         }
 
         try {
-            logInvocation(commandLine, input);
-            final int exitCode =
-                    ProcessUtil.invokeProcess(commandLine, new StringReader(input), LOGGER::debug, LOGGER::warn);
+            logInvocation(commandLine, sj);
+            final int exitCode = ProcessUtil.invokeProcess(commandLine,
+                                                           new StringReader(sj.toString()),
+                                                           LOGGER::debug,
+                                                           LOGGER::warn);
             logResult(exitCode);
             return exitCode == 0;
         } catch (IOException | InterruptedException e) {
@@ -117,7 +122,7 @@ public class StdInOracle<I> implements SingleQueryOracle<I, Boolean> {
             for (I p : prefix) {
                 logInvocation(commandLine, p);
                 returnCode = ProcessUtil.invokeProcess(commandLine,
-                                                       new StringReader(Objects.toString(p)),
+                                                       new StringReader(String.valueOf(p)),
                                                        LOGGER::debug,
                                                        LOGGER::warn);
                 logResult(returnCode);
@@ -126,7 +131,7 @@ public class StdInOracle<I> implements SingleQueryOracle<I, Boolean> {
             for (I s : suffix) {
                 logInvocation(commandLine, s);
                 returnCode = ProcessUtil.invokeProcess(commandLine,
-                                                       new StringReader(Objects.toString(s)),
+                                                       new StringReader(String.valueOf(s)),
                                                        LOGGER::debug,
                                                        LOGGER::warn);
                 logResult(returnCode);
@@ -143,7 +148,7 @@ public class StdInOracle<I> implements SingleQueryOracle<I, Boolean> {
         LOGGER.debug("Invoking '{}' with payload '{}'", command, payload);
     }
 
-    private static void logResult(int exitCpde) {
-        LOGGER.debug("Exit code '{}'", exitCpde);
+    private static void logResult(int exitCode) {
+        LOGGER.debug("Exit code '{}'", exitCode);
     }
 }

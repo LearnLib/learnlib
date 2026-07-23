@@ -17,9 +17,11 @@ package de.learnlib.cli.option;
 
 public enum Learner {
 
+    ADT,
     DHC,
     KV,
     LLAMBDA,
+    LSHARP,
     LSTAR,
     NLSTAR,
     OP,

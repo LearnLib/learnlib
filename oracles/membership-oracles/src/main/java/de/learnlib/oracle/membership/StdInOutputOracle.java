@@ -17,12 +17,14 @@ package de.learnlib.oracle.membership;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.function.BiFunction;
 
 import de.learnlib.oracle.SingleQueryOracle;
+import net.automatalib.common.setting.AutomataLibProperty;
+import net.automatalib.common.setting.AutomataLibSettings;
 import net.automatalib.common.util.process.ProcessUtil;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -52,9 +54,11 @@ import org.slf4j.LoggerFactory;
 public class StdInOutputOracle<I, D> implements SingleQueryOracle<I, D> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StdInOutputOracle.class);
+    private static final String DELIM =
+            AutomataLibSettings.getInstance().getProperty(AutomataLibProperty.WORD_SYMBOL_SEPARATOR, " ");
 
     private final List<String> commandLine;
-    private final BiFunction<String, Integer, D> outputTransformer;
+    private final BiFunction<List<String>, Integer, D> outputTransformer;
     private final @Nullable String reset;
 
     /**
@@ -68,7 +72,7 @@ public class StdInOutputOracle<I, D> implements SingleQueryOracle<I, D> {
      *
      * @see #StdInOutputOracle(List, BiFunction, String)
      */
-    public StdInOutputOracle(List<String> commandLine, BiFunction<String, Integer, D> outputTransformer) {
+    public StdInOutputOracle(List<String> commandLine, BiFunction<List<String>, Integer, D> outputTransformer) {
         this(commandLine, outputTransformer, null);
     }
 
@@ -84,8 +88,8 @@ public class StdInOutputOracle<I, D> implements SingleQueryOracle<I, D> {
      *         the symbol passed to the program to indicate a reset
      */
     public StdInOutputOracle(List<String> commandLine,
-                             BiFunction<String, Integer, D> outputTransformer,
-                             @Nullable String reset) {
+                             BiFunction<List<String>, Integer, D> outputTransformer,
+                             String reset) {
         this.commandLine = commandLine;
         this.outputTransformer = outputTransformer;
         this.reset = reset;
@@ -97,21 +101,24 @@ public class StdInOutputOracle<I, D> implements SingleQueryOracle<I, D> {
     }
 
     private D answerStatelessQuery(Word<I> prefix, Word<I> suffix) {
-        final StringJoiner sj = new StringJoiner(System.lineSeparator());
-        final String input;
+        final StringJoiner input = new StringJoiner(DELIM);
 
-        // prevent sending "ε" to the process
-        if (prefix.isEmpty() && suffix.isEmpty()) {
-            input = "";
-        } else {
-            input = prefix.concat(suffix).toString();
+        for (I p : prefix) {
+            input.add(String.valueOf(p));
+        }
+
+        for (I s : suffix) {
+            input.add(String.valueOf(s));
         }
 
         try {
+            final List<String> output = new ArrayList<>();
+
             logInvocation(commandLine, input);
-            ProcessUtil.invokeProcess(commandLine, new StringReader(input), sj::add, LOGGER::warn);
-            logResult(sj);
-            return outputTransformer.apply(sj.toString(), prefix.length());
+            ProcessUtil.invokeProcess(commandLine, new StringReader(input.toString()), output::add, LOGGER::warn);
+            logResult(output);
+
+            return outputTransformer.apply(output, prefix.length());
         } catch (IOException | InterruptedException e) {
             throw new IllegalStateException(e);
         }
@@ -119,35 +126,40 @@ public class StdInOutputOracle<I, D> implements SingleQueryOracle<I, D> {
 
     @RequiresNonNull("this.reset")
     private D answerStatefulQuery(Word<I> prefix, Word<I> suffix) {
-        final StringJoiner sj = new StringJoiner(System.lineSeparator());
+        final List<String> output = new ArrayList<>();
 
         try {
             logInvocation(commandLine, reset);
             ProcessUtil.invokeProcess(commandLine, new StringReader(reset), LOGGER::debug, LOGGER::warn);
 
             for (I p : prefix) {
-                logInvocation(commandLine, p);
-                ProcessUtil.invokeProcess(commandLine, new StringReader(Objects.toString(p)), sj::add, LOGGER::warn);
-                logResult(sj);
+                answerStatefulSymbol(p, output);
             }
 
             for (I s : suffix) {
-                logInvocation(commandLine, s);
-                ProcessUtil.invokeProcess(commandLine, new StringReader(Objects.toString(s)), sj::add, LOGGER::warn);
-                logResult(sj);
+                answerStatefulSymbol(s, output);
             }
 
-            return outputTransformer.apply(sj.toString(), prefix.length());
+            return outputTransformer.apply(output, prefix.length());
         } catch (IOException | InterruptedException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private void answerStatefulSymbol(I i, List<String> output) throws IOException, InterruptedException {
+        // ProcessUtil calls the stdout consumer for every line, so replicate the newlines in the output
+        final StringJoiner sj = new StringJoiner(System.lineSeparator());
+        logInvocation(commandLine, i);
+        ProcessUtil.invokeProcess(commandLine, new StringReader(String.valueOf(i)), sj::add, LOGGER::warn);
+        logResult(sj);
+        output.add(sj.toString());
     }
 
     private static void logInvocation(List<String> command, Object payload) {
         LOGGER.debug("Invoking '{}' with payload '{}'", command, payload);
     }
 
-    private static void logResult(StringJoiner sj) {
-        LOGGER.debug("Received output '{}'", sj);
+    private static void logResult(Object output) {
+        LOGGER.debug("Received output '{}'", output);
     }
 }

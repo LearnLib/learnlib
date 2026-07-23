@@ -17,7 +17,6 @@ package de.learnlib.oracle.membership;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 import de.learnlib.oracle.SingleQueryOracle;
 import net.automatalib.common.util.process.ProcessUtil;
@@ -89,18 +88,18 @@ public class CLIOracle<I> implements SingleQueryOracle<I, Boolean> {
         this.commandLine.toArray(args);
 
         for (I p : prefix) {
-            args[idx++] = Objects.toString(p);
+            args[idx++] = String.valueOf(p);
         }
 
         for (I s : suffix) {
-            args[idx++] = Objects.toString(s);
+            args[idx++] = String.valueOf(s);
         }
 
         try {
             logInvocation(args);
-            final int exitCpde = ProcessUtil.invokeProcess(args, LOGGER::debug, LOGGER::warn);
-            logResult(exitCpde);
-            return exitCpde == 0;
+            final int exitCode = ProcessUtil.invokeProcess(args, LOGGER::debug, LOGGER::warn);
+            logResult(exitCode);
+            return exitCode == 0;
         } catch (IOException | InterruptedException e) {
             LOGGER.warn("Error while invoking process", e);
             return false;
@@ -141,7 +140,7 @@ public class CLIOracle<I> implements SingleQueryOracle<I, Boolean> {
         final String[] result = new String[args.size() + 1];
 
         args.toArray(result);
-        result[args.size()] = Objects.toString(arg);
+        result[args.size()] = String.valueOf(arg);
 
         return result;
     }
@@ -150,7 +149,7 @@ public class CLIOracle<I> implements SingleQueryOracle<I, Boolean> {
         LOGGER.debug("Invoking '{}'", (Object) command);
     }
 
-    private static void logResult(int exitCpde) {
-        LOGGER.debug("Exit code '{}'", exitCpde);
+    private static void logResult(int exitCode) {
+        LOGGER.debug("Exit code '{}'", exitCode);
     }
 }

@@ -18,6 +18,7 @@ package de.learnlib.cli.util;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.cli.adapter.ProceduralDFAAdapter;
 import de.learnlib.cli.adapter.ProceduralMealyAdapter;
+import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
@@ -25,20 +26,32 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
 @FunctionalInterface
-public interface Constructor<A extends Alphabet<I>, M, I, D> {
+public interface Constructor<A extends Alphabet<I>, M, I, D, OR> {
 
-    LearningAlgorithm<M, I, D> constructLearner(A alphabet, MembershipOracle<I, D> oracle);
+    LearningAlgorithm<M, I, D> constructLearner(A alphabet, OR oracle);
+
+    @FunctionalInterface
+    interface PresetConstructor<A extends Alphabet<I>, M, I, D>
+            extends Constructor<A, M, I, D, MembershipOracle<I, D>> {
+
+    }
+
+    @FunctionalInterface
+    interface AdaptiveConstructor<A extends Alphabet<I>, M, I, O>
+            extends Constructor<A, M, I, Word<O>, AdaptiveMembershipOracle<I, O>> {
+
+    }
 
     @FunctionalInterface
     interface MealyConstructor<A extends Alphabet<I>, I, O>
-            extends Constructor<A, MealyMachine<?, I, ?, O>, I, Word<O>> {
+            extends PresetConstructor<A, MealyMachine<?, I, ?, O>, I, Word<O>> {
 
         @Override
         ProceduralMealyAdapter<I, O> constructLearner(A alphabet, MembershipOracle<I, Word<O>> oracle);
     }
 
     @FunctionalInterface
-    interface DFAConstructor<A extends Alphabet<I>, I> extends Constructor<A, DFA<?, I>, I, Boolean> {
+    interface DFAConstructor<A extends Alphabet<I>, I> extends PresetConstructor<A, DFA<?, I>, I, Boolean> {
 
         @Override
         ProceduralDFAAdapter<I> constructLearner(A alphabet, MembershipOracle<I, Boolean> oracle);

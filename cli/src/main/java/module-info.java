@@ -15,9 +15,11 @@
  */
 open module de.learnlib.cli {
 
+    requires de.learnlib.algorithm.adt;
     requires de.learnlib.algorithm.dhc;
     requires de.learnlib.algorithm.kv;
     requires de.learnlib.algorithm.lambda;
+    requires de.learnlib.algorithm.lsharp;
     requires de.learnlib.algorithm.lstar;
     requires de.learnlib.algorithm.nlstar;
     requires de.learnlib.algorithm.observationpack;

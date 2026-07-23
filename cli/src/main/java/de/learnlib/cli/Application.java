@@ -50,7 +50,7 @@ public class Application implements Runnable {
     @Override
     public void run() {
         setLogLevel(options);
-        options.type.runner().run(options);
+        options.type.runner(options).run(options);
     }
 
     private void setLogLevel(Options options) {

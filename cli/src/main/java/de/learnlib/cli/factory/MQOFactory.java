@@ -25,21 +25,27 @@ import java.util.regex.Pattern;
 import de.learnlib.cli.option.Options;
 import de.learnlib.filter.cache.dfa.DFACaches;
 import de.learnlib.filter.cache.mealy.MealyCaches;
+import de.learnlib.filter.statistic.oracle.CounterAdaptiveQueryOracle;
 import de.learnlib.filter.statistic.oracle.CounterOracle;
+import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.membership.CLIOracle;
+import de.learnlib.oracle.membership.CLIOutputAdaptiveOracle;
 import de.learnlib.oracle.membership.CLIOutputOracle;
 import de.learnlib.oracle.membership.StdInOracle;
+import de.learnlib.oracle.membership.StdInOutputAdaptiveOracle;
 import de.learnlib.oracle.membership.StdInOutputOracle;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 
 @FunctionalInterface
-public interface MQOFactory<D> extends Function<Options, MembershipOracle<String, D>> {
+public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
 
-    MQOFactory<Boolean> ACCEPTOR = MQOFactory::getAcceptorOracle;
-    MQOFactory<Word<String>> TRANSDUCER = MQOFactory::getTransducerOracle;
+    MQOFactory<MembershipOracle<String, Boolean>, Alphabet<String>> ACCEPTOR = MQOFactory::getAcceptorOracle;
+    MQOFactory<MembershipOracle<String, Word<String>>, Alphabet<String>> TRANSDUCER = MQOFactory::getTransducerOracle;
+    MQOFactory<AdaptiveMembershipOracle<String, String>, Alphabet<String>> ADAPTIVE = MQOFactory::getAdaptiveOracle;
 
-    private static MembershipOracle<String, Boolean> getAcceptorOracle(Options options) {
+    private static MembershipOracle<String, Boolean> getAcceptorOracle(Options options, Alphabet<String> alphabet) {
         verifyPath(options);
 
         MembershipOracle<String, Boolean> oracle;
@@ -56,7 +62,7 @@ public interface MQOFactory<D> extends Function<Options, MembershipOracle<String
         }
 
         if (options.cache) {
-            oracle = DFACaches.createHashCache(oracle);
+            oracle = DFACaches.createDAGCache(alphabet, oracle);
             if (options.statistics) {
                 oracle = new CounterOracle<>(oracle, "cache");
             }
@@ -65,7 +71,8 @@ public interface MQOFactory<D> extends Function<Options, MembershipOracle<String
         return oracle;
     }
 
-    private static MembershipOracle<String, Word<String>> getTransducerOracle(Options options) {
+    private static MembershipOracle<String, Word<String>> getTransducerOracle(Options options,
+                                                                              Alphabet<String> alphabet) {
         verifyPath(options);
 
         MembershipOracle<String, Word<String>> oracle;
@@ -82,9 +89,37 @@ public interface MQOFactory<D> extends Function<Options, MembershipOracle<String
         }
 
         if (options.cache) {
-            oracle = MealyCaches.createDynamicTreeCache(oracle);
+            oracle = MealyCaches.createDAGCache(alphabet, oracle);
             if (options.statistics) {
                 oracle = new CounterOracle<>(oracle, "cache");
+            }
+        }
+
+        return oracle;
+    }
+
+    private static AdaptiveMembershipOracle<String, String> getAdaptiveOracle(Options options,
+                                                                              Alphabet<String> alphabet) {
+        verifyPath(options);
+        verifyReset(options);
+
+        AdaptiveMembershipOracle<String, String> oracle;
+
+        if (options.stdin) {
+            oracle = new StdInOutputAdaptiveOracle<>(buildCommandLine(options), l -> l.get(0), options.reset);
+        } else {
+            oracle = new CLIOutputAdaptiveOracle<>(buildCommandLine(options), l -> l.get(0), options.reset);
+
+        }
+
+        if (options.statistics) {
+            oracle = new CounterAdaptiveQueryOracle<>(oracle, "sul");
+        }
+
+        if (options.cache) {
+            oracle = MealyCaches.createAdaptiveQueryCache(alphabet, oracle);
+            if (options.statistics) {
+                oracle = new CounterAdaptiveQueryOracle<>(oracle, "cache");
             }
         }
 
@@ -109,7 +144,15 @@ public interface MQOFactory<D> extends Function<Options, MembershipOracle<String
         }
     }
 
-    class OutputTransformer implements BiFunction<String, Integer, Word<String>> {
+    private static void verifyReset(Options options) {
+        if (options.reset == null) {
+            throw new IllegalArgumentException(String.format(
+                    "Learner '%s' requires a stateful oracle. Provide a --reset",
+                    options.learner));
+        }
+    }
+
+    class OutputTransformer implements BiFunction<List<String>, Integer, Word<String>> {
 
         private final Pattern pattern;
 
@@ -118,7 +161,7 @@ public interface MQOFactory<D> extends Function<Options, MembershipOracle<String
         }
 
         @Override
-        public Word<String> apply(String string, Integer offset) {
+        public Word<String> apply(List<String> string, Integer offset) {
             if (string.isEmpty()) {
                 return Word.epsilon();
             }

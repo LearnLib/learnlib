@@ -22,6 +22,7 @@ import java.util.function.BiFunction;
 
 import de.learnlib.cli.option.EQOracle;
 import de.learnlib.cli.option.Options;
+import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.equivalence.EQOracleChain;
@@ -34,8 +35,9 @@ import de.learnlib.oracle.equivalence.SampleSetEQOracle;
 import de.learnlib.oracle.equivalence.WMethodEQOracle;
 import de.learnlib.oracle.equivalence.WpMethodEQOracle;
 import de.learnlib.oracle.equivalence.vpa.RandomWellMatchedWordsEQOracle;
+import de.learnlib.util.mealy.Adaptive2MembershipWrapper;
 import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.RegularAutomaton;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.NFA;
@@ -48,17 +50,26 @@ import net.automatalib.util.automaton.fsa.NFAs;
 import net.automatalib.word.Word;
 
 @FunctionalInterface
-public interface EQOFactory<M, I, D> extends BiFunction<Options, MembershipOracle<I, D>, EquivalenceOracle<M, I, D>> {
+public interface EQOFactory<M, I, D, OR> extends BiFunction<Options, OR, EquivalenceOracle<M, I, D>> {
 
-    EQOFactory<DFA<?, String>, String, Boolean> DFA_ORACLES = EQOFactory::getRegularOracles;
-    EQOFactory<MealyMachine<?, String, ?, String>, String, Word<String>> MEALY_ORACLES = EQOFactory::getRegularOracles;
-    EQOFactory<NFA<?, String>, String, Boolean> NFA_ORACLES = EQOFactory::getNFAOracles;
-    EQOFactory<SBA<?, String>, String, Boolean> SBA_ORACLES = EQOFactory::getSBAOracles;
-    EQOFactory<SPA<?, String>, String, Boolean> SPA_ORACLES = EQOFactory::getSPAOracles;
-    EQOFactory<SPMM<?, String, ?, String>, String, Word<String>> SPMM_ORACLES = EQOFactory::getSPMMOracles;
-    EQOFactory<OneSEVPA<?, String>, String, Boolean> VPA_ORACLES = EQOFactory::getVPAOracles;
+    EQOFactory<DFA<?, String>, String, Boolean, MembershipOracle<String, Boolean>> DFA_ORACLES =
+            EQOFactory::getRegularOracles;
+    EQOFactory<MealyMachine<?, String, ?, String>, String, Word<String>, MembershipOracle<String, Word<String>>>
+            MEALY_ORACLES = EQOFactory::getRegularOracles;
+    EQOFactory<MealyMachine<?, String, ?, String>, String, Word<String>, AdaptiveMembershipOracle<String, String>>
+            ADAPTIVE_ORACLES = EQOFactory::getAdaptiveOracles;
+    EQOFactory<NFA<?, String>, String, Boolean, MembershipOracle<String, Boolean>> NFA_ORACLES =
+            EQOFactory::getNFAOracles;
+    EQOFactory<SBA<?, String>, String, Boolean, MembershipOracle<String, Boolean>> SBA_ORACLES =
+            EQOFactory::getSBAOracles;
+    EQOFactory<SPA<?, String>, String, Boolean, MembershipOracle<String, Boolean>> SPA_ORACLES =
+            EQOFactory::getSPAOracles;
+    EQOFactory<SPMM<?, String, ?, String>, String, Word<String>, MembershipOracle<String, Word<String>>> SPMM_ORACLES =
+            EQOFactory::getSPMMOracles;
+    EQOFactory<OneSEVPA<?, String>, String, Boolean, MembershipOracle<String, Boolean>> VPA_ORACLES =
+            EQOFactory::getVPAOracles;
 
-    private static <M extends UniversalDeterministicAutomaton<?, String, ?, ?, ?> & SuffixOutput<String, D>, D> EQOracleChain<M, String, D> getRegularOracles(
+    private static <M extends RegularAutomaton<?, String, ?, ?, ?> & SuffixOutput<String, D>, D> EQOracleChain<M, String, D> getRegularOracles(
             Options options,
             MembershipOracle<String, D> mqo) {
         final EQOracleChain<M, String, D> chain = new EQOracleChain<>();
@@ -110,6 +121,12 @@ public interface EQOFactory<M, I, D> extends BiFunction<Options, MembershipOracl
         }
 
         return chain;
+    }
+
+    private static <M extends RegularAutomaton<?, String, ?, ?, ?> & SuffixOutput<String, Word<O>>, O> EQOracleChain<M, String, Word<O>> getAdaptiveOracles(
+            Options options,
+            AdaptiveMembershipOracle<String, O> mqo) {
+        return getRegularOracles(options, new Adaptive2MembershipWrapper<>(mqo));
     }
 
     private static EquivalenceOracle<NFA<?, String>, String, Boolean> getNFAOracles(Options options,

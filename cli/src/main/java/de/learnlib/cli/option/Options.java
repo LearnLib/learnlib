@@ -16,6 +16,7 @@
 package de.learnlib.cli.option;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 import picocli.CommandLine.ArgGroup;
@@ -58,7 +59,7 @@ public class Options {
     public Output format;
 
     @Option(names = {"-o", "--output"}, paramLabel = "<path>", descriptionKey = "option.output")
-    public File output;
+    public Path output;
 
     @Option(names = {"-v", "--verbose"}, descriptionKey = "option.verbose")
     public boolean[] verbosity;
