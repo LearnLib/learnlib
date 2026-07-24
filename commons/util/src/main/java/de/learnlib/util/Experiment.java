@@ -15,7 +15,9 @@
  */
 package de.learnlib.util;
 
-import java.util.Collection;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.logging.Category;
@@ -24,10 +26,12 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatisticsKey;
 import de.learnlib.statistic.StatisticsService;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
@@ -68,10 +72,52 @@ public class Experiment<A extends FiniteRepresentation> {
     private final ExperimentImpl<?, ?> impl;
     private @Nullable A finalHypothesis;
 
+    /**
+     * Constructor. Delegates to
+     * {@link Experiment#Experiment(LearningAlgorithm, EquivalenceOracle, Alphabet, InputModelSerializer)} using
+     * {@code null} for {@code serializer}.
+     *
+     * @param learningAlgorithm
+     *         the learning algorithm to use in this experiment
+     * @param equivalenceAlgorithm
+     *         the strategy for finding counterexamples
+     * @param inputs
+     *         the inputs to consider for exploration
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     *
+     * @see Experiment#Experiment(LearningAlgorithm, EquivalenceOracle, Alphabet, InputModelSerializer)
+     */
     public <I, D> Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
                              EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
-                             Collection<? extends I> inputs) {
-        this.impl = new ExperimentImpl<>(learningAlgorithm, equivalenceAlgorithm, inputs);
+                             Alphabet<I> inputs) {
+        this(learningAlgorithm, equivalenceAlgorithm, inputs, null);
+    }
+
+    /**
+     * Constructor. Creates a new experiment to run.
+     *
+     * @param learningAlgorithm
+     *         the learning algorithm to use in this experiment
+     * @param equivalenceAlgorithm
+     *         the strategy for finding counterexamples
+     * @param inputs
+     *         the inputs to consider for exploration
+     * @param serializer
+     *         the serializer for logging intermediate hypotheses (may be {@code null} in case no such logging is
+     *         wanted)
+     * @param <I>
+     *         input symbol type
+     * @param <D>
+     *         output domain type
+     */
+    public <I, D> Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
+                             EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
+                             Alphabet<I> inputs,
+                             @Nullable InputModelSerializer<I, ? super A> serializer) {
+        this.impl = new ExperimentImpl<>(learningAlgorithm, equivalenceAlgorithm, inputs, serializer);
     }
 
     /**
@@ -111,16 +157,19 @@ public class Experiment<A extends FiniteRepresentation> {
 
         private final LearningAlgorithm<? extends A, I, D> learningAlgorithm;
         private final EquivalenceOracle<? super A, I, D> equivalenceAlgorithm;
-        private final Collection<? extends I> inputs;
+        private final Alphabet<I> inputs;
+        private final @Nullable InputModelSerializer<I, ? super A> serializer;
         private final StatisticsService statistics;
         private int rounds;
 
         ExperimentImpl(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
                        EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
-                       Collection<? extends I> inputs) {
+                       Alphabet<I> inputs,
+                       @Nullable InputModelSerializer<I, ? super A> serializer) {
             this.learningAlgorithm = learningAlgorithm;
             this.equivalenceAlgorithm = equivalenceAlgorithm;
             this.inputs = inputs;
+            this.serializer = serializer;
             this.statistics = Statistics.getService();
         }
 
@@ -136,6 +185,18 @@ public class Experiment<A extends FiniteRepresentation> {
 
             while (true) {
                 final A hyp = learningAlgorithm.getHypothesisModel();
+
+                if (serializer != null) {
+                    final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    try {
+                        serializer.writeModel(baos, hyp, inputs);
+                        LOGGER.info(Category.MODEL,
+                                    "Intermediate hypothesis:\n{}",
+                                    baos.toString(StandardCharsets.UTF_8));
+                    } catch (IOException e) {
+                        LOGGER.warn("Couldn't write intermediate hypothesis", e);
+                    }
+                }
 
                 LOGGER.info(Category.PHASE, "Searching for counterexample");
 
@@ -169,7 +230,7 @@ public class Experiment<A extends FiniteRepresentation> {
 
         public DFAExperiment(LearningAlgorithm<? extends DFA<?, I>, I, Boolean> learningAlgorithm,
                              EquivalenceOracle<? super DFA<?, I>, I, Boolean> equivalenceAlgorithm,
-                             Collection<? extends I> inputs) {
+                             Alphabet<I> inputs) {
             super(learningAlgorithm, equivalenceAlgorithm, inputs);
         }
 
@@ -179,7 +240,7 @@ public class Experiment<A extends FiniteRepresentation> {
 
         public MealyExperiment(LearningAlgorithm<? extends MealyMachine<?, I, ?, O>, I, Word<O>> learningAlgorithm,
                                EquivalenceOracle<? super MealyMachine<?, I, ?, O>, I, Word<O>> equivalenceAlgorithm,
-                               Collection<? extends I> inputs) {
+                               Alphabet<I> inputs) {
             super(learningAlgorithm, equivalenceAlgorithm, inputs);
         }
 
@@ -189,7 +250,7 @@ public class Experiment<A extends FiniteRepresentation> {
 
         public MooreExperiment(LearningAlgorithm<? extends MooreMachine<?, I, ?, O>, I, Word<O>> learningAlgorithm,
                                EquivalenceOracle<? super MooreMachine<?, I, ?, O>, I, Word<O>> equivalenceAlgorithm,
-                               Collection<? extends I> inputs) {
+                               Alphabet<I> inputs) {
             super(learningAlgorithm, equivalenceAlgorithm, inputs);
         }
 

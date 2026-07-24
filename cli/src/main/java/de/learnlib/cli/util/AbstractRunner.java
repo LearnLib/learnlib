@@ -24,6 +24,7 @@ import java.util.function.Function;
 
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.cli.option.Options;
+import de.learnlib.logging.Category;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatisticsService;
@@ -35,7 +36,8 @@ import net.automatalib.ts.simple.SimpleTS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractRunner<A extends Alphabet<I>, M extends SimpleTS<?, I> & FiniteRepresentation, I, D, OR> implements Runner {
+public abstract class AbstractRunner<A extends Alphabet<I>, M extends SimpleTS<?, I> & FiniteRepresentation, I, D, OR>
+        implements Runner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRunner.class);
 
@@ -58,7 +60,6 @@ public abstract class AbstractRunner<A extends Alphabet<I>, M extends SimpleTS<?
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     public void run(Options options) {
 
         final A alphabet = alphabetCreator.apply(options);
@@ -84,14 +85,14 @@ public abstract class AbstractRunner<A extends Alphabet<I>, M extends SimpleTS<?
         final EquivalenceOracle<M, I, D> eqo = eqoCreator.apply(options, eqoOracle);
         final InputModelSerializer<I, M> serializer = serializerCreator.apply(options);
 
-        final Experiment<M> experiment = new Experiment<>(learner, eqo, alphabet);
+        final Experiment<M> experiment = new Experiment<>(learner, eqo, alphabet, serializer);
         experiment.run();
 
         final M hyp = experiment.getFinalHypothesis();
 
         if (options.statistics) {
             final StatisticsService service = Statistics.getService();
-            LOGGER.info(service.print());
+            LOGGER.info(Category.STATISTIC, service.print());
             service.clear();
         }
 
@@ -99,12 +100,12 @@ public abstract class AbstractRunner<A extends Alphabet<I>, M extends SimpleTS<?
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             serializer.writeModel(baos, hyp, alphabet);
 
-            LOGGER.info("Hypothesis:\n{}", baos.toString(StandardCharsets.UTF_8));
+            LOGGER.info(Category.MODEL, "Final hypothesis:\n{}", baos.toString(StandardCharsets.UTF_8));
             if (options.output != null) {
                 Files.write(options.output, baos.toByteArray());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOGGER.warn("Could not write hypothesis", e);
         }
     }
 

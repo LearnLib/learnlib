@@ -20,7 +20,6 @@ import java.util.function.Function;
 
 import de.learnlib.cli.option.Options;
 import de.learnlib.cli.option.Output;
-import net.automatalib.automaton.Automaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.procedural.SBA;
@@ -28,7 +27,6 @@ import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.vpa.OneSEVPA;
-import net.automatalib.graph.concept.GraphViewable;
 import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.serialization.aut.AUTWriter;
 import net.automatalib.serialization.ba.BAWriter;
@@ -53,7 +51,7 @@ public interface SerializerFactory<M extends SimpleTS<?, String>>
 
     private static <I> InputModelSerializer<I, DFA<?, I>> getDFASerializer(Options options) {
         final InputModelSerializer<I, ? super DFA<?, I>> dfaSerializer =
-                SerializerFactory.<I>getDFASerializerInternal(options);
+                SerializerFactory.getDFASerializerInternal(options);
         return dfaSerializer::writeModel;
     }
 
@@ -61,7 +59,7 @@ public interface SerializerFactory<M extends SimpleTS<?, String>>
         return switch (options.format) {
             case AUT -> new AUTWriter<>();
             case BA -> new BAWriter<>();
-            case DOT -> dotAutomatonWriter();
+            case DOT -> DOTSerializationProvider.forAutomaton();
             case LEARNLIBV2 -> LearnLibV2Serialization.getInstance();
             case MATA -> new MataNFAWriter<>();
             case SAF -> SAFWriters.dfa();
@@ -71,7 +69,7 @@ public interface SerializerFactory<M extends SimpleTS<?, String>>
 
     private static <I> InputModelSerializer<I, MealyMachine<?, I, ?, String>> getMealySerializer(Options options) {
         return switch (options.format) {
-            case DOT -> dotAutomatonWriter();
+            case DOT -> DOTSerializationProvider.forAutomaton();
             case SAF -> SAFWriters.mealy(DataOutput::writeUTF);
             case TAF -> TAFWriters.mealy();
             default -> throw new UnsupportedCombinationException(options);
@@ -80,7 +78,7 @@ public interface SerializerFactory<M extends SimpleTS<?, String>>
 
     private static <I> InputModelSerializer<I, NFA<?, I>> getNFASerializer(Options options) {
         final InputModelSerializer<I, ? super NFA<?, I>> nfaSerializer =
-                SerializerFactory.<I>getNFASerializerInternal(options);
+                SerializerFactory.getNFASerializerInternal(options);
         return nfaSerializer::writeModel;
     }
 
@@ -88,7 +86,7 @@ public interface SerializerFactory<M extends SimpleTS<?, String>>
         return switch (options.format) {
             case AUT -> new AUTWriter<>();
             case BA -> new BAWriter<>();
-            case DOT -> dotAutomatonWriter();
+            case DOT -> DOTSerializationProvider.forAutomaton();
             case MATA -> new MataNFAWriter<>();
             case SAF -> SAFWriters.nfa();
             default -> throw new UnsupportedCombinationException(options);
@@ -97,39 +95,30 @@ public interface SerializerFactory<M extends SimpleTS<?, String>>
 
     private static <I> InputModelSerializer<I, SBA<?, I>> getSBASerializer(Options options) {
         if (options.format == Output.DOT) {
-            return dotGraphWriter();
+            return DOTSerializationProvider.forGraphViewableInput();
         }
         throw new UnsupportedCombinationException(options);
     }
 
     private static <I> InputModelSerializer<I, SPA<?, I>> getSPASerializer(Options options) {
         if (options.format == Output.DOT) {
-            return dotGraphWriter();
+            return DOTSerializationProvider.forGraphViewableInput();
         }
         throw new UnsupportedCombinationException(options);
     }
 
     private static <I, O> InputModelSerializer<I, SPMM<?, I, ?, O>> getSPMMSerializer(Options options) {
         if (options.format == Output.DOT) {
-            return dotGraphWriter();
+            return DOTSerializationProvider.forGraphViewableInput();
         }
         throw new UnsupportedCombinationException(options);
     }
 
     private static <I> InputModelSerializer<I, OneSEVPA<?, I>> getVPASerializer(Options options) {
         if (options.format == Output.DOT) {
-            return dotGraphWriter();
+            return DOTSerializationProvider.forGraphViewableInput();
         }
         throw new UnsupportedCombinationException(options);
-    }
-
-    private static <I, M extends Automaton<?, I, ?>> InputModelSerializer<I, M> dotAutomatonWriter() {
-        return (os, model, inputs) -> DOTSerializationProvider.getInstance()
-                                                              .writeModel(os, model.transitionGraphView(inputs));
-    }
-
-    private static <I, M extends SimpleTS<?, I> & GraphViewable> InputModelSerializer<I, M> dotGraphWriter() {
-        return (os, model, inputs) -> DOTSerializationProvider.getInstance().writeModel(os, model.graphView());
     }
 
     class UnsupportedCombinationException extends IllegalArgumentException {
