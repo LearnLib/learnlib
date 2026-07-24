@@ -106,9 +106,9 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
         AdaptiveMembershipOracle<String, String> oracle;
 
         if (options.stdin) {
-            oracle = new StdInOutputAdaptiveOracle<>(buildCommandLine(options), l -> l.get(0), options.reset);
+            oracle = new StdInOutputAdaptiveOracle<>(buildCommandLine(options), Function.identity(), options.reset);
         } else {
-            oracle = new CLIOutputAdaptiveOracle<>(buildCommandLine(options), l -> l.get(0), options.reset);
+            oracle = new CLIOutputAdaptiveOracle<>(buildCommandLine(options), Function.identity(), options.reset);
 
         }
 
@@ -152,7 +152,7 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
         }
     }
 
-    class OutputTransformer implements BiFunction<List<String>, Integer, Word<String>> {
+    class OutputTransformer implements BiFunction<String, Integer, Word<String>> {
 
         private final Pattern pattern;
 
@@ -161,12 +161,12 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
         }
 
         @Override
-        public Word<String> apply(List<String> string, Integer offset) {
+        public Word<String> apply(String string, Integer suffixLength) {
             if (string.isEmpty()) {
                 return Word.epsilon();
             }
             final String[] orig = pattern.split(string);
-            return Word.fromArray(orig, offset, orig.length - offset);
+            return Word.fromArray(orig, orig.length - suffixLength, suffixLength);
         }
     }
 }

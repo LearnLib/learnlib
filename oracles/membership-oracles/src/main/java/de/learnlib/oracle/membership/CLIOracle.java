@@ -31,12 +31,12 @@ import org.slf4j.LoggerFactory;
  * is determined based on the program's return code where {@code 0} indicates success and any other value indicates
  * failure.
  * <p>
- * Queries are translated to program arguments (via the symbol's {@link #toString()} method). Depending on whether a
+ * Queries are translated to program arguments via the symbol's {@link Object#toString()} method. Depending on whether a
  * {@code reset} symbol has been specified, this oracle assumes either a stateless ({@code reset == null}) or stateful
  * ({@code reset != null}) communication.
  * <p>
  * In a stateless communication, all symbols of a query are passed to the program at once and invocations should be
- * treated independently from each other. In a stateful communication, the program is executed multiple times with a
+ * treated independently of each other. In a stateful communication, the program is executed multiple times with a
  * single query symbol each, preceded by a single invocation with only the {@code reset} symbol. The exit code of the
  * last invocation determines the query response.
  *

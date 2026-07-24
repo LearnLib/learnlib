@@ -17,7 +17,6 @@ package de.learnlib.oracle.membership;
 
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.List;
 
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -30,9 +29,7 @@ public class StdInOutputAdaptiveOracleTest extends AbstractPythonTest {
         final String script = getPathToScript("/stateful_stdin_sul.py");
         final String reset = "reset";
         final StdInOutputAdaptiveOracle<Character, Integer> oracle =
-                new StdInOutputAdaptiveOracle<>(Arrays.asList(PROGRAM, script),
-                                                CLIOutputAdaptiveOracleTest::parseOutput,
-                                                reset);
+                new StdInOutputAdaptiveOracle<>(Arrays.asList(PROGRAM, script), Integer::parseInt, reset);
 
         final AdaptiveTestQuery<Character, Integer> q1 = new AdaptiveTestQuery<>(Word.fromString("ab"));
         final AdaptiveTestQuery<Character, Integer> q2 =
@@ -46,6 +43,17 @@ public class StdInOutputAdaptiveOracleTest extends AbstractPythonTest {
         Assert.assertEquals(q2.getOutputs().size(), 2);
         Assert.assertEquals(q2.getOutputs().get(0).toWord(), Word.fromLetter(97));
         Assert.assertEquals(q2.getOutputs().get(1).toWord(), Word.fromSymbols(97, 98));
+
+        final String brokenScript = script.substring(0, script.length() - 3) + "2.py";
+        final StdInOutputAdaptiveOracle<Character, Integer> brokenOracle =
+                new StdInOutputAdaptiveOracle<>(Arrays.asList(PROGRAM, brokenScript), Integer::parseInt, reset);
+
+        final AdaptiveTestQuery<Character, Integer> bq1 = new AdaptiveTestQuery<>(Word.fromString("ab"));
+        final AdaptiveTestQuery<Character, Integer> bq2 =
+                new AdaptiveTestQuery<>(Word.fromLetter('a'), Word.fromString("ab"));
+
+        Assert.assertThrows(() -> brokenOracle.processQuery(bq1));
+        Assert.assertThrows(() -> brokenOracle.processQuery(bq2));
     }
 
 }

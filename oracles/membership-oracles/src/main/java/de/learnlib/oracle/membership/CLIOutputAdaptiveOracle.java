@@ -17,16 +17,15 @@ package de.learnlib.oracle.membership;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.function.Function;
 
+import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.SingleAdaptiveMembershipOracle;
 import de.learnlib.query.AdaptiveQuery;
 import de.learnlib.query.AdaptiveQuery.Response;
 import net.automatalib.common.util.process.ProcessUtil;
-import net.automatalib.word.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,13 +33,11 @@ import org.slf4j.LoggerFactory;
  * An oracle that delegates its queries to an external program via the command-line interface. Outputs of the queries
  * are determined based on the provided output transformer.
  * <p>
- * Queries are translated to program arguments (via the symbol's {@link #toString()} method). Depending on whether a
- * {@code reset} symbol has been specified, this oracle assumes either a stateless ({@code reset == null}) or stateful
- * ({@code reset != null}) communication.
+ * Queries are translated to program arguments via the symbol's {@link Object#toString()} method. Due to the nature of
+ * {@link AdaptiveMembershipOracle}s, communication is inherently stateful, i.e., the program is executed multiple times
+ * with a single query symbol each, preceded by a single invocation with only the {@code reset} symbol.
  * <p>
- * In a stateless communication, all symbols of a query are passed to the program at once and invocations should be
- * treated independently of each other. In a stateful communication, the program is executed multiple times with a
- * single query symbol each, preceded by a single invocation with only the {@code reset} symbol.
+ * The {@code outputTransformer} is used to transform responses of the individual invocations.
  *
  * @param <I>
  *         input symbol type
@@ -52,7 +49,7 @@ public class CLIOutputAdaptiveOracle<I, O> implements SingleAdaptiveMembershipOr
     private static final Logger LOGGER = LoggerFactory.getLogger(CLIOutputAdaptiveOracle.class);
 
     private final List<String> commandLine;
-    private final Function<List<String>, O> outputTransformer;
+    private final Function<String, O> outputTransformer;
     private final String reset;
 
     /**
@@ -61,12 +58,11 @@ public class CLIOutputAdaptiveOracle<I, O> implements SingleAdaptiveMembershipOr
      * @param commandLine
      *         the command line, containing the main binary and potential additional arguments
      * @param outputTransformer
-     *         the transformer for the program's output. Receives the full process output (stdin and stderr) as well as
-     *         the length of the query prefix for properly offsetting potentially {@link Word}-based output types.
+     *         the transformer for the program's output. Receives the full (stdout) output of an individual invocation.
      * @param reset
      *         the symbol passed to the program to indicate a reset
      */
-    public CLIOutputAdaptiveOracle(List<String> commandLine, Function<List<String>, O> outputTransformer, String reset) {
+    public CLIOutputAdaptiveOracle(List<String> commandLine, Function<String, O> outputTransformer, String reset) {
         this.commandLine = commandLine;
         this.reset = reset;
         this.outputTransformer = outputTransformer;
@@ -82,16 +78,17 @@ public class CLIOutputAdaptiveOracle<I, O> implements SingleAdaptiveMembershipOr
             Response response;
 
             do {
-                final List<String> list = new ArrayList<>();
+                // ProcessUtil calls the stdout consumer for every line, so replicate the newlines in the output
+                final StringJoiner sj = new StringJoiner(System.lineSeparator());
                 final I input = query.getInput();
 
                 final String[] command = CLIOracle.toCommand(commandLine, input);
 
                 logInvocation(command);
-                ProcessUtil.invokeProcess(command, list::add, LOGGER::warn);
-                logResult(list);
+                ProcessUtil.invokeProcess(command, sj::add, LOGGER::warn);
+                logResult(sj);
 
-                final O output = outputTransformer.apply(list);
+                final O output = outputTransformer.apply(sj.toString());
                 response = query.processOutput(output);
 
                 if (response == Response.RESET) {
@@ -107,7 +104,7 @@ public class CLIOutputAdaptiveOracle<I, O> implements SingleAdaptiveMembershipOr
         LOGGER.debug("Invoking '{}'", (Object) command);
     }
 
-    private static void logResult(List<String> output) {
+    private static void logResult(StringJoiner output) {
         LOGGER.debug("Received output '{}'", output);
     }
 }

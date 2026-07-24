@@ -17,7 +17,6 @@ package de.learnlib.oracle.membership;
 
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.List;
 
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -30,9 +29,7 @@ public class CLIOutputAdaptiveOracleTest extends AbstractPythonTest {
         final String script = getPathToScript("/stateful_sul.py");
         final String reset = "reset";
         final CLIOutputAdaptiveOracle<Character, Integer> oracle =
-                new CLIOutputAdaptiveOracle<>(Arrays.asList(PROGRAM, script),
-                                              CLIOutputAdaptiveOracleTest::parseOutput,
-                                              reset);
+                new CLIOutputAdaptiveOracle<>(Arrays.asList(PROGRAM, script), Integer::parseInt, reset);
 
         final AdaptiveTestQuery<Character, Integer> q1 = new AdaptiveTestQuery<>(Word.fromString("ab"));
         final AdaptiveTestQuery<Character, Integer> q2 =
@@ -46,10 +43,6 @@ public class CLIOutputAdaptiveOracleTest extends AbstractPythonTest {
         Assert.assertEquals(q2.getOutputs().size(), 2);
         Assert.assertEquals(q2.getOutputs().get(0).toWord(), Word.fromLetter(97));
         Assert.assertEquals(q2.getOutputs().get(1).toWord(), Word.fromSymbols(97, 98));
-    }
-
-    public static Integer parseOutput(List<String> input) {
-        return Integer.parseInt(input.get(0));
     }
 
 }

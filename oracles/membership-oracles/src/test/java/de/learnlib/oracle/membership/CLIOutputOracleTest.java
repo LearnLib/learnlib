@@ -17,7 +17,6 @@ package de.learnlib.oracle.membership;
 
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.List;
 
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -62,15 +61,18 @@ public class CLIOutputOracleTest extends AbstractPythonTest {
         Assert.assertThrows(() -> brokenOracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")));
     }
 
-    static Word<Integer> parseOutput(List<String> input, Integer offset) {
-        if (input.isEmpty()) {
+    static Word<Integer> parseOutput(String input, Integer suffix) {
+        if (suffix == 0) {
             return Word.epsilon();
         }
 
-        if (input.get(0).isBlank()) {
+        if (input.isBlank()) {
             throw new IllegalStateException();
         }
 
-        return input.stream().map(Integer::parseInt).skip(offset).collect(Word.collector());
+        final Word<Integer> result =
+                Arrays.stream(input.split(System.lineSeparator())).map(Integer::parseInt).collect(Word.collector());
+
+        return result.subWord(result.size() - suffix);
     }
 }

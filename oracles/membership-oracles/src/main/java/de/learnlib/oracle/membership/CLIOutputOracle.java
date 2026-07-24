@@ -16,8 +16,6 @@
 package de.learnlib.oracle.membership;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -35,13 +33,17 @@ import org.slf4j.LoggerFactory;
  * An oracle that delegates its queries to an external program via the command-line interface. Outputs of the queries
  * are determined based on the provided output transformer.
  * <p>
- * Queries are translated to program arguments (via the symbol's {@link #toString()} method). Depending on whether a
+ * Queries are translated to program arguments via the symbol's {@link Object#toString()} method. Depending on whether a
  * {@code reset} symbol has been specified, this oracle assumes either a stateless ({@code reset == null}) or stateful
  * ({@code reset != null}) communication.
  * <p>
  * In a stateless communication, all symbols of a query are passed to the program at once and invocations should be
  * treated independently of each other. In a stateful communication, the program is executed multiple times with a
  * single query symbol each, preceded by a single invocation with only the {@code reset} symbol.
+ * <p>
+ * With stateless communication, the {@code outputTransformer} receives the full program's output at once. With stateful
+ * communication, the individual invocation's outputs are concatenated via {@link System#lineSeparator()} before being
+ * passed to the transformer at once.
  *
  * @param <I>
  *         input symbol type
@@ -53,7 +55,7 @@ public class CLIOutputOracle<I, D> implements SingleQueryOracle<I, D> {
     private static final Logger LOGGER = LoggerFactory.getLogger(CLIOutputOracle.class);
 
     private final List<String> commandLine;
-    private final BiFunction<List<String>, Integer, D> outputTransformer;
+    private final BiFunction<String, Integer, D> outputTransformer;
     private final @Nullable String reset;
 
     /**
@@ -63,11 +65,11 @@ public class CLIOutputOracle<I, D> implements SingleQueryOracle<I, D> {
      *         the command line, containing the main binary and potential additional arguments
      * @param outputTransformer
      *         the transformer for the program's output. Receives the full (stdout) output as well as the length of the
-     *         query prefix for properly offsetting potentially {@link Word}-based output types.
+     *         query suffix for properly offsetting potentially {@link Word}-based output types.
      *
      * @see #CLIOutputOracle(List, BiFunction, String)
      */
-    public CLIOutputOracle(List<String> commandLine, BiFunction<List<String>, Integer, D> outputTransformer) {
+    public CLIOutputOracle(List<String> commandLine, BiFunction<String, Integer, D> outputTransformer) {
         this(commandLine, outputTransformer, null);
     }
 
@@ -78,13 +80,13 @@ public class CLIOutputOracle<I, D> implements SingleQueryOracle<I, D> {
      *         the command line, containing the main binary and potential additional arguments
      * @param outputTransformer
      *         the transformer for the program's output. Receives the full (stdout) output as well as the length of the
-     *         query prefix for properly offsetting potentially {@link Word}-based output types.
+     *         query suffix for properly offsetting potentially {@link Word}-based output types.
      * @param reset
      *         the symbol passed to the program to indicate a reset
      */
     public CLIOutputOracle(List<String> commandLine,
-                           BiFunction<List<String>, Integer, D> outputTransformer,
-                           String reset) {
+                           BiFunction<String, Integer, D> outputTransformer,
+                           @Nullable String reset) {
         this.commandLine = commandLine;
         this.reset = reset;
         this.outputTransformer = outputTransformer;
@@ -110,13 +112,14 @@ public class CLIOutputOracle<I, D> implements SingleQueryOracle<I, D> {
             args[idx++] = Objects.toString(s);
         }
 
-        final List<String> output = new ArrayList<>();
+        // ProcessUtil calls the stdout consumer for every line, so replicate the newlines in the output
+        final StringJoiner sj = new StringJoiner(System.lineSeparator());
 
         try {
             logInvocation(args);
-            ProcessUtil.invokeProcess(args, output::add, LOGGER::warn);
-            logResult(output);
-            return outputTransformer.apply(output, prefix.length());
+            ProcessUtil.invokeProcess(args, sj::add, LOGGER::warn);
+            logResult(sj);
+            return outputTransformer.apply(sj.toString(), suffix.length());
         } catch (IOException | InterruptedException e) {
             throw new IllegalStateException(e);
         }
@@ -124,7 +127,8 @@ public class CLIOutputOracle<I, D> implements SingleQueryOracle<I, D> {
 
     @RequiresNonNull("this.reset")
     private D answerStatefulQuery(Word<I> prefix, Word<I> suffix) {
-        final List<String> output = new ArrayList<>();
+        // ProcessUtil calls the stdout consumer for every line, so replicate the newlines in the output
+        final StringJoiner sj = new StringJoiner(System.lineSeparator());
 
         try {
             final String[] resetCommand = CLIOracle.toCommand(commandLine, reset);
@@ -132,27 +136,24 @@ public class CLIOutputOracle<I, D> implements SingleQueryOracle<I, D> {
             ProcessUtil.invokeProcess(resetCommand, LOGGER::debug, LOGGER::warn);
 
             for (I p : prefix) {
-                answerStatefulSymbol(p, output);
+                answerStatefulSymbol(p, sj);
             }
 
             for (I s : suffix) {
-                answerStatefulSymbol(s, output);
+                answerStatefulSymbol(s, sj);
             }
 
-            return outputTransformer.apply(output, prefix.length());
+            return outputTransformer.apply(sj.toString(), suffix.length());
         } catch (IOException | InterruptedException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    private void answerStatefulSymbol(I i, List<String> output) throws IOException, InterruptedException {
-        // ProcessUtil calls the stdout consumer for every line, so replicate the newlines in the output
-        final StringJoiner sj = new StringJoiner(System.lineSeparator());
+    private void answerStatefulSymbol(I i, StringJoiner sj) throws IOException, InterruptedException {
         String[] command = CLIOracle.toCommand(commandLine, i);
         logInvocation(command);
         ProcessUtil.invokeProcess(command, sj::add, LOGGER::warn);
         logResult(sj);
-        output.add(sj.toString());
     }
 
     private static void logInvocation(String[] command) {
