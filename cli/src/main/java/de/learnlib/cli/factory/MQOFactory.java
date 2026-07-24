@@ -15,6 +15,7 @@
  */
 package de.learnlib.cli.factory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +36,7 @@ import de.learnlib.oracle.membership.CLIOutputOracle;
 import de.learnlib.oracle.membership.StdInOracle;
 import de.learnlib.oracle.membership.StdInOutputAdaptiveOracle;
 import de.learnlib.oracle.membership.StdInOutputOracle;
+import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 
@@ -46,15 +48,16 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
     MQOFactory<AdaptiveMembershipOracle<String, String>, Alphabet<String>> ADAPTIVE = MQOFactory::getAdaptiveOracle;
 
     private static MembershipOracle<String, Boolean> getAcceptorOracle(Options options, Alphabet<String> alphabet) {
-        verifyPath(options);
-
         MembershipOracle<String, Boolean> oracle;
 
-        if (options.stdin) {
-            oracle = new StdInOracle<>(buildCommandLine(options), options.reset);
+        if (options.sul.size() == 1) {
+            oracle = buildSingleAcceptorOracle(options, options.sul.get(0));
         } else {
-            oracle = new CLIOracle<>(buildCommandLine(options), options.reset);
-
+            final List<MembershipOracle<String, Boolean>> suls = new ArrayList<>(options.sul.size());
+            for (File sul : options.sul) {
+                suls.add(buildSingleAcceptorOracle(options, sul));
+            }
+            oracle = ParallelOracleBuilders.newStaticParallelOracle(suls).create();
         }
 
         if (options.statistics) {
@@ -71,17 +74,26 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
         return oracle;
     }
 
+    private static MembershipOracle<String, Boolean> buildSingleAcceptorOracle(Options options, File path) {
+        if (options.stdin) {
+            return new StdInOracle<>(buildCommandLine(options, path), options.reset);
+        } else {
+            return new CLIOracle<>(buildCommandLine(options, path), options.reset);
+        }
+    }
+
     private static MembershipOracle<String, Word<String>> getTransducerOracle(Options options,
                                                                               Alphabet<String> alphabet) {
-        verifyPath(options);
-
         MembershipOracle<String, Word<String>> oracle;
 
-        if (options.stdin) {
-            oracle = new StdInOutputOracle<>(buildCommandLine(options), new OutputTransformer(options), options.reset);
+        if (options.sul.size() == 1) {
+            oracle = buildSingleTransducerOracle(options, options.sul.get(0));
         } else {
-            oracle = new CLIOutputOracle<>(buildCommandLine(options), new OutputTransformer(options), options.reset);
-
+            final List<MembershipOracle<String, Word<String>>> suls = new ArrayList<>(options.sul.size());
+            for (File sul : options.sul) {
+                suls.add(buildSingleTransducerOracle(options, sul));
+            }
+            oracle = ParallelOracleBuilders.newStaticParallelOracle(suls).create();
         }
 
         if (options.statistics) {
@@ -98,18 +110,32 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
         return oracle;
     }
 
+    private static MembershipOracle<String, Word<String>> buildSingleTransducerOracle(Options options, File path) {
+        if (options.stdin) {
+            return new StdInOutputOracle<>(buildCommandLine(options, path),
+                                           new OutputTransformer(options),
+                                           options.reset);
+        } else {
+            return new CLIOutputOracle<>(buildCommandLine(options, path),
+                                         new OutputTransformer(options),
+                                         options.reset);
+        }
+    }
+
     private static AdaptiveMembershipOracle<String, String> getAdaptiveOracle(Options options,
                                                                               Alphabet<String> alphabet) {
-        verifyPath(options);
         verifyReset(options);
 
         AdaptiveMembershipOracle<String, String> oracle;
 
-        if (options.stdin) {
-            oracle = new StdInOutputAdaptiveOracle<>(buildCommandLine(options), Function.identity(), options.reset);
+        if (options.sul.size() == 1) {
+            oracle = buildSingleAdaptiveOracle(options, options.sul.get(0));
         } else {
-            oracle = new CLIOutputAdaptiveOracle<>(buildCommandLine(options), Function.identity(), options.reset);
-
+            final List<AdaptiveMembershipOracle<String, String>> suls = new ArrayList<>(options.sul.size());
+            for (File sul : options.sul) {
+                suls.add(buildSingleAdaptiveOracle(options, sul));
+            }
+            oracle = ParallelOracleBuilders.newStaticParallelAdaptiveOracle(suls).create();
         }
 
         if (options.statistics) {
@@ -126,8 +152,17 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
         return oracle;
     }
 
-    private static List<String> buildCommandLine(Options options) {
-        final String absolutePath = options.sul.getAbsolutePath();
+    private static AdaptiveMembershipOracle<String, String> buildSingleAdaptiveOracle(Options options, File path) {
+        if (options.stdin) {
+            return new StdInOutputAdaptiveOracle<>(buildCommandLine(options, path), Function.identity(), options.reset);
+        } else {
+            return new CLIOutputAdaptiveOracle<>(buildCommandLine(options, path), Function.identity(), options.reset);
+        }
+    }
+
+    private static List<String> buildCommandLine(Options options, File file) {
+        verifyPath(file);
+        final String absolutePath = file.getAbsolutePath();
         if (options.additionalArgs == null) {
             return Collections.singletonList(absolutePath);
         } else {
@@ -138,9 +173,9 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
         }
     }
 
-    private static void verifyPath(Options options) {
-        if (!options.sul.exists()) {
-            throw new IllegalArgumentException(String.format("Specified SUL '%s' does not exist", options.sul));
+    private static void verifyPath(File file) {
+        if (!file.exists()) {
+            throw new IllegalArgumentException(String.format("Specified SUL '%s' does not exist", file));
         }
     }
 

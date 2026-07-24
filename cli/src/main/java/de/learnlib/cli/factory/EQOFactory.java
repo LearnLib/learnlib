@@ -52,6 +52,8 @@ import net.automatalib.word.Word;
 @FunctionalInterface
 public interface EQOFactory<M, I, D, OR> extends BiFunction<Options, OR, EquivalenceOracle<M, I, D>> {
 
+    int BATCH_SIZE = 10;
+
     EQOFactory<DFA<?, String>, String, Boolean, MembershipOracle<String, Boolean>> DFA_ORACLES =
             EQOFactory::getRegularOracles;
     EQOFactory<MealyMachine<?, String, ?, String>, String, Word<String>, MembershipOracle<String, Word<String>>>
@@ -78,33 +80,36 @@ public interface EQOFactory<M, I, D, OR> extends BiFunction<Options, OR, Equival
             EquivalenceOracle<? super M, String, D> eqo = switch (e) {
                 case W -> new WMethodEQOracle<>(mqo,
                                                 options.eqoParams.wMethod.lookahead,
-                                                options.eqoParams.wMethod.expectedSize);
+                                                options.eqoParams.wMethod.expectedSize,
+                                                computeBatchSize(options));
                 case WP -> new WpMethodEQOracle<>(mqo,
                                                   options.eqoParams.wpMethod.lookahead,
-                                                  options.eqoParams.wpMethod.expectedSize);
+                                                  options.eqoParams.wpMethod.expectedSize,
+                                                  computeBatchSize(options));
                 case RANDOM -> new RandomWordsEQOracle<>(mqo,
                                                          options.eqoParams.random.minLength,
                                                          options.eqoParams.random.maxLength,
                                                          options.eqoParams.random.maxTests,
-                                                         new Random(options.eqoParams.random.seed));
+                                                         new Random(options.eqoParams.random.seed),
+                                                         computeBatchSize(options));
                 case RANDOM_W -> new RandomWMethodEQOracle<>(mqo,
                                                              options.eqoParams.randomWMethod.minimalSize,
                                                              options.eqoParams.randomWMethod.rndLength,
                                                              options.eqoParams.randomWMethod.bound,
                                                              new Random(options.eqoParams.randomWMethod.seed),
-                                                             1);
+                                                             computeBatchSize(options));
                 case RANDOM_WP -> new RandomWpMethodEQOracle<>(mqo,
                                                                options.eqoParams.randomWpMethod.minimalSize,
                                                                options.eqoParams.randomWpMethod.rndLength,
                                                                options.eqoParams.randomWpMethod.bound,
                                                                new Random(options.eqoParams.randomWpMethod.seed),
-                                                               1);
+                                                               computeBatchSize(options));
                 case KWAY_S -> new KWayStateCoverEQOracle<>(mqo,
                                                             new Random(options.eqoParams.kWayState.seed),
                                                             options.eqoParams.kWayState.randomWalkLen,
                                                             options.eqoParams.kWayState.k,
                                                             options.eqoParams.kWayState.combinationMethod,
-                                                            1);
+                                                            computeBatchSize(options));
                 case KWAY_T -> new KWayTransitionCoverEQOracle<>(mqo,
                                                                  new Random(options.eqoParams.kWayTransition.seed),
                                                                  options.eqoParams.kWayTransition.randomWalkLen,
@@ -114,7 +119,7 @@ public interface EQOFactory<M, I, D, OR> extends BiFunction<Options, OR, Equival
                                                                  options.eqoParams.kWayTransition.k,
                                                                  options.eqoParams.kWayTransition.optimizationMetric,
                                                                  options.eqoParams.kWayTransition.generationMethod,
-                                                                 1);
+                                                                 computeBatchSize(options));
                 case SAMPLE -> buildSampleSetOracle(options, mqo);
             };
             chain.addOracle(eqo);
@@ -240,6 +245,14 @@ public interface EQOFactory<M, I, D, OR> extends BiFunction<Options, OR, Equival
         }
 
         return new SampleSetEQOracle<String, D>().addAll(oracle, tmp);
+    }
+
+    private static int computeBatchSize(Options options) {
+        if (options.sul.size() == 1) {
+            return 1;
+        } else {
+            return options.sul.size() * BATCH_SIZE;
+        }
     }
 
     class UnsupportedCombinationException extends IllegalArgumentException {

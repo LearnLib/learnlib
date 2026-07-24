@@ -25,8 +25,8 @@ import picocli.CommandLine.Parameters;
 
 public class Options {
 
-    @Parameters(paramLabel = "<path>", descriptionKey = "option.sul")
-    public File sul;
+    @Parameters(paramLabel = "<path>", descriptionKey = "option.sul", arity = "1..*")
+    public List<File> sul;
 
     @Option(names = {"-t", "--type"}, defaultValue = "DFA", descriptionKey = "option.type")
     public Type type;

@@ -35,6 +35,7 @@ open module de.learnlib.cli {
     requires de.learnlib.filter.statistic;
     requires de.learnlib.oracle.equivalence;
     requires de.learnlib.oracle.membership;
+    requires de.learnlib.oracle.parallelism;
 
     requires net.automatalib.api;
     requires net.automatalib.common.util;
