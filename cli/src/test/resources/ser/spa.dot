@@ -1,11 +1,13 @@
 digraph g {
 
-	s0 [shape="circle" label="s0"];
-	s1 [shape="doublecircle" label="s1"];
+	s0 [shape="circle" label="S 0"];
+	s1 [shape="doublecircle" label="S 1"];
 	s0 -> s1 [label="a"];
 	s0 -> s1 [label="b"];
+	s0 -> s0 [style="bold" label="S"];
 	s1 -> s0 [label="a"];
 	s1 -> s0 [label="b"];
+	s1 -> s0 [style="bold" label="S"];
 
 __start0 [label="" shape="none" width="0" height="0"];
 __start0 -> s0;

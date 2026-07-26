@@ -28,79 +28,79 @@ public enum Type {
     DFA {
         @Override
         public Runner runner(Options options) {
-            return new PresetRunner<>(AlphabetFactory.REGULAR,
-                                      MQOFactory.ACCEPTOR,
-                                      LearnerFactory.DFA_LEARNER,
-                                      EQOFactory.DFA_ORACLES,
-                                      SerializerFactory.DFA_SERIALIZER);
+            return new PresetRunner<>(AlphabetFactory::getRegularAlphabet,
+                                      MQOFactory::getAcceptorOracle,
+                                      LearnerFactory::getDFALearner,
+                                      EQOFactory::getRegularOracles,
+                                      SerializerFactory::getDFASerializer);
         }
     },
     MEALY {
         @Override
         public Runner runner(Options options) {
             if (options.learner == Learner.ADT || options.learner == Learner.LSHARP) {
-                return new AdaptiveRunner<>(AlphabetFactory.REGULAR,
-                                            MQOFactory.ADAPTIVE,
-                                            LearnerFactory.ADAPTIVE_LEARNER,
-                                            EQOFactory.ADAPTIVE_ORACLES,
-                                            SerializerFactory.MEALY_SERIALIZER);
+                return new AdaptiveRunner<>(AlphabetFactory::getRegularAlphabet,
+                                            MQOFactory::getAdaptiveOracle,
+                                            LearnerFactory::getAdaptiveLearner,
+                                            EQOFactory::getAdaptiveOracles,
+                                            SerializerFactory::getMealySerializer);
             } else {
-                return new PresetRunner<>(AlphabetFactory.REGULAR,
-                                          MQOFactory.TRANSDUCER,
-                                          LearnerFactory.MEALY_LEARNER,
-                                          EQOFactory.MEALY_ORACLES,
-                                          SerializerFactory.MEALY_SERIALIZER);
+                return new PresetRunner<>(AlphabetFactory::getRegularAlphabet,
+                                          MQOFactory::getTransducerOracle,
+                                          LearnerFactory::getMealyLearner,
+                                          EQOFactory::getRegularOracles,
+                                          SerializerFactory::getMealySerializer);
             }
         }
     },
     NFA {
         @Override
         public Runner runner(Options options) {
-            return new PresetRunner<>(AlphabetFactory.REGULAR,
-                                      MQOFactory.ACCEPTOR,
-                                      LearnerFactory.NFA_LEARNER,
-                                      EQOFactory.NFA_ORACLES,
-                                      SerializerFactory.NFA_SERIALIZER);
+            return new PresetRunner<>(AlphabetFactory::getRegularAlphabet,
+                                      MQOFactory::getAcceptorOracle,
+                                      LearnerFactory::getNFALearner,
+                                      EQOFactory::getNFAOracles,
+                                      SerializerFactory::getNFASerializer);
         }
     },
     SBA {
         @Override
         public Runner runner(Options options) {
-            return new PresetRunner<>(AlphabetFactory.PROCEDURAL,
-                                      MQOFactory.ACCEPTOR,
-                                      LearnerFactory.SBA_LEARNER,
-                                      EQOFactory.SBA_ORACLES,
-                                      SerializerFactory.SBA_SERIALIZER);
+            return new PresetRunner<>(AlphabetFactory::getProceduralAlphabet,
+                                      MQOFactory::getAcceptorOracle,
+                                      LearnerFactory::getSBALearner,
+                                      EQOFactory::getSBAOracles,
+                                      SerializerFactory::getSBASerializer);
         }
     },
     SPA {
         @Override
         public Runner runner(Options options) {
-            return new PresetRunner<>(AlphabetFactory.PROCEDURAL,
-                                      MQOFactory.ACCEPTOR,
-                                      LearnerFactory.SPA_LEARNER,
-                                      EQOFactory.SPA_ORACLES,
-                                      SerializerFactory.SPA_SERIALIZER);
+            return new PresetRunner<>(AlphabetFactory::getProceduralAlphabet,
+                                      MQOFactory::getAcceptorOracle,
+                                      LearnerFactory::getSPALearner,
+                                      EQOFactory::getSPAOracles,
+                                      SerializerFactory::getSPASerializer);
         }
     },
     SPMM {
         @Override
         public Runner runner(Options options) {
-            return new PresetRunner<>(AlphabetFactory.PROCEDURAL,
-                                      MQOFactory.TRANSDUCER,
-                                      LearnerFactory.SPMM_LEARNER,
-                                      EQOFactory.SPMM_ORACLES,
-                                      SerializerFactory.SPMM_SERIALIZER);
+            return new PresetRunner<>(AlphabetFactory::getProceduralAlphabet,
+                                      MQOFactory::getTransducerOracle,
+                                      LearnerFactory::getSPMMLearner,
+                                      EQOFactory::getSPMMOracles,
+                                      SerializerFactory::getSPMMSerializer);
         }
     },
     VPA {
         @Override
         public Runner runner(Options options) {
-            return new PresetRunner<>(AlphabetFactory.VPA,
-                                      MQOFactory.ACCEPTOR,
-                                      LearnerFactory.VPA_LEARNER,
-                                      EQOFactory.VPA_ORACLES,
-                                      SerializerFactory.VPA_SERIALIZER);
+            return new PresetRunner<>(AlphabetFactory::getVPAlphabet,
+                                      MQOFactory::getAcceptorOracle,
+                                      LearnerFactory::getVPALearner,
+                                      EQOFactory::getVPAOracles,
+                                      SerializerFactory::getVPASerializer);
         }
     };
 

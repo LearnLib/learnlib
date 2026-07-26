@@ -41,6 +41,9 @@ public abstract class AbstractRunner<A extends Alphabet<I>, M extends SimpleTS<?
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRunner.class);
 
+    public static final String LEARNER_KEY = "learner";
+    public static final String EQO_KEY = "eqo";
+
     private final Function<Options, A> alphabetCreator;
     private final BiFunction<Options, ? super A, OR> mqoCreator;
     private final Function<Options, Constructor<A, M, I, D, OR>> learnerCreator;
@@ -67,7 +70,7 @@ public abstract class AbstractRunner<A extends Alphabet<I>, M extends SimpleTS<?
 
         final OR learnerOracle;
         if (options.statistics) {
-            learnerOracle = getCounter(mqo, "learner");
+            learnerOracle = getCounter(mqo, LEARNER_KEY);
         } else {
             learnerOracle = mqo;
         }
@@ -77,7 +80,7 @@ public abstract class AbstractRunner<A extends Alphabet<I>, M extends SimpleTS<?
 
         final OR eqoOracle;
         if (options.statistics) {
-            eqoOracle = getCounter(mqo, "eqo");
+            eqoOracle = getCounter(mqo, EQO_KEY);
         } else {
             eqoOracle = mqo;
         }
@@ -93,7 +96,6 @@ public abstract class AbstractRunner<A extends Alphabet<I>, M extends SimpleTS<?
         if (options.statistics) {
             final StatisticsService service = Statistics.getService();
             LOGGER.info(Category.STATISTIC, service.print());
-            service.clear();
         }
 
         try {

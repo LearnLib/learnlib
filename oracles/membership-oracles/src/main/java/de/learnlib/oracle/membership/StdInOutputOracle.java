@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 import java.util.StringJoiner;
-import java.util.function.BiFunction;
 
 import de.learnlib.oracle.SingleQueryOracle;
 import net.automatalib.common.setting.AutomataLibProperty;
@@ -59,7 +58,7 @@ public class StdInOutputOracle<I, D> implements SingleQueryOracle<I, D> {
             AutomataLibSettings.getInstance().getProperty(AutomataLibProperty.WORD_SYMBOL_SEPARATOR, " ");
 
     private final List<String> commandLine;
-    private final BiFunction<String, Integer, D> outputTransformer;
+    private final OutputTransformer<D> outputTransformer;
     private final @Nullable String reset;
 
     /**
@@ -69,11 +68,11 @@ public class StdInOutputOracle<I, D> implements SingleQueryOracle<I, D> {
      *         the command line, containing the main binary and potential additional arguments
      * @param outputTransformer
      *         the transformer for the program's output. Receives the full (stdout) output as well as the length of the
-     *         query suffix for properly offsetting potentially {@link Word}-based output types.
+     *         query prefix and suffix for properly offsetting potentially {@link Word}-based output types.
      *
-     * @see #StdInOutputOracle(List, BiFunction, String)
+     * @see #StdInOutputOracle(List, OutputTransformer, String)
      */
-    public StdInOutputOracle(List<String> commandLine, BiFunction<String, Integer, D> outputTransformer) {
+    public StdInOutputOracle(List<String> commandLine, OutputTransformer<D> outputTransformer) {
         this(commandLine, outputTransformer, null);
     }
 
@@ -84,13 +83,11 @@ public class StdInOutputOracle<I, D> implements SingleQueryOracle<I, D> {
      *         the command line, containing the main binary and potential additional arguments
      * @param outputTransformer
      *         the transformer for the program's output. Receives the full (stdout) output as well as the length of the
-     *         query suffix for properly offsetting potentially {@link Word}-based output types.
+     *         query prefix and suffix for properly offsetting potentially {@link Word}-based output types.
      * @param reset
      *         the symbol passed to the program to indicate a reset
      */
-    public StdInOutputOracle(List<String> commandLine,
-                             BiFunction<String, Integer, D> outputTransformer,
-                             @Nullable String reset) {
+    public StdInOutputOracle(List<String> commandLine, OutputTransformer<D> outputTransformer, @Nullable String reset) {
         this.commandLine = commandLine;
         this.outputTransformer = outputTransformer;
         this.reset = reset;
@@ -120,7 +117,7 @@ public class StdInOutputOracle<I, D> implements SingleQueryOracle<I, D> {
             ProcessUtil.invokeProcess(commandLine, new StringReader(input.toString()), sj::add, LOGGER::warn);
             logResult(sj);
 
-            return outputTransformer.apply(sj.toString(), suffix.length());
+            return outputTransformer.transform(sj.toString(), prefix.length(), suffix.length());
         } catch (IOException | InterruptedException e) {
             throw new IllegalStateException(e);
         }
@@ -143,7 +140,7 @@ public class StdInOutputOracle<I, D> implements SingleQueryOracle<I, D> {
                 answerStatefulSymbol(s, sj);
             }
 
-            return outputTransformer.apply(sj.toString(), suffix.length());
+            return outputTransformer.transform(sj.toString(), prefix.length(), suffix.length());
         } catch (IOException | InterruptedException e) {
             throw new IllegalStateException(e);
         }
@@ -161,5 +158,30 @@ public class StdInOutputOracle<I, D> implements SingleQueryOracle<I, D> {
 
     private static void logResult(Object output) {
         LOGGER.debug("Received output '{}'", output);
+    }
+
+    /**
+     * Transformer for converting the {@link String}-based output of a CLI application to a custom-typed output.
+     *
+     * @param <D>
+     *         output domain type
+     */
+    @FunctionalInterface
+    public interface OutputTransformer<D> {
+
+        /**
+         * Transforms the provided output to a custom output object. Additionally, receives information about the length
+         * of the original query's prefix and suffix (e.g., for {@link Word}-based outputs).
+         *
+         * @param output
+         *         the stdout output of the invocation
+         * @param prefixLength
+         *         the length of the query prefix
+         * @param suffixLength
+         *         the length of the query suffix
+         *
+         * @return the output
+         */
+        D transform(String output, int prefixLength, int suffixLength);
     }
 }

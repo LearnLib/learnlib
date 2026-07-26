@@ -15,8 +15,6 @@
  */
 package de.learnlib.cli.factory;
 
-import java.util.function.Function;
-
 import de.learnlib.algorithm.adt.learner.ADTLearner;
 import de.learnlib.algorithm.lsharp.LSharpMealy;
 import de.learnlib.algorithm.nlstar.NLStarLearner;
@@ -42,18 +40,13 @@ import de.learnlib.cli.adapter.ProceduralMealyAdapter.TTTLambdaMealyAdapter;
 import de.learnlib.cli.adapter.ProceduralMealyAdapter.TTTLearnerMealyAdapter;
 import de.learnlib.cli.option.Learner;
 import de.learnlib.cli.option.Options;
-import de.learnlib.cli.util.Constructor;
 import de.learnlib.cli.util.Constructor.AdaptiveConstructor;
 import de.learnlib.cli.util.Constructor.DFAConstructor;
 import de.learnlib.cli.util.Constructor.MealyConstructor;
 import de.learnlib.cli.util.Constructor.PresetConstructor;
-import de.learnlib.oracle.AdaptiveMembershipOracle;
-import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.VPAlphabet;
-import net.automatalib.automaton.concept.FiniteRepresentation;
-import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;
@@ -62,25 +55,13 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.word.Word;
 
-@FunctionalInterface
-public interface LearnerFactory<A extends Alphabet<String>, M extends FiniteRepresentation, D, OR>
-        extends Function<Options, Constructor<A, M, String, D, OR>> {
+public final class LearnerFactory {
 
-    LearnerFactory<Alphabet<String>, DFA<?, String>, Boolean, MembershipOracle<String, Boolean>> DFA_LEARNER = LearnerFactory::getDFALearner;
-    LearnerFactory<Alphabet<String>, MealyMachine<?, String, ?, String>, Word<String>, MembershipOracle<String, Word<String>>> MEALY_LEARNER =
-            LearnerFactory::getMealyLearner;
-    LearnerFactory<Alphabet<String>, MealyMachine<?, String, ?, String>, Word<String>, AdaptiveMembershipOracle<String, String>> ADAPTIVE_LEARNER =
-            LearnerFactory::getAdaptiveLearner;
-    LearnerFactory<Alphabet<String>, NFA<?, String>, Boolean, MembershipOracle<String, Boolean>> NFA_LEARNER = LearnerFactory::getNFALearner;
-    LearnerFactory<ProceduralInputAlphabet<String>, SBA<?, String>, Boolean, MembershipOracle<String, Boolean>> SBA_LEARNER =
-            LearnerFactory::getSBALearner;
-    LearnerFactory<ProceduralInputAlphabet<String>, SPA<?, String>, Boolean, MembershipOracle<String, Boolean>> SPA_LEARNER =
-            LearnerFactory::getSPALearner;
-    LearnerFactory<ProceduralInputAlphabet<String>, SPMM<?, String, ?, String>, Word<String>, MembershipOracle<String, Word<String>>> SPMM_LEARNER =
-            LearnerFactory::getSPMMLearner;
-    LearnerFactory<VPAlphabet<String>, OneSEVPA<?, String>, Boolean, MembershipOracle<String, Boolean>> VPA_LEARNER = LearnerFactory::getVPALearner;
+    private LearnerFactory() {
+        // prevent instantiation
+    }
 
-    private static <I> DFAConstructor<Alphabet<I>, I> getDFALearner(Options options) {
+    public static <I> DFAConstructor<Alphabet<I>, I> getDFALearner(Options options) {
         return switch (options.learner) {
             case KV -> KearnsVaziraniDFAAdapter::new;
             case LLAMBDA -> LLambdaDFAAdapter::new;
@@ -92,7 +73,7 @@ public interface LearnerFactory<A extends Alphabet<String>, M extends FiniteRepr
         };
     }
 
-    private static <I, O> MealyConstructor<Alphabet<I>, I, O> getMealyLearner(Options options) {
+    public static <I, O> MealyConstructor<Alphabet<I>, I, O> getMealyLearner(Options options) {
         return switch (options.learner) {
             case DHC -> MealyDHCAdapter::new;
             case KV -> KearnsVaziraniMealyAdapter::new;
@@ -106,7 +87,7 @@ public interface LearnerFactory<A extends Alphabet<String>, M extends FiniteRepr
         };
     }
 
-    private static <I, O> AdaptiveConstructor<Alphabet<I>, MealyMachine<?, I, ?, O>, I, O> getAdaptiveLearner(Options options) {
+    public static <I, O> AdaptiveConstructor<Alphabet<I>, MealyMachine<?, I, ?, O>, I, O> getAdaptiveLearner(Options options) {
         return switch (options.learner) {
             case ADT -> ADTLearner::new;
             case LSHARP -> LSharpMealy::new;
@@ -114,30 +95,30 @@ public interface LearnerFactory<A extends Alphabet<String>, M extends FiniteRepr
         };
     }
 
-    private static <I> PresetConstructor<Alphabet<I>, NFA<?, I>, I, Boolean> getNFALearner(Options options) {
+    public static <I> PresetConstructor<Alphabet<I>, NFA<?, I>, I, Boolean> getNFALearner(Options options) {
         if (options.learner == Learner.NLSTAR) {
             return NLStarLearner::new;
         }
         throw new UnsupportedCombinationException(options);
     }
 
-    private static <I> PresetConstructor<ProceduralInputAlphabet<I>, SBA<?, I>, I, Boolean> getSBALearner(Options options) {
+    public static <I> PresetConstructor<ProceduralInputAlphabet<I>, SBA<?, I>, I, Boolean> getSBALearner(Options options) {
         final DFAConstructor<Alphabet<SymbolWrapper<I>>, SymbolWrapper<I>> learner = getDFALearner(options);
         return (alph, mqo) -> new SBALearner<>(alph, mqo, learner::constructLearner);
     }
 
-    private static <I> PresetConstructor<ProceduralInputAlphabet<I>, SPA<?, I>, I, Boolean> getSPALearner(Options options) {
+    public static <I> PresetConstructor<ProceduralInputAlphabet<I>, SPA<?, I>, I, Boolean> getSPALearner(Options options) {
         final DFAConstructor<Alphabet<I>, I> learner = getDFALearner(options);
         return (alph, mqo) -> new SPALearner<>(alph, mqo, learner::constructLearner);
     }
 
-    private static <I> PresetConstructor<ProceduralInputAlphabet<I>, SPMM<?, I, ?, String>, I, Word<String>> getSPMMLearner(
+    public static <I> PresetConstructor<ProceduralInputAlphabet<I>, SPMM<?, I, ?, String>, I, Word<String>> getSPMMLearner(
             Options options) {
         final MealyConstructor<Alphabet<SymbolWrapper<I>>, SymbolWrapper<I>, String> learner = getMealyLearner(options);
         return (alph, mqo) -> new SPMMLearner<>(alph, "error", mqo, learner::constructLearner);
     }
 
-    private static <I> PresetConstructor<VPAlphabet<I>, OneSEVPA<?, I>, I, Boolean> getVPALearner(Options options) {
+    public static <I> PresetConstructor<VPAlphabet<I>, OneSEVPA<?, I>, I, Boolean> getVPALearner(Options options) {
         return switch (options.learner) {
             case OP -> (alphabet, mqo) -> new OPLearnerVPABuilder<I>().withAlphabet(alphabet).withOracle(mqo).create();
             case TTT ->
@@ -146,7 +127,7 @@ public interface LearnerFactory<A extends Alphabet<String>, M extends FiniteRepr
         };
     }
 
-    class UnsupportedCombinationException extends IllegalArgumentException {
+    private static final class UnsupportedCombinationException extends IllegalArgumentException {
 
         UnsupportedCombinationException(Options options) {
             super(String.format("Learner '%s' does not support type '%s'", options.learner, options.type));

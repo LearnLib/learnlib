@@ -16,7 +16,6 @@
 package de.learnlib.cli.factory;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 import de.learnlib.cli.option.Options;
 import de.learnlib.cli.option.Symbols.ContextFreeSymbols;
@@ -28,19 +27,18 @@ import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.DefaultVPAlphabet;
 
-@FunctionalInterface
-public interface AlphabetFactory<A extends Alphabet<String>> extends Function<Options, A> {
+public final class AlphabetFactory {
 
-    AlphabetFactory<Alphabet<String>> REGULAR = AlphabetFactory::getRegularAlphabet;
-    AlphabetFactory<ProceduralInputAlphabet<String>> PROCEDURAL = AlphabetFactory::getProceduralAlphabet;
-    AlphabetFactory<VPAlphabet<String>> VPA = AlphabetFactory::getVPAAlphabet;
+    private AlphabetFactory() {
+        // prevent instantiation
+    }
 
-    private static Alphabet<String> getRegularAlphabet(Options options) {
+    public static Alphabet<String> getRegularAlphabet(Options options) {
         final RegularSymbols inputs = validateRegularSymbols(options);
         return Alphabets.fromList(inputs.symbols);
     }
 
-    private static ProceduralInputAlphabet<String> getProceduralAlphabet(Options options) {
+    public static ProceduralInputAlphabet<String> getProceduralAlphabet(Options options) {
         final ContextFreeSymbols inputs = validateContextFreeSymbols(options);
         if (inputs.returnSymbols.size() != 1) {
             throw new IllegalArgumentException("Procedural systems require exactly one return symbol");
@@ -50,7 +48,7 @@ public interface AlphabetFactory<A extends Alphabet<String>> extends Function<Op
                                                     inputs.returnSymbols.get(0));
     }
 
-    private static VPAlphabet<String> getVPAAlphabet(Options options) {
+    public static VPAlphabet<String> getVPAlphabet(Options options) {
         final ContextFreeSymbols inputs = validateContextFreeSymbols(options);
         return new DefaultVPAlphabet<>(Alphabets.fromList(inputs.internalSymbols),
                                        Alphabets.fromList(inputs.callSymbols),

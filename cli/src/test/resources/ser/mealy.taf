@@ -1,0 +1,6 @@
+mealy {a,b} {
+	s0 [initial] {
+		b / 98 -> s0
+		a / 97 -> s0
+	}
+}

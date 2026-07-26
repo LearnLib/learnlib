@@ -18,7 +18,7 @@ package de.learnlib.cli.factory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.function.BiFunction;
+import java.util.regex.Pattern;
 
 import de.learnlib.cli.option.EQOracle;
 import de.learnlib.cli.option.Options;
@@ -44,34 +44,20 @@ import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.SPMM;
-import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.util.automaton.fsa.NFAs;
 import net.automatalib.word.Word;
 
-@FunctionalInterface
-public interface EQOFactory<M, I, D, OR> extends BiFunction<Options, OR, EquivalenceOracle<M, I, D>> {
+public final class EQOFactory {
 
-    int BATCH_SIZE = 10;
+    public static final int BATCH_SIZE = 10;
+    public static final double RANDOM_CALL_PROB = 0.5;
 
-    EQOFactory<DFA<?, String>, String, Boolean, MembershipOracle<String, Boolean>> DFA_ORACLES =
-            EQOFactory::getRegularOracles;
-    EQOFactory<MealyMachine<?, String, ?, String>, String, Word<String>, MembershipOracle<String, Word<String>>>
-            MEALY_ORACLES = EQOFactory::getRegularOracles;
-    EQOFactory<MealyMachine<?, String, ?, String>, String, Word<String>, AdaptiveMembershipOracle<String, String>>
-            ADAPTIVE_ORACLES = EQOFactory::getAdaptiveOracles;
-    EQOFactory<NFA<?, String>, String, Boolean, MembershipOracle<String, Boolean>> NFA_ORACLES =
-            EQOFactory::getNFAOracles;
-    EQOFactory<SBA<?, String>, String, Boolean, MembershipOracle<String, Boolean>> SBA_ORACLES =
-            EQOFactory::getSBAOracles;
-    EQOFactory<SPA<?, String>, String, Boolean, MembershipOracle<String, Boolean>> SPA_ORACLES =
-            EQOFactory::getSPAOracles;
-    EQOFactory<SPMM<?, String, ?, String>, String, Word<String>, MembershipOracle<String, Word<String>>> SPMM_ORACLES =
-            EQOFactory::getSPMMOracles;
-    EQOFactory<OneSEVPA<?, String>, String, Boolean, MembershipOracle<String, Boolean>> VPA_ORACLES =
-            EQOFactory::getVPAOracles;
+    private EQOFactory() {
+        // prevent instantiation
+    }
 
-    private static <M extends RegularAutomaton<?, String, ?, ?, ?> & SuffixOutput<String, D>, D> EQOracleChain<M, String, D> getRegularOracles(
+    public static <M extends RegularAutomaton<?, String, ?, ?, ?> & SuffixOutput<String, D>, D> EQOracleChain<M, String, D> getRegularOracles(
             Options options,
             MembershipOracle<String, D> mqo) {
         final EQOracleChain<M, String, D> chain = new EQOracleChain<>();
@@ -128,14 +114,14 @@ public interface EQOFactory<M, I, D, OR> extends BiFunction<Options, OR, Equival
         return chain;
     }
 
-    private static <M extends RegularAutomaton<?, String, ?, ?, ?> & SuffixOutput<String, Word<O>>, O> EQOracleChain<M, String, Word<O>> getAdaptiveOracles(
+    public static <M extends RegularAutomaton<?, String, ?, ?, ?> & SuffixOutput<String, Word<O>>, O> EQOracleChain<M, String, Word<O>> getAdaptiveOracles(
             Options options,
             AdaptiveMembershipOracle<String, O> mqo) {
         return getRegularOracles(options, new Adaptive2MembershipWrapper<>(mqo));
     }
 
-    private static EquivalenceOracle<NFA<?, String>, String, Boolean> getNFAOracles(Options options,
-                                                                                    MembershipOracle<String, Boolean> mqo) {
+    public static EQOracleChain<NFA<?, String>, String, Boolean> getNFAOracles(Options options,
+                                                                               MembershipOracle<String, Boolean> mqo) {
         final EQOracleChain<? super DFA<?, String>, String, Boolean> chain = getRegularOracles(options, mqo);
         final EQOracleChain<NFA<?, String>, String, Boolean> result = new EQOracleChain<>();
 
@@ -148,15 +134,16 @@ public interface EQOFactory<M, I, D, OR> extends BiFunction<Options, OR, Equival
         return result;
     }
 
-    private static EquivalenceOracle<SBA<?, String>, String, Boolean> getSBAOracles(Options options,
-                                                                                    MembershipOracle<String, Boolean> mqo) {
+    public static EQOracleChain<SBA<?, String>, String, Boolean> getSBAOracles(Options options,
+                                                                               MembershipOracle<String, Boolean> mqo) {
         final EQOracleChain<SBA<?, String>, String, Boolean> chain = new EQOracleChain<>();
 
         for (EQOracle e : options.eqos) {
             EquivalenceOracle<? super SBA<?, String>, String, Boolean> eqo = switch (e) {
                 case W -> new de.learnlib.oracle.equivalence.sba.WMethodEQOracle<>(mqo,
                                                                                    options.eqoParams.wMethod.lookahead,
-                                                                                   options.eqoParams.wMethod.expectedSize);
+                                                                                   options.eqoParams.wMethod.expectedSize,
+                                                                                   computeBatchSize(options));
                 case RANDOM -> buildRandomWellMatchedOracle(options, mqo);
                 case SAMPLE -> buildSampleSetOracle(options, mqo);
                 default -> throw new UnsupportedCombinationException(options, e);
@@ -167,18 +154,20 @@ public interface EQOFactory<M, I, D, OR> extends BiFunction<Options, OR, Equival
         return chain;
     }
 
-    private static EquivalenceOracle<SPA<?, String>, String, Boolean> getSPAOracles(Options options,
-                                                                                    MembershipOracle<String, Boolean> mqo) {
+    public static EQOracleChain<SPA<?, String>, String, Boolean> getSPAOracles(Options options,
+                                                                               MembershipOracle<String, Boolean> mqo) {
         final EQOracleChain<SPA<?, String>, String, Boolean> chain = new EQOracleChain<>();
 
         for (EQOracle e : options.eqos) {
             EquivalenceOracle<? super SPA<?, String>, String, Boolean> eqo = switch (e) {
                 case W -> new de.learnlib.oracle.equivalence.spa.WMethodEQOracle<>(mqo,
                                                                                    options.eqoParams.wMethod.lookahead,
-                                                                                   options.eqoParams.wMethod.expectedSize);
+                                                                                   options.eqoParams.wMethod.expectedSize,
+                                                                                   computeBatchSize(options));
                 case WP -> new de.learnlib.oracle.equivalence.spa.WpMethodEQOracle<>(mqo,
                                                                                      options.eqoParams.wpMethod.lookahead,
-                                                                                     options.eqoParams.wpMethod.expectedSize);
+                                                                                     options.eqoParams.wpMethod.expectedSize,
+                                                                                     computeBatchSize(options));
                 case RANDOM -> buildRandomWellMatchedOracle(options, mqo);
                 case SAMPLE -> buildSampleSetOracle(options, mqo);
                 default -> throw new UnsupportedCombinationException(options, e);
@@ -189,15 +178,17 @@ public interface EQOFactory<M, I, D, OR> extends BiFunction<Options, OR, Equival
         return chain;
     }
 
-    private static <O> EquivalenceOracle<SPMM<?, String, ?, O>, String, Word<O>> getSPMMOracles(Options options,
-                                                                                                MembershipOracle<String, Word<O>> mqo) {
+    public static <O> EQOracleChain<SPMM<?, String, ?, O>, String, Word<O>> getSPMMOracles(Options options,
+                                                                                           MembershipOracle<String, Word<O>> mqo) {
         final EQOracleChain<SPMM<?, String, ?, O>, String, Word<O>> chain = new EQOracleChain<>();
 
         for (EQOracle e : options.eqos) {
             EquivalenceOracle<? super SPMM<?, String, ?, O>, String, Word<O>> eqo = switch (e) {
                 case W -> new de.learnlib.oracle.equivalence.spmm.WMethodEQOracle<>(mqo,
                                                                                     options.eqoParams.wMethod.lookahead,
-                                                                                    options.eqoParams.wMethod.expectedSize);
+                                                                                    options.eqoParams.wMethod.expectedSize,
+                                                                                    computeBatchSize(options));
+                case RANDOM -> buildRandomWellMatchedOracle(options, mqo);
                 case SAMPLE -> buildSampleSetOracle(options, mqo);
                 default -> throw new UnsupportedCombinationException(options, e);
             };
@@ -207,8 +198,8 @@ public interface EQOFactory<M, I, D, OR> extends BiFunction<Options, OR, Equival
         return chain;
     }
 
-    private static EquivalenceOracle<OneSEVPA<?, String>, String, Boolean> getVPAOracles(Options options,
-                                                                                         MembershipOracle<String, Boolean> mqo) {
+    public static EQOracleChain<OneSEVPA<?, String>, String, Boolean> getVPAOracles(Options options,
+                                                                                    MembershipOracle<String, Boolean> mqo) {
         final EQOracleChain<OneSEVPA<?, String>, String, Boolean> chain = new EQOracleChain<>();
 
         for (EQOracle e : options.eqos) {
@@ -223,28 +214,36 @@ public interface EQOFactory<M, I, D, OR> extends BiFunction<Options, OR, Equival
         return chain;
     }
 
-    private static <I> RandomWellMatchedWordsEQOracle<I> buildRandomWellMatchedOracle(Options options,
-                                                                                      MembershipOracle<I, Boolean> oracle) {
-        final double callProb = 0.5;
+    private static <I, D> RandomWellMatchedWordsEQOracle<I, D> buildRandomWellMatchedOracle(Options options,
+                                                                                            MembershipOracle<I, D> oracle) {
         return new RandomWellMatchedWordsEQOracle<>(new Random(options.eqoParams.random.seed),
                                                     oracle,
-                                                    callProb,
+                                                    RANDOM_CALL_PROB,
                                                     options.eqoParams.random.maxTests,
                                                     options.eqoParams.random.minLength,
-                                                    options.eqoParams.random.maxLength);
+                                                    options.eqoParams.random.maxLength,
+                                                    computeBatchSize(options));
     }
 
     private static <D> SampleSetEQOracle<String, D> buildSampleSetOracle(Options options,
                                                                          MembershipOracle<String, D> oracle) {
         final List<String> samples = options.eqoParams.samples.samples;
-        final List<Word<String>> tmp = new ArrayList<>(samples.size());
+        final SampleSetEQOracle<String, D> sampleSetOracle = new SampleSetEQOracle<>();
 
-        for (String s : options.eqoParams.samples.samples) {
-            String[] words = s.split(options.eqoParams.samples.split);
-            tmp.add(Word.fromArray(words, 0, words.length));
+        if (samples != null) {
+
+            final Pattern pattern = Pattern.compile(options.eqoParams.samples.split);
+            final List<Word<String>> tmp = new ArrayList<>(samples.size());
+
+            for (String s : samples) {
+                String[] words = pattern.split(s);
+                tmp.add(Word.fromArray(words, 0, words.length));
+            }
+
+            sampleSetOracle.addAll(oracle, tmp);
         }
 
-        return new SampleSetEQOracle<String, D>().addAll(oracle, tmp);
+        return sampleSetOracle;
     }
 
     private static int computeBatchSize(Options options) {
@@ -255,7 +254,7 @@ public interface EQOFactory<M, I, D, OR> extends BiFunction<Options, OR, Equival
         }
     }
 
-    class UnsupportedCombinationException extends IllegalArgumentException {
+    private static final class UnsupportedCombinationException extends IllegalArgumentException {
 
         UnsupportedCombinationException(Options options, EQOracle eqo) {
             super(String.format("Type '%s' does not support oracle '%s'", options.type, eqo));

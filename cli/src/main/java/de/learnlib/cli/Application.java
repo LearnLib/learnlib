@@ -57,11 +57,12 @@ public class Application implements Runnable {
         if (options.verbosity != null) {
             final Logger root = (Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
 
-            final Level level = switch (options.verbosity.length) {
-                case 0 -> Level.INFO;
-                case 1 -> Level.DEBUG;
-                default -> Level.TRACE;
-            };
+            Level level;
+            if (options.verbosity.length == 1) {
+                level = Level.DEBUG;
+            } else {
+                level = Level.TRACE;
+            }
 
             root.setLevel(level);
         }

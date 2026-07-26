@@ -61,7 +61,7 @@ public class CLIOutputOracleTest extends AbstractPythonTest {
         Assert.assertThrows(() -> brokenOracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")));
     }
 
-    static Word<Integer> parseOutput(String input, Integer suffix) {
+    static Word<Integer> parseOutput(String input, int prefix, int suffix) {
         if (suffix == 0) {
             return Word.epsilon();
         }
@@ -73,6 +73,10 @@ public class CLIOutputOracleTest extends AbstractPythonTest {
         final Word<Integer> result =
                 Arrays.stream(input.split(System.lineSeparator())).map(Integer::parseInt).collect(Word.collector());
 
-        return result.subWord(result.size() - suffix);
+        if (result.length() != (prefix + suffix)) {
+            throw new IllegalStateException();
+        }
+
+        return result.suffix(suffix);
     }
 }

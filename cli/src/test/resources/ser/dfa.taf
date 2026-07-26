@@ -1,0 +1,8 @@
+dfa {a,b} {
+	s0 [initial] {
+		{a,b} -> s1
+	}
+	s1 [accepting] {
+		{a,b} -> s0
+	}
+}

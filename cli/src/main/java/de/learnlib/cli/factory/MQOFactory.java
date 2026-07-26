@@ -17,9 +17,9 @@ package de.learnlib.cli.factory;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -40,14 +40,16 @@ import de.learnlib.oracle.parallelism.ParallelOracleBuilders;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 
-@FunctionalInterface
-public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
+public final class MQOFactory {
 
-    MQOFactory<MembershipOracle<String, Boolean>, Alphabet<String>> ACCEPTOR = MQOFactory::getAcceptorOracle;
-    MQOFactory<MembershipOracle<String, Word<String>>, Alphabet<String>> TRANSDUCER = MQOFactory::getTransducerOracle;
-    MQOFactory<AdaptiveMembershipOracle<String, String>, Alphabet<String>> ADAPTIVE = MQOFactory::getAdaptiveOracle;
+    static final String SUL_KEY = "sul";
+    static final String CACHE_KEY = "cache";
 
-    private static MembershipOracle<String, Boolean> getAcceptorOracle(Options options, Alphabet<String> alphabet) {
+    private MQOFactory() {
+        // prevent instantiation
+    }
+
+    public static MembershipOracle<String, Boolean> getAcceptorOracle(Options options, Alphabet<String> alphabet) {
         MembershipOracle<String, Boolean> oracle;
 
         if (options.sul.size() == 1) {
@@ -61,20 +63,20 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
         }
 
         if (options.statistics) {
-            oracle = new CounterOracle<>(oracle, "sul");
+            oracle = new CounterOracle<>(oracle, SUL_KEY);
         }
 
         if (options.cache) {
             oracle = DFACaches.createDAGCache(alphabet, oracle);
             if (options.statistics) {
-                oracle = new CounterOracle<>(oracle, "cache");
+                oracle = new CounterOracle<>(oracle, CACHE_KEY);
             }
         }
 
         return oracle;
     }
 
-    private static MembershipOracle<String, Boolean> buildSingleAcceptorOracle(Options options, File path) {
+    static MembershipOracle<String, Boolean> buildSingleAcceptorOracle(Options options, File path) {
         if (options.stdin) {
             return new StdInOracle<>(buildCommandLine(options, path), options.reset);
         } else {
@@ -82,8 +84,8 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
         }
     }
 
-    private static MembershipOracle<String, Word<String>> getTransducerOracle(Options options,
-                                                                              Alphabet<String> alphabet) {
+    public static MembershipOracle<String, Word<String>> getTransducerOracle(Options options,
+                                                                             Alphabet<String> alphabet) {
         MembershipOracle<String, Word<String>> oracle;
 
         if (options.sul.size() == 1) {
@@ -97,20 +99,20 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
         }
 
         if (options.statistics) {
-            oracle = new CounterOracle<>(oracle, "sul");
+            oracle = new CounterOracle<>(oracle, SUL_KEY);
         }
 
         if (options.cache) {
             oracle = MealyCaches.createDAGCache(alphabet, oracle);
             if (options.statistics) {
-                oracle = new CounterOracle<>(oracle, "cache");
+                oracle = new CounterOracle<>(oracle, CACHE_KEY);
             }
         }
 
         return oracle;
     }
 
-    private static MembershipOracle<String, Word<String>> buildSingleTransducerOracle(Options options, File path) {
+    static MembershipOracle<String, Word<String>> buildSingleTransducerOracle(Options options, File path) {
         if (options.stdin) {
             return new StdInOutputOracle<>(buildCommandLine(options, path),
                                            new OutputTransformer(options),
@@ -122,8 +124,8 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
         }
     }
 
-    private static AdaptiveMembershipOracle<String, String> getAdaptiveOracle(Options options,
-                                                                              Alphabet<String> alphabet) {
+    public static AdaptiveMembershipOracle<String, String> getAdaptiveOracle(Options options,
+                                                                             Alphabet<String> alphabet) {
         verifyReset(options);
 
         AdaptiveMembershipOracle<String, String> oracle;
@@ -139,20 +141,20 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
         }
 
         if (options.statistics) {
-            oracle = new CounterAdaptiveQueryOracle<>(oracle, "sul");
+            oracle = new CounterAdaptiveQueryOracle<>(oracle, SUL_KEY);
         }
 
         if (options.cache) {
             oracle = MealyCaches.createAdaptiveQueryCache(alphabet, oracle);
             if (options.statistics) {
-                oracle = new CounterAdaptiveQueryOracle<>(oracle, "cache");
+                oracle = new CounterAdaptiveQueryOracle<>(oracle, CACHE_KEY);
             }
         }
 
         return oracle;
     }
 
-    private static AdaptiveMembershipOracle<String, String> buildSingleAdaptiveOracle(Options options, File path) {
+    static AdaptiveMembershipOracle<String, String> buildSingleAdaptiveOracle(Options options, File path) {
         if (options.stdin) {
             return new StdInOutputAdaptiveOracle<>(buildCommandLine(options, path), Function.identity(), options.reset);
         } else {
@@ -187,21 +189,35 @@ public interface MQOFactory<OR, A> extends BiFunction<Options, A, OR> {
         }
     }
 
-    class OutputTransformer implements BiFunction<String, Integer, Word<String>> {
+    private static class OutputTransformer implements CLIOutputOracle.OutputTransformer<Word<String>>,
+                                                      StdInOutputOracle.OutputTransformer<Word<String>> {
 
         private final Pattern pattern;
 
-        public OutputTransformer(Options options) {
+        OutputTransformer(Options options) {
             this.pattern = Pattern.compile(options.delimiter);
         }
 
         @Override
-        public Word<String> apply(String string, Integer suffixLength) {
-            if (string.isEmpty()) {
+        public Word<String> transform(String output, int prefixLength, int suffixLength) {
+            if (suffixLength == 0) {
                 return Word.epsilon();
             }
-            final String[] orig = pattern.split(string);
-            return Word.fromArray(orig, orig.length - suffixLength, suffixLength);
+
+            if (output.isBlank()) {
+                throw new IllegalStateException("Received empty output when non-empty output was expected.");
+            }
+
+            final String[] orig = pattern.split(output);
+
+            if (orig.length != (prefixLength + suffixLength)) {
+                throw new IllegalStateException(String.format(
+                        "The parsed output '%s' does not have the expected number (%d) of symbols.",
+                        Arrays.toString(orig),
+                        prefixLength + suffixLength));
+            }
+
+            return Word.fromArray(orig, prefixLength, suffixLength);
         }
     }
 }

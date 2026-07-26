@@ -37,7 +37,7 @@ public class Options {
     @Option(names = {"-r", "--reset"}, paramLabel = "<sym>", descriptionKey = "option.reset")
     public String reset;
 
-    @Option(names = {"-d", "--delim"}, paramLabel = "<string>", defaultValue = "\n", descriptionKey = "option.delim")
+    @Option(names = {"-d", "--delim"}, paramLabel = "<string>", defaultValue = "\\n", descriptionKey = "option.delim")
     public String delimiter;
 
     @Option(names = {"-e", "--eqo"}, paramLabel = "<eqo>", defaultValue = "RANDOM_WP", descriptionKey = "option.eqo")

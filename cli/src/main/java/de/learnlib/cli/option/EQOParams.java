@@ -207,7 +207,7 @@ public class EQOParams {
         public List<String> samples;
 
         @Option(names = "--eqo-sample-split",
-                defaultValue = " ",
+                defaultValue = "\\s",
                 paramLabel = "<string>",
                 descriptionKey = "param.eqo.sample.split")
         public String split;

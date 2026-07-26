@@ -1,6 +1,6 @@
 digraph g {
 
-	s0 [shape="circle" label="s0"];
+	s0 [shape="circle" label="0"];
 	s0 -> s0 [label="a / 97"];
 	s0 -> s0 [label="b / 98"];
 

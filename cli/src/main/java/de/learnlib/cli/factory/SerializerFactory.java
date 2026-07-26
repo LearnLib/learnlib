@@ -16,7 +16,6 @@
 package de.learnlib.cli.factory;
 
 import java.io.DataOutput;
-import java.util.function.Function;
 
 import de.learnlib.cli.option.Options;
 import de.learnlib.cli.option.Output;
@@ -35,21 +34,14 @@ import net.automatalib.serialization.learnlibv2.LearnLibV2Serialization;
 import net.automatalib.serialization.mata.writer.MataNFAWriter;
 import net.automatalib.serialization.saf.SAFWriters;
 import net.automatalib.serialization.taf.writer.TAFWriters;
-import net.automatalib.ts.simple.SimpleTS;
 
-@FunctionalInterface
-public interface SerializerFactory<M extends SimpleTS<?, String>>
-        extends Function<Options, InputModelSerializer<String, M>> {
+public final class SerializerFactory {
 
-    SerializerFactory<DFA<?, String>> DFA_SERIALIZER = SerializerFactory::getDFASerializer;
-    SerializerFactory<MealyMachine<?, String, ?, String>> MEALY_SERIALIZER = SerializerFactory::getMealySerializer;
-    SerializerFactory<NFA<?, String>> NFA_SERIALIZER = SerializerFactory::getNFASerializer;
-    SerializerFactory<SBA<?, String>> SBA_SERIALIZER = SerializerFactory::getSBASerializer;
-    SerializerFactory<SPA<?, String>> SPA_SERIALIZER = SerializerFactory::getSPASerializer;
-    SerializerFactory<SPMM<?, String, ?, String>> SPMM_SERIALIZER = SerializerFactory::getSPMMSerializer;
-    SerializerFactory<OneSEVPA<?, String>> VPA_SERIALIZER = SerializerFactory::getVPASerializer;
+    private SerializerFactory() {
+        // prevent instantiation
+    }
 
-    private static <I> InputModelSerializer<I, DFA<?, I>> getDFASerializer(Options options) {
+    public static <I> InputModelSerializer<I, DFA<?, I>> getDFASerializer(Options options) {
         final InputModelSerializer<I, ? super DFA<?, I>> dfaSerializer =
                 SerializerFactory.getDFASerializerInternal(options);
         return dfaSerializer::writeModel;
@@ -67,7 +59,7 @@ public interface SerializerFactory<M extends SimpleTS<?, String>>
         };
     }
 
-    private static <I> InputModelSerializer<I, MealyMachine<?, I, ?, String>> getMealySerializer(Options options) {
+    public static <I> InputModelSerializer<I, MealyMachine<?, I, ?, String>> getMealySerializer(Options options) {
         return switch (options.format) {
             case DOT -> DOTSerializationProvider.forAutomaton();
             case SAF -> SAFWriters.mealy(DataOutput::writeUTF);
@@ -76,7 +68,7 @@ public interface SerializerFactory<M extends SimpleTS<?, String>>
         };
     }
 
-    private static <I> InputModelSerializer<I, NFA<?, I>> getNFASerializer(Options options) {
+    public static <I> InputModelSerializer<I, NFA<?, I>> getNFASerializer(Options options) {
         final InputModelSerializer<I, ? super NFA<?, I>> nfaSerializer =
                 SerializerFactory.getNFASerializerInternal(options);
         return nfaSerializer::writeModel;
@@ -93,35 +85,35 @@ public interface SerializerFactory<M extends SimpleTS<?, String>>
         };
     }
 
-    private static <I> InputModelSerializer<I, SBA<?, I>> getSBASerializer(Options options) {
+    public static <I> InputModelSerializer<I, SBA<?, I>> getSBASerializer(Options options) {
         if (options.format == Output.DOT) {
             return DOTSerializationProvider.forGraphViewableInput();
         }
         throw new UnsupportedCombinationException(options);
     }
 
-    private static <I> InputModelSerializer<I, SPA<?, I>> getSPASerializer(Options options) {
+    public static <I> InputModelSerializer<I, SPA<?, I>> getSPASerializer(Options options) {
         if (options.format == Output.DOT) {
             return DOTSerializationProvider.forGraphViewableInput();
         }
         throw new UnsupportedCombinationException(options);
     }
 
-    private static <I, O> InputModelSerializer<I, SPMM<?, I, ?, O>> getSPMMSerializer(Options options) {
+    public static <I, O> InputModelSerializer<I, SPMM<?, I, ?, O>> getSPMMSerializer(Options options) {
         if (options.format == Output.DOT) {
             return DOTSerializationProvider.forGraphViewableInput();
         }
         throw new UnsupportedCombinationException(options);
     }
 
-    private static <I> InputModelSerializer<I, OneSEVPA<?, I>> getVPASerializer(Options options) {
+    public static <I> InputModelSerializer<I, OneSEVPA<?, I>> getVPASerializer(Options options) {
         if (options.format == Output.DOT) {
             return DOTSerializationProvider.forGraphViewableInput();
         }
         throw new UnsupportedCombinationException(options);
     }
 
-    class UnsupportedCombinationException extends IllegalArgumentException {
+    private static final class UnsupportedCombinationException extends IllegalArgumentException {
 
         UnsupportedCombinationException(Options options) {
             super(String.format("Type '%s' cannot be written into '%s' format", options.type, options.format));
