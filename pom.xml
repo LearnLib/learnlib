@@ -276,7 +276,7 @@ limitations under the License.
         <checkerframework.version>4.2.1</checkerframework.version>
         <checkstyle.version>12.3.0</checkstyle.version>
         <extra-enforcer-rules.version>1.10.0</extra-enforcer-rules.version>
-        <fury.version>0.9.0</fury.version>
+        <fory.version>1.4.0</fory.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <logback.version>1.5.35</logback.version>
         <metainf-services.version>1.11</metainf-services.version>
@@ -654,9 +654,9 @@ limitations under the License.
 
             <!-- Serialization -->
             <dependency>
-                <groupId>org.apache.fury</groupId>
-                <artifactId>fury-core</artifactId>
-                <version>${fury.version}</version>
+                <groupId>org.apache.fory</groupId>
+                <artifactId>fory-core</artifactId>
+                <version>${fory.version}</version>
             </dependency>
 
             <!-- Logging -->
@@ -932,12 +932,16 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>${resources-plugin.version}</version>
+                    <configuration>
+                        <propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${compiler-plugin.version}</version>
                     <configuration>
+                        <compilerArgs>-Xlint:unchecked</compilerArgs>
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>de.learnlib.tooling</groupId>

@@ -46,6 +46,8 @@ import picocli.CommandLine;
 public class ApplicationIT {
 
     public static final String STATELESS = getPathToScript("/sul/stateless.py");
+    public static final String STATELESS_BROKEN = getPathToScript("/sul/stateless_broken.py");
+    public static final String STATELESS_LARGE = getPathToScript("/sul/stateless_large.py");
     public static final String STATELESS_SPA = getPathToScript("/sul/spa.py");
     public static final String STATELESS_SBA = getPathToScript("/sul/sba.py");
     public static final String STATEFUL = getPathToScript("/sul/stateful.py");
@@ -219,7 +221,7 @@ public class ApplicationIT {
         }
     }
 
-    private void checkOutputs(Path output, String resource) throws IOException {
+    public static void checkOutputs(Path output, String resource) throws IOException {
         final StringWriter expectedWriter = new StringWriter();
 
         try (Reader reader = IOUtil.asBufferedUTF8Reader(ApplicationIT.class.getResourceAsStream(resource))) {

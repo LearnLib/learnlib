@@ -23,6 +23,7 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
+@SuppressWarnings("PMD.TooManyFields")
 public class Options {
 
     @Parameters(paramLabel = "<path>", descriptionKey = "option.sul", arity = "1..*")
@@ -60,6 +61,12 @@ public class Options {
 
     @Option(names = {"-o", "--output"}, paramLabel = "<path>", descriptionKey = "option.output")
     public Path output;
+
+    @Option(names = "--resume-from", paramLabel = "<path>", descriptionKey = "option.resume")
+    public Path resumeFrom;
+
+    @Option(names = "--snapshot-dir", paramLabel = "<path>", descriptionKey = "option.snapshot")
+    public Path snapshotDir;
 
     @Option(names = {"-v", "--verbose"}, descriptionKey = "option.verbose")
     public boolean[] verbosity;

@@ -20,12 +20,21 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
+import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
+import de.learnlib.algorithm.LearningAlgorithm.MooreLearner;
 import de.learnlib.logging.Category;
 import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.EquivalenceOracle.DFAEquivalenceOracle;
+import de.learnlib.oracle.EquivalenceOracle.MealyEquivalenceOracle;
+import de.learnlib.oracle.EquivalenceOracle.MooreEquivalenceOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatisticsKey;
 import de.learnlib.statistic.StatisticsService;
+import de.learnlib.tooling.annotation.refinement.GenerateRefinement;
+import de.learnlib.tooling.annotation.refinement.Generic;
+import de.learnlib.tooling.annotation.refinement.Mapping;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.fsa.DFA;
@@ -42,8 +51,47 @@ import org.slf4j.LoggerFactory;
  *
  * @param <A>
  *         the automaton type
+ * @param <I>
+ *         input symbol type
+ * @param <D>
+ *         output domain type
  */
-public class Experiment<A extends FiniteRepresentation> {
+@GenerateRefinement(name = "DFAExperiment",
+                    generics = @Generic(value = "I", desc = "input symbol type"),
+                    parentGenerics = {@Generic(clazz = DFA.class, generics = {"?", "I"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Boolean.class)},
+                    typeMappings = {@Mapping(from = LearningAlgorithm.class,
+                                             to = DFALearner.class,
+                                             generics = @Generic("I")),
+                                    @Mapping(from = EquivalenceOracle.class,
+                                             to = DFAEquivalenceOracle.class,
+                                             generics = @Generic("I"))})
+@GenerateRefinement(name = "MealyExperiment",
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
+                    parentGenerics = {@Generic(clazz = MealyMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    typeMappings = {@Mapping(from = LearningAlgorithm.class,
+                                             to = MealyLearner.class,
+                                             generics = {@Generic("I"), @Generic("O")}),
+                                    @Mapping(from = EquivalenceOracle.class,
+                                             to = MealyEquivalenceOracle.class,
+                                             generics = {@Generic("I"), @Generic("O")})})
+@GenerateRefinement(name = "MooreExperiment",
+                    generics = {@Generic(value = "I", desc = "input symbol type"),
+                                @Generic(value = "O", desc = "output symbol type")},
+                    parentGenerics = {@Generic(clazz = MooreMachine.class, generics = {"?", "I", "?", "O"}),
+                                      @Generic("I"),
+                                      @Generic(clazz = Word.class, generics = "O")},
+                    typeMappings = {@Mapping(from = LearningAlgorithm.class,
+                                             to = MooreLearner.class,
+                                             generics = {@Generic("I"), @Generic("O")}),
+                                    @Mapping(from = EquivalenceOracle.class,
+                                             to = MooreEquivalenceOracle.class,
+                                             generics = {@Generic("I"), @Generic("O")})})
+public class Experiment<A extends FiniteRepresentation, I, D> {
 
     /**
      * The {@link StatisticsKey} this class uses for clocking the duration of the exploration phase of the learning
@@ -68,8 +116,14 @@ public class Experiment<A extends FiniteRepresentation> {
      */
     public static final StatisticsKey KEY_FINAL_SIZE = new StatisticsKey("exp-hyp-size", "Size of final hypothesis");
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Experiment.class);
-    private final ExperimentImpl<?, ?> impl;
+    protected static final Logger LOGGER = LoggerFactory.getLogger(Experiment.class);
+
+    protected final LearningAlgorithm<? extends A, I, D> learningAlgorithm;
+    protected final EquivalenceOracle<? super A, I, D> equivalenceAlgorithm;
+    protected final Alphabet<I> inputs;
+    protected final @Nullable InputModelSerializer<I, ? super A> serializer;
+    protected final StatisticsService statistics;
+    private int rounds;
     private @Nullable A finalHypothesis;
 
     /**
@@ -83,16 +137,12 @@ public class Experiment<A extends FiniteRepresentation> {
      *         the strategy for finding counterexamples
      * @param inputs
      *         the inputs to consider for exploration
-     * @param <I>
-     *         input symbol type
-     * @param <D>
-     *         output domain type
      *
      * @see Experiment#Experiment(LearningAlgorithm, EquivalenceOracle, Alphabet, InputModelSerializer)
      */
-    public <I, D> Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
-                             EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
-                             Alphabet<I> inputs) {
+    public Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
+                      EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
+                      Alphabet<I> inputs) {
         this(learningAlgorithm, equivalenceAlgorithm, inputs, null);
     }
 
@@ -108,33 +158,16 @@ public class Experiment<A extends FiniteRepresentation> {
      * @param serializer
      *         the serializer for logging intermediate hypotheses (may be {@code null} in case no such logging is
      *         wanted)
-     * @param <I>
-     *         input symbol type
-     * @param <D>
-     *         output domain type
      */
-    public <I, D> Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
-                             EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
-                             Alphabet<I> inputs,
-                             @Nullable InputModelSerializer<I, ? super A> serializer) {
-        this.impl = new ExperimentImpl<>(learningAlgorithm, equivalenceAlgorithm, inputs, serializer);
-    }
-
-    /**
-     * Run the experiment, once.
-     *
-     * @return the final hypothesis
-     *
-     * @throws IllegalStateException
-     *         if invoked more than once
-     */
-    public A run() {
-        if (this.finalHypothesis != null) {
-            throw new IllegalStateException("Experiment has already been run");
-        }
-
-        finalHypothesis = impl.run();
-        return finalHypothesis;
+    public Experiment(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
+                      EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
+                      Alphabet<I> inputs,
+                      @Nullable InputModelSerializer<I, ? super A> serializer) {
+        this.learningAlgorithm = learningAlgorithm;
+        this.equivalenceAlgorithm = equivalenceAlgorithm;
+        this.inputs = inputs;
+        this.serializer = serializer;
+        this.statistics = Statistics.getService();
     }
 
     /**
@@ -145,7 +178,7 @@ public class Experiment<A extends FiniteRepresentation> {
      * @throws IllegalStateException
      *         if the experiment has not been run yet
      */
-    public A getFinalHypothesis() {
+    public final A getFinalHypothesis() {
         if (finalHypothesis == null) {
             throw new IllegalStateException("Experiment has not yet been run");
         }
@@ -153,107 +186,95 @@ public class Experiment<A extends FiniteRepresentation> {
         return finalHypothesis;
     }
 
-    private final class ExperimentImpl<I, D> {
-
-        private final LearningAlgorithm<? extends A, I, D> learningAlgorithm;
-        private final EquivalenceOracle<? super A, I, D> equivalenceAlgorithm;
-        private final Alphabet<I> inputs;
-        private final @Nullable InputModelSerializer<I, ? super A> serializer;
-        private final StatisticsService statistics;
-        private int rounds;
-
-        ExperimentImpl(LearningAlgorithm<? extends A, I, D> learningAlgorithm,
-                       EquivalenceOracle<? super A, I, D> equivalenceAlgorithm,
-                       Alphabet<I> inputs,
-                       @Nullable InputModelSerializer<I, ? super A> serializer) {
-            this.learningAlgorithm = learningAlgorithm;
-            this.equivalenceAlgorithm = equivalenceAlgorithm;
-            this.inputs = inputs;
-            this.serializer = serializer;
-            this.statistics = Statistics.getService();
+    /**
+     * Run the experiment, once.
+     *
+     * @return the final hypothesis
+     *
+     * @throws IllegalStateException
+     *         if invoked more than once
+     */
+    public final A run() {
+        if (this.finalHypothesis != null) {
+            throw new IllegalStateException("Experiment has already been run");
         }
 
-        A run() {
+        finalHypothesis = runInternal();
+        return finalHypothesis;
+    }
+
+    private A runInternal() {
+        rounds++;
+        statistics.increaseCounter(KEY_ROUNDS, this);
+        LOGGER.info(Category.PHASE, "Starting round {}", rounds);
+        LOGGER.info(Category.PHASE, "Learning");
+
+        initializeLearning();
+
+        while (true) {
+            final A hyp = learningAlgorithm.getHypothesisModel();
+
+            if (serializer != null) {
+                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                try {
+                    serializer.writeModel(baos, hyp, inputs);
+                    LOGGER.info(Category.MODEL, "Intermediate hypothesis:\n{}", baos.toString(StandardCharsets.UTF_8));
+                } catch (IOException e) {
+                    LOGGER.warn("Couldn't write intermediate hypothesis", e);
+                }
+            }
+
+            LOGGER.info(Category.PHASE, "Searching for counterexample");
+
+            statistics.startOrResumeClock(KEY_DUR_CEX, this);
+            DefaultQuery<I, D> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
+            statistics.pauseClock(KEY_DUR_CEX, this);
+
+            if (ce == null) {
+                statistics.setCounter(KEY_FINAL_SIZE, hyp.size(), this);
+                return hyp;
+            }
+
+            LOGGER.info(Category.COUNTEREXAMPLE, ce.getInput().toString());
+
+            // next round ...
             rounds++;
-            statistics.increaseCounter(KEY_ROUNDS, Experiment.this);
+            statistics.increaseCounter(KEY_ROUNDS, this);
             LOGGER.info(Category.PHASE, "Starting round {}", rounds);
             LOGGER.info(Category.PHASE, "Learning");
 
-            statistics.startOrResumeClock(KEY_DUR_LEARN, Experiment.this);
-            learningAlgorithm.startLearning();
-            statistics.pauseClock(KEY_DUR_LEARN, Experiment.this);
+            statistics.startOrResumeClock(KEY_DUR_LEARN, this);
+            final boolean refined = learningAlgorithm.refineHypothesis(ce);
+            statistics.pauseClock(KEY_DUR_LEARN, this);
 
-            while (true) {
-                final A hyp = learningAlgorithm.getHypothesisModel();
+            assert refined;
 
-                if (serializer != null) {
-                    final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    try {
-                        serializer.writeModel(baos, hyp, inputs);
-                        LOGGER.info(Category.MODEL,
-                                    "Intermediate hypothesis:\n{}",
-                                    baos.toString(StandardCharsets.UTF_8));
-                    } catch (IOException e) {
-                        LOGGER.warn("Couldn't write intermediate hypothesis", e);
-                    }
-                }
-
-                LOGGER.info(Category.PHASE, "Searching for counterexample");
-
-                statistics.startOrResumeClock(KEY_DUR_CEX, Experiment.this);
-                DefaultQuery<I, D> ce = equivalenceAlgorithm.findCounterExample(hyp, inputs);
-                statistics.pauseClock(KEY_DUR_CEX, Experiment.this);
-
-                if (ce == null) {
-                    statistics.setCounter(KEY_FINAL_SIZE, hyp.size(), Experiment.this);
-                    return hyp;
-                }
-
-                LOGGER.info(Category.COUNTEREXAMPLE, ce.getInput().toString());
-
-                // next round ...
-                rounds++;
-                statistics.increaseCounter(KEY_ROUNDS, Experiment.this);
-                LOGGER.info(Category.PHASE, "Starting round {}", rounds);
-                LOGGER.info(Category.PHASE, "Learning");
-
-                statistics.startOrResumeClock(KEY_DUR_LEARN, Experiment.this);
-                final boolean refined = learningAlgorithm.refineHypothesis(ce);
-                statistics.pauseClock(KEY_DUR_LEARN, Experiment.this);
-
-                assert refined;
-            }
+            postRefinementHook();
         }
     }
 
-    public static class DFAExperiment<I> extends Experiment<DFA<?, I>> {
-
-        public DFAExperiment(LearningAlgorithm<? extends DFA<?, I>, I, Boolean> learningAlgorithm,
-                             EquivalenceOracle<? super DFA<?, I>, I, Boolean> equivalenceAlgorithm,
-                             Alphabet<I> inputs) {
-            super(learningAlgorithm, equivalenceAlgorithm, inputs);
-        }
-
+    /**
+     * Utility method to access to current learning round.
+     *
+     * @return the current learning round
+     */
+    protected final int getRound() {
+        return rounds;
     }
 
-    public static class MealyExperiment<I, O> extends Experiment<MealyMachine<?, I, ?, O>> {
-
-        public MealyExperiment(LearningAlgorithm<? extends MealyMachine<?, I, ?, O>, I, Word<O>> learningAlgorithm,
-                               EquivalenceOracle<? super MealyMachine<?, I, ?, O>, I, Word<O>> equivalenceAlgorithm,
-                               Alphabet<I> inputs) {
-            super(learningAlgorithm, equivalenceAlgorithm, inputs);
-        }
-
+    /**
+     * Initializes the learning process. By default, this method calls {@link LearningAlgorithm#startLearning()}.
+     */
+    protected void initializeLearning() {
+        statistics.startOrResumeClock(KEY_DUR_LEARN, this);
+        learningAlgorithm.startLearning();
+        statistics.pauseClock(KEY_DUR_LEARN, this);
     }
 
-    public static class MooreExperiment<I, O> extends Experiment<MooreMachine<?, I, ?, O>> {
-
-        public MooreExperiment(LearningAlgorithm<? extends MooreMachine<?, I, ?, O>, I, Word<O>> learningAlgorithm,
-                               EquivalenceOracle<? super MooreMachine<?, I, ?, O>, I, Word<O>> equivalenceAlgorithm,
-                               Alphabet<I> inputs) {
-            super(learningAlgorithm, equivalenceAlgorithm, inputs);
-        }
-
+    /**
+     * Called upon calling {@link LearningAlgorithm#refineHypothesis(DefaultQuery)}.
+     */
+    protected void postRefinementHook() {
+        // do nothing by default
     }
-
 }

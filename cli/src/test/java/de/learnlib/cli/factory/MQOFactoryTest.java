@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import de.learnlib.cli.ApplicationIT;
 import de.learnlib.cli.option.Options;
 import de.learnlib.cli.util.AcceptorNullOracle;
 import de.learnlib.cli.util.AdaptiveNullOracle;
@@ -166,7 +167,7 @@ public class MQOFactoryTest {
             Statistics.getService().clear();
 
             // with cache
-            Mockito.reset(oracleMock);
+            Mockito.reset(new Object[]{oracleMock}); // make compiler happy
             options.cache = true;
             oracle = oracleFunction.apply(options, alphabet);
 
@@ -184,7 +185,7 @@ public class MQOFactoryTest {
             Statistics.getService().clear();
 
             // with stats
-            Mockito.reset(oracleMock);
+            Mockito.reset(new Object[]{oracleMock}); // make compiler happy
             options.cache = false;
             options.statistics = true;
             oracle = oracleFunction.apply(options, alphabet);
@@ -203,7 +204,7 @@ public class MQOFactoryTest {
             Statistics.getService().clear();
 
             // with stats + cache
-            Mockito.reset(oracleMock);
+            Mockito.reset(new Object[]{oracleMock}); // make compiler happy
             options.cache = true;
             oracle = oracleFunction.apply(options, alphabet);
 
@@ -313,9 +314,7 @@ public class MQOFactoryTest {
 
     @Test
     public void testOutputTransformer() {
-        final URL resource = MQOFactoryTest.class.getResource("/sul/stateless_broken.py");
-        Assert.assertNotNull(resource);
-        File sulFile = new File(resource.getFile());
+        File sulFile = new File(ApplicationIT.STATELESS_BROKEN);
 
         final Options options = new Options();
         options.delimiter = "\\n";

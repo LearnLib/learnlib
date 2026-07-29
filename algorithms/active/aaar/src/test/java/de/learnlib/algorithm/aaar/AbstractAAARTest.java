@@ -52,12 +52,12 @@ public abstract class AbstractAAARTest<L extends AbstractAAARLearner<?, A, A, I,
         final WpMethodTestsIterator<I> iter = new WpMethodTestsIterator<>(automaton, alphabet);
         final List<Word<I>> testCases = IteratorUtil.list(iter);
 
-        final SampleSetEQOracle<I, D> eqo = new SampleSetEQOracle<>();
-        eqo.addAll(new SimulatorOracle<>(automaton), testCases);
+        final SampleSetEQOracle<I, D> eqo =
+                new SampleSetEQOracle<I, D>().addAll(new SimulatorOracle<>(automaton), testCases);
 
         final LearningAlgorithm<A, I, D> learner =
                 new TranslatingLearnerWrapper<>((AbstractAAARLearner<?, A, A, I, I, D>) aaarLearner);
-        final Experiment<A> exp = new Experiment<>(learner, eqo, alphabet);
+        final Experiment<A, I, D> exp = new Experiment<>(learner, eqo, alphabet);
 
         exp.run();
 

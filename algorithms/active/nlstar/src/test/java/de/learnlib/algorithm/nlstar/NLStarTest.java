@@ -62,7 +62,8 @@ public class NLStarTest {
 
         final NLStarLearner<Character> learner = new NLStarLearner<>(alphabet, mqOracle);
 
-        final Experiment<NFA<?, Character>> experiment = new Experiment<>(learner, eqOracle, alphabet);
+        final Experiment<NFA<?, Character>, Character, Boolean> experiment =
+                new Experiment<>(learner, eqOracle, alphabet);
         experiment.run();
         final NFA<?, Character> hyp = experiment.getFinalHypothesis();
 

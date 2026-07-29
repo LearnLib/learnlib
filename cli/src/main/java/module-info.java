@@ -51,6 +51,7 @@ open module de.learnlib.cli {
 
     requires ch.qos.logback.classic;
     requires info.picocli;
+    requires org.apache.fory.core;
     requires org.slf4j;
 
 }

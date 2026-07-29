@@ -30,7 +30,7 @@ import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.testsupport.it.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.variant.LearnerVariantList.MealyLearnerVariantList;
-import de.learnlib.util.Experiment.MealyExperiment;
+import de.learnlib.util.MealyExperiment;
 import de.learnlib.util.mealy.MealyUtil;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;

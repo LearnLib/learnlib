@@ -36,7 +36,7 @@ import de.learnlib.oracle.property.MealyLassoPropertyOracle;
 import de.learnlib.oracle.property.MealyLoggingPropertyOracle;
 import de.learnlib.testsupport.example.LearningExample.MealyLearningExample;
 import de.learnlib.testsupport.example.mealy.ExampleTinyMealy;
-import de.learnlib.util.Experiment.MealyExperiment;
+import de.learnlib.util.MealyExperiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLAlternatingBuilder;

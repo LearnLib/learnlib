@@ -54,7 +54,7 @@ open module de.learnlib.example {
     requires net.automatalib.util;
     requires net.automatalib.serialization.dot;
     requires net.automatalib.visualization.dot;
-    requires org.apache.fury.core;
+    requires org.apache.fory.core;
     requires org.reactivestreams;
     requires reactor.core;
 

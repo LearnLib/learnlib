@@ -36,7 +36,7 @@ import de.learnlib.oracle.property.DFALassoPropertyOracle;
 import de.learnlib.oracle.property.DFALoggingPropertyOracle;
 import de.learnlib.testsupport.example.LearningExample.DFALearningExample;
 import de.learnlib.testsupport.example.dfa.ExampleTinyDFA;
-import de.learnlib.util.Experiment.DFAExperiment;
+import de.learnlib.util.DFAExperiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLDFABuilder;

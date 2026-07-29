@@ -19,7 +19,7 @@ import de.learnlib.algorithm.LearningAlgorithm.DFALearner;
 import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.SampleSetEQOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
-import de.learnlib.util.Experiment.DFAExperiment;
+import de.learnlib.util.Experiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
@@ -80,7 +80,8 @@ public abstract class AbstractCounterexampleQueueTest {
         final Word<Character> b = new WordBuilder<>('b', 9).toWord();
         eqOracle.addAll(mqOracle, Word.fromWords(b, a, b, a, b, a, b, a));
 
-        final DFAExperiment<Character> experiment = new DFAExperiment<>(learner, eqOracle, alphabet);
+        final Experiment<DFA<?, Character>, Character, Boolean> experiment =
+                new Experiment<>(learner, eqOracle, alphabet);
         experiment.run();
 
         final DFA<?, Character> result = experiment.getFinalHypothesis();

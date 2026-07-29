@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import de.learnlib.Resumable;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.cli.option.Options;
 import de.learnlib.logging.Category;
@@ -87,11 +88,9 @@ public abstract class AbstractRunner<A extends Alphabet<I>, M extends SimpleTS<?
 
         final EquivalenceOracle<M, I, D> eqo = eqoCreator.apply(options, eqoOracle);
         final InputModelSerializer<I, M> serializer = serializerCreator.apply(options);
+        final Experiment<M, I, D> experiment = buildExperiment(learner, eqo, alphabet, serializer, options);
 
-        final Experiment<M> experiment = new Experiment<>(learner, eqo, alphabet, serializer);
-        experiment.run();
-
-        final M hyp = experiment.getFinalHypothesis();
+        final M hyp = experiment.run();
 
         if (options.statistics) {
             final StatisticsService service = Statistics.getService();
@@ -108,6 +107,24 @@ public abstract class AbstractRunner<A extends Alphabet<I>, M extends SimpleTS<?
             }
         } catch (IOException e) {
             LOGGER.warn("Could not write hypothesis", e);
+        }
+    }
+
+    private Experiment<M, I, D> buildExperiment(LearningAlgorithm<M, I, D> learner,
+                                                EquivalenceOracle<M, I, D> eqo,
+                                                Alphabet<I> alphabet,
+                                                InputModelSerializer<I, M> serializer,
+                                                Options options) {
+        if (learner instanceof Resumable<?> r) {
+            return new SnapshottingExperiment<>(learner, r, eqo, alphabet, serializer, options);
+        } else {
+            if (options.resumeFrom != null || options.snapshotDir != null) {
+                throw new IllegalArgumentException(String.format(
+                        "Resuming learning processes is not supported by '%s' ('%s')",
+                        options.learner,
+                        options.type));
+            }
+            return new Experiment<>(learner, eqo, alphabet, serializer);
         }
     }
 

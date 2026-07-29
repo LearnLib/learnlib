@@ -38,7 +38,7 @@ import de.learnlib.statistic.Statistics;
 import de.learnlib.sul.SUL;
 import de.learnlib.sul.StateLocalInputSUL;
 import de.learnlib.testsupport.example.mealy.ExampleRandomStateLocalInputMealy;
-import de.learnlib.util.Experiment.MealyExperiment;
+import de.learnlib.util.MealyExperiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;

@@ -16,19 +16,24 @@
 package de.learnlib.testsupport;
 
 import de.learnlib.Resumable;
-import org.apache.fury.Fury;
-import org.apache.fury.logging.LoggerFactory;
+import org.apache.fory.Fory;
+import org.apache.fory.logging.LoggerFactory;
 
 /**
  * Utility functions for {@link Resumable} features.
  */
 public final class ResumeUtils {
 
-    private static final Fury FURY;
+    private static final Fory FURY;
 
     static {
         LoggerFactory.useSlf4jLogging(true);
-        FURY = Fury.builder().withRefTracking(true).requireClassRegistration(false).build();
+        FURY = Fory.builder()
+                   .requireClassRegistration(false)
+                   .withCodegen(false)
+                   .withRefTracking(true)
+                   .withXlang(false)
+                   .build();
     }
 
     private ResumeUtils() {

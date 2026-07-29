@@ -33,7 +33,7 @@ import picocli.CommandLine.Mixin;
          descriptionHeading = "%nDescription:%n%n",
          parameterListHeading = "%nParameters:%n",
          optionListHeading = "%nOptions:%n",
-         description = "Runs an active automata learning process by invoking the provided SUL to answer membership queries. For learning acceptor-based formalisms, the tool will use the exitcode of the binary to determine acceptance where an exitcode of 0 equals 'accept' and an exitcode unequal to 0 equals 'reject'. For learning transduction-based formalisms, the tool expects the SUL to emit an output that is transformed into individual symbols using the provided 'delimiter'. For additional information on the involved components of LearnLib, you may use the documentation available at https://learnlib.de/learnlib/maven-site/.")
+         description = "Runs an active automata learning process by invoking the provided SUL(s) to answer membership queries. For learning acceptor-based formalisms, the tool will use the exitcode of the binary to determine acceptance where an exitcode of 0 equals 'accept' and an exitcode unequal to 0 equals 'reject'. For learning transduction-based formalisms, the tool expects the SUL to emit an output that is transformed into individual symbols using the provided 'delimiter'. For additional information on the involved components of LearnLib, you may use the documentation available at https://learnlib.de/learnlib/maven-site/.")
 public class Application implements Runnable {
 
     public static final String PROPERTIES = "application";
@@ -67,6 +67,4 @@ public class Application implements Runnable {
             root.setLevel(level);
         }
     }
-
 }
-
