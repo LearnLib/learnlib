@@ -44,73 +44,79 @@ public class EQOParams {
 
     public static class KWayStateMethod {
 
-        @Option(names = "--eqo-kways-k", defaultValue = "2", paramLabel = "<int>", descriptionKey = "param.eqo.kways.k")
+        @Option(names = "--eqo-kway-s-k",
+                defaultValue = "2",
+                paramLabel = "<int>",
+                descriptionKey = "param.eqo.kway-s.k")
         public int k;
 
-        @Option(names = "--eqo-kways-randomWalkLen",
+        @Option(names = "--eqo-kway-s-randomWalkLen",
                 defaultValue = "20",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.kways.randomWalkLen")
+                descriptionKey = "param.eqo.kway-s.randomWalkLen")
         public int randomWalkLen;
 
-        @Option(names = "--eqo-kways-combinationMethod",
+        @Option(names = "--eqo-kway-s-combinationMethod",
                 defaultValue = "PERMUTATIONS",
                 paramLabel = "<method>",
-                descriptionKey = "param.eqo.kways.combinationMethod")
+                descriptionKey = "param.eqo.kway-s.combinationMethod")
         public CombinationMethod combinationMethod;
 
-        @Option(names = "--eqo-kways-seed",
+        @Option(names = "--eqo-kway-s-seed",
                 defaultValue = "42",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.kways.seed")
+                descriptionKey = "param.eqo.kway-s.seed")
         public int seed;
     }
 
     public static class KWayTransitionMethod {
 
-        @Option(names = "--eqo-kwayt-k", defaultValue = "2", paramLabel = "<int>", descriptionKey = "param.eqo.kwayt.k")
+        @Option(names = "--eqo-kway-t-k",
+                defaultValue = "2",
+                paramLabel = "<int>",
+                descriptionKey = "param.eqo.kway-t.k")
         public int k;
 
-        @Option(names = "--eqo-kwayt-randomWalkLen",
+        @Option(names = "--eqo-kway-t-randomWalkLen",
                 defaultValue = "10",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.kwayt.randomWalkLen")
+                descriptionKey = "param.eqo.kway-t.randomWalkLen")
         public int randomWalkLen;
 
-        @Option(names = "--eqo-kwayt-numGeneratePaths",
+        @Option(names = "--eqo-kway-t-numGeneratePaths",
                 defaultValue = "100",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.kwayt.numGeneratePaths")
+                descriptionKey = "param.eqo.kway-t.numGeneratePaths")
         public int numGeneratePaths;
 
-        @Option(names = "--eqo-kwayt-maxPathLen",
+        @Option(names = "--eqo-kway-t-maxPathLen",
                 defaultValue = "50",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.kwayt.maxPathLen")
+                descriptionKey = "param.eqo.kway-t.maxPathLen")
         public int maxPathLen;
 
-        @Option(names = "--eqo-kwayt-maxNumberOfSteps",
+        @Option(names = "--eqo-kway-t-maxNumberOfSteps",
                 defaultValue = "100",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.kwayt.maxNumberOfSteps")
+                descriptionKey = "param.eqo.kway-t.maxNumberOfSteps")
         public int maxNumberOfSteps;
 
-        @Option(names = "--eqo-kwayt-optimizationMetric",
+        @Option(names = "--eqo-kway-t-optimizationMetric",
                 defaultValue = "STEPS",
                 paramLabel = "<metric>",
-                descriptionKey = "param.eqo.kwayt.optimizationMetric")
+                descriptionKey = "param.eqo.kway-t.optimizationMetric")
         public OptimizationMetric optimizationMetric;
 
-        @Option(names = "--eqo-kwayt-generationMethod",
+        @Option(names = "--eqo-kway-t-generationMethod",
                 defaultValue = "RANDOM",
                 paramLabel = "<method>",
-                descriptionKey = "param.eqo.kwayt.generationMethod")
+                descriptionKey = "param.eqo.kway-t.generationMethod")
         public GenerationMethod generationMethod;
 
-        @Option(names = "--eqo-kwayt-seed",
+        @Option(names = "--eqo-kway-t-seed",
                 defaultValue = "42",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.kwayt.seed")
+                descriptionKey = "param.eqo.kway-t.seed")
         public int seed;
     }
 
@@ -143,55 +149,55 @@ public class EQOParams {
 
     public static class RandomWMethod {
 
-        @Option(names = "--eqo-randomw-minimalSize",
+        @Option(names = "--eqo-random-w-minimalSize",
                 defaultValue = "0",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.randomw.minimalSize")
+                descriptionKey = "param.eqo.random-w.minimalSize")
         public int minimalSize;
 
-        @Option(names = "--eqo-randomw-rndLength",
+        @Option(names = "--eqo-random-w-rndLength",
                 defaultValue = "5",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.randomw.rndLength")
+                descriptionKey = "param.eqo.random-w.rndLength")
         public int rndLength;
 
-        @Option(names = "--eqo-randomw-bound",
+        @Option(names = "--eqo-random-w-bound",
                 defaultValue = "100",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.randomw.bound")
+                descriptionKey = "param.eqo.random-w.bound")
         public int bound;
 
-        @Option(names = "--eqo-randomw-seed",
+        @Option(names = "--eqo-random-w-seed",
                 defaultValue = "42",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.randomw.seed")
+                descriptionKey = "param.eqo.random-w.seed")
         public int seed;
     }
 
     public static class RandomWpMethod {
 
-        @Option(names = "--eqo-randomwp-minimalSize",
+        @Option(names = "--eqo-random-wp-minimalSize",
                 defaultValue = "0",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.randomwp.minimalSize")
+                descriptionKey = "param.eqo.random-wp.minimalSize")
         public int minimalSize;
 
-        @Option(names = "--eqo-randomwp-rndLength",
+        @Option(names = "--eqo-random-wp-rndLength",
                 defaultValue = "5",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.randomwp.rndLength")
+                descriptionKey = "param.eqo.random-wp.rndLength")
         public int rndLength;
 
-        @Option(names = "--eqo-randomwp-bound",
+        @Option(names = "--eqo-random-wp-bound",
                 defaultValue = "100",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.randomwp.bound")
+                descriptionKey = "param.eqo.random-wp.bound")
         public int bound;
 
-        @Option(names = "--eqo-randomwp-seed",
+        @Option(names = "--eqo-random-wp-seed",
                 defaultValue = "42",
                 paramLabel = "<int>",
-                descriptionKey = "param.eqo.randomwp.seed")
+                descriptionKey = "param.eqo.random-wp.seed")
         public int seed;
     }
 
