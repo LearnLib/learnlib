@@ -41,7 +41,7 @@ public class SnapshotIT {
         final IExecutionExceptionHandler defaultHandler = cmd.getExecutionExceptionHandler();
 
         cmd.setExecutionExceptionHandler((ex, commandLine, fullParseResult) -> {
-            Assert.assertTrue(ex instanceof IllegalArgumentException);
+            Assert.assertTrue(ex instanceof IllegalArgumentException, ex.toString());
             return defaultHandler.handleExecutionException(ex, commandLine, fullParseResult);
         });
         cmd.setParameterExceptionHandler((ex, args) -> {

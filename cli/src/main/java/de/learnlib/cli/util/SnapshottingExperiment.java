@@ -18,7 +18,7 @@ package de.learnlib.cli.util;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import de.learnlib.Resumable;
@@ -63,7 +63,7 @@ final class SnapshottingExperiment<A extends FiniteRepresentation, I, D> extends
         super(learningAlgorithm, equivalenceAlgorithm, inputs, serializer);
 
         this.resumable = resumable;
-        this.fingerPrint = DTF.format(LocalDate.now());
+        this.fingerPrint = DTF.format(LocalDateTime.now());
         this.resumeFrom = options.resumeFrom;
         this.snapshotDir = options.snapshotDir;
 
