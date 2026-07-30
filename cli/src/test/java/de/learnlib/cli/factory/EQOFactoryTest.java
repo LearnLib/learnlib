@@ -245,34 +245,34 @@ public class EQOFactoryTest {
         args.add("-sa");
         Arrays.stream(EQOracle.values()).map(EQOracle::name).forEach(n -> args.add("-e" + n));
 
-        args.add("--eqo-kway-s-combinationMethod=" + RandomUtil.choose(r, CombinationMethod.values()));
-        args.add("--eqo-kway-s-k=" + r.nextInt(randomBound));
-        args.add("--eqo-kway-s-randomWalkLen=" + r.nextInt(randomBound));
-        args.add("--eqo-kway-s-seed=" + r.nextInt(randomBound));
+        args.add("--eqo-kways-combinationMethod=" + RandomUtil.choose(r, CombinationMethod.values()));
+        args.add("--eqo-kways-k=" + r.nextInt(randomBound));
+        args.add("--eqo-kways-randomWalkLen=" + r.nextInt(randomBound));
+        args.add("--eqo-kways-seed=" + r.nextInt(randomBound));
 
-        args.add("--eqo-kway-t-randomWalkLen=" + r.nextInt(randomBound));
-        args.add("--eqo-kway-t-numGeneratePaths=" + r.nextInt(randomBound));
-        args.add("--eqo-kway-t-maxPathLen=" + r.nextInt(randomBound));
-        args.add("--eqo-kway-t-maxNumberOfSteps=" + r.nextInt(randomBound));
-        args.add("--eqo-kway-t-k=" + r.nextInt(randomBound));
-        args.add("--eqo-kway-t-optimizationMetric=" + RandomUtil.choose(r, OptimizationMetric.values()));
-        args.add("--eqo-kway-t-generationMethod=" + RandomUtil.choose(r, GenerationMethod.values()));
-        args.add("--eqo-kway-t-seed=" + r.nextInt(randomBound));
+        args.add("--eqo-kwayt-randomWalkLen=" + r.nextInt(randomBound));
+        args.add("--eqo-kwayt-numGeneratePaths=" + r.nextInt(randomBound));
+        args.add("--eqo-kwayt-maxPathLen=" + r.nextInt(randomBound));
+        args.add("--eqo-kwayt-maxNumberOfSteps=" + r.nextInt(randomBound));
+        args.add("--eqo-kwayt-k=" + r.nextInt(randomBound));
+        args.add("--eqo-kwayt-optimizationMetric=" + RandomUtil.choose(r, OptimizationMetric.values()));
+        args.add("--eqo-kwayt-generationMethod=" + RandomUtil.choose(r, GenerationMethod.values()));
+        args.add("--eqo-kwayt-seed=" + r.nextInt(randomBound));
 
         args.add("--eqo-random-minLength=" + r.nextInt(randomBound));
         args.add("--eqo-random-maxLength=" + r.nextInt(randomBound));
         args.add("--eqo-random-maxTests=" + r.nextInt(randomBound));
         args.add("--eqo-random-seed=" + r.nextInt(randomBound));
 
-        args.add("--eqo-random-w-minimalSize=" + r.nextInt(randomBound));
-        args.add("--eqo-random-w-rndLength=" + r.nextInt(randomBound));
-        args.add("--eqo-random-w-bound=" + r.nextInt(randomBound));
-        args.add("--eqo-random-w-seed=" + r.nextInt(randomBound));
+        args.add("--eqo-randomw-minimalSize=" + r.nextInt(randomBound));
+        args.add("--eqo-randomw-rndLength=" + r.nextInt(randomBound));
+        args.add("--eqo-randomw-bound=" + r.nextInt(randomBound));
+        args.add("--eqo-randomw-seed=" + r.nextInt(randomBound));
 
-        args.add("--eqo-random-wp-minimalSize=" + r.nextInt(randomBound));
-        args.add("--eqo-random-wp-rndLength=" + r.nextInt(randomBound));
-        args.add("--eqo-random-wp-bound=" + r.nextInt(randomBound));
-        args.add("--eqo-random-wp-seed=" + r.nextInt(randomBound));
+        args.add("--eqo-randomwp-minimalSize=" + r.nextInt(randomBound));
+        args.add("--eqo-randomwp-rndLength=" + r.nextInt(randomBound));
+        args.add("--eqo-randomwp-bound=" + r.nextInt(randomBound));
+        args.add("--eqo-randomwp-seed=" + r.nextInt(randomBound));
 
         args.add("--eqo-w-lookahead=" + r.nextInt(randomBound));
         args.add("--eqo-w-expectedSize=" + r.nextInt(randomBound));
