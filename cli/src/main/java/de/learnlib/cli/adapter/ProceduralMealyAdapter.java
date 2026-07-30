@@ -22,7 +22,9 @@ import de.learnlib.algorithm.kv.mealy.KearnsVaziraniMealy;
 import de.learnlib.algorithm.lambda.lstar.LLambdaMealy;
 import de.learnlib.algorithm.lambda.ttt.mealy.TTTLambdaMealy;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
+import de.learnlib.algorithm.malerpnueli.MalerPnueliMealy;
 import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealy;
+import de.learnlib.algorithm.rivestschapire.RivestSchapireMealy;
 import de.learnlib.algorithm.sparse.SparseLearner;
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealy;
 import de.learnlib.oracle.MembershipOracle;
@@ -63,6 +65,13 @@ public interface ProceduralMealyAdapter<I, O>
         }
     }
 
+    final class MalerPnueliMealyAdapter<I, O> extends MalerPnueliMealy<I, O> implements ProceduralMealyAdapter<I, O> {
+
+        public MalerPnueliMealyAdapter(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
+            super(alphabet, oracle);
+        }
+    }
+
     final class SparseLearnerAdapter<I, O> extends SparseLearner<I, O> implements ProceduralMealyAdapter<I, O> {
 
         public SparseLearnerAdapter(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
@@ -73,6 +82,14 @@ public interface ProceduralMealyAdapter<I, O>
     final class OPLearnerMealyAdapter<I, O> extends OPLearnerMealy<I, O> implements ProceduralMealyAdapter<I, O> {
 
         public OPLearnerMealyAdapter(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
+            super(alphabet, oracle);
+        }
+    }
+
+    final class RivestSchapireMealyAdapter<I, O> extends RivestSchapireMealy<I, O>
+            implements ProceduralMealyAdapter<I, O> {
+
+        public RivestSchapireMealyAdapter(Alphabet<I> alphabet, MembershipOracle<I, Word<O>> oracle) {
             super(alphabet, oracle);
         }
     }

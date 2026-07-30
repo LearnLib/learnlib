@@ -27,14 +27,18 @@ import de.learnlib.algorithm.ttt.vpa.TTTLearnerVPABuilder;
 import de.learnlib.cli.adapter.ProceduralDFAAdapter.ExtensibleLStarDFAAdapter;
 import de.learnlib.cli.adapter.ProceduralDFAAdapter.KearnsVaziraniDFAAdapter;
 import de.learnlib.cli.adapter.ProceduralDFAAdapter.LLambdaDFAAdapter;
+import de.learnlib.cli.adapter.ProceduralDFAAdapter.MalerPnueliDFAAdapter;
 import de.learnlib.cli.adapter.ProceduralDFAAdapter.OPLearnerDFAAdapter;
+import de.learnlib.cli.adapter.ProceduralDFAAdapter.RivestSchapireDFAAdapter;
 import de.learnlib.cli.adapter.ProceduralDFAAdapter.TTTLambdaDFAAdapter;
 import de.learnlib.cli.adapter.ProceduralDFAAdapter.TTTLearnerDFAAdapter;
 import de.learnlib.cli.adapter.ProceduralMealyAdapter.ExtensibleLStarMealyAdapter;
 import de.learnlib.cli.adapter.ProceduralMealyAdapter.KearnsVaziraniMealyAdapter;
 import de.learnlib.cli.adapter.ProceduralMealyAdapter.LLambdaMealyAdapter;
+import de.learnlib.cli.adapter.ProceduralMealyAdapter.MalerPnueliMealyAdapter;
 import de.learnlib.cli.adapter.ProceduralMealyAdapter.MealyDHCAdapter;
 import de.learnlib.cli.adapter.ProceduralMealyAdapter.OPLearnerMealyAdapter;
+import de.learnlib.cli.adapter.ProceduralMealyAdapter.RivestSchapireMealyAdapter;
 import de.learnlib.cli.adapter.ProceduralMealyAdapter.SparseLearnerAdapter;
 import de.learnlib.cli.adapter.ProceduralMealyAdapter.TTTLambdaMealyAdapter;
 import de.learnlib.cli.adapter.ProceduralMealyAdapter.TTTLearnerMealyAdapter;
@@ -63,12 +67,14 @@ public final class LearnerFactory {
 
     public static <I> DFAConstructor<Alphabet<I>, I> getDFALearner(Options options) {
         return switch (options.learner) {
-            case KV -> KearnsVaziraniDFAAdapter::new;
-            case LLAMBDA -> LLambdaDFAAdapter::new;
-            case LSTAR -> ExtensibleLStarDFAAdapter::new;
-            case OP -> OPLearnerDFAAdapter::new;
+            case KEARNS_VAZIRANI -> KearnsVaziraniDFAAdapter::new;
+            case L_LAMBDA -> LLambdaDFAAdapter::new;
+            case L_STAR -> ExtensibleLStarDFAAdapter::new;
+            case MALER_PNUELI -> MalerPnueliDFAAdapter::new;
+            case OBSERVATION_PACK -> OPLearnerDFAAdapter::new;
+            case RIVEST_SCHAPIRE -> RivestSchapireDFAAdapter::new;
             case TTT -> TTTLearnerDFAAdapter::new;
-            case TTTLAMBDA -> TTTLambdaDFAAdapter::new;
+            case TTT_LAMBDA -> TTTLambdaDFAAdapter::new;
             default -> throw new UnsupportedCombinationException(options);
         };
     }
@@ -76,13 +82,15 @@ public final class LearnerFactory {
     public static <I, O> MealyConstructor<Alphabet<I>, I, O> getMealyLearner(Options options) {
         return switch (options.learner) {
             case DHC -> MealyDHCAdapter::new;
-            case KV -> KearnsVaziraniMealyAdapter::new;
-            case LLAMBDA -> LLambdaMealyAdapter::new;
-            case LSTAR -> ExtensibleLStarMealyAdapter::new;
+            case KEARNS_VAZIRANI -> KearnsVaziraniMealyAdapter::new;
+            case L_LAMBDA -> LLambdaMealyAdapter::new;
+            case L_STAR -> ExtensibleLStarMealyAdapter::new;
+            case MALER_PNUELI -> MalerPnueliMealyAdapter::new;
+            case OBSERVATION_PACK -> OPLearnerMealyAdapter::new;
+            case RIVEST_SCHAPIRE -> RivestSchapireMealyAdapter::new;
             case SPARSE -> SparseLearnerAdapter::new;
-            case OP -> OPLearnerMealyAdapter::new;
             case TTT -> TTTLearnerMealyAdapter::new;
-            case TTTLAMBDA -> TTTLambdaMealyAdapter::new;
+            case TTT_LAMBDA -> TTTLambdaMealyAdapter::new;
             default -> throw new UnsupportedCombinationException(options);
         };
     }
@@ -90,13 +98,13 @@ public final class LearnerFactory {
     public static <I, O> AdaptiveConstructor<Alphabet<I>, MealyMachine<?, I, ?, O>, I, O> getAdaptiveLearner(Options options) {
         return switch (options.learner) {
             case ADT -> ADTLearner::new;
-            case LSHARP -> LSharpMealy::new;
+            case L_SHARP -> LSharpMealy::new;
             default -> throw new UnsupportedCombinationException(options);
         };
     }
 
     public static <I> PresetConstructor<Alphabet<I>, NFA<?, I>, I, Boolean> getNFALearner(Options options) {
-        if (options.learner == Learner.NLSTAR) {
+        if (options.learner == Learner.NL_STAR) {
             return NLStarLearner::new;
         }
         throw new UnsupportedCombinationException(options);
@@ -120,7 +128,8 @@ public final class LearnerFactory {
 
     public static <I> PresetConstructor<VPAlphabet<I>, OneSEVPA<?, I>, I, Boolean> getVPALearner(Options options) {
         return switch (options.learner) {
-            case OP -> (alphabet, mqo) -> new OPLearnerVPABuilder<I>().withAlphabet(alphabet).withOracle(mqo).create();
+            case OBSERVATION_PACK ->
+                    (alphabet, mqo) -> new OPLearnerVPABuilder<I>().withAlphabet(alphabet).withOracle(mqo).create();
             case TTT ->
                     (alphabet, mqo) -> new TTTLearnerVPABuilder<I>().withAlphabet(alphabet).withOracle(mqo).create();
             default -> throw new UnsupportedCombinationException(options);

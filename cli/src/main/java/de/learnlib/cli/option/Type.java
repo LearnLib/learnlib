@@ -38,7 +38,7 @@ public enum Type {
     MEALY {
         @Override
         public Runner runner(Options options) {
-            if (options.learner == Learner.ADT || options.learner == Learner.LSHARP) {
+            if (options.learner == Learner.ADT || options.learner == Learner.L_SHARP) {
                 return new AdaptiveRunner<>(AlphabetFactory::getRegularAlphabet,
                                             MQOFactory::getAdaptiveOracle,
                                             LearnerFactory::getAdaptiveLearner,

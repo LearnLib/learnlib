@@ -85,7 +85,6 @@ public class ApplicationIT {
         Assert.assertEquals(exitCode, 0);
         Assert.assertEquals(root.getLevel(), Level.DEBUG);
 
-
         exitCode = cmd.execute("-vv", STATELESS, "-sa", "-eSAMPLE", "--eqo-sample=a b");
 
         Assert.assertEquals(exitCode, 0);
@@ -96,19 +95,19 @@ public class ApplicationIT {
 
     @Test
     public void testStatelessDFA() throws IOException {
-        checkRegularExecution(new String[] {"-lLSTAR", "-eSAMPLE", "--eqo-sample=a b", STATELESS}, "/ser/dfa.dot");
+        checkRegularExecution(new String[] {"-lL_STAR", "-eSAMPLE", "--eqo-sample=a b", STATELESS}, "/ser/dfa.dot");
     }
 
     @Test
     public void testMealyPreset() throws IOException {
-        checkRegularExecution(new String[] {"-lLSTAR", "-tMEALY", "-eSAMPLE", "--eqo-sample=a b", STATELESS},
+        checkRegularExecution(new String[] {"-lL_STAR", "-tMEALY", "-eSAMPLE", "--eqo-sample=a b", STATELESS},
                               "/ser/mealy.dot");
     }
 
     @Test
     public void testMealyAdaptive() throws IOException {
         checkRegularExecution(new String[] {"-tMEALY",
-                                            "-lLSHARP",
+                                            "-lL_SHARP",
                                             "-eSAMPLE",
                                             "--eqo-sample=a b",
                                             "--reset=reset",
@@ -117,25 +116,25 @@ public class ApplicationIT {
 
     @Test
     public void testStatelessNFA() throws IOException {
-        checkRegularExecution(new String[] {"-tNFA", "-lNLSTAR", "-eSAMPLE", "--eqo-sample=a b", STATELESS},
+        checkRegularExecution(new String[] {"-tNFA", "-lNL_STAR", "-eSAMPLE", "--eqo-sample=a b", STATELESS},
                               "/ser/dfa.dot");
     }
 
     @Test
     public void testStatelessSBA() throws IOException {
-        checkProceduralExecution(new String[] {"-lLSTAR", "-tSBA", "-eSAMPLE", "--eqo-sample=S a R", STATELESS_SBA},
+        checkProceduralExecution(new String[] {"-lL_STAR", "-tSBA", "-eSAMPLE", "--eqo-sample=S a R", STATELESS_SBA},
                                  null);
     }
 
     @Test
     public void testStatelessSPA() throws IOException {
-        checkProceduralExecution(new String[] {"-lLSTAR", "-tSPA", "-eSAMPLE", "--eqo-sample=S a R", STATELESS_SPA},
+        checkProceduralExecution(new String[] {"-lL_STAR", "-tSPA", "-eSAMPLE", "--eqo-sample=S a R", STATELESS_SPA},
                                  "/ser/spa.dot");
     }
 
     @Test
     public void testStatelessSPMM() throws IOException {
-        checkProceduralExecution(new String[] {"-lLSTAR",
+        checkProceduralExecution(new String[] {"-lL_STAR",
                                                "-tSPMM",
                                                "-eSAMPLE",
                                                "--eqo-sample=S a R",
@@ -150,7 +149,7 @@ public class ApplicationIT {
 
     @Test
     public void testStatistics() throws IOException {
-        checkRegularExecution(new String[] {"-lLSTAR", "-eSAMPLE", "--eqo-sample=abab", "--stats", STATELESS}, null);
+        checkRegularExecution(new String[] {"-lL_STAR", "-eSAMPLE", "--eqo-sample=abab", "--stats", STATELESS}, null);
 
         StatisticsService statistics = Statistics.getService();
         Assert.assertTrue(statistics.getCount(CounterOracle.KEY_SYMBOL.withId(AbstractRunner.EQO_KEY)).isPresent());
@@ -161,7 +160,7 @@ public class ApplicationIT {
     @Test
     public void testAdaptiveStatistics() throws IOException {
         checkRegularExecution(new String[] {"-tMEALY",
-                                            "-lLSHARP",
+                                            "-lL_SHARP",
                                             "-eSAMPLE",
                                             "--eqo-sample=abab",
                                             "--reset=reset",

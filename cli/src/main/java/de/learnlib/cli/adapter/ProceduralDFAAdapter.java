@@ -21,7 +21,9 @@ import de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFA;
 import de.learnlib.algorithm.lambda.lstar.LLambdaDFA;
 import de.learnlib.algorithm.lambda.ttt.dfa.TTTLambdaDFA;
 import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFA;
+import de.learnlib.algorithm.malerpnueli.MalerPnueliDFA;
 import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFA;
+import de.learnlib.algorithm.rivestschapire.RivestSchapireDFA;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.alphabet.Alphabet;
@@ -51,9 +53,23 @@ public interface ProceduralDFAAdapter<I>
         }
     }
 
+    final class MalerPnueliDFAAdapter<I> extends MalerPnueliDFA<I> implements ProceduralDFAAdapter<I> {
+
+        public MalerPnueliDFAAdapter(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
+            super(alphabet, oracle);
+        }
+    }
+
     final class OPLearnerDFAAdapter<I> extends OPLearnerDFA<I> implements ProceduralDFAAdapter<I> {
 
         public OPLearnerDFAAdapter(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
+            super(alphabet, oracle);
+        }
+    }
+
+    final class RivestSchapireDFAAdapter<I> extends RivestSchapireDFA<I> implements ProceduralDFAAdapter<I> {
+
+        public RivestSchapireDFAAdapter(Alphabet<I> alphabet, MembershipOracle<I, Boolean> oracle) {
             super(alphabet, oracle);
         }
     }

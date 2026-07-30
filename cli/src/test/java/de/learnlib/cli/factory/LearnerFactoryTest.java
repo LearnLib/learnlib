@@ -32,6 +32,8 @@ import de.learnlib.algorithm.lambda.ttt.mealy.TTTLambdaMealy;
 import de.learnlib.algorithm.lsharp.LSharpMealy;
 import de.learnlib.algorithm.lstar.dfa.ExtensibleLStarDFA;
 import de.learnlib.algorithm.lstar.mealy.ExtensibleLStarMealy;
+import de.learnlib.algorithm.malerpnueli.MalerPnueliDFA;
+import de.learnlib.algorithm.malerpnueli.MalerPnueliMealy;
 import de.learnlib.algorithm.nlstar.NLStarLearner;
 import de.learnlib.algorithm.observationpack.dfa.OPLearnerDFA;
 import de.learnlib.algorithm.observationpack.mealy.OPLearnerMealy;
@@ -39,6 +41,8 @@ import de.learnlib.algorithm.observationpack.vpa.OPLearnerVPA;
 import de.learnlib.algorithm.procedural.sba.SBALearner;
 import de.learnlib.algorithm.procedural.spa.SPALearner;
 import de.learnlib.algorithm.procedural.spmm.SPMMLearner;
+import de.learnlib.algorithm.rivestschapire.RivestSchapireDFA;
+import de.learnlib.algorithm.rivestschapire.RivestSchapireMealy;
 import de.learnlib.algorithm.sparse.SparseLearner;
 import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFA;
 import de.learnlib.algorithm.ttt.mealy.TTTLearnerMealy;
@@ -91,22 +95,30 @@ public class LearnerFactoryTest {
             result[value.ordinal()] = switch (value) {
                 case ADT -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lADT"}, Exception.class};
                 case DHC -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lDHC"}, Exception.class};
-                case KV ->
-                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lKV"}, KearnsVaziraniDFA.class};
-                case LLAMBDA ->
-                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lLLAMBDA"}, LLambdaDFA.class};
-                case LSHARP ->
-                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lLSHARP"}, Exception.class};
-                case LSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lLSTAR"},
-                                            ExtensibleLStarDFA.class};
-                case NLSTAR ->
-                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lNLSTAR"}, Exception.class};
-                case OP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lOP"}, OPLearnerDFA.class};
+                case KEARNS_VAZIRANI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lKEARNS_VAZIRANI"},
+                                      KearnsVaziraniDFA.class};
+                case L_LAMBDA ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lL_LAMBDA"}, LLambdaDFA.class};
+                case L_SHARP ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lL_SHARP"}, Exception.class};
+                case L_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lL_STAR"},
+                                             ExtensibleLStarDFA.class};
+                case MALER_PNUELI -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lMALER_PNUELI"},
+                                                   MalerPnueliDFA.class};
+                case NL_STAR ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lNL_STAR"}, Exception.class};
+                case OBSERVATION_PACK ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lOBSERVATION_PACK"},
+                                      OPLearnerDFA.class};
+                case RIVEST_SCHAPIRE ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lRIVEST_SCHAPIRE"},
+                                      RivestSchapireDFA.class};
                 case SPARSE ->
                         new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lSPARSE"}, Exception.class};
                 case TTT -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lTTT"}, TTTLearnerDFA.class};
-                case TTTLAMBDA ->
-                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lTTTLAMBDA"}, TTTLambdaDFA.class};
+                case TTT_LAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-lTTT_LAMBDA"},
+                                                 TTTLambdaDFA.class};
             };
         }
 
@@ -138,24 +150,33 @@ public class LearnerFactoryTest {
                                           Exception.class};
                 case DHC -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lDHC"},
                                           MealyDHC.class};
-                case KV -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lKV"},
-                                         KearnsVaziraniMealy.class};
-                case LLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lLLAMBDA"},
-                                              LLambdaMealy.class};
-                case LSHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lLSHARP"},
-                                             Exception.class};
-                case LSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lLSTAR"},
-                                            ExtensibleLStarMealy.class};
-                case NLSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lNLSTAR"},
-                                             Exception.class};
-                case OP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lOP"},
-                                         OPLearnerMealy.class};
+                case KEARNS_VAZIRANI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lKEARNS_VAZIRANI"},
+                                      KearnsVaziraniMealy.class};
+                case L_LAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lL_LAMBDA"},
+                                               LLambdaMealy.class};
+                case L_SHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lL_SHARP"},
+                                              Exception.class};
+                case L_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lL_STAR"},
+                                             ExtensibleLStarMealy.class};
+                case MALER_PNUELI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lMALER_PNUELI"},
+                                      MalerPnueliMealy.class};
+                case NL_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lNL_STAR"},
+                                              Exception.class};
+                case OBSERVATION_PACK ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lOBSERVATION_PACK"},
+                                      OPLearnerMealy.class};
+                case RIVEST_SCHAPIRE ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lRIVEST_SCHAPIRE"},
+                                      RivestSchapireMealy.class};
                 case SPARSE -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lSPARSE"},
                                              SparseLearner.class};
                 case TTT -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lTTT"},
                                           TTTLearnerMealy.class};
-                case TTTLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lTTTLAMBDA"},
-                                                TTTLambdaMealy.class};
+                case TTT_LAMBDA ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lTTT_LAMBDA"},
+                                      TTTLambdaMealy.class};
             };
         }
 
@@ -188,24 +209,33 @@ public class LearnerFactoryTest {
                                           ADTLearner.class};
                 case DHC -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lDHC"},
                                           Exception.class};
-                case KV -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lKV"},
-                                         Exception.class};
-                case LLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lLLAMBDA"},
-                                              Exception.class};
-                case LSHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lLSHARP"},
-                                             LSharpMealy.class};
-                case LSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lLSTAR"},
-                                            Exception.class};
-                case NLSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lNLSTAR"},
+                case KEARNS_VAZIRANI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lKEARNS_VAZIRANI"},
+                                      Exception.class};
+                case L_LAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lL_LAMBDA"},
+                                               Exception.class};
+                case L_SHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lL_SHARP"},
+                                              LSharpMealy.class};
+                case L_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lL_STAR"},
                                              Exception.class};
-                case OP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lOP"},
-                                         Exception.class};
+                case MALER_PNUELI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lMALER_PNUELI"},
+                                      Exception.class};
+                case NL_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lNL_STAR"},
+                                              Exception.class};
+                case OBSERVATION_PACK ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lOBSERVATION_PACK"},
+                                      Exception.class};
+                case RIVEST_SCHAPIRE ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lRIVEST_SCHAPIRE"},
+                                      Exception.class};
                 case SPARSE -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lSPARSE"},
                                              Exception.class};
                 case TTT -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lTTT"},
                                           Exception.class};
-                case TTTLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lTTTLAMBDA"},
-                                                Exception.class};
+                case TTT_LAMBDA ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tMEALY", "-lTTT_LAMBDA"},
+                                      Exception.class};
             };
         }
 
@@ -238,24 +268,32 @@ public class LearnerFactoryTest {
                         new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lADT"}, Exception.class};
                 case DHC ->
                         new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lDHC"}, Exception.class};
-                case KV ->
-                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lKV"}, Exception.class};
-                case LLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lLLAMBDA"},
+                case KEARNS_VAZIRANI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lKEARNS_VAZIRANI"},
+                                      Exception.class};
+                case L_LAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lL_LAMBDA"},
+                                               Exception.class};
+                case L_SHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lL_SHARP"},
                                               Exception.class};
-                case LSHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lLSHARP"},
+                case L_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lL_STAR"},
                                              Exception.class};
-                case LSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lLSTAR"},
-                                            Exception.class};
-                case NLSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lNLSTAR"},
-                                             NLStarLearner.class};
-                case OP ->
-                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lOP"}, Exception.class};
+                case MALER_PNUELI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lMALER_PNUELI"},
+                                      Exception.class};
+                case NL_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lNL_STAR"},
+                                              NLStarLearner.class};
+                case OBSERVATION_PACK ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lOBSERVATION_PACK"},
+                                      Exception.class};
+                case RIVEST_SCHAPIRE ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lRIVEST_SCHAPIRE"},
+                                      Exception.class};
                 case SPARSE -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lSPARSE"},
                                              Exception.class};
                 case TTT ->
                         new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lTTT"}, Exception.class};
-                case TTTLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lTTTLAMBDA"},
-                                                Exception.class};
+                case TTT_LAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tNFA", "-lTTT_LAMBDA"},
+                                                 Exception.class};
             };
         }
 
@@ -288,24 +326,32 @@ public class LearnerFactoryTest {
                         new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lADT"}, Exception.class};
                 case DHC ->
                         new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lDHC"}, Exception.class};
-                case KV ->
-                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lKV"}, SBALearner.class};
-                case LLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lLLAMBDA"},
-                                              SBALearner.class};
-                case LSHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lLSHARP"},
-                                             Exception.class};
-                case LSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lLSTAR"},
-                                            SBALearner.class};
-                case NLSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lNLSTAR"},
-                                             Exception.class};
-                case OP ->
-                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lOP"}, SBALearner.class};
+                case KEARNS_VAZIRANI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lKEARNS_VAZIRANI"},
+                                      SBALearner.class};
+                case L_LAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lL_LAMBDA"},
+                                               SBALearner.class};
+                case L_SHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lL_SHARP"},
+                                              Exception.class};
+                case L_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lL_STAR"},
+                                             SBALearner.class};
+                case MALER_PNUELI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lMALER_PNUELI"},
+                                      SBALearner.class};
+                case NL_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lNL_STAR"},
+                                              Exception.class};
+                case OBSERVATION_PACK ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lOBSERVATION_PACK"},
+                                      SBALearner.class};
+                case RIVEST_SCHAPIRE ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lRIVEST_SCHAPIRE"},
+                                      SBALearner.class};
                 case SPARSE -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lSPARSE"},
                                              Exception.class};
                 case TTT -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lTTT"},
                                           SBALearner.class};
-                case TTTLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lTTTLAMBDA"},
-                                                SBALearner.class};
+                case TTT_LAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSBA", "-lTTT_LAMBDA"},
+                                                 SBALearner.class};
             };
         }
 
@@ -340,24 +386,32 @@ public class LearnerFactoryTest {
                         new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lADT"}, Exception.class};
                 case DHC ->
                         new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lDHC"}, Exception.class};
-                case KV ->
-                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lKV"}, SPALearner.class};
-                case LLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lLLAMBDA"},
-                                              SPALearner.class};
-                case LSHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lLSHARP"},
-                                             Exception.class};
-                case LSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lLSTAR"},
-                                            SPALearner.class};
-                case NLSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lNLSTAR"},
-                                             Exception.class};
-                case OP ->
-                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lOP"}, SPALearner.class};
+                case KEARNS_VAZIRANI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lKEARNS_VAZIRANI"},
+                                      SPALearner.class};
+                case L_LAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lL_LAMBDA"},
+                                               SPALearner.class};
+                case L_SHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lL_SHARP"},
+                                              Exception.class};
+                case L_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lL_STAR"},
+                                             SPALearner.class};
+                case MALER_PNUELI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lMALER_PNUELI"},
+                                      SPALearner.class};
+                case NL_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lNL_STAR"},
+                                              Exception.class};
+                case OBSERVATION_PACK ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lOBSERVATION_PACK"},
+                                      SPALearner.class};
+                case RIVEST_SCHAPIRE ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lRIVEST_SCHAPIRE"},
+                                      SPALearner.class};
                 case SPARSE -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lSPARSE"},
                                              Exception.class};
                 case TTT -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lTTT"},
                                           SPALearner.class};
-                case TTTLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lTTTLAMBDA"},
-                                                SPALearner.class};
+                case TTT_LAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPA", "-lTTT_LAMBDA"},
+                                                 SPALearner.class};
             };
         }
 
@@ -392,24 +446,33 @@ public class LearnerFactoryTest {
                                           Exception.class};
                 case DHC -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lDHC"},
                                           SPMMLearner.class};
-                case KV -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lKV"},
-                                         SPMMLearner.class};
-                case LLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lLLAMBDA"},
-                                              SPMMLearner.class};
-                case LSHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lLSHARP"},
-                                             Exception.class};
-                case LSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lLSTAR"},
-                                            SPMMLearner.class};
-                case NLSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lNLSTAR"},
-                                             Exception.class};
-                case OP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lOP"},
-                                         SPMMLearner.class};
+                case KEARNS_VAZIRANI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lKEARNS_VAZIRANI"},
+                                      SPMMLearner.class};
+                case L_LAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lL_LAMBDA"},
+                                               SPMMLearner.class};
+                case L_SHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lL_SHARP"},
+                                              Exception.class};
+                case L_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lL_STAR"},
+                                             SPMMLearner.class};
+                case MALER_PNUELI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lMALER_PNUELI"},
+                                      SPMMLearner.class};
+                case NL_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lNL_STAR"},
+                                              Exception.class};
+                case OBSERVATION_PACK ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lOBSERVATION_PACK"},
+                                      SPMMLearner.class};
+                case RIVEST_SCHAPIRE ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lRIVEST_SCHAPIRE"},
+                                      SPMMLearner.class};
                 case SPARSE -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lSPARSE"},
                                              SPMMLearner.class};
                 case TTT -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lTTT"},
                                           SPMMLearner.class};
-                case TTTLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lTTTLAMBDA"},
-                                                SPMMLearner.class};
+                case TTT_LAMBDA ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tSPMM", "-lTTT_LAMBDA"},
+                                      SPMMLearner.class};
             };
         }
 
@@ -445,24 +508,32 @@ public class LearnerFactoryTest {
                         new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lADT"}, Exception.class};
                 case DHC ->
                         new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lDHC"}, Exception.class};
-                case KV ->
-                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lKV"}, Exception.class};
-                case LLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lLLAMBDA"},
+                case KEARNS_VAZIRANI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lKEARNS_VAZIRANI"},
+                                      Exception.class};
+                case L_LAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lL_LAMBDA"},
+                                               Exception.class};
+                case L_SHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lL_SHARP"},
                                               Exception.class};
-                case LSHARP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lLSHARP"},
+                case L_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lL_STAR"},
                                              Exception.class};
-                case LSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lLSTAR"},
-                                            Exception.class};
-                case NLSTAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lNLSTAR"},
-                                             Exception.class};
-                case OP -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lOP"},
-                                         OPLearnerVPA.class};
+                case MALER_PNUELI ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lMALER_PNUELI"},
+                                      Exception.class};
+                case NL_STAR -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lNL_STAR"},
+                                              Exception.class};
+                case OBSERVATION_PACK ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lOBSERVATION_PACK"},
+                                      OPLearnerVPA.class};
+                case RIVEST_SCHAPIRE ->
+                        new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lRIVEST_SCHAPIRE"},
+                                      Exception.class};
                 case SPARSE -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lSPARSE"},
                                              Exception.class};
                 case TTT -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lTTT"},
                                           TTTLearnerVPA.class};
-                case TTTLAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lTTTLAMBDA"},
-                                                Exception.class};
+                case TTT_LAMBDA -> new Object[] {new String[] {ApplicationIT.STATELESS, "-sa", "-tVPA", "-lTTT_LAMBDA"},
+                                                 Exception.class};
             };
         }
 
