@@ -129,27 +129,27 @@ public abstract class AbstractOPLearner<M extends SuffixOutput<I, D>, I, D, SP, 
             throw new AssertionError("Suffix finder does not work correctly, found no suffix for valid counterexample");
         }
 
-        Word<I> input = ceQuery.getInput();
-        Word<I> oldStateAs = input.prefix(suffixIdx);
-        HState<I, D, SP, TP> oldState = hypothesis.getState(oldStateAs);
+        final Word<I> input = ceQuery.getInput();
+        final Word<I> oldStateAs = input.prefix(suffixIdx);
+        final HState<I, D, SP, TP> oldState = hypothesis.getState(oldStateAs);
         assert oldState != null;
-        AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>> oldDt = oldState.getDTLeaf();
+        final AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>> oldDt = oldState.getDTLeaf();
 
-        Word<I> newPredAs = input.prefix(suffixIdx - 1);
-        HState<I, D, SP, TP> newPred = hypothesis.getState(newPredAs);
+        final Word<I> newPredAs = input.prefix(suffixIdx - 1);
+        final HState<I, D, SP, TP> newPred = hypothesis.getState(newPredAs);
         assert newPred != null;
-        I transSym = input.getSymbol(suffixIdx - 1);
-        int transIdx = alphabet.getSymbolIndex(transSym);
-        HTransition<I, D, SP, TP> trans = newPred.getTransition(transIdx);
+        final I transSym = input.getSymbol(suffixIdx - 1);
+        final int transIdx = alphabet.getSymbolIndex(transSym);
+        final HTransition<I, D, SP, TP> trans = newPred.getTransition(transIdx);
 
-        HState<I, D, SP, TP> newState = createState(trans);
+        final HState<I, D, SP, TP> newState = createState(trans);
 
-        Word<I> suffix = input.subWord(suffixIdx);
+        final Word<I> suffix = input.subWord(suffixIdx);
 
-        D oldOut = oracle.answerQuery(oldState.getAccessSequence(), suffix);
-        D newOut = oracle.answerQuery(newState.getAccessSequence(), suffix);
+        final D oldOut = oracle.answerQuery(oldState.getAccessSequence(), suffix);
+        final D newOut = oracle.answerQuery(newState.getAccessSequence(), suffix);
 
-        AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>>.SplitResult sr =
+        final AbstractWordBasedDTNode<I, D, HState<I, D, SP, TP>>.SplitResult sr =
                 oldDt.split(suffix, oldOut, newOut, newState);
 
         oldState.fetchNonTreeIncoming(openTransitions);

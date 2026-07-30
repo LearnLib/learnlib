@@ -46,36 +46,36 @@ public final class M3CSBAExample {
 
     public static void main(String[] args) throws FormatException {
         // setup example
-        var example = ExamplePalindrome.createExample();
-        var alphabet = example.getAlphabet();
-        var sba = example.getReferenceAutomaton();
+        final var example = ExamplePalindrome.createExample();
+        final var alphabet = example.getAlphabet();
+        final var sba = example.getReferenceAutomaton();
 
         // setup model checkers
-        var cfmpsChecker = M3CCheckers.<Character, Void>typedChecker();
-        var sbaChecker = SBAs.transformModelChecker(cfmpsChecker);
-        var formulas = new String[] {// it should not be possible to eventually do a c-step followed by another c-step.
-                                     "!(EF <c> (EF <c> true))",
-                                     // it should not be possible to perform a call right after a return
-                                     "!(EF (<R><S> true || <R><T> true))",
-                                     // it should not be possible to perform a call eventually after a return
-                                     "!(EF <R> (EF <S> true || <T> true))",
-                                     // it should not be possible to perform any action after a return
-                                     "!(EF <R> (EF <> true))",
-                                     // globally, every S path must be followed by an R eventually.
-                                     // the model checker can't generate counterexamples for this, but this property holds invariantly.
-                                     "AG ([S] (AF <R> true))"};
+        final var cfmpsChecker = M3CCheckers.<Character, Void>typedChecker();
+        final var sbaChecker = SBAs.transformModelChecker(cfmpsChecker);
+        final var formulas =
+                new String[] {// it should not be possible to eventually do a c-step followed by another c-step.
+                              "!(EF <c> (EF <c> true))",
+                              // it should not be possible to perform a call right after a return
+                              "!(EF (<R><S> true || <R><T> true))",
+                              // it should not be possible to perform a call eventually after a return
+                              "!(EF <R> (EF <S> true || <T> true))",
+                              // it should not be possible to perform any action after a return
+                              "!(EF <R> (EF <> true))",
+                              // globally, every S path must be followed by an R eventually.
+                              // the model checker can't generate counterexamples for this, but this property holds invariantly.
+                              "AG ([S] (AF <R> true))"};
 
         // setup oracles
-        var mqo = new SimulatorOracle<>(sba);
-        var eqo = new EQOracleChain<SBA<?, Character>, Character, Boolean>();
+        final var mqo = new SimulatorOracle<>(sba);
+        final var eqo = new EQOracleChain<SBA<?, Character>, Character, Boolean>();
 
         // the model checker currently can't handle empty hypothesis models so we help with an initial fixed trace
-        var sampleSetEqo = new SampleSetEQOracle<Character, Boolean>();
-        sampleSetEqo.add(Word.fromString("S"), true);
+        final var sampleSetEqo = new SampleSetEQOracle<Character, Boolean>().add(Word.fromString("S"), true);
         eqo.addOracle(sampleSetEqo);
 
         // property oracles
-        var propEqos = new ArrayList<PropertyOracle<?, ?, ?, ?>>(formulas.length);
+        final var propEqos = new ArrayList<PropertyOracle<?, ?, ?, ?>>(formulas.length);
         for (String f : formulas) {
             var o = new LoggingPropertyOracle<>(new SBAPropertyOracle<>(M3CParser.parse(f, s -> s.charAt(0), s -> null),
                                                                         mqo,
@@ -89,10 +89,10 @@ public final class M3CSBAExample {
         eqo.addOracle(new WMethodEQOracle<>(mqo));
 
         // setup learner
-        var learner = new SBALearner<>(alphabet, mqo, TTTLearnerDFA::new);
+        final var learner = new SBALearner<>(alphabet, mqo, TTTLearnerDFA::new);
 
         // run learn loop
-        var exp = new Experiment<>(learner, eqo, alphabet);
+        final var exp = new Experiment<>(learner, eqo, alphabet);
         exp.run();
 
         // report results

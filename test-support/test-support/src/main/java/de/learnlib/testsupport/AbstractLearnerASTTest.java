@@ -109,7 +109,8 @@ public abstract class AbstractLearnerASTTest<L extends AccessSequenceTransformer
             ce = Automata.findSeparatingWord(sul, hyp, inputAlphabet);
         }
 
-        checkStateMapping((RegularAutomaton<?, I, ?, ?, ?>) hyp);
+        RegularAutomaton<?, I, ?, ?, ?> hypAsReg = hyp;
+        checkStateMapping(hypAsReg);
     }
 
     private <S> void checkStateMapping(RegularAutomaton<S, I, ?, ?, ?> hyp) {

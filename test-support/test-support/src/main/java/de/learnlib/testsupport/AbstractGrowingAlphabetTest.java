@@ -58,7 +58,7 @@ public abstract class AbstractGrowingAlphabetTest<L extends SupportsGrowingAlpha
         initialAlphabet = getInitialAlphabet();
         alphabetExtensions = new ArrayList<>(getAlphabetExtensions());
 
-        assert alphabetExtensions.size() > 2 : "At least 3 symbols need to be added for proper coverage";
+        Assert.assertTrue(alphabetExtensions.size() > 2, "At least 3 symbols need to be added for proper coverage");
 
         final List<I> compoundAlphabet = new ArrayList<>(initialAlphabet.size() + alphabetExtensions.size());
         compoundAlphabet.addAll(initialAlphabet);

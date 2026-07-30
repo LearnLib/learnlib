@@ -37,8 +37,9 @@ public final class GlobalSuffixFinders {
      *
      * @see #findMalerPnueli(Query)
      */
+    @SuppressWarnings("PMD.UseDiamondOperator") // type-hint for checkerframework
     public static final GlobalSuffixFinder<@Nullable Object, @Nullable Object> MALER_PNUELI =
-            new GlobalSuffixFinder<>() {
+            new GlobalSuffixFinder<@Nullable Object, @Nullable Object>() {
 
                 @Override
                 public <RI, RD> List<Word<RI>> findSuffixes(Query<RI, RD> ceQuery,
@@ -60,8 +61,9 @@ public final class GlobalSuffixFinders {
      *
      * @see #findShahbaz(Query, AccessSequenceTransformer)
      */
+    @SuppressWarnings("PMD.UseDiamondOperator") // type-hint for checkerframework
     public static final GlobalSuffixFinder<@Nullable Object, @Nullable Object> SHAHBAZ =
-            new GlobalSuffixFinder<>() {
+            new GlobalSuffixFinder<@Nullable Object, @Nullable Object>() {
 
                 @Override
                 public <RI, RD> List<Word<RI>> findSuffixes(Query<RI, RD> ceQuery,

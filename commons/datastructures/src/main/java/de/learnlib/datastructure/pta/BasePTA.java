@@ -22,7 +22,6 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import de.learnlib.datastructure.pta.visualization.PTAVisualizationHelper;
@@ -66,7 +65,7 @@ public class BasePTA<S extends AbstractBasePTAState<S, SP, TP>, SP, TP>
      */
     public BasePTA(int alphabetSize, S root) {
         this.alphabetSize = alphabetSize;
-        this.root = Objects.requireNonNull(root);
+        this.root = root;
     }
 
     /**

@@ -175,7 +175,6 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
         assert !topState.isRed();
 
         S topClone = topState.copy();
-        S currTgt = topClone;
 
         Iterator<FoldRecord<S>> it = stack.iterator();
         FoldRecord<S> currRec = it.next();
@@ -185,6 +184,7 @@ public class RedBlueMerge<S extends AbstractBlueFringePTAState<S, SP, TP>, SP, T
         assert it.hasNext();
         currRec = it.next();
         S currSrc = currRec.q;
+        S currTgt = topClone;
 
         while (!currSrc.isRed()) {
             S currSrcClone = currSrc.copy();

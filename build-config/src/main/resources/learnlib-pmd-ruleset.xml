@@ -125,5 +125,10 @@ limitations under the License.
         </properties>
     </rule>
 
+    <rule ref="category/java/errorprone.xml/WrongTestAnnotation">
+        <properties>
+            <property name="testFrameworks" value="testNG" />
+        </properties>
+    </rule>
 
 </ruleset>

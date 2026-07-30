@@ -61,8 +61,8 @@ public abstract class AbstractLearnerVariantITCase<I, D, M extends FiniteReprese
         lockableOracle.lock();
         LearningAlgorithm<? extends M, I, D> learner = variant.getLearner();
 
-        Alphabet<I> alphabet = example.getAlphabet();
-        M reference = example.getReferenceAutomaton();
+        final Alphabet<I> alphabet = example.getAlphabet();
+        final M reference = example.getReferenceAutomaton();
 
         int maxRounds = variant.getMaxRounds();
         if (maxRounds < 0) {

@@ -129,7 +129,7 @@ public class ObservationTable<I> {
     public List<List<Row<I>>> addSuffixes(List<? extends Word<I>> suffixesToAdd) {
         List<Word<I>> newSuffixes = new ArrayList<>();
 
-        int oldNumSuffixes = suffixes.size();
+        final int oldNumSuffixes = suffixes.size();
 
         for (Word<I> suffix : suffixesToAdd) {
             if (suffixSet.add(suffix)) {
@@ -142,7 +142,7 @@ public class ObservationTable<I> {
             return Collections.emptyList();
         }
 
-        int numNewSuffixes = newSuffixes.size();
+        final int numNewSuffixes = newSuffixes.size();
 
         List<DefaultQuery<I, Boolean>> queries = new ArrayList<>(allRows.size() * numNewSuffixes);
 

@@ -21,6 +21,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 class Event {
 
+    private Event() {
+        // prevent direct instantiation
+    }
+
     static final class Msg<D> extends Event {
 
         final int seq;

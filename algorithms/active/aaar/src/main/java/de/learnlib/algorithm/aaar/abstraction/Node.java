@@ -19,11 +19,15 @@ import net.automatalib.word.Word;
 
 public class Node {
 
-    static class InnerNode<CI, D> extends Node {
+    private Node() {
+        // prevent direct instantiation
+    }
 
-        final Word<CI> prefix;
-        final Word<CI> suffix;
-        final D out;
+    public static class InnerNode<CI, D> extends Node {
+
+        public final Word<CI> prefix;
+        public final Word<CI> suffix;
+        public final D out;
 
         Node equalsNext;
         Node otherNext;
@@ -37,10 +41,10 @@ public class Node {
         }
     }
 
-    static class Leaf<AI, CI> extends Node {
+    public static class Leaf<AI, CI> extends Node {
 
-        final AI abs;
-        final CI rep;
+        public final AI abs;
+        public final CI rep;
 
         Leaf(AI abs, CI rep) {
             this.abs = abs;

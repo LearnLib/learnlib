@@ -74,18 +74,31 @@ public class StateLocalInputSULCache<I, O> extends AbstractSULCache<I, O, StateL
         StateLocalInputSULCacheImpl(IncrementalMealyBuilder<I, O> incMealy,
                                     MealyTransitionSystem<S, I, T, O> mealyTs,
                                     StateLocalInputSUL<I, O> sul) {
-            this(incMealy, mealyTs, new HashMap<>(), sul);
+            this(incMealy, mealyTs, validateInit(mealyTs), new HashMap<>(), sul);
         }
 
         StateLocalInputSULCacheImpl(IncrementalMealyBuilder<I, O> incMealy,
                                     MealyTransitionSystem<S, I, T, O> mealyTs,
                                     Map<S, Collection<I>> enabledInputCache,
                                     StateLocalInputSUL<I, O> sul) {
+            this(incMealy, mealyTs, validateInit(mealyTs), enabledInputCache, sul);
+        }
+
+        // utility constructor to prevent finalizer attacks, see SEI CERT Rule OBJ-11
+        private StateLocalInputSULCacheImpl(IncrementalMealyBuilder<I, O> incMealy,
+                                            MealyTransitionSystem<S, I, T, O> mealyTs,
+                                            S init,
+                                            Map<S, Collection<I>> enabledInputCache,
+                                            StateLocalInputSUL<I, O> sul) {
             super(incMealy, mealyTs, sul);
             this.delegate = sul;
-            this.initialState = Objects.requireNonNull(mealyTs.getInitialState());
+            this.initialState = init;
             this.enabledInputCache = enabledInputCache;
             this.inputsTrace = new ArrayList<>();
+        }
+
+        private static <S> S validateInit(MealyTransitionSystem<S, ?, ?, ?> mealyTs) {
+            return Objects.requireNonNull(mealyTs.getInitialState());
         }
 
         @Override

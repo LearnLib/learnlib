@@ -98,6 +98,7 @@ public class PropertyOracleChain<I, A extends Output<I, D>, P, D> implements Pro
         this.property = oracles.get(0).getProperty();
     }
 
+    @SafeVarargs
     private static <I, A extends Output<I, D>, P, D> List<PropertyOracle<I, ? super A, P, D>> validateOracles(
             PropertyOracle<I, ? super A, P, D>... oracles) {
         return validateOracles(Arrays.asList(oracles));
