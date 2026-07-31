@@ -231,6 +231,28 @@ limitations under the License.
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <configuration>
+                            <excludedScopes>test,provided,system</excludedScopes>
+                            <sortArtifactByName>true</sortArtifactByName>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>add-third-party</id>
+                                <goals>
+                                    <goal>add-third-party</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>download-licenses</id>
+                                <goals>
+                                    <goal>download-licenses</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jlink-plugin</artifactId>
                         <executions>
@@ -241,6 +263,17 @@ limitations under the License.
                                 </goals>
                                 <configuration>
                                     <attach>false</attach>
+                                    <additionalResources>
+                                        <resource>
+                                            <directory>${project.build.directory}/generated-sources/license/</directory>
+                                            <includes>THIRD-PARTY.txt</includes>
+                                            <targetPath>legal/third-party</targetPath>
+                                        </resource>
+                                        <resource>
+                                            <directory>${project.build.directory}/generated-resources/licenses/</directory>
+                                            <targetPath>legal/third-party/licenses</targetPath>
+                                        </resource>
+                                    </additionalResources>
                                     <noHeaderFiles>true</noHeaderFiles>
                                     <noManPages>true</noManPages>
                                     <stripDebug>true</stripDebug>
