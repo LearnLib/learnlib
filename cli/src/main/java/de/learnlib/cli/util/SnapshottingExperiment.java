@@ -30,8 +30,9 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.serialization.InputModelSerializer;
 import org.apache.fory.Fory;
-import org.apache.fory.annotation.Nullable;
 import org.apache.fory.exception.ForyException;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 final class SnapshottingExperiment<A extends FiniteRepresentation, I, D> extends Experiment<A, I, D> {
 
@@ -93,6 +94,7 @@ final class SnapshottingExperiment<A extends FiniteRepresentation, I, D> extends
         }
     }
 
+    @RequiresNonNull("this.resumeFrom")
     private <T> void resumLearner(Resumable<T> resumable) throws IOException {
         @SuppressWarnings("unchecked")
         final T state = (T) FORY.deserialize(Files.readAllBytes(resumeFrom));
@@ -108,6 +110,7 @@ final class SnapshottingExperiment<A extends FiniteRepresentation, I, D> extends
         }
     }
 
+    @RequiresNonNull("this.snapshotDir")
     private <T> void snapshotState(Resumable<T> resumable) {
         final T suspend = resumable.suspend();
         final String round = Integer.toString(getRound() - 1); // do not count startLearning round

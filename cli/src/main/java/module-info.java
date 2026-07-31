@@ -54,4 +54,6 @@ open module de.learnlib.cli {
     requires org.apache.fory.core;
     requires org.slf4j;
 
+    requires static org.checkerframework.checker.qual;
+
 }

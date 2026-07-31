@@ -942,7 +942,6 @@ limitations under the License.
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${compiler-plugin.version}</version>
                     <configuration>
-                        <compilerArgs>-Xlint:unchecked</compilerArgs>
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>de.learnlib.tooling</groupId>
