@@ -18,22 +18,30 @@ package de.learnlib.testsupport;
 import de.learnlib.Resumable;
 import org.apache.fory.Fory;
 import org.apache.fory.logging.LoggerFactory;
+import org.apache.fory.resolver.AllowListChecker;
+import org.apache.fory.resolver.AllowListChecker.CheckLevel;
 
 /**
  * Utility functions for {@link Resumable} features.
  */
 public final class ResumeUtils {
 
-    private static final Fory FURY;
+    private static final Fory FORY;
 
     static {
-        LoggerFactory.useSlf4jLogging(true);
-        FURY = Fory.builder()
+        // use same config as CLI to automatically test proper white-listing
+        final AllowListChecker checker = new AllowListChecker();
+        checker.setCheckLevel(CheckLevel.STRICT);
+        checker.allowClass("de.learnlib.*");
+        checker.allowClass("net.automatalib.*");
+        FORY = Fory.builder()
                    .requireClassRegistration(false)
                    .withCodegen(false)
                    .withRefTracking(true)
+                   .withTypeChecker(checker)
                    .withXlang(false)
                    .build();
+        LoggerFactory.useSlf4jLogging(true);
     }
 
     private ResumeUtils() {
@@ -41,12 +49,12 @@ public final class ResumeUtils {
     }
 
     public static byte[] toBytes(Object state) {
-        return FURY.serialize(state);
+        return FORY.serialize(state);
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T fromBytes(byte[] bytes) {
-        return (T) FURY.deserialize(bytes);
+        return (T) FORY.deserialize(bytes);
     }
 
 }

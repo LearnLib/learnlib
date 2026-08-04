@@ -29,9 +29,9 @@ limitations under the License.
 
     <name>LearnLib :: CLI</name>
     <description>
-        A standalone application to offer the functionality of LearnLib via a command-line interface.
-        *Note:* This artifact is not intended as a library and therefore not deployed to Maven Central but instead as a
-        direct download (e.g., from GitHub).
+        A module for building a standalone command-line application of LearnLib. Note that this artifact is not intended
+        as a library and therefore not deployed to Maven Central but instead provided as a direct download (e.g., from
+        GitHub).
     </description>
 
     <dependencies>

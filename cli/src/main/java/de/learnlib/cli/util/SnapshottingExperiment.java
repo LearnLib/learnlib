@@ -31,6 +31,9 @@ import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.serialization.InputModelSerializer;
 import org.apache.fory.Fory;
 import org.apache.fory.exception.ForyException;
+import org.apache.fory.logging.LoggerFactory;
+import org.apache.fory.resolver.AllowListChecker;
+import org.apache.fory.resolver.AllowListChecker.CheckLevel;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
@@ -40,12 +43,19 @@ final class SnapshottingExperiment<A extends FiniteRepresentation, I, D> extends
     private static final DateTimeFormatter DTF;
 
     static {
+        // use same config as test-support to automatically test proper white-listing
+        final AllowListChecker checker = new AllowListChecker();
+        checker.setCheckLevel(CheckLevel.STRICT);
+        checker.allowClass("de.learnlib.*");
+        checker.allowClass("net.automatalib.*");
         FORY = Fory.builder()
                    .requireClassRegistration(false)
                    .withCodegen(false)
                    .withRefTracking(true)
+                   .withTypeChecker(checker)
                    .withXlang(false)
                    .build();
+        LoggerFactory.useSlf4jLogging(true);
         DTF = DateTimeFormatter.ofPattern("-yyyyMMdd-HHmmss-");
     }
 
