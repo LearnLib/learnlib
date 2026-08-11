@@ -31,7 +31,7 @@ limitations under the License.
     <description>
         A module for building a standalone command-line application of LearnLib. Note that this artifact is not intended
         as a library and therefore not deployed to Maven Central but instead provided as a direct download (e.g., from
-        GitHub).
+        GitHub releases).
     </description>
 
     <properties>
