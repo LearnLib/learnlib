@@ -230,6 +230,29 @@ limitations under the License.
             <build>
                 <plugins>
                     <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>check-binary</id>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                                <configuration>
+                                    <systemPropertyVariables>
+                                        <learnlib.binary.path>${project.build.directory}/maven-jlink/default</learnlib.binary.path>
+                                    </systemPropertyVariables>
+                                    <includes>
+                                        <include>**/CheckBinary.java</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>**/*IT.java</exclude>
+                                    </excludes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>license-maven-plugin</artifactId>
                         <configuration>
@@ -273,6 +296,9 @@ limitations under the License.
                                             <targetPath>legal/third-party/licenses</targetPath>
                                         </resource>
                                     </additionalResources>
+                                    <addOptions>
+                                        <addOption>--add-opens=java.base/java.lang.invoke=org.apache.fory.core</addOption>
+                                    </addOptions>
                                     <noHeaderFiles>true</noHeaderFiles>
                                     <noManPages>true</noManPages>
                                     <stripDebug>true</stripDebug>
