@@ -296,9 +296,6 @@ limitations under the License.
                                             <targetPath>legal/third-party/licenses</targetPath>
                                         </resource>
                                     </additionalResources>
-                                    <addOptions>
-                                        <addOption>--add-opens=java.base/java.lang.invoke=org.apache.fory.core</addOption>
-                                    </addOptions>
                                     <noHeaderFiles>true</noHeaderFiles>
                                     <noManPages>true</noManPages>
                                     <stripDebug>true</stripDebug>
@@ -310,6 +307,29 @@ limitations under the License.
                         </executions>
                     </plugin>
                 </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>jlink-on-java-24</id>
+            <activation>
+                <jdk>[24,]</jdk>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jlink-plugin</artifactId>
+                            <!-- fory requires additional "add-opens" statements on JDK25+ -->
+                            <!-- Luckily, there flags are supported since JDK24 -->
+                            <configuration combine.children="append">
+                                <addOptions>
+                                    <addOption>--add-opens=java.base/java.lang.invoke=org.apache.fory.core</addOption>
+                                </addOptions>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
             </build>
         </profile>
     </profiles>
