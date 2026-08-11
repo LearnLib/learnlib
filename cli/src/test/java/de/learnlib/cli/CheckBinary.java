@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,11 +38,8 @@ public class CheckBinary {
     @Test
     public void testInvokeBinary() throws IOException, InterruptedException {
 
-        final File bin = Path.of(System.getProperty("learnlib.binary.path", ""))
-                             .resolve("bin")
-                             .resolve("learnlib")
-                             .toAbsolutePath()
-                             .toFile();
+        final File bin =
+                new File(System.getProperty("learnlib.binary.path", "target/maven-jlink/default/bin/learnlib"));
         final String sul = ApplicationIT.STATELESS;
         final File snapshot = Files.createTempDirectory("learnlib-snapshot").toFile();
         snapshot.deleteOnExit();

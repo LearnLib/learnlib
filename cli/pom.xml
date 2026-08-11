@@ -34,6 +34,10 @@ limitations under the License.
         GitHub).
     </description>
 
+    <properties>
+        <learnlib.binary.path>${project.build.directory}/maven-jlink/default/bin/learnlib</learnlib.binary.path>
+    </properties>
+
     <dependencies>
 
         <!-- internal -->
@@ -240,7 +244,7 @@ limitations under the License.
                                 </goals>
                                 <configuration>
                                     <systemPropertyVariables>
-                                        <learnlib.binary.path>${project.build.directory}/maven-jlink/default</learnlib.binary.path>
+                                        <learnlib.binary.path>${learnlib.binary.path}</learnlib.binary.path>
                                     </systemPropertyVariables>
                                     <includes>
                                         <include>**/CheckBinary.java</include>
@@ -331,6 +335,17 @@ limitations under the License.
                     </plugins>
                 </pluginManagement>
             </build>
+        </profile>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <learnlib.binary.path>${project.build.directory}/maven-jlink/default/bin/learnlib.bat</learnlib.binary.path>
+            </properties>
         </profile>
     </profiles>
 </project>
