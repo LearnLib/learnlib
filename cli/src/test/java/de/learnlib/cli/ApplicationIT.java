@@ -82,61 +82,97 @@ public class ApplicationIT extends AbstractPythonTest {
 
     @Test
     public void testStatelessDFA() throws IOException {
-        checkRegularExecution(new String[] {"-lL_STAR", "-eSAMPLE", "--eqo-sample=a b", STATELESS}, "/ser/dfa.dot");
-    }
-
-    @Test
-    public void testMealyPreset() throws IOException {
-        checkRegularExecution(new String[] {"-lL_STAR", "-tMEALY", "-eSAMPLE", "--eqo-sample=a b", STATELESS},
-                              "/ser/mealy.dot");
-    }
-
-    @Test
-    public void testMealyAdaptive() throws IOException {
-        checkRegularExecution(new String[] {"-tMEALY",
-                                            "-lL_SHARP",
-                                            "-eSAMPLE",
-                                            "--eqo-sample=a b",
-                                            "--reset=reset",
-                                            STATEFUL}, "/ser/mealy.dot");
-    }
-
-    @Test
-    public void testStatelessNFA() throws IOException {
-        checkRegularExecution(new String[] {"-tNFA", "-lNL_STAR", "-eSAMPLE", "--eqo-sample=a b", STATELESS},
+        checkRegularExecution(new String[] {PROGRAM, "--args", STATELESS, "-lL_STAR", "-eSAMPLE", "--eqo-sample=a b"},
                               "/ser/dfa.dot");
     }
 
     @Test
+    public void testMealyPreset() throws IOException {
+        checkRegularExecution(new String[] {PROGRAM,
+                                            "--args",
+                                            STATELESS,
+                                            "-lL_STAR",
+                                            "-tMEALY",
+                                            "-eSAMPLE",
+                                            "--eqo-sample=a b"}, "/ser/mealy.dot");
+    }
+
+    @Test
+    public void testMealyAdaptive() throws IOException {
+        checkRegularExecution(new String[] {PROGRAM,
+                                            "--args",
+                                            STATELESS,
+                                            "-tMEALY",
+                                            "-lL_SHARP",
+                                            "-eSAMPLE",
+                                            "--eqo-sample=a b",
+                                            "--reset=reset"}, "/ser/mealy.dot");
+    }
+
+    @Test
+    public void testStatelessNFA() throws IOException {
+        checkRegularExecution(new String[] {PROGRAM,
+                                            "--args",
+                                            STATELESS,
+                                            "-tNFA",
+                                            "-lNL_STAR",
+                                            "-eSAMPLE",
+                                            "--eqo-sample=a b"}, "/ser/dfa.dot");
+    }
+
+    @Test
     public void testStatelessSBA() throws IOException {
-        checkProceduralExecution(new String[] {"-lL_STAR", "-tSBA", "-eSAMPLE", "--eqo-sample=S a R", STATELESS_SBA},
-                                 null);
+        checkProceduralExecution(new String[] {PROGRAM,
+                                               "--args",
+                                               STATELESS_SBA,
+                                               "-lL_STAR",
+                                               "-tSBA",
+                                               "-eSAMPLE",
+                                               "--eqo-sample=S a R"}, null);
     }
 
     @Test
     public void testStatelessSPA() throws IOException {
-        checkProceduralExecution(new String[] {"-lL_STAR", "-tSPA", "-eSAMPLE", "--eqo-sample=S a R", STATELESS_SPA},
-                                 "/ser/spa.dot");
+        checkProceduralExecution(new String[] {PROGRAM,
+                                               "--args",
+                                               STATELESS_SPA,
+                                               "-lL_STAR",
+                                               "-tSPA",
+                                               "-eSAMPLE",
+                                               "--eqo-sample=S a R"}, "/ser/spa.dot");
     }
 
     @Test
     public void testStatelessSPMM() throws IOException {
-        checkProceduralExecution(new String[] {"-lL_STAR",
+        checkProceduralExecution(new String[] {PROGRAM,
+                                               "--args",
+                                               STATELESS_SBA,
+                                               "-lL_STAR",
                                                "-tSPMM",
                                                "-eSAMPLE",
                                                "--eqo-sample=S a R",
-                                               "-d=\\s",
-                                               STATELESS_SBA}, "/ser/spmm.dot");
+                                               "-d=\\s"}, "/ser/spmm.dot");
     }
 
     @Test
     public void testStatelessVPA() throws IOException {
-        checkProceduralExecution(new String[] {"-tVPA", "-eSAMPLE", "--eqo-sample=S a R", STATELESS_SPA}, null);
+        checkProceduralExecution(new String[] {PROGRAM,
+                                               "--args",
+                                               STATELESS_SPA,
+                                               "-tVPA",
+                                               "-eSAMPLE",
+                                               "--eqo-sample=S a R"}, null);
     }
 
     @Test
     public void testStatistics() throws IOException {
-        checkRegularExecution(new String[] {"-lL_STAR", "-eSAMPLE", "--eqo-sample=abab", "--stats", STATELESS}, null);
+        checkRegularExecution(new String[] {PROGRAM,
+                                            "--args",
+                                            STATELESS,
+                                            "-lL_STAR",
+                                            "-eSAMPLE",
+                                            "--eqo-sample=abab",
+                                            "--stats"}, null);
 
         StatisticsService statistics = Statistics.getService();
         Assert.assertTrue(statistics.getCount(CounterOracle.KEY_SYMBOL.withId(AbstractRunner.EQO_KEY)).isPresent());
@@ -146,13 +182,15 @@ public class ApplicationIT extends AbstractPythonTest {
 
     @Test
     public void testAdaptiveStatistics() throws IOException {
-        checkRegularExecution(new String[] {"-tMEALY",
+        checkRegularExecution(new String[] {PROGRAM,
+                                            "--args",
+                                            STATEFUL,
+                                            "-tMEALY",
                                             "-lL_SHARP",
                                             "-eSAMPLE",
                                             "--eqo-sample=abab",
                                             "--reset=reset",
-                                            "--stats",
-                                            STATEFUL}, null);
+                                            "--stats"}, null);
 
         StatisticsService statistics = Statistics.getService();
         Assert.assertTrue(statistics.getCount(CounterAdaptiveQueryOracle.KEY_SYMBOL.withId(AbstractRunner.EQO_KEY))

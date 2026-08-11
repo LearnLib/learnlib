@@ -15,7 +15,10 @@
  */
 package de.learnlib.cli;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import net.automatalib.common.util.process.ProcessUtil;
 import org.testng.SkipException;
@@ -23,15 +26,33 @@ import org.testng.annotations.BeforeClass;
 
 public abstract class AbstractPythonTest {
 
-    protected static final String PROGRAM = "python3";
+    private static final boolean AVAILABLE;
+    public static final String PROGRAM;
+
+    static {
+        String path = "";
+        boolean available = false;
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            // if python is available, we can also use it to give us the absolute path to its interpreter
+            if (ProcessUtil.invokeProcess(new String[] {"python3", "-c", "import sys; print(sys.executable, end=\"\")"},
+                                          null,
+                                          baos,
+                                          OutputStream.nullOutputStream()) == 0) {
+                path = baos.toString(StandardCharsets.UTF_8);
+                available = true;
+            }
+        } catch (IOException | InterruptedException ignored) {
+            // use defaults
+        }
+
+        AVAILABLE = available;
+        PROGRAM = path;
+    }
 
     @BeforeClass
     public void setUp() {
-        try {
-            if (ProcessUtil.invokeProcess(new String[] {PROGRAM, "--version"}) != 0) {
-                throw new SkipException("python3 not supported");
-            }
-        } catch (IOException | InterruptedException e) {
+        if (!AVAILABLE) {
             throw new SkipException("python3 not supported");
         }
     }

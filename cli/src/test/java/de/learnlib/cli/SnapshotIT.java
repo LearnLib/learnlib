@@ -60,7 +60,9 @@ public class SnapshotIT {
         snapshot.deleteOnExit();
         int exitCode;
 
-        exitCode = cmd.execute(ApplicationIT.STATELESS,
+        exitCode = cmd.execute(ApplicationIT.PROGRAM,
+                               "--args",
+                               ApplicationIT.STATELESS,
                                "-sa",
                                "-sb",
                                "-tMEALY",
@@ -69,7 +71,9 @@ public class SnapshotIT {
                                resume.toString());
         Assert.assertTrue(exitCode > 0);
 
-        exitCode = cmd.execute(ApplicationIT.STATELESS,
+        exitCode = cmd.execute(ApplicationIT.PROGRAM,
+                               "--args",
+                               ApplicationIT.STATELESS,
                                "-sa",
                                "-sb",
                                "-tMEALY",
@@ -78,7 +82,9 @@ public class SnapshotIT {
                                snapshot.toString());
         Assert.assertTrue(exitCode > 0);
 
-        exitCode = cmd.execute(ApplicationIT.STATELESS,
+        exitCode = cmd.execute(ApplicationIT.PROGRAM,
+                               "--args",
+                               ApplicationIT.STATELESS,
                                "-sa",
                                "-sb",
                                "-tMEALY",
@@ -100,13 +106,27 @@ public class SnapshotIT {
 
         int exitCode;
 
-        exitCode = cmd.execute(ApplicationIT.STATELESS, "-sa", "-sb", "--resume-from", resume.toString());
+        exitCode = cmd.execute(ApplicationIT.PROGRAM,
+                               "--args",
+                               ApplicationIT.STATELESS,
+                               "-sa",
+                               "-sb",
+                               "--resume-from",
+                               resume.toString());
         Assert.assertTrue(exitCode > 0);
 
-        exitCode = cmd.execute(ApplicationIT.STATELESS, "-sa", "-sb", "--snapshot-dir", snapshot.toString());
+        exitCode = cmd.execute(ApplicationIT.PROGRAM,
+                               "--args",
+                               ApplicationIT.STATELESS,
+                               "-sa",
+                               "-sb",
+                               "--snapshot-dir",
+                               snapshot.toString());
         Assert.assertTrue(exitCode > 0);
 
-        exitCode = cmd.execute(ApplicationIT.STATELESS,
+        exitCode = cmd.execute(ApplicationIT.PROGRAM,
+                               "--args",
+                               ApplicationIT.STATELESS,
                                "-sa",
                                "-sb",
                                "--resume-from",
@@ -126,7 +146,9 @@ public class SnapshotIT {
         int exitCode;
 
         // run regular scenario with snapshotting
-        exitCode = cmd.execute(ApplicationIT.STATELESS_LARGE,
+        exitCode = cmd.execute(ApplicationIT.PROGRAM,
+                               "--args",
+                               ApplicationIT.STATELESS_LARGE,
                                "-sa",
                                "-sb",
                                "-tMEALY",
@@ -148,7 +170,9 @@ public class SnapshotIT {
         // resume from snapshot with broken SUL
         // with an empty SampleSet oracle, no equivalence queries should be posed
         // the final hypothesis should be completely constructed from resuming
-        exitCode = cmd2.execute(ApplicationIT.STATELESS_BROKEN,
+        exitCode = cmd2.execute(ApplicationIT.PROGRAM,
+                                "--args",
+                                ApplicationIT.STATELESS_BROKEN,
                                 "-sa",
                                 "-sb",
                                 "-tMEALY",
@@ -168,7 +192,9 @@ public class SnapshotIT {
         output.deleteOnExit();
 
         // run regular scenario with snapshotting
-        final int exitCode = cmd.execute(ApplicationIT.STATELESS_LARGE,
+        final int exitCode = cmd.execute(ApplicationIT.PROGRAM,
+                                         "--args",
+                                         ApplicationIT.STATELESS_LARGE,
                                          "-sa",
                                          "-sb",
                                          "-tMEALY",

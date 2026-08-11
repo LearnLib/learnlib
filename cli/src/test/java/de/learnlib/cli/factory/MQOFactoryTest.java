@@ -315,10 +315,11 @@ public class MQOFactoryTest extends AbstractPythonTest {
 
     @Test
     public void testOutputTransformer() {
-        File sulFile = new File(ApplicationIT.STATELESS_BROKEN);
+        final File sulFile = new File(PROGRAM);
 
         final Options options = new Options();
         options.delimiter = "\\n";
+        options.additionalArgs = Collections.singletonList(ApplicationIT.STATELESS_BROKEN);
 
         var mqo = MQOFactory.buildSingleTransducerOracle(options, sulFile);
 
