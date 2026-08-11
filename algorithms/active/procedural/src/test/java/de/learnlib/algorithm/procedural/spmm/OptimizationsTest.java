@@ -57,7 +57,8 @@ public class OptimizationsTest {
         final SPMMLearner<Character, Character, ?> learner =
                 new SPMMLearner<>(alphabet, spmm.getErrorOutput(), mqo, TTTLearnerMealy::new);
 
-        final Experiment<SPMM<?, Character, ?, Character>> experiment = new Experiment<>(learner, eqo, alphabet);
+        final Experiment<SPMM<?, Character, ?, Character>, Character, Word<Character>> experiment =
+                new Experiment<>(learner, eqo, alphabet);
 
         experiment.run();
 

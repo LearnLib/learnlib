@@ -256,7 +256,10 @@ limitations under the License.
         <jacoco-plugin.version>0.8.15</jacoco-plugin.version>
         <jar-plugin.version>3.5.0</jar-plugin.version>
         <javadoc-plugin.version>3.12.0</javadoc-plugin.version>
+        <jlink-plugin.version>3.3.0</jlink-plugin.version>
+        <license-plugin.version>2.7.1</license-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+        <os-plugin.version>1.7.1</os-plugin.version>
         <pmd-plugin.version>3.28.0</pmd-plugin.version>
         <release-plugin.version>3.3.1</release-plugin.version>
         <resources-plugin.version>3.5.0</resources-plugin.version>
@@ -274,12 +277,13 @@ limitations under the License.
         <checkerframework.version>4.2.1</checkerframework.version>
         <checkstyle.version>12.3.0</checkstyle.version>
         <extra-enforcer-rules.version>1.10.0</extra-enforcer-rules.version>
-        <fury.version>0.9.0</fury.version>
+        <fory.version>1.4.0</fory.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <logback.version>1.5.35</logback.version>
         <metainf-services.version>1.11</metainf-services.version>
         <mockito.version>5.22.0</mockito.version>
         <mutiny.version>3.3.0</mutiny.version>
+        <picocli.version>4.7.7</picocli.version>
         <pmd.version>7.26.0</pmd.version>
         <reactive-streams.version>1.0.4</reactive-streams.version>
         <reactor.version>3.8.6</reactor.version>
@@ -627,7 +631,7 @@ limitations under the License.
                 <scope>test</scope>
             </dependency>
 
-            <!-- Checker Annotations (@Nullable, @Nonnull, ...) -->
+            <!-- Annotations (@Nullable, @Nonnull, ...) -->
             <dependency>
                 <groupId>org.checkerframework</groupId>
                 <artifactId>checker-qual</artifactId>
@@ -643,18 +647,20 @@ limitations under the License.
             </dependency>
 
             <dependency>
-                <groupId>org.apache.fury</groupId>
-                <artifactId>fury-core</artifactId>
-                <version>${fury.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.kohsuke.metainf-services</groupId>
                 <artifactId>metainf-services</artifactId>
                 <version>${metainf-services.version}</version>
                 <scope>provided</scope>
             </dependency>
 
+            <!-- Serialization -->
+            <dependency>
+                <groupId>org.apache.fory</groupId>
+                <artifactId>fory-core</artifactId>
+                <version>${fory.version}</version>
+            </dependency>
+
+            <!-- Logging -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -695,6 +701,12 @@ limitations under the License.
                 <version>${reactive-streams.version}</version>
             </dependency>
 
+            <!-- CLI interface -->
+            <dependency>
+                <groupId>info.picocli</groupId>
+                <artifactId>picocli</artifactId>
+                <version>${picocli.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -791,14 +803,6 @@ limitations under the License.
                     <configuration>
                         <enableAssertions>true</enableAssertions>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>integration-test</goal>
-                                <goal>verify</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
@@ -846,7 +850,7 @@ limitations under the License.
                         <preparationProfiles>integration-tests,code-analysis</preparationProfiles>
                         <goals>deploy site site:stage scm-publish:publish-scm</goals>
                         <!-- explicitly disable preparationProfiles until https://issues.apache.org/jira/browse/MRELEASE-1124 is fixed-->
-                        <releaseProfiles>release,bundles,!examples,!integration-tests,!code-analysis</releaseProfiles>
+                        <releaseProfiles>release,bundles,!examples,!cli,!integration-tests,!code-analysis</releaseProfiles>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -921,6 +925,9 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>${resources-plugin.version}</version>
+                    <configuration>
+                        <propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -948,6 +955,11 @@ limitations under the License.
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jlink-plugin</artifactId>
+                    <version>${jlink-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
                     <version>${install-plugin.version}</version>
                 </plugin>
@@ -955,6 +967,11 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-invoker-plugin</artifactId>
                     <version>${invoker-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>${license-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -1036,6 +1053,15 @@ limitations under the License.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -1297,6 +1323,19 @@ limitations under the License.
             </activation>
             <modules>
                 <module>examples</module>
+            </modules>
+        </profile>
+        <profile>
+            <!-- define module in a profile so that we can disable it during a release -->
+            <id>cli</id>
+            <activation>
+                <!-- see https://stackoverflow.com/a/7481347 -->
+                <property>
+                    <name>!learnlib.release</name>
+                </property>
+            </activation>
+            <modules>
+                <module>cli</module>
             </modules>
         </profile>
     </profiles>

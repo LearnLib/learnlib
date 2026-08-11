@@ -35,7 +35,7 @@ import de.learnlib.oracle.equivalence.mealy.RandomWalkEQOracle;
 import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.sul.SUL;
-import de.learnlib.util.Experiment.MealyExperiment;
+import de.learnlib.util.MealyExperiment;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.visualization.Visualization;

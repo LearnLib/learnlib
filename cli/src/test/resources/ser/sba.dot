@@ -1,0 +1,27 @@
+digraph g {
+
+	s0 [shape="doublecircle" label="S 0"];
+	s1 [shape="circle" label="S 1"];
+	s2 [shape="doublecircle" label="S 2"];
+	s3 [shape="doublecircle" label="S 3"];
+	s0 -> s1 [label="a"];
+	s0 -> s1 [label="b"];
+	s0 -> s1 [style="bold" label="S"];
+	s0 -> s1 [style="bold" label="R"];
+	s1 -> s1 [label="a"];
+	s1 -> s1 [label="b"];
+	s1 -> s1 [style="bold" label="S"];
+	s1 -> s1 [style="bold" label="R"];
+	s2 -> s3 [label="a"];
+	s2 -> s3 [label="b"];
+	s2 -> s1 [style="bold" label="S"];
+	s2 -> s1 [style="bold" label="R"];
+	s3 -> s1 [label="a"];
+	s3 -> s1 [label="b"];
+	s3 -> s1 [style="bold" label="S"];
+	s3 -> s0 [style="bold" label="R"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s2;
+
+}

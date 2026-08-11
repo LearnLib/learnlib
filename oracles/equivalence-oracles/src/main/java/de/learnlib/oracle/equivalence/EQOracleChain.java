@@ -18,6 +18,7 @@ package de.learnlib.oracle.equivalence;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import de.learnlib.oracle.EquivalenceOracle;
@@ -95,6 +96,10 @@ public class EQOracleChain<A, I, D> implements EquivalenceOracle<A, I, D> {
 
     public void addOracle(EquivalenceOracle<? super A, I, D> oracle) {
         oracles.add(oracle);
+    }
+
+    public List<EquivalenceOracle<? super A, I, D>> getOracles() {
+        return Collections.unmodifiableList(oracles);
     }
 
     @Override

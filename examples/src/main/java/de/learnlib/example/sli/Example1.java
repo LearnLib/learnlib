@@ -24,7 +24,7 @@ import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.equivalence.mealy.StateLocalInputMealySimulatorEQOracle;
 import de.learnlib.oracle.membership.StateLocalInputSULOracle;
 import de.learnlib.sul.StateLocalInputSUL;
-import de.learnlib.util.Experiment.MealyExperiment;
+import de.learnlib.util.MealyExperiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;

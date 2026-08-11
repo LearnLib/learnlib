@@ -26,9 +26,10 @@ public class StdInOracleTest extends AbstractPythonTest {
 
     @Test
     public void testStatelessCommunication() throws URISyntaxException {
-        final String script = getPathToScript("/stateless_sul.py");
+        final String script = getPathToScript("/stateless_stdin_sul.py");
         final StdInOracle<Character> oracle = new StdInOracle<>(Arrays.asList(PROGRAM, script));
 
+        Assert.assertEquals(oracle.answerQuery(Word.epsilon()), false);
         Assert.assertEquals(oracle.answerQuery(Word.epsilon(), Word.fromString("ab")), false);
         Assert.assertEquals(oracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")), true);
 
@@ -41,10 +42,11 @@ public class StdInOracleTest extends AbstractPythonTest {
 
     @Test
     public void testStatefulCommunication() throws URISyntaxException {
-        final String script = getPathToScript("/stateful_sul.py");
+        final String script = getPathToScript("/stateful_stdin_sul.py");
         final String reset = "reset";
         final StdInOracle<Character> oracle = new StdInOracle<>(Arrays.asList(PROGRAM, script), reset);
 
+        Assert.assertEquals(oracle.answerQuery(Word.epsilon()), false);
         Assert.assertEquals(oracle.answerQuery(Word.epsilon(), Word.fromString("ab")), false);
         Assert.assertEquals(oracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")), true);
 

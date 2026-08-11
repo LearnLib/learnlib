@@ -30,6 +30,7 @@ open module de.learnlib.oracle.membership {
 
     requires de.learnlib.api;
     requires net.automatalib.api;
+    requires net.automatalib.common.setting;
     requires net.automatalib.common.util;
     requires org.slf4j;
 

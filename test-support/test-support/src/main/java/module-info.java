@@ -39,7 +39,7 @@ open module de.learnlib.testsupport {
     requires net.automatalib.common.util;
     requires net.automatalib.core;
     requires net.automatalib.util;
-    requires org.apache.fury.core;
+    requires org.apache.fory.core;
     requires org.mockito;
     requires org.testng;
 

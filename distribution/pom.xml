@@ -227,7 +227,7 @@ limitations under the License.
 
     <profiles>
         <profile>
-            <id>jlink</id>
+            <id>integration-tests</id>
             <build>
                 <plugins>
                     <plugin>
@@ -270,10 +270,16 @@ limitations under the License.
                 </plugins>
             </build>
             <dependencies>
-                <!-- when checking coverage, make sure we run the example tests before report aggregation -->
+                <!-- when checking coverage, make sure we run the example and cli tests before report aggregation -->
                 <dependency>
                     <groupId>de.learnlib</groupId>
                     <artifactId>learnlib-examples</artifactId>
+                    <version>${project.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>de.learnlib</groupId>
+                    <artifactId>learnlib-cli</artifactId>
                     <version>${project.version}</version>
                     <scope>test</scope>
                 </dependency>

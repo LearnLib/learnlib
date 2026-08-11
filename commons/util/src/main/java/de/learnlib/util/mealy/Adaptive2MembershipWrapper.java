@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.algorithm.adt.learner;
+package de.learnlib.util.mealy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +22,6 @@ import de.learnlib.oracle.AdaptiveMembershipOracle;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.query.AdaptiveQuery;
 import de.learnlib.query.Query;
-import de.learnlib.util.mealy.PresetAdaptiveQuery;
 import net.automatalib.word.Word;
 
 /**
@@ -33,11 +32,11 @@ import net.automatalib.word.Word;
  * @param <O>
  *         output symbol type
  */
-class Adaptive2MembershipWrapper<I, O> implements MealyMembershipOracle<I, O> {
+public class Adaptive2MembershipWrapper<I, O> implements MealyMembershipOracle<I, O> {
 
     private final AdaptiveMembershipOracle<I, O> oracle;
 
-    Adaptive2MembershipWrapper(AdaptiveMembershipOracle<I, O> oracle) {
+    public Adaptive2MembershipWrapper(AdaptiveMembershipOracle<I, O> oracle) {
         this.oracle = oracle;
     }
 

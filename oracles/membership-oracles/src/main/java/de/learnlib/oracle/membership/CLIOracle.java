@@ -17,7 +17,6 @@ package de.learnlib.oracle.membership;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 import de.learnlib.oracle.SingleQueryOracle;
 import net.automatalib.common.util.process.ProcessUtil;
@@ -32,12 +31,12 @@ import org.slf4j.LoggerFactory;
  * is determined based on the program's return code where {@code 0} indicates success and any other value indicates
  * failure.
  * <p>
- * Queries are translated to program arguments (via the symbol's {@link #toString()} method). Depending on whether a
+ * Queries are translated to program arguments via the symbol's {@link Object#toString()} method. Depending on whether a
  * {@code reset} symbol has been specified, this oracle assumes either a stateless ({@code reset == null}) or stateful
  * ({@code reset != null}) communication.
  * <p>
  * In a stateless communication, all symbols of a query are passed to the program at once and invocations should be
- * treated independently from each other. In a stateful communication, the program is executed multiple times with a
+ * treated independently of each other. In a stateful communication, the program is executed multiple times with a
  * single query symbol each, preceded by a single invocation with only the {@code reset} symbol. The exit code of the
  * last invocation determines the query response.
  *
@@ -89,15 +88,18 @@ public class CLIOracle<I> implements SingleQueryOracle<I, Boolean> {
         this.commandLine.toArray(args);
 
         for (I p : prefix) {
-            args[idx++] = Objects.toString(p);
+            args[idx++] = String.valueOf(p);
         }
 
         for (I s : suffix) {
-            args[idx++] = Objects.toString(s);
+            args[idx++] = String.valueOf(s);
         }
 
         try {
-            return ProcessUtil.invokeProcess(args, LOGGER::debug, LOGGER::warn) == 0;
+            logInvocation(args);
+            final int exitCode = ProcessUtil.invokeProcess(args, LOGGER::debug, LOGGER::warn);
+            logResult(exitCode);
+            return exitCode == 0;
         } catch (IOException | InterruptedException e) {
             LOGGER.warn("Error while invoking process", e);
             return false;
@@ -107,14 +109,23 @@ public class CLIOracle<I> implements SingleQueryOracle<I, Boolean> {
     @RequiresNonNull("this.reset")
     private boolean answerStatefulQuery(Word<I> prefix, Word<I> suffix) {
         try {
-            int returnCode = ProcessUtil.invokeProcess(toCommand(commandLine, reset), LOGGER::debug, LOGGER::warn);
+            final String[] resetCommand = toCommand(commandLine, reset);
+            logInvocation(resetCommand);
+            int returnCode = ProcessUtil.invokeProcess(resetCommand, LOGGER::debug, LOGGER::warn);
+            logResult(returnCode);
 
             for (I p : prefix) {
-                returnCode = ProcessUtil.invokeProcess(toCommand(commandLine, p), LOGGER::debug, LOGGER::warn);
+                final String[] command = toCommand(commandLine, p);
+                logInvocation(command);
+                returnCode = ProcessUtil.invokeProcess(command, LOGGER::debug, LOGGER::warn);
+                logResult(returnCode);
             }
 
             for (I s : suffix) {
-                returnCode = ProcessUtil.invokeProcess(toCommand(commandLine, s), LOGGER::debug, LOGGER::warn);
+                final String[] command = toCommand(commandLine, s);
+                logInvocation(command);
+                returnCode = ProcessUtil.invokeProcess(command, LOGGER::debug, LOGGER::warn);
+                logResult(returnCode);
             }
 
             return returnCode == 0;
@@ -129,8 +140,16 @@ public class CLIOracle<I> implements SingleQueryOracle<I, Boolean> {
         final String[] result = new String[args.size() + 1];
 
         args.toArray(result);
-        result[args.size()] = Objects.toString(arg);
+        result[args.size()] = String.valueOf(arg);
 
         return result;
+    }
+
+    private static void logInvocation(String[] command) {
+        LOGGER.debug("Invoking '{}'", (Object) command);
+    }
+
+    private static void logResult(int exitCode) {
+        LOGGER.debug("Exit code '{}'", exitCode);
     }
 }

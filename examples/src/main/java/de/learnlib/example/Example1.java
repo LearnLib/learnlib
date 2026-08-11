@@ -27,7 +27,7 @@ import de.learnlib.oracle.MembershipOracle.DFAMembershipOracle;
 import de.learnlib.oracle.equivalence.DFAWMethodEQOracle;
 import de.learnlib.oracle.membership.DFASimulatorOracle;
 import de.learnlib.statistic.Statistics;
-import de.learnlib.util.Experiment.DFAExperiment;
+import de.learnlib.util.DFAExperiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;

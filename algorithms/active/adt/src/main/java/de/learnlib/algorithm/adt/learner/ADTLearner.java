@@ -60,6 +60,7 @@ import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import de.learnlib.util.MQUtil;
+import de.learnlib.util.mealy.Adaptive2MembershipWrapper;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -104,12 +105,26 @@ public class ADTLearner<I, O> implements LearningAlgorithm.MealyLearner<I, O>,
     private ADTHypothesis<I, O> hypothesis;
     private ADT<ADTState<I, O>, I, O> adt;
 
+    public ADTLearner(Alphabet<I> alphabet, AdaptiveMembershipOracle<I, O> oracle) {
+        this(alphabet,
+             oracle,
+             BuilderDefaults.leafSplitter(),
+             BuilderDefaults.adtExtender(),
+             BuilderDefaults.subtreeReplacer());
+    }
+
     public ADTLearner(Alphabet<I> alphabet,
                       AdaptiveMembershipOracle<I, O> oracle,
                       LeafSplitter leafSplitter,
                       ADTExtender adtExtender,
                       SubtreeReplacer subtreeReplacer) {
-        this(alphabet, oracle, leafSplitter, adtExtender, subtreeReplacer, true, LocalSuffixFinders.RIVEST_SCHAPIRE);
+        this(alphabet,
+             oracle,
+             leafSplitter,
+             adtExtender,
+             subtreeReplacer,
+             BuilderDefaults.useObservationTree(),
+             BuilderDefaults.suffixFinder());
     }
 
     @GenerateBuilder(defaults = BuilderDefaults.class)

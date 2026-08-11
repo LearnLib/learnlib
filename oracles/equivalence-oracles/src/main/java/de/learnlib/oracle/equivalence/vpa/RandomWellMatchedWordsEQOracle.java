@@ -32,7 +32,7 @@ import net.automatalib.word.WordBuilder;
  * @param <I>
  *         input symbol type
  */
-public final class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQOracle<Output<I, Boolean>, I, Boolean> {
+public final class RandomWellMatchedWordsEQOracle<I, D> extends AbstractTestWordEQOracle<Output<I, D>, I, D> {
 
     private final Random random;
 
@@ -41,7 +41,7 @@ public final class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQO
     private final int maxTests, minLength, maxLength;
 
     public RandomWellMatchedWordsEQOracle(Random random,
-                                          MembershipOracle<I, Boolean> oracle,
+                                          MembershipOracle<I, D> oracle,
                                           double callProb,
                                           int maxTests,
                                           int minLength,
@@ -50,7 +50,7 @@ public final class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQO
     }
 
     public RandomWellMatchedWordsEQOracle(Random random,
-                                          MembershipOracle<I, Boolean> oracle,
+                                          MembershipOracle<I, D> oracle,
                                           double callProb,
                                           int maxTests,
                                           int minLength,
@@ -70,7 +70,7 @@ public final class RandomWellMatchedWordsEQOracle<I> extends AbstractTestWordEQO
     }
 
     @Override
-    public Stream<Word<I>> generateTestWords(Output<I, Boolean> hypothesis, Collection<? extends I> inputs) {
+    public Stream<Word<I>> generateTestWords(Output<I, D> hypothesis, Collection<? extends I> inputs) {
 
         if (!(inputs instanceof VPAlphabet)) {
             throw new IllegalArgumentException(

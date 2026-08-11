@@ -26,16 +26,17 @@ public class StdInOutputOracleTest extends AbstractPythonTest {
 
     @Test
     public void testStatelessCommunication() throws URISyntaxException {
-        final String script = getPathToScript("/stateless_sul.py");
+        final String script = getPathToScript("/stateless_stdin_sul.py");
         final StdInOutputOracle<Character, Word<Integer>> oracle =
-                new StdInOutputOracle<>(Arrays.asList(PROGRAM, script), this::parseOutput);
+                new StdInOutputOracle<>(Arrays.asList(PROGRAM, script), CLIOutputOracleTest::parseOutput);
 
+        Assert.assertEquals(oracle.answerQuery(Word.epsilon()), Word.epsilon());
         Assert.assertEquals(oracle.answerQuery(Word.epsilon(), Word.fromString("ab")), Word.fromSymbols(97, 98));
         Assert.assertEquals(oracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")), Word.fromSymbols(97, 98));
 
         final String brokenScript = script.substring(0, script.length() - 3) + "2.py";
         final StdInOutputOracle<Character, Word<Integer>> brokenOracle =
-                new StdInOutputOracle<>(Arrays.asList(PROGRAM, brokenScript), this::parseOutput);
+                new StdInOutputOracle<>(Arrays.asList(PROGRAM, brokenScript), CLIOutputOracleTest::parseOutput);
 
         Assert.assertThrows(() -> brokenOracle.answerQuery(Word.epsilon(), Word.fromString("ab")));
         Assert.assertThrows(() -> brokenOracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")));
@@ -43,27 +44,21 @@ public class StdInOutputOracleTest extends AbstractPythonTest {
 
     @Test
     public void testStatefulCommunication() throws URISyntaxException {
-        final String script = getPathToScript("/stateful_sul.py");
+        final String script = getPathToScript("/stateful_stdin_sul.py");
         final String reset = "reset";
         final StdInOutputOracle<Character, Word<Integer>> oracle =
-                new StdInOutputOracle<>(Arrays.asList(PROGRAM, script), this::parseOutput, reset);
+                new StdInOutputOracle<>(Arrays.asList(PROGRAM, script), CLIOutputOracleTest::parseOutput, reset);
 
+        Assert.assertEquals(oracle.answerQuery(Word.epsilon()), Word.epsilon());
         Assert.assertEquals(oracle.answerQuery(Word.epsilon(), Word.fromString("ab")), Word.fromSymbols(97, 98));
         Assert.assertEquals(oracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")), Word.fromSymbols(97, 98));
 
         final String brokenScript = script.substring(0, script.length() - 3) + "2.py";
         final StdInOutputOracle<Character, Word<Integer>> brokenOracle =
-                new StdInOutputOracle<>(Arrays.asList(PROGRAM, brokenScript), this::parseOutput, reset);
+                new StdInOutputOracle<>(Arrays.asList(PROGRAM, brokenScript), CLIOutputOracleTest::parseOutput, reset);
 
         Assert.assertThrows(() -> brokenOracle.answerQuery(Word.epsilon(), Word.fromString("ab")));
         Assert.assertThrows(() -> brokenOracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")));
-    }
-
-    private Word<Integer> parseOutput(String input, Integer offset) {
-        return Arrays.stream(input.split(System.lineSeparator()))
-                     .map(Integer::parseInt)
-                     .skip(offset)
-                     .collect(Word.collector());
     }
 
 }

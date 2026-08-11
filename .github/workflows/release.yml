@@ -1,0 +1,35 @@
+name: Attach artifacts to GitHub release
+on:
+  release:
+    types: [published]
+jobs:
+  publish:
+    name: "Build and attach artifacts"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-22.04, windows-2022, macos-15-intel, macos-15 ]
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'maven'
+      - name: Build AutomataLib # can be removed on actual stable releases
+        shell: bash
+        run: |
+          git clone -b develop --single-branch https://github.com/LearnLib/automatalib.git ${HOME}/automatalib-git
+          cd ${HOME}/automatalib-git
+          mvn -B install -DskipTests
+          cd $GITHUB_WORKSPACE
+      - name: Build
+        run: mvn -B package -DskipTests -Pcli
+      - name: Release
+        uses: softprops/action-gh-release@v3
+        with:
+          working_directory: cli/target
+          files: learnlib-cli-*.zip
+          fail_on_unmatched_files: true

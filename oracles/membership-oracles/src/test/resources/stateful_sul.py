@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python3
 from pathlib import Path
 
 import sys
@@ -13,23 +13,13 @@ def main():
     if os.path.isfile(path):
         argv = pickle.load(open(path, "rb"))
 
-    if len(sys.argv) > 1: # arg mode
-        for arg in sys.argv[1:]:
-            if arg == "reset":
-                argv = 1
-            else:
-                argv += 1
-                print(sum([ord(c) for c in arg]))
-                print(arg, file=sys.stderr)
-    else: # stdin mode
-        for line in sys.stdin:
-            for arg in line.split():
-                if arg == "reset":
-                    argv = 1
-                else:
-                    argv += 1
-                    print(sum([ord(c) for c in arg]))
-                    print(arg, file=sys.stderr)
+    for arg in sys.argv[1:]:
+        if arg == "reset":
+            argv = 1
+        else:
+            argv += 1
+            print(sum([ord(c) for c in arg]))
+            print(arg, file=sys.stderr)
 
     pickle.dump(argv, open(path, "wb"))
     sys.exit(argv % 2)

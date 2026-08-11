@@ -27,7 +27,7 @@ import org.testng.annotations.BeforeTest;
 
 public abstract class AbstractPythonTest {
 
-    protected static final String PROGRAM = "python";
+    protected static final String PROGRAM = "python3";
 
     protected static String getPathToScript(String script) throws URISyntaxException {
         final URL resource = Objects.requireNonNull(AbstractPythonTest.class.getResource(script));
@@ -37,11 +37,11 @@ public abstract class AbstractPythonTest {
     @BeforeTest
     public void setUp() {
         try {
-            if (ProcessUtil.invokeProcess(new String[] {"python", "--version"}) != 0) {
-                throw new SkipException("python not supported");
+            if (ProcessUtil.invokeProcess(new String[] {PROGRAM, "--version"}) != 0) {
+                throw new SkipException("python3 not supported");
             }
         } catch (IOException | InterruptedException e) {
-            throw new SkipException("python not supported");
+            throw new SkipException("python3 not supported");
         }
     }
 

@@ -28,14 +28,15 @@ public class CLIOutputOracleTest extends AbstractPythonTest {
     public void testStatelessCommunication() throws URISyntaxException {
         final String script = getPathToScript("/stateless_sul.py");
         final CLIOutputOracle<Character, Word<Integer>> oracle =
-                new CLIOutputOracle<>(Arrays.asList(PROGRAM, script), this::parseOutput);
+                new CLIOutputOracle<>(Arrays.asList(PROGRAM, script), CLIOutputOracleTest::parseOutput);
 
+        Assert.assertEquals(oracle.answerQuery(Word.epsilon()), Word.epsilon());
         Assert.assertEquals(oracle.answerQuery(Word.epsilon(), Word.fromString("ab")), Word.fromSymbols(97, 98));
         Assert.assertEquals(oracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")), Word.fromSymbols(97, 98));
 
         final String brokenScript = script.substring(0, script.length() - 3) + "2.py";
         final CLIOutputOracle<Character, Word<Integer>> brokenOracle =
-                new CLIOutputOracle<>(Arrays.asList(PROGRAM, brokenScript), this::parseOutput);
+                new CLIOutputOracle<>(Arrays.asList(PROGRAM, brokenScript), CLIOutputOracleTest::parseOutput);
 
         Assert.assertThrows(() -> brokenOracle.answerQuery(Word.epsilon(), Word.fromString("ab")));
         Assert.assertThrows(() -> brokenOracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")));
@@ -46,23 +47,36 @@ public class CLIOutputOracleTest extends AbstractPythonTest {
         final String script = getPathToScript("/stateful_sul.py");
         final String reset = "reset";
         final CLIOutputOracle<Character, Word<Integer>> oracle =
-                new CLIOutputOracle<>(Arrays.asList(PROGRAM, script), this::parseOutput, reset);
+                new CLIOutputOracle<>(Arrays.asList(PROGRAM, script), CLIOutputOracleTest::parseOutput, reset);
 
+        Assert.assertEquals(oracle.answerQuery(Word.epsilon()), Word.epsilon());
         Assert.assertEquals(oracle.answerQuery(Word.epsilon(), Word.fromString("ab")), Word.fromSymbols(97, 98));
         Assert.assertEquals(oracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")), Word.fromSymbols(97, 98));
 
         final String brokenScript = script.substring(0, script.length() - 3) + "2.py";
         final CLIOutputOracle<Character, Word<Integer>> brokenOracle =
-                new CLIOutputOracle<>(Arrays.asList(PROGRAM, brokenScript), this::parseOutput, reset);
+                new CLIOutputOracle<>(Arrays.asList(PROGRAM, brokenScript), CLIOutputOracleTest::parseOutput, reset);
 
         Assert.assertThrows(() -> brokenOracle.answerQuery(Word.epsilon(), Word.fromString("ab")));
         Assert.assertThrows(() -> brokenOracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")));
     }
 
-    private Word<Integer> parseOutput(String input, Integer offset) {
-        return Arrays.stream(input.split(System.lineSeparator()))
-                     .map(Integer::parseInt)
-                     .skip(offset)
-                     .collect(Word.collector());
+    static Word<Integer> parseOutput(String input, int prefix, int suffix) {
+        if (suffix == 0) {
+            return Word.epsilon();
+        }
+
+        if (input.isBlank()) {
+            throw new IllegalStateException();
+        }
+
+        final Word<Integer> result =
+                Arrays.stream(input.split(System.lineSeparator())).map(Integer::parseInt).collect(Word.collector());
+
+        if (result.length() != (prefix + suffix)) {
+            throw new IllegalStateException();
+        }
+
+        return result.suffix(suffix);
     }
 }

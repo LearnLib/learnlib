@@ -29,12 +29,14 @@ public class CLIOracleTest extends AbstractPythonTest {
         final String script = getPathToScript("/stateless_sul.py");
         final CLIOracle<Character> oracle = new CLIOracle<>(Arrays.asList(PROGRAM, script));
 
+        Assert.assertEquals(oracle.answerQuery(Word.epsilon()), false);
         Assert.assertEquals(oracle.answerQuery(Word.epsilon(), Word.fromString("ab")), false);
         Assert.assertEquals(oracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")), true);
 
         final String brokenScript = script.substring(0, script.length() - 3) + "2.py";
         final CLIOracle<Character> brokenOracle = new CLIOracle<>(Arrays.asList(PROGRAM, brokenScript));
 
+        Assert.assertEquals(oracle.answerQuery(Word.epsilon()), false);
         Assert.assertEquals(brokenOracle.answerQuery(Word.epsilon(), Word.fromString("ab")), false);
         Assert.assertEquals(brokenOracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")), false);
     }
@@ -45,12 +47,14 @@ public class CLIOracleTest extends AbstractPythonTest {
         final String reset = "reset";
         final CLIOracle<Character> oracle = new CLIOracle<>(Arrays.asList(PROGRAM, script), reset);
 
+        Assert.assertEquals(oracle.answerQuery(Word.epsilon()), false);
         Assert.assertEquals(oracle.answerQuery(Word.epsilon(), Word.fromString("ab")), false);
         Assert.assertEquals(oracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")), true);
 
         final String brokenScript = script.substring(0, script.length() - 3) + "2.py";
         final CLIOracle<Character> brokenOracle = new CLIOracle<>(Arrays.asList(PROGRAM, brokenScript), reset);
 
+        Assert.assertEquals(oracle.answerQuery(Word.epsilon()), false);
         Assert.assertEquals(brokenOracle.answerQuery(Word.epsilon(), Word.fromString("ab")), false);
         Assert.assertEquals(brokenOracle.answerQuery(Word.fromLetter('a'), Word.fromString("ab")), false);
     }

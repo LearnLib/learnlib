@@ -50,7 +50,7 @@ public class DTVisualizationTest {
         final SimulatorEQOracle<Character> eqo = new SimulatorEQOracle<>(vpa);
         this.learner = new OPLearnerVPA<>(alphabet, mqo, AcexAnalyzers.BINARY_SEARCH_FWD);
 
-        final Experiment<OneSEVPA<?, Character>> exp = new Experiment<>(learner, eqo, alphabet);
+        final Experiment<OneSEVPA<?, Character>, Character, Boolean> exp = new Experiment<>(learner, eqo, alphabet);
         exp.run();
     }
 

@@ -55,7 +55,7 @@ public class OptimizationsTest {
 
         final SBALearner<Character, ?> learner = new SBALearner<>(alphabet, mqo, TTTLearnerDFA::new);
 
-        final Experiment<SBA<?, Character>> experiment = new Experiment<>(learner, eqo, alphabet);
+        final Experiment<SBA<?, Character>, Character, Boolean> experiment = new Experiment<>(learner, eqo, alphabet);
 
         experiment.run();
 

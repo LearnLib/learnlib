@@ -35,9 +35,8 @@ import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.util.automaton.random.RandomAutomata;
-import org.apache.fury.Fury;
-import org.apache.fury.logging.LogLevel;
-import org.apache.fury.logging.LoggerFactory;
+import org.apache.fory.Fory;
+import org.apache.fory.logging.LoggerFactory;
 
 /**
  * An example to demonstrate the {@link Resumable} feature of LearnLib to continue learning setups from previously
@@ -48,18 +47,22 @@ public final class ResumableExample {
 
     private static final CompactDFA<Character> TARGET;
     private static final Alphabet<Character> INITIAL_ALPHABET;
-    private static final Fury FURY;
+    private static final Fory FORY;
 
     static {
         LoggerFactory.useSlf4jLogging(true);
-        LoggerFactory.setLogLevel(LogLevel.ERROR_LEVEL);
 
         final int seed = 42;
         final int size = 100;
 
         TARGET = RandomAutomata.randomDFA(new Random(seed), size, Alphabets.characters('a', 'd'));
         INITIAL_ALPHABET = Alphabets.characters('a', 'b');
-        FURY = Fury.builder().withRefTracking(true).requireClassRegistration(false).build();
+        FORY = Fory.builder()
+                   .requireClassRegistration(false)
+                   .withCodegen(false)
+                   .withRefTracking(true)
+                   .withXlang(false)
+                   .build();
     }
 
     private ResumableExample() {
@@ -114,12 +117,12 @@ public final class ResumableExample {
     }
 
     private static byte[] toBytes(Object state) {
-        return FURY.serialize(state);
+        return FORY.serialize(state);
     }
 
     @SuppressWarnings("unchecked")
     private static <T> T fromBytes(byte[] bytes) {
-        return (T) FURY.deserialize(bytes);
+        return (T) FORY.deserialize(bytes);
     }
 
     private static void printStats(Setup setup) {

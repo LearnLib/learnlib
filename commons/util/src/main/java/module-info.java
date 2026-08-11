@@ -35,6 +35,7 @@ open module de.learnlib.common.util {
     requires org.slf4j;
 
     // annotations are 'provided'-scoped and do not need to be loaded at runtime
+    requires static de.learnlib.tooling.annotation;
     requires static org.checkerframework.checker.qual;
 
     exports de.learnlib.util;

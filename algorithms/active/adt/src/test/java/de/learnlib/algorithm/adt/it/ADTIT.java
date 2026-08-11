@@ -47,7 +47,7 @@ import de.learnlib.sul.SUL;
 import de.learnlib.testsupport.MQ2AQWrapper;
 import de.learnlib.testsupport.it.AbstractMealyLearnerIT;
 import de.learnlib.testsupport.it.variant.LearnerVariantList;
-import de.learnlib.util.Experiment.MealyExperiment;
+import de.learnlib.util.MealyExperiment;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.exception.FormatException;
