@@ -81,10 +81,10 @@ limitations under the License.
                             <exclude>de/learnlib/oracle/property/DFA*Chain.class</exclude>
                             <exclude>de/learnlib/oracle/property/Mealy*Chain.class</exclude>
 
-                            <!-- generated refinements for Example -->
-                            <exclude>de/learnlib/util/DFAExample.class</exclude>
-                            <exclude>de/learnlib/util/MealyExample.class</exclude>
-                            <exclude>de/learnlib/util/MooreExample.class</exclude>
+                            <!-- generated refinements for Experiment -->
+                            <exclude>de/learnlib/util/DFAExperiment.class</exclude>
+                            <exclude>de/learnlib/util/MealyExperiment.class</exclude>
+                            <exclude>de/learnlib/util/MooreExperiment.class</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
