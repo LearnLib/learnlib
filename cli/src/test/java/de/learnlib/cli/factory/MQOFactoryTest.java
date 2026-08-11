@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import de.learnlib.cli.AbstractPythonTest;
 import de.learnlib.cli.ApplicationIT;
 import de.learnlib.cli.option.Options;
 import de.learnlib.cli.util.AcceptorNullOracle;
@@ -52,7 +53,7 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class MQOFactoryTest {
+public class MQOFactoryTest extends AbstractPythonTest {
 
     private final File sulFile;
 

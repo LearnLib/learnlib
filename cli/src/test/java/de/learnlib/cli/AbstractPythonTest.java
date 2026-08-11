@@ -13,28 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.learnlib.oracle.membership;
+package de.learnlib.cli;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.util.Objects;
 
 import net.automatalib.common.util.process.ProcessUtil;
 import org.testng.SkipException;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 
 public abstract class AbstractPythonTest {
 
     protected static final String PROGRAM = "python3";
 
-    protected static String getPathToScript(String script) throws URISyntaxException {
-        final URL resource = Objects.requireNonNull(AbstractPythonTest.class.getResource(script));
-        return Paths.get(resource.toURI()).toFile().getAbsolutePath();
-    }
-
-    @BeforeTest
+    @BeforeClass
     public void setUp() {
         try {
             if (ProcessUtil.invokeProcess(new String[] {PROGRAM, "--version"}) != 0) {

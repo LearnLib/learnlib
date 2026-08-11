@@ -34,16 +34,14 @@ import de.learnlib.filter.statistic.oracle.CounterOracle;
 import de.learnlib.statistic.Statistics;
 import de.learnlib.statistic.StatisticsService;
 import net.automatalib.common.util.IOUtil;
-import net.automatalib.common.util.process.ProcessUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.SkipException;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import picocli.CommandLine;
 
-public class ApplicationIT {
+public class ApplicationIT extends AbstractPythonTest {
 
     public static final String STATELESS = getPathToScript("/sul/stateless.py");
     public static final String STATELESS_BROKEN = getPathToScript("/sul/stateless_broken.py");
@@ -58,17 +56,6 @@ public class ApplicationIT {
             return Paths.get(resource.toURI()).toFile().getAbsolutePath();
         } catch (URISyntaxException e) {
             throw new SkipException("Error while loading script " + script);
-        }
-    }
-
-    @BeforeTest
-    public void setUp() {
-        try {
-            if (ProcessUtil.invokeProcess(new String[] {"python", "--version"}) != 0) {
-                throw new SkipException("python not supported");
-            }
-        } catch (IOException | InterruptedException e) {
-            throw new SkipException("python not supported");
         }
     }
 
