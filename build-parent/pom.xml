@@ -80,6 +80,8 @@ limitations under the License.
                             <exclude>de/learnlib/oracle/property/Mealy*Oracle.class</exclude>
                             <exclude>de/learnlib/oracle/property/DFA*Chain.class</exclude>
                             <exclude>de/learnlib/oracle/property/Mealy*Chain.class</exclude>
+
+                            <!-- generated refinements for Example -->
                             <exclude>de/learnlib/util/DFAExample.class</exclude>
                             <exclude>de/learnlib/util/MealyExample.class</exclude>
                             <exclude>de/learnlib/util/MooreExample.class</exclude>
