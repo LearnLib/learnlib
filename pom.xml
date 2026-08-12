@@ -271,7 +271,7 @@ limitations under the License.
         <tidy-pom.version>1.4.0</tidy-pom.version>
 
         <!-- dependency versions -->
-        <automatalib.version>0.13.0-SNAPSHOT</automatalib.version>
+        <automatalib.version>13.0.0</automatalib.version>
         <build-tools.version>0.1.1</build-tools.version>
         <cacio.version>1.18</cacio.version>
         <checkerframework.version>4.2.1</checkerframework.version>
@@ -867,7 +867,7 @@ limitations under the License.
                         <links>
                             <!-- TODO -->
                             <!-- JDK 17+ seems to fail on missing (SNAPSHOT) docs. reactivate before release -->
-                            <!--link>${automatalib.apidocs}</link-->
+                            <link>${automatalib.apidocs}</link>
                             <link>${checkerframework.apidocs}</link>
                             <!-- tends to be blocked in GitHub actions -->
                             <!--link>${metainf-services.apidocs}</link-->

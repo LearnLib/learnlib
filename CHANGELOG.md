@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `{DFA,Mealy,Moore}Experiment` have been moved to the `de.learnlib.util` package.
 * The `generateTestWords` method of `AbstractTestWordEQOracle` now needs to be public.
 * The classes of `de.learnlib.testsupport.it.learner` have been split into the packages `de.learnlib.testsupport.it{,testcase,util,variant}` in the same module (`de.learnlib.testsupport:learnlib-learner-it-support`).
+* Switched to [AutomataLib 13.0.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-13.0.0).
 
 ### Removed
 

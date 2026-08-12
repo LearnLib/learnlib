@@ -18,13 +18,6 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
           cache: 'maven'
-      - name: Build AutomataLib # can be removed on actual stable releases
-        shell: bash
-        run: |
-          git clone -b develop --single-branch https://github.com/LearnLib/automatalib.git ${HOME}/automatalib-git
-          cd ${HOME}/automatalib-git
-          mvn -B install -DskipTests
-          cd $GITHUB_WORKSPACE
       - name: Build
         run: mvn -B package -DskipTests -Pcli
       - name: Release
