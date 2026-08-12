@@ -2,9 +2,15 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [19.0.0-SNAPSHOT] - Unreleased
 
-[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.18.0...HEAD)
+## [20.0.0-SNAPSHOT] - Unreleased
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-19.0.0...HEAD)
+
+
+## [19.0.0] - 2026-08-12
+
+[Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.18.0...learnlib-19.0.0)
 
 ### Added
 
