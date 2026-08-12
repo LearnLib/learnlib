@@ -34,7 +34,7 @@ Currently, the following learning algorithms with respective target models are s
 
 Additionally, LearnLib offers a variety of tools to ease the practical application of automata learning on real-world systems.
 This includes drivers and mappers for interfacing software systems with the LearnLib API as well as caches and parallelization for improving the overall performance of the learning setup.
-Also, more nuanced setups such as Black-Box-Checking (via [LTSmin][ltsmin]) or inferring partial machines are possible.
+Also, more nuanced setups such as Black-Box-Checking (via [LTSmin][ltsmin] or [M3C][m3c] + [ADD-Lib][addlib]) or inferring partial machines are possible.
 
 While we strive to deliver code at a high quality, a healthy community is central to future growth.
 Contributions -- whether it is in the form of new features, improved documentation or bugfixes -- are welcome.
@@ -112,3 +112,5 @@ If you have any questions regarding the usage of LearnLib or if you want to disc
 [intellij]: https://www.jetbrains.com/idea/
 [eclipse]: https://www.eclipse.org/
 [ltsmin]: https://ltsmin.utwente.nl/
+[m3c]: https://doi.org/10.1007/978-3-030-00244-2_15
+[addlib]: https://add-lib.scce.info/
