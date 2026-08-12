@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.19.0-SNAPSHOT] - Unreleased
+## [19.0.0-SNAPSHOT] - Unreleased
 
 [Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-0.18.0...HEAD)
 
@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+* LearnLib shifted version numbers to more prominently communicate breaking changes with major versions.
 * LearnLib now requires Java 17 at runtime.
 * Statistics collection has received a major rework. Previously, classes would implement the `StatisticCollector` interface and return a `StatisticData` object which 1) only allows for describing a very limited amount of data, and 2) requires you to keep track of all the objects that collect data. This approach has been *replaced* by a new `StatisticsService`. Instances of this service can be obtained similar to a logger via `Statistics.getService()` and require you to provide an implementation of this service on the classpath (a default one is provided by the `learnlib-statistics` module). The new service allows arbitrary components to collect various data which can be conveniently extracted based on the new `StatisticsKey`s used by the components. For more details on advanced scenarios (such as multi-threaded benchmarking), see the documentation of the respective classes. While this may require you to adjust the way you are collecting statistics, all functionality from beforehand should still be available.
   * `SimpleProfiler` has been replaced by the new clock-based statistics.
