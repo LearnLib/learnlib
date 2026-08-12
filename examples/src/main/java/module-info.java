@@ -17,6 +17,7 @@
 /**
  * This module provides a collection of various small example applications that illustrate several use cases of
  * LearnLib.
+ * <p>
  * <b>Note:</b> This module is not intended as a library but only exists for educational purposes. No artifacts are
  * deployed for this module.
  */
@@ -55,7 +56,6 @@ open module de.learnlib.example {
     requires net.automatalib.serialization.dot;
     requires net.automatalib.visualization.dot;
     requires org.apache.fory.core;
-    requires org.reactivestreams;
     requires reactor.core;
 
     // annotations are 'provided'-scoped and do not need to be loaded at runtime

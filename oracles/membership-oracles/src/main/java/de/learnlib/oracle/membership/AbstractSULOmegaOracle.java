@@ -160,7 +160,7 @@ public abstract class AbstractSULOmegaOracle<S extends Object, I, O, Q> implemen
      * Creates a new {@link AbstractSULOmegaOracle} that assumes the {@link SUL} can not make deep copies.
      *
      * @param sul
-     *         the sul to delegate queris to
+     *         the sul to delegate queries to
      * @param <S>
      *         the state type
      * @param <I>

@@ -60,7 +60,7 @@ import net.automatalib.word.Word;
  * </pre>
  * <b>Note:</b> This requires the shared membership oracle to be thread-safe.
  * <p>
- * Creating a dynamic parallel oracle with a cached thread pool of maximum size 4, a batch size of 5, using a (forkabel)
+ * Creating a dynamic parallel oracle with a cached thread pool of maximum size 4, a batch size of 5, using a (forkable)
  * SUL:
  * <pre>
  * ParallelOracleBuilders.newDynamicParallelOracle(sul)

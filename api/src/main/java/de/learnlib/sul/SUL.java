@@ -63,7 +63,7 @@ public interface SUL<I, O> {
 
     /**
      * Forks this SUL, if possible. The fork of a SUL is a copy which behaves exactly the same as this SUL. This method
-     * should always return a reseted SUL, regardless of whether this call is made between a call to {@link #pre()} and
+     * should always return a reset SUL, regardless of whether this call is made between a call to {@link #pre()} and
      * {@link #post()}.
      * <p>
      * If {@link #canFork()} returns {@code true}, this method must return a non-{@code null} object, which should

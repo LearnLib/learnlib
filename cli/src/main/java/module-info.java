@@ -13,6 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * A module for building a standalone command-line application of LearnLib.
+ * <p>
+ * <b>Note:</b> This artifact is not intended as a library and therefore not deployed to Maven Central but instead
+ * provided as a direct download (e.g., from GitHub releases).
+ */
 open module de.learnlib.cli {
 
     requires de.learnlib.algorithm.adt;
@@ -29,7 +36,6 @@ open module de.learnlib.cli {
     requires de.learnlib.algorithm.ttt;
     requires de.learnlib.algorithm.ttt.vpa;
     requires de.learnlib.api;
-    requires de.learnlib.common.counterexample;
     requires de.learnlib.common.util;
     requires de.learnlib.filter.cache;
     requires de.learnlib.filter.statistic;

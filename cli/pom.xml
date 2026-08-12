@@ -29,9 +29,9 @@ limitations under the License.
 
     <name>LearnLib :: CLI</name>
     <description>
-        A module for building a standalone command-line application of LearnLib. Note that this artifact is not intended
-        as a library and therefore not deployed to Maven Central but instead provided as a direct download (e.g., from
-        GitHub releases).
+        A module for building a standalone command-line application of LearnLib.
+        *Note:* This artifact is not intended as a library and therefore not deployed to Maven Central but instead
+        provided as a direct download (e.g., from GitHub releases).
     </description>
 
     <properties>
@@ -237,7 +237,7 @@ limitations under the License.
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>check-binary</id>
+                                <id>binary-check</id>
                                 <goals>
                                     <goal>integration-test</goal>
                                     <goal>verify</goal>
@@ -247,7 +247,7 @@ limitations under the License.
                                         <learnlib.binary.path>${learnlib.binary.path}</learnlib.binary.path>
                                     </systemPropertyVariables>
                                     <includes>
-                                        <include>**/CheckBinary.java</include>
+                                        <include>**/BinaryCheck.java</include>
                                     </includes>
                                     <excludes>
                                         <exclude>**/*IT.java</exclude>

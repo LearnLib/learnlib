@@ -103,7 +103,7 @@ public abstract class AbstractDynamicBatchProcessor<Q, P extends BatchProcessor<
             }
         } catch (ExecutionException e) {
             ExceptionUtil.throwIfUnchecked(e.getCause());
-            throw new AssertionError("Runnables must not throw checked exceptions", e);
+            throw new AssertionError("Runnable must not throw checked exceptions", e);
         } catch (InterruptedException e) {
             Thread.interrupted();
             throw new BatchInterruptedException(e);

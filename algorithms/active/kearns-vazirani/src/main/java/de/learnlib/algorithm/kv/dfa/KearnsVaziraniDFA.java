@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.BooleanSupplier;
 
 import de.learnlib.AccessSequenceTransformer;
 import de.learnlib.LearnerStateTracker;
@@ -43,6 +42,7 @@ import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.array.ArrayStorage;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.word.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -362,11 +362,8 @@ public class KearnsVaziraniDFA<I> implements DFALearner<I>,
                 setTransition(stateIter.next().id, inputIdx, leafsIter.next());
             }
 
-            // in case the new symbol added a new state (see sift method) we allow at max one additional state
-            assert !stateIter.hasNext() || !((BooleanSupplier) () -> {
-                stateIter.next();
-                return stateIter.hasNext();
-            }).getAsBoolean();
+            // in case the new symbol added a new state (see sift method) we allow at most one additional state
+            assert IteratorUtil.size(stateIter) <= 1;
             assert !leafsIter.hasNext();
         }
     }

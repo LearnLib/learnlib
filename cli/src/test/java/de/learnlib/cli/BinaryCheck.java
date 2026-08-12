@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
  * surefire- or failsafe-plugin, because it should only be explicitly called by the failsafe-plugin when the "cli"
  * profile is active and the native binary is actually built.
  */
-public class CheckBinary {
+public class BinaryCheck {
 
     @Test
     public void testInvokeBinary() throws IOException, InterruptedException {
