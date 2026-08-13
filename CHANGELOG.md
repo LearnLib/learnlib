@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/learnlib/compare/learnlib-19.0.0...HEAD)
 
+### Removed
+
+* The archetype `de.learnlib.archtypes:basic` has been removed.
+
 
 ## [19.0.0] - 2026-08-12
 
