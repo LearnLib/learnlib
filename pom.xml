@@ -240,7 +240,7 @@ limitations under the License.
         <antrun-plugin.version>3.2.0</antrun-plugin.version>
         <archetype-plugin.version>3.4.1</archetype-plugin.version>
         <assembly-plugin.version>3.8.0</assembly-plugin.version>
-        <central-publish-plugin.version>0.9.0</central-publish-plugin.version>
+        <central-publish-plugin.version>0.11.0</central-publish-plugin.version>
         <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
         <clean-plugin.version>3.4.0</clean-plugin.version>
         <compiler-plugin.version>3.15.0</compiler-plugin.version>
@@ -1269,7 +1269,11 @@ limitations under the License.
                         <configuration>
                             <deploymentName>LearnLib ${project.version}</deploymentName>
                             <publishingServerId>sonatype</publishingServerId>
-                            <excludeArtifacts>learnlib-examples</excludeArtifacts>
+                            <checksums>required</checksums>
+                            <excludeArtifacts>
+                                <excludeArtifact>learnlib-examples</excludeArtifact>
+                                <excludeArtifact>learnlib-cli</excludeArtifact>
+                            </excludeArtifacts>
                         </configuration>
                     </plugin>
                     <plugin>
