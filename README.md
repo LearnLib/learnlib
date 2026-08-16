@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/LearnLib/learnlib/actions/workflows/ci.yml/badge.svg)](https://github.com/LearnLib/learnlib/actions/workflows/ci.yml)
 [![Coverage](https://coveralls.io/repos/github/LearnLib/learnlib/badge.svg?branch=develop)](https://coveralls.io/github/LearnLib/learnlib?branch=develop)
-[![Maven Central](https://maven-badges.sml.io/maven-central/de.learnlib/learnlib-parent/badge.svg)](https://maven-badges.sml.io/maven-central/de.learnlib/learnlib-parent)
+[![Maven Central](https://maven-badges.sml.io/sonatype-central/de.learnlib/learnlib-parent/badge.svg?subject=maven%20central)](https://maven-badges.sml.io/sonatype-central/de.learnlib/learnlib-parent)
 
 LearnLib is a free, open-source ([Apache License, v2.0][1]) Java library for automata learning algorithms.
 
