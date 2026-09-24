@@ -867,7 +867,7 @@ limitations under the License.
                         <links>
                             <!-- TODO -->
                             <!-- JDK 17+ seems to fail on missing (SNAPSHOT) docs. reactivate before release -->
-                            <link>${automatalib.apidocs}</link>
+                            <!--link>${automatalib.apidocs}</link-->
                             <link>${checkerframework.apidocs}</link>
                             <!-- tends to be blocked in GitHub actions -->
                             <!--link>${metainf-services.apidocs}</link-->
