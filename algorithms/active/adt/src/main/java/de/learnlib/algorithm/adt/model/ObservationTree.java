@@ -30,7 +30,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
-import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
+import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -190,7 +190,7 @@ public class ObservationTree<S, I, O> implements AdaptiveMembershipOracle<I, O>,
         final Integer s2Succ = cache.getSuccessor(n2, prefix);
 
         if (s1Succ != null && s2Succ != null) {
-            return NearLinearEquivalenceTest.findSeparatingWord(cache, s1Succ, s2Succ, alphabet, true);
+            return DeterministicEquivalenceTest.findSeparatingWord(cache, s1Succ, s2Succ, alphabet, true);
         }
 
         return null;
@@ -211,7 +211,7 @@ public class ObservationTree<S, I, O> implements AdaptiveMembershipOracle<I, O>,
         final Integer n1 = this.nodeToObservationMap.get(s1);
         final Integer n2 = this.nodeToObservationMap.get(s2);
 
-        return NearLinearEquivalenceTest.findSeparatingWord(this.cache.getCache(), n1, n2, this.alphabet, true);
+        return DeterministicEquivalenceTest.findSeparatingWord(this.cache.getCache(), n1, n2, this.alphabet, true);
     }
 
     /**

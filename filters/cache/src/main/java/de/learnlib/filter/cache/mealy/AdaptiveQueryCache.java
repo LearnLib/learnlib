@@ -36,10 +36,12 @@ import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.impl.CompactTransition;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
-import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
+import net.automatalib.incremental.util.DFSepWordFinder;
+import net.automatalib.incremental.util.DFSepWordFinder.Visitor;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A cache for an {@link AdaptiveMembershipOracle}. Upon construction, it is provided with a delegate oracle. Queries
@@ -135,16 +137,25 @@ public class AdaptiveQueryCache<I, O> implements AdaptiveMembershipOracle<I, O>,
 
     @Override
     public EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> createCacheConsistencyTest() {
-        return (hypothesis, alphabet) -> {
-            //TODO: If the hypothesis has undefined transitions, but the cache doesn't, it is a clear counterexample!
-            final Word<I> sepWord = NearLinearEquivalenceTest.findSeparatingWord(cache, hypothesis, alphabet, true);
+        return this::findCounterexample;
+    }
 
-            if (sepWord != null) {
-                return new DefaultQuery<>(sepWord, cache.computeOutput(sepWord));
+    private <S, T> @Nullable DefaultQuery<I, Word<O>> findCounterexample(MealyMachine<S, I, T, O> hypothesis,
+                                                                         Collection<? extends I> inputs) {
+        final Word<I> sepWord = DFSepWordFinder.findSeparatingWord(cache, hypothesis, inputs, false, new Visitor<>() {
+
+            @Override
+            public boolean succConflict(CompactTransition<O> incTrans, @Nullable T targetTrans) {
+                return targetTrans == null ||
+                       !Objects.equals(incTrans.getProperty(), hypothesis.getTransitionOutput(targetTrans));
             }
+        });
 
-            return null;
-        };
+        if (sepWord != null) {
+            return new DefaultQuery<>(sepWord, cache.computeOutput(sepWord));
+        }
+
+        return null;
     }
 
     @Override
